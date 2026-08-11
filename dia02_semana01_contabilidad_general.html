@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contabilidad General - Semana 1, Día 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Source Sans 3', sans-serif;background:#eef3f8;color:#1a1a1a;line-height:1.6;padding-bottom:40px;}
+h1,h2,h3,h4{font-family:'Lora', serif;}
+.container{max-width:960px;margin:0 auto;padding:0 16px;}
+
+.header{background:#003366;color:#ffffff;padding:24px 16px;text-align:center;}
+.header .institucion{font-size:0.85rem;letter-spacing:0.5px;text-transform:uppercase;opacity:0.92;margin-bottom:6px;}
+.header h1{font-size:1.6rem;font-weight:700;color:#ffffff;margin-bottom:4px;}
+.header .subtitulo{font-size:1rem;color:#cfe3ff;font-weight:500;}
+.header .meta{margin-top:10px;font-size:0.85rem;color:#ffffff;background:rgba(255,255,255,0.12);display:inline-block;padding:6px 14px;border-radius:20px;}
+
+.tabs-nav-wrapper{background:#87CEEB;overflow-x:auto;white-space:nowrap;border-bottom:3px solid #003366;}
+.tabs-nav{display:inline-flex;min-width:100%;}
+.tab-btn{background:#87CEEB;border:none;color:#0d1b2a;font-family:'Source Sans 3', sans-serif;font-weight:600;font-size:0.92rem;padding:14px 18px;cursor:pointer;border-right:1px solid rgba(0,51,102,0.15);transition:background 0.2s ease;flex-shrink:0;}
+.tab-btn:hover{background:#a4d9ef;}
+.tab-btn.active{background:#ffffff;color:#003366;font-weight:700;box-shadow:inset 0 -3px 0 #003366;}
+
+.tab-panel{display:none;background:#ffffff;padding:28px 20px;margin:18px auto;max-width:960px;border-radius:10px;box-shadow:0 2px 10px rgba(0,51,102,0.08);}
+.tab-panel.active{display:block;}
+.panel-title{color:#003366;font-size:1.4rem;margin-bottom:6px;border-bottom:3px solid #87CEEB;padding-bottom:10px;}
+.panel-subtitle{color:#4a4a4a;font-size:0.95rem;margin-bottom:20px;font-style:italic;}
+
+.acordeon-item{border:1px solid #cfe0ee;border-radius:8px;margin-bottom:12px;overflow:hidden;}
+.acordeon-header{background:#f0f6fc;color:#003366;padding:14px 16px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;}
+.acordeon-header .flecha{transition:transform 0.25s ease;}
+.acordeon-header.abierto .flecha{transform:rotate(90deg);}
+.acordeon-body{max-height:0;overflow:hidden;transition:max-height 0.3s ease;padding:0 16px;background:#ffffff;}
+.acordeon-body.abierto{max-height:1200px;padding:16px 16px 20px 16px;}
+
+.definicion-box{background:#f0f6fc;border-left:5px solid #003366;padding:16px 18px;border-radius:6px;margin:16px 0;}
+.definicion-box strong{color:#003366;}
+.ejemplo-box{background:#fff8ec;border-left:5px solid #d99a1b;padding:16px 18px;border-radius:6px;margin:16px 0;}
+.ejemplo-box .etiqueta{font-weight:700;color:#a86a00;text-transform:uppercase;font-size:0.8rem;letter-spacing:0.5px;margin-bottom:6px;display:block;}
+.conclusion-box{background:#003366;color:#ffffff;padding:16px 18px;border-radius:6px;margin:20px 0 6px 0;}
+.conclusion-box .etiqueta{font-weight:700;text-transform:uppercase;font-size:0.8rem;letter-spacing:0.5px;color:#87CEEB;display:block;margin-bottom:6px;}
+.carrera-box{background:#eaf7f0;border-left:5px solid #1e7a34;padding:16px 18px;border-radius:6px;margin:20px 0;}
+.carrera-box .etiqueta{font-weight:700;color:#1e7a34;text-transform:uppercase;font-size:0.8rem;letter-spacing:0.5px;margin-bottom:6px;display:block;}
+p{margin-bottom:12px;}
+ul{margin:0 0 12px 22px;}
+li{margin-bottom:6px;}
+
+.item-card{border:1px solid #d7e3ef;border-radius:8px;padding:16px;margin-bottom:16px;background:#fbfdff;}
+.item-card .pregunta-texto{font-weight:600;color:#1a1a1a;margin-bottom:12px;}
+.badge{display:inline-block;font-size:0.7rem;font-weight:700;padding:3px 10px;border-radius:12px;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.4px;}
+.badge-teorica{background:#dbeafe;color:#003366;}
+.badge-caso{background:#fde8cc;color:#a86a00;}
+.opciones label{display:block;padding:8px 10px;border:1px solid #dde7f0;border-radius:6px;margin-bottom:8px;cursor:pointer;transition:background 0.15s ease;}
+.opciones label:hover{background:#f0f6fc;}
+.opciones input{margin-right:8px;}
+.feedback{display:none;margin-top:10px;padding:10px 12px;border-radius:6px;font-size:0.92rem;}
+.feedback.correcto{background:#e3f7e8;color:#1e7a34;border-left:4px solid #1e7a34;}
+.feedback.incorrecto{background:#fdeaea;color:#a3262d;border-left:4px solid #a3262d;}
+.item-card.eval-correcto{border-color:#1e7a34;}
+.item-card.eval-incorrecto{border-color:#a3262d;}
+
+.btn{background:#003366;color:#ffffff;border:none;padding:12px 26px;border-radius:8px;font-weight:700;font-size:0.95rem;cursor:pointer;font-family:'Source Sans 3', sans-serif;transition:background 0.2s ease;}
+.btn:hover{background:#00509e;}
+.btn-secundario{background:#ffffff;color:#003366;border:2px solid #003366;}
+.btn-secundario:hover{background:#f0f6fc;}
+.botones-accion{margin-top:20px;display:flex;gap:12px;flex-wrap:wrap;}
+
+.alerta-incompleto{display:none;background:#fff3cd;color:#7a5c00;border-left:4px solid #d99a1b;padding:10px 14px;border-radius:6px;margin-bottom:16px;font-weight:600;}
+
+.resultado-box{display:none;text-align:center;background:#f0f6fc;border-radius:10px;padding:22px;margin-top:22px;}
+.resultado-box .emoji{font-size:2.6rem;}
+.resultado-box .calificacion{font-size:1.6rem;font-weight:700;color:#003366;margin:8px 0;}
+.barra-container{background:#dde7f0;border-radius:20px;height:20px;overflow:hidden;margin:14px auto;max-width:400px;}
+.barra-animada{height:100%;width:0%;background:linear-gradient(90deg,#003366,#0074d9);border-radius:20px;transition:width 1.2s ease;}
+
+.ia-prompt-box{background:#0d1b2a;color:#e8f1ff;padding:18px;border-radius:8px;font-family:'Source Sans 3', monospace;font-size:0.9rem;margin:16px 0;white-space:pre-wrap;line-height:1.7;}
+.reflexion-pregunta{background:#f0f6fc;border-left:5px solid #87CEEB;padding:14px 18px;border-radius:6px;margin-bottom:14px;font-weight:500;}
+.reflexion-intro{background:#eaf7f0;border-left:5px solid #1e7a34;padding:16px 18px;border-radius:6px;margin-bottom:20px;}
+.reflexion-intro strong{color:#1e7a34;}
+
+.biblio-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(260px,1fr));gap:16px;margin-top:16px;}
+.biblio-card{background:#f0f6fc;border-top:4px solid #003366;border-radius:8px;padding:16px;font-size:0.92rem;}
+.biblio-card .num{color:#87CEEB;font-family:'Lora', serif;font-weight:700;font-size:1.3rem;}
+.nota-pie{margin-top:18px;font-size:0.85rem;color:#5a5a5a;font-style:italic;border-top:1px solid #dde7f0;padding-top:12px;}
+
+@media(max-width:600px){
+  .header h1{font-size:1.25rem;}
+  .tab-btn{padding:12px 14px;font-size:0.85rem;}
+  .tab-panel{padding:18px 14px;}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="institucion">Universidad de Guayaquil &middot; Facultad de Ciencias Administrativas &middot; Negocios Internacionales</div>
+  <h1>Contabilidad General</h1>
+  <div class="subtitulo">Periodo Académico Extraordinario 2026</div>
+  <div class="meta">Semana 1 &middot; Día 2 &middot; Miércoles 12 de agosto de 2026 &middot; Unidad 1: Introducción a la Contabilidad</div>
+</div>
+
+<div class="tabs-nav-wrapper">
+  <div class="tabs-nav" id="tabsNav">
+    <button class="tab-btn active" data-tab="repaso" onclick="showTab('repaso')">Repaso</button>
+    <button class="tab-btn" data-tab="tema1" onclick="showTab('tema1')">Tema 1</button>
+    <button class="tab-btn" data-tab="tema2" onclick="showTab('tema2')">Tema 2</button>
+    <button class="tab-btn" data-tab="ejercicio" onclick="showTab('ejercicio')">Ejercicio Interactivo</button>
+    <button class="tab-btn" data-tab="cuestionario" onclick="showTab('cuestionario')">Cuestionario</button>
+    <button class="tab-btn" data-tab="ia" onclick="showTab('ia')">Actividad con IA</button>
+    <button class="tab-btn" data-tab="reflexion" onclick="showTab('reflexion')">Reflexión</button>
+    <button class="tab-btn" data-tab="biblio" onclick="showTab('biblio')">Bibliografía</button>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ===================== PESTAÑA: REPASO ===================== -->
+<div class="tab-panel active" id="panel-repaso">
+  <h2 class="panel-title">Repaso</h2>
+  <p class="panel-subtitle">Lo visto en la clase anterior</p>
+
+  <div class="acordeon-item">
+    <div class="acordeon-header" onclick="toggleAcordeon(this)">
+      <span>Día 1 &mdash; La contabilidad como sistema de información</span>
+      <span class="flecha">&#9654;</span>
+    </div>
+    <div class="acordeon-body">
+      <p>En la clase anterior definimos la <strong>contabilidad</strong> como la ciencia y técnica que identifica, registra, clasifica, resume e interpreta las transacciones económicas de una entidad, con el objetivo de producir información financiera confiable para la toma de decisiones. Vimos que ese objetivo no se limita a calcular impuestos, sino que sirve a distintos usuarios.</p>
+      <p>También introdujimos las <strong>NIIF (Normas Internacionales de Información Financiera)</strong> como el conjunto de reglas que uniforman el lenguaje contable a nivel mundial, emitidas por el IASB a través de la Fundación IFRS.</p>
+      <p>En la segunda parte de la clase clasificamos a las empresas según su <strong>naturaleza jurídica</strong> (unipersonal o societaria) y su <strong>actividad económica</strong> (comercial, industrial o de servicios). Identificamos también a los <strong>usuarios internos</strong> (gerentes, administradores) y <strong>usuarios externos</strong> (bancos, proveedores, SRI, Superintendencia de Compañías) de la información financiera, y repasamos los principales <strong>tipos de contabilidad</strong>: financiera, de costos, administrativa y tributaria.</p>
+      <p>Hoy vamos a profundizar en dos aspectos que sostienen todo ese sistema: primero, los <strong>principios éticos</strong> que debe seguir quien produce esa información y los <strong>organismos de control</strong> que la supervisan en Ecuador; y segundo, el <strong>Marco Conceptual de las NIIF</strong> y la <strong>NIC 1</strong>, que establecen las reglas técnicas para presentar los estados financieros.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PESTAÑA: TEMA 1 ===================== -->
+<div class="tab-panel" id="panel-tema1">
+  <h2 class="panel-title">Tema 1 &mdash; Principios Éticos de la Profesión y Organismos de Control</h2>
+  <p class="panel-subtitle">Por qué la confianza es la base de toda información financiera</p>
+
+  <h3>1. Principios éticos de la profesión contable</h3>
+  <p>Ayer aprendiste que el objetivo de la contabilidad es producir información <strong>confiable</strong> para que distintos usuarios tomen decisiones. Pero esa confiabilidad no aparece sola: depende de que la persona que elabora la información &mdash;el contador&mdash; actúe con principios éticos claros. Sin ética profesional, cualquier estado financiero, por muy bien calculado que esté matemáticamente, pierde su valor, porque nadie puede confiar en que refleja la realidad.</p>
+
+  <div class="definicion-box">
+    <strong>Definición &mdash; Ética profesional contable:</strong> conjunto de principios y valores que guían la conducta del contador en el ejercicio de su profesión, garantizando que la información financiera que produce sea honesta, imparcial y respete tanto a la empresa como a la sociedad y al Estado.
+  </div>
+
+  <p>A nivel internacional, los principios éticos que rigen la profesión contable se agrupan generalmente en cinco:</p>
+  <ul>
+    <li><strong>Integridad:</strong> actuar con honestidad y franqueza en todas las relaciones profesionales; no participar en el registro de información falsa o engañosa.</li>
+    <li><strong>Objetividad:</strong> no permitir que prejuicios, conflictos de interés o presiones de terceros influyan en los juicios profesionales del contador.</li>
+    <li><strong>Competencia y diligencia profesional:</strong> mantener el conocimiento y la habilidad técnica actualizados, y actuar con el cuidado necesario según las normas vigentes (por ejemplo, las NIIF que empezaste a estudiar ayer).</li>
+    <li><strong>Confidencialidad:</strong> no divulgar información financiera de la empresa a terceros sin autorización, salvo que exista una obligación legal o profesional de hacerlo.</li>
+    <li><strong>Comportamiento profesional:</strong> cumplir las leyes y normas aplicables, y evitar cualquier conducta que desacredite a la profesión contable.</li>
+  </ul>
+
+  <h3>2. Organismos de control</h3>
+  <p>Ahora bien, no basta con confiar en que cada contador actúe éticamente por voluntad propia: en Ecuador existen instituciones encargadas de <strong>supervisar, regular y sancionar</strong> el correcto manejo de la información financiera y tributaria de las empresas. A estas instituciones se les llama <strong>organismos de control</strong>.</p>
+
+  <div class="definicion-box">
+    <strong>Definición &mdash; Organismo de control:</strong> entidad pública que tiene la facultad legal de supervisar, regular y, cuando corresponde, sancionar a las empresas y profesionales en un ámbito específico, con el fin de proteger el interés público y garantizar el cumplimiento de la normativa vigente.
+  </div>
+
+  <p>En el contexto de esta asignatura, los dos organismos de control más relevantes en Ecuador son:</p>
+  <ul>
+    <li><strong>Servicio de Rentas Internas (SRI):</strong> entidad encargada de la administración tributaria del Ecuador; regula, recauda y controla el cumplimiento de las obligaciones fiscales de las empresas (Impuesto a la Renta, IVA, retenciones, entre otros), tema que profundizarás en la Unidad 2.</li>
+    <li><strong>Superintendencia de Compañías, Valores y Seguros:</strong> entidad que supervisa a las compañías (Cía. Ltda., S.A., entre otras) en cuanto a su constitución legal, su información financiera y el cumplimiento de las NIIF en la elaboración de sus estados financieros.</li>
+  </ul>
+
+  <p>A nivel internacional, quien "regula" técnicamente el contenido de las NIIF es el <strong>IASB</strong>, a través de la <strong>Fundación IFRS</strong>, que ya conociste ayer. La diferencia es clave: el IASB define <em>cómo</em> debe elaborarse la información financiera a nivel técnico y mundial, mientras que el SRI y la Superintendencia de Compañías supervisan que las empresas ecuatorianas <em>cumplan</em> con esas reglas dentro del país.</p>
+
+  <div class="ejemplo-box">
+    <span class="etiqueta">Ejemplo aplicado &mdash; Contexto ecuatoriano</span>
+    <p>Una compañía exportadora de cacao en Manabí presenta cada año sus estados financieros a la Superintendencia de Compañías, como exige la ley. Si un contador de esa empresa decidiera "maquillar" las cifras para mostrar más utilidad de la que realmente existe &mdash;por ejemplo, para conseguir un préstamo bancario más fácilmente&mdash; estaría violando el principio de integridad y objetividad, y la empresa podría enfrentar sanciones de la Superintendencia si esto se detecta en una auditoría o revisión. Además, si esas cifras alteradas también afectan el cálculo del Impuesto a la Renta, el SRI podría iniciar un proceso de control tributario independiente.</p>
+  </div>
+
+  <div class="conclusion-box">
+    <span class="etiqueta">Idea clave</span>
+    La confiabilidad de la información financiera depende de dos pilares que trabajan juntos: la ética del profesional que la elabora, y los organismos de control (SRI, Superintendencia de Compañías, y a nivel técnico internacional el IASB) que supervisan que esa información cumpla con la normativa vigente.
+  </div>
+
+  <div class="carrera-box">
+    <span class="etiqueta">Conexión con tu carrera</span>
+    <p>Recuerda: Negocios Internacionales no es solo "negociar" con otro país. Es poder gestionar comercio exterior, finanzas internacionales, marketing/negociación y marco legal entre empresas de distintos países. Los principios éticos y los organismos de control que viste hoy son precisamente parte de ese <strong>marco legal y normativo</strong>: cuando una empresa ecuatoriana negocia con un socio extranjero, ese socio necesita confiar en que la información financiera ecuatoriana cumple reglas éticas y de control equivalentes a las de su propio país. Sin esa confianza, no hay negocio internacional posible.</p>
+  </div>
+</div>
+
+<!-- ===================== PESTAÑA: TEMA 2 ===================== -->
+<div class="tab-panel" id="panel-tema2">
+  <h2 class="panel-title">Tema 2 &mdash; Marco Conceptual de las NIIF y NIC 1</h2>
+  <p class="panel-subtitle">Las reglas base que sostienen la elaboración de cualquier estado financiero</p>
+
+  <h3>1. Marco Conceptual de las NIIF</h3>
+  <p>Ayer conociste qué son las NIIF: el conjunto de normas emitidas por el IASB para uniformar el lenguaje contable mundial. Pero antes de aplicar cada norma específica (como la NIC 1 que verás a continuación, o la NIC 2 que estudiarás en la Unidad 3), el IASB estableció un documento base llamado <strong>Marco Conceptual</strong>, que funciona como los "cimientos" sobre los que se construyen todas las demás normas.</p>
+
+  <div class="definicion-box">
+    <strong>Definición &mdash; Marco Conceptual de las NIIF:</strong> documento emitido por el IASB que establece los conceptos fundamentales que sustentan la elaboración y presentación de los estados financieros, incluyendo el objetivo de la información financiera, sus características cualitativas, y la definición de los elementos que la componen (activos, pasivos, patrimonio, ingresos y gastos).
+  </div>
+
+  <p>El Marco Conceptual define <strong>características cualitativas</strong> que debe cumplir toda información financiera para ser útil. Se dividen en dos grupos:</p>
+  <ul>
+    <li><strong>Características fundamentales:</strong>
+      <ul>
+        <li><em>Relevancia:</em> la información debe ser capaz de influir en las decisiones de los usuarios.</li>
+        <li><em>Representación fiel:</em> la información debe reflejar la realidad económica de forma completa, neutral y libre de error significativo.</li>
+      </ul>
+    </li>
+    <li><strong>Características de mejora:</strong>
+      <ul>
+        <li><em>Comparabilidad:</em> permite comparar la información de una empresa a lo largo del tiempo, o frente a otras empresas.</li>
+        <li><em>Verificabilidad:</em> distintos observadores independientes podrían llegar a un consenso de que la información representa la realidad.</li>
+        <li><em>Oportunidad:</em> la información debe estar disponible a tiempo para influir en las decisiones.</li>
+        <li><em>Comprensibilidad:</em> la información debe presentarse de forma clara y concisa para que los usuarios puedan entenderla.</li>
+      </ul>
+    </li>
+  </ul>
+
+  <p>El Marco Conceptual también define los cinco <strong>elementos</strong> básicos de los estados financieros, que usarás durante todo el curso: <strong>activo</strong> (recurso controlado por la entidad que se espera genere beneficios económicos futuros), <strong>pasivo</strong> (obligación presente de la entidad que implica una salida futura de recursos), <strong>patrimonio</strong> (la parte residual de los activos una vez deducidos los pasivos), <strong>ingresos</strong> (incrementos en los beneficios económicos durante el periodo) y <strong>gastos</strong> (disminuciones en los beneficios económicos durante el periodo).</p>
+
+  <h3>2. NIC 1 &mdash; Presentación de estados financieros</h3>
+  <p>Mientras el Marco Conceptual da los cimientos generales, la <strong>NIC 1</strong> es la norma específica que establece <em>cómo</em> deben presentarse los estados financieros: qué componentes deben incluir, cómo deben estructurarse y qué principios generales deben respetar.</p>
+
+  <div class="definicion-box">
+    <strong>Definición &mdash; NIC 1:</strong> Norma Internacional de Contabilidad que establece las bases para la presentación de los estados financieros con propósito general, con el fin de asegurar que sean comparables tanto con los estados financieros de periodos anteriores de la misma entidad, como con los de otras entidades.
+  </div>
+
+  <p>Según la NIC 1, un juego completo de estados financieros incluye, entre otros: el <strong>Estado de Situación Financiera</strong> (que muestra activos, pasivos y patrimonio a una fecha determinada) y el <strong>Estado de Resultados</strong> (que muestra ingresos y gastos durante un periodo) &mdash;ambos los estudiarás con detalle en el Día 3&mdash;, además de notas explicativas que aclaran las cifras presentadas.</p>
+
+  <p>La NIC 1 también establece principios generales que debe respetar toda empresa al presentar sus estados financieros, entre ellos el de <strong>negocio en marcha</strong>: los estados financieros se elaboran asumiendo que la empresa continuará operando en el futuro previsible, salvo que exista evidencia de lo contrario.</p>
+
+  <div class="ejemplo-box">
+    <span class="etiqueta">Ejemplo aplicado &mdash; Contexto ecuatoriano</span>
+    <p>Una compañía de transporte de carga en Guayaquil elabora sus estados financieros al cierre de cada año. Gracias a que sigue la NIC 1, presenta su información en el mismo formato y con los mismos criterios que usó el año anterior (comparabilidad), lo cual le permite a un banco comparar fácilmente si la empresa mejoró o empeoró su situación financiera de un año a otro antes de aprobarle una línea de crédito para renovar su flota de camiones. Si la empresa cambiara de formato cada año sin justificación, esa comparación sería imposible y el banco tendría menos confianza para prestarle dinero.</p>
+  </div>
+
+  <div class="conclusion-box">
+    <span class="etiqueta">Idea clave</span>
+    El Marco Conceptual de las NIIF establece los cimientos (qué características debe tener la información y qué elementos la componen), mientras que la NIC 1 aplica esos cimientos definiendo cómo deben presentarse en concreto los estados financieros, garantizando que sean comparables en el tiempo y entre empresas.
+  </div>
+
+  <div class="carrera-box">
+    <span class="etiqueta">Conexión con tu carrera</span>
+    <p>El Marco Conceptual y la NIC 1 son, en el fondo, un "idioma común" para las finanzas internacionales: cuando una empresa ecuatoriana busca inversión extranjera o crédito de un banco internacional, presentar sus estados financieros bajo estas mismas reglas es lo que permite que un inversionista en otro país pueda leerlos y compararlos con empresas de su propio mercado. Sin este marco compartido, cada país "hablaría" su propio idioma contable y las finanzas internacionales, tal como las estudiarás más adelante en la carrera, serían mucho más difíciles de ejecutar.</p>
+  </div>
+</div>
+
+<!-- ===================== PESTAÑA: EJERCICIO INTERACTIVO ===================== -->
+<div class="tab-panel" id="panel-ejercicio">
+  <h2 class="panel-title">Ejercicio Interactivo</h2>
+  <p class="panel-subtitle">Verdadero o Falso &mdash; Responde los 8 ítems y luego presiona "Verificar respuestas"</p>
+
+  <div class="alerta-incompleto" id="alertaEjercicio">⚠️ Debes responder todos los ítems antes de verificar.</div>
+
+  <form id="formEjercicio">
+    <div class="item-card" id="card-ei1">
+      <p class="pregunta-texto">1. La integridad, como principio ético contable, implica actuar con honestidad y no participar en el registro de información falsa o engañosa.</p>
+      <div class="opciones"><label><input type="radio" name="ei1" value="V"> Verdadero</label><label><input type="radio" name="ei1" value="F"> Falso</label></div>
+      <div class="feedback" id="fb-ei1"></div>
+    </div>
+    <div class="item-card" id="card-ei2">
+      <p class="pregunta-texto">2. La confidencialidad permite que el contador divulgue libremente la información financiera de una empresa a cualquier persona interesada.</p>
+      <div class="opciones"><label><input type="radio" name="ei2" value="V"> Verdadero</label><label><input type="radio" name="ei2" value="F"> Falso</label></div>
+      <div class="feedback" id="fb-ei2"></div>
+    </div>
+    <div class="item-card" id="card-ei3">
+      <p class="pregunta-texto">3. El Servicio de Rentas Internas (SRI) es el organismo encargado de la administración tributaria del Ecuador.</p>
+      <div class="opciones"><label><input type="radio" name="ei3" value="V"> Verdadero</label><label><input type="radio" name="ei3" value="F"> Falso</label></div>
+      <div class="feedback" id="fb-ei3"></div>
+    </div>
+    <div class="item-card" id="card-ei4">
+      <p class="pregunta-texto">4. La Superintendencia de Compañías, Valores y Seguros supervisa la constitución legal y la información financiera de las compañías en Ecuador.</p>
+      <div class="opciones"><label><input type="radio" name="ei4" value="V"> Verdadero</label><label><input type="radio" name="ei4" value="F"> Falso</label></div>
+      <div class="feedback" id="fb-ei4"></div>
+    </div>
+    <div class="item-card" id="card-ei5">
+      <p class="pregunta-texto">5. El Marco Conceptual de las NIIF define, entre otros elementos, qué es un activo, un pasivo y el patrimonio.</p>
+      <div class="opciones"><label><input type="radio" name="ei5" value="V"> Verdadero</label><label><input type="radio" name="ei5" value="F"> Falso</label></div>
+      <div class="feedback" id="fb-ei5"></div>
+    </div>
+    <div class="item-card" id="card-ei6">
+      <p class="pregunta-texto">6. La representación fiel y la relevancia son ejemplos de características cualitativas de mejora, no fundamentales, según el Marco Conceptual.</p>
+      <div class="opciones"><label><input type="radio" name="ei6" value="V"> Verdadero</label><label><input type="radio" name="ei6" value="F"> Falso</label></div>
+      <div class="feedback" id="fb-ei6"></div>
+    </div>
+    <div class="item-card" id="card-ei7">
+      <p class="pregunta-texto">7. La NIC 1 establece las bases para la presentación de los estados financieros, buscando que sean comparables entre periodos y entre entidades.</p>
+      <div class="opciones"><label><input type="radio" name="ei7" value="V"> Verdadero</label><label><input type="radio" name="ei7" value="F"> Falso</label></div>
+      <div class="feedback" id="fb-ei7"></div>
+    </div>
+    <div class="item-card" id="card-ei8">
+      <p class="pregunta-texto">8. El principio de negocio en marcha asume que la empresa dejará de operar en el corto plazo, salvo que exista evidencia de lo contrario.</p>
+      <div class="opciones"><label><input type="radio" name="ei8" value="V"> Verdadero</label><label><input type="radio" name="ei8" value="F"> Falso</label></div>
+      <div class="feedback" id="fb-ei8"></div>
+    </div>
+
+    <div class="botones-accion">
+      <button type="button" class="btn" onclick="verificarEjercicio()">Verificar respuestas</button>
+      <button type="button" class="btn btn-secundario" onclick="reiniciarEjercicio()">Reiniciar</button>
+    </div>
+  </form>
+
+  <div class="resultado-box" id="resultadoEjercicio">
+    <div class="emoji" id="emojiEjercicio"></div>
+    <div class="calificacion" id="calificacionEjercicio"></div>
+    <div class="barra-container"><div class="barra-animada" id="barraEjercicio"></div></div>
+  </div>
+</div>
+
+<!-- ===================== PESTAÑA: CUESTIONARIO ===================== -->
+<div class="tab-panel" id="panel-cuestionario">
+  <h2 class="panel-title">Cuestionario</h2>
+  <p class="panel-subtitle">10 preguntas de opción múltiple: 7 teóricas + 3 de análisis de caso &mdash; responde todas y luego presiona "Verificar respuestas"</p>
+
+  <div class="alerta-incompleto" id="alertaCuestionario">⚠️ Debes responder todas las preguntas antes de verificar.</div>
+
+  <form id="formCuestionario">
+    <div class="item-card" id="card-qi1">
+      <span class="badge badge-teorica">Teórica</span>
+      <p class="pregunta-texto">1. El principio ético que exige que el contador no permita que prejuicios o presiones de terceros influyan en sus juicios profesionales es:</p>
+      <div class="opciones">
+        <label><input type="radio" name="qi1" value="a"> a) Confidencialidad</label>
+        <label><input type="radio" name="qi1" value="b"> b) Objetividad</label>
+        <label><input type="radio" name="qi1" value="c"> c) Comportamiento profesional</label>
+        <label><input type="radio" name="qi1" value="d"> d) Competencia técnica</label>
+      </div>
+      <div class="feedback" id="fb-qi1"></div>
+    </div>
+
+    <div class="item-card" id="card-qi2">
+      <span class="badge badge-teorica">Teórica</span>
+      <p class="pregunta-texto">2. En Ecuador, el organismo encargado de la administración tributaria es:</p>
+      <div class="opciones">
+        <label><input type="radio" name="qi2" value="a"> a) La Superintendencia de Compañías</label>
+        <label><input type="radio" name="qi2" value="b"> b) El Servicio de Rentas Internas (SRI)</label>
+        <label><input type="radio" name="qi2" value="c"> c) El IASB</label>
+        <label><input type="radio" name="qi2" value="d"> d) El Ministerio del Trabajo</label>
+      </div>
+      <div class="feedback" id="fb-qi2"></div>
+    </div>
+
+    <div class="item-card" id="card-qi3">
+      <span class="badge badge-teorica">Teórica</span>
+      <p class="pregunta-texto">3. La Superintendencia de Compañías, Valores y Seguros supervisa principalmente:</p>
+      <div class="opciones">
+        <label><input type="radio" name="qi3" value="a"> a) El pago de sueldos de los empleados</label>
+        <label><input type="radio" name="qi3" value="b"> b) La constitución legal e información financiera de las compañías</label>
+        <label><input type="radio" name="qi3" value="c"> c) Los tratados de comercio exterior</label>
+        <label><input type="radio" name="qi3" value="d"> d) El tipo de cambio internacional</label>
+      </div>
+      <div class="feedback" id="fb-qi3"></div>
+    </div>
+
+    <div class="item-card" id="card-qi4">
+      <span class="badge badge-teorica">Teórica</span>
+      <p class="pregunta-texto">4. Según el Marco Conceptual de las NIIF, el patrimonio se define como:</p>
+      <div class="opciones">
+        <label><input type="radio" name="qi4" value="a"> a) Una obligación presente de la entidad</label>
+        <label><input type="radio" name="qi4" value="b"> b) Un recurso controlado por la entidad</label>
+        <label><input type="radio" name="qi4" value="c"> c) La parte residual de los activos una vez deducidos los pasivos</label>
+        <label><input type="radio" name="qi4" value="d"> d) Un incremento en los beneficios económicos del periodo</label>
+      </div>
+      <div class="feedback" id="fb-qi4"></div>
+    </div>
+
+    <div class="item-card" id="card-qi5">
+      <span class="badge badge-teorica">Teórica</span>
+      <p class="pregunta-texto">5. La característica cualitativa que permite comparar la información de una empresa a lo largo del tiempo o frente a otras empresas es:</p>
+      <div class="opciones">
+        <label><input type="radio" name="qi5" value="a"> a) Comparabilidad</label>
+        <label><input type="radio" name="qi5" value="b"> b) Confidencialidad</label>
+        <label><input type="radio" name="qi5" value="c"> c) Objetividad</label>
+        <label><input type="radio" name="qi5" value="d"> d) Integridad</label>
+      </div>
+      <div class="feedback" id="fb-qi5"></div>
+    </div>
+
+    <div class="item-card" id="card-qi6">
+      <span class="badge badge-teorica">Teórica</span>
+      <p class="pregunta-texto">6. La NIC 1 establece principalmente:</p>
+      <div class="opciones">
+        <label><input type="radio" name="qi6" value="a"> a) El porcentaje de retención en la fuente</label>
+        <label><input type="radio" name="qi6" value="b"> b) Las bases para la presentación de los estados financieros</label>
+        <label><input type="radio" name="qi6" value="c"> c) Los métodos de valuación de inventarios</label>
+        <label><input type="radio" name="qi6" value="d"> d) El cálculo del Impuesto a la Renta</label>
+      </div>
+      <div class="feedback" id="fb-qi6"></div>
+    </div>
+
+    <div class="item-card" id="card-qi7">
+      <span class="badge badge-teorica">Teórica</span>
+      <p class="pregunta-texto">7. El principio de "negocio en marcha" asume que:</p>
+      <div class="opciones">
+        <label><input type="radio" name="qi7" value="a"> a) La empresa dejará de operar en el corto plazo</label>
+        <label><input type="radio" name="qi7" value="b"> b) La empresa continuará operando en el futuro previsible, salvo evidencia contraria</label>
+        <label><input type="radio" name="qi7" value="c"> c) La empresa debe cambiar de auditor cada año</label>
+        <label><input type="radio" name="qi7" value="d"> d) La empresa no necesita presentar estados financieros</label>
+      </div>
+      <div class="feedback" id="fb-qi7"></div>
+    </div>
+
+    <div class="item-card" id="card-qi8">
+      <span class="badge badge-caso">Análisis de caso</span>
+      <p class="pregunta-texto">8. Un contador de una empresa exportadora decide registrar ventas ficticias para mostrar mayores ingresos y así obtener un préstamo bancario más fácilmente. ¿Qué principio ético está violando principalmente?</p>
+      <div class="opciones">
+        <label><input type="radio" name="qi8" value="a"> a) Confidencialidad</label>
+        <label><input type="radio" name="qi8" value="b"> b) Integridad</label>
+        <label><input type="radio" name="qi8" value="c"> c) Competencia técnica</label>
+        <label><input type="radio" name="qi8" value="d"> d) Comparabilidad</label>
+      </div>
+      <div class="feedback" id="fb-qi8"></div>
+    </div>
+
+    <div class="item-card" id="card-qi9">
+      <span class="badge badge-caso">Análisis de caso</span>
+      <p class="pregunta-texto">9. Una compañía ecuatoriana cambia cada año, sin justificación, el formato en que presenta sus estados financieros, dificultando que un banco compare su evolución. ¿Qué principio de la NIC 1 está incumpliendo?</p>
+      <div class="opciones">
+        <label><input type="radio" name="qi9" value="a"> a) Confidencialidad</label>
+        <label><input type="radio" name="qi9" value="b"> b) Comparabilidad</label>
+        <label><input type="radio" name="qi9" value="c"> c) Objetividad</label>
+        <label><input type="radio" name="qi9" value="d"> d) Retención en la fuente</label>
+      </div>
+      <div class="feedback" id="fb-qi9"></div>
+    </div>
+
+    <div class="item-card" id="card-qi10">
+      <span class="badge badge-caso">Análisis de caso</span>
+      <p class="pregunta-texto">10. Una empresa de manufactura textil en Ecuador es auditada y se detecta que sus estados financieros no cumplen con las NIIF. ¿Qué organismo de control ecuatoriano tiene la facultad de supervisar y, de corresponder, sancionar esta situación?</p>
+      <div class="opciones">
+        <label><input type="radio" name="qi10" value="a"> a) El Ministerio del Trabajo</label>
+        <label><input type="radio" name="qi10" value="b"> b) La Superintendencia de Compañías, Valores y Seguros</label>
+        <label><input type="radio" name="qi10" value="c"> c) El IASB directamente</label>
+        <label><input type="radio" name="qi10" value="d"> d) Ningún organismo, es una decisión interna de la empresa</label>
+      </div>
+      <div class="feedback" id="fb-qi10"></div>
+    </div>
+
+    <div class="botones-accion">
+      <button type="button" class="btn" onclick="verificarCuestionario()">Verificar respuestas</button>
+      <button type="button" class="btn btn-secundario" onclick="reiniciarCuestionario()">Reiniciar</button>
+    </div>
+  </form>
+
+  <div class="resultado-box" id="resultadoCuestionario">
+    <div class="emoji" id="emojiCuestionario"></div>
+    <div class="calificacion" id="calificacionCuestionario"></div>
+    <div class="barra-container"><div class="barra-animada" id="barraCuestionario"></div></div>
+  </div>
+</div>
+
+<!-- ===================== PESTAÑA: ACTIVIDAD CON IA ===================== -->
+<div class="tab-panel" id="panel-ia">
+  <h2 class="panel-title">Actividad con IA</h2>
+  <p class="panel-subtitle">Actividad ejecutable gratis con Claude (claude.ai)</p>
+
+  <p>Ingresa a <strong>claude.ai</strong> (puedes usar la versión gratuita) y copia exactamente el siguiente prompt en el chat:</p>
+
+  <div class="ia-prompt-box">Actúa como un consultor en ética empresarial y regulación contable. Plantéame un caso hipotético de una empresa ecuatoriana que exporta un producto (tú elige cuál) y que se ve tentada a alterar su información financiera para conseguir una ventaja de corto plazo (un préstamo, atraer un inversionista extranjero, o pagar menos impuestos). Explícame qué principio ético de los que aprendí hoy (integridad, objetividad, competencia, confidencialidad o comportamiento profesional) estaría violando, y qué consecuencias reales podría tener frente al SRI, la Superintendencia de Compañías, o sus socios internacionales.</div>
+
+  <p><strong>Qué hacer con la respuesta:</strong></p>
+  <ul>
+    <li>Identifica si Claude vinculó correctamente el caso con uno de los cinco principios éticos vistos hoy, y no con otro concepto distinto.</li>
+    <li>Verifica si las consecuencias mencionadas frente al SRI y la Superintendencia de Compañías son realistas y específicas, y no genéricas.</li>
+    <li>Escribe, en tus propias palabras, un párrafo de 5 a 7 líneas explicando si el caso planteado por Claude podría ocurrir en una empresa real que conozcas (aunque sea de nombre) y qué habrías hecho tú en el lugar del contador.</li>
+  </ul>
+
+  <div class="definicion-box">
+    <strong>Criterio para distinguir pensamiento crítico de copia simple:</strong> copiar y pegar la respuesta de Claude sin análisis propio es copia simple. Pensamiento crítico es cuando tú evalúas si el principio ético identificado es realmente el correcto, si las consecuencias mencionadas tienen sentido en el contexto ecuatoriano, y si puedes explicar con tus propias palabras por qué la ética y el control institucional son inseparables de la confianza en los negocios internacionales.
+  </div>
+</div>
+
+<!-- ===================== PESTAÑA: REFLEXIÓN ===================== -->
+<div class="tab-panel" id="panel-reflexion">
+  <h2 class="panel-title">Reflexión</h2>
+  <p class="panel-subtitle">Preguntas abiertas &mdash; no tienen una respuesta correcta o incorrecta</p>
+
+  <div class="reflexion-intro">
+    <strong>Antes de responder, recuerda:</strong> Negocios Internacionales no es solo "negociar" con otro país. Es poder gestionar comercio exterior, finanzas internacionales, marketing/negociación y marco legal entre empresas de distintos países. Hoy trabajaste con ética profesional y organismos de control, que son la base del marco legal y de la confianza en cualquier negociación internacional. Las siguientes preguntas te ayudarán a conectar esto con tu propia vida y con tu futuro profesional.
+  </div>
+
+  <div class="reflexion-pregunta">1. Piensa en un objeto que tengas contigo ahora mismo y que no se haya fabricado en Ecuador. Sin buscarlo en internet, imagina cuántas empresas de distintos países tuvieron que "confiar" unas en otras &mdash;con información financiera de por medio&mdash; para que ese objeto llegara hasta ti. ¿Qué pasaría con esa cadena si una sola empresa en el camino actuara sin ética o sin control alguno?</div>
+
+  <div class="reflexion-pregunta">2. ¿Recuerdas alguna situación de tu vida (personal, familiar o académica) en la que confiaste en la palabra de alguien y esa confianza se rompió porque la información que te dieron no era honesta? ¿Qué sentiste, y qué relación encuentras entre esa experiencia y la importancia de la integridad en la profesión contable?</div>
+
+  <div class="reflexion-pregunta">3. De los cinco principios éticos vistos hoy (integridad, objetividad, competencia, confidencialidad, comportamiento profesional), ¿cuál sientes que es el que más practicas ya en tu vida diaria, y cuál te cuesta más? ¿Por qué crees que es así?</div>
+
+  <div class="reflexion-pregunta">4. Piensa en las cuatro grandes áreas de Negocios Internacionales: comercio exterior, finanzas internacionales, marketing/negociación internacional, y marco legal y normativo. Con lo que has visto hasta ahora en estos dos primeros días de clase, ¿en cuál de estas áreas te ves trabajando en el futuro? Explica con tus propias palabras por qué esa área te llama la atención más que las otras.</div>
+</div>
+
+<!-- ===================== PESTAÑA: BIBLIOGRAFÍA ===================== -->
+<div class="tab-panel" id="panel-biblio">
+  <h2 class="panel-title">Bibliografía</h2>
+  <p class="panel-subtitle">Referencias en formato APA 7.ª edición</p>
+
+  <div class="biblio-grid">
+    <div class="biblio-card"><span class="num">1</span><p>Zapata Sánchez, P. (2011). <em>Laboratorio de contabilidad general</em> (7.ª ed.). McGraw-Hill.</p></div>
+    <div class="biblio-card"><span class="num">2</span><p>Vite Rangel, V. T. (s.f.). <em>Contabilidad general</em>. Editorial digital UNID. https://elibro.net/es/ereader/uguayaquil/41179</p></div>
+    <div class="biblio-card"><span class="num">3</span><p>Moreno Fernández, J. A. (s.f.). <em>Contabilidad básica</em> (4.ª ed.). Grupo Editorial Patria. https://elibro.net/es/ereader/uguayaquil/39416</p></div>
+    <div class="biblio-card"><span class="num">4</span><p>IFRS Foundation. (s.f.). <em>Marco Conceptual para la Información Financiera</em>. IFRS Foundation. https://www.ifrs.org</p></div>
+    <div class="biblio-card"><span class="num">5</span><p>IFRS Foundation. (s.f.). <em>NIC 1: Presentación de estados financieros</em>. IFRS Foundation. https://www.ifrs.org</p></div>
+    <div class="biblio-card"><span class="num">6</span><p>Servicio de Rentas Internas del Ecuador. (s.f.). <em>Portal institucional</em>. https://www.sri.gob.ec</p></div>
+    <div class="biblio-card"><span class="num">7</span><p>Superintendencia de Compañías, Valores y Seguros del Ecuador. (s.f.). <em>Portal institucional</em>. https://www.supercias.gob.ec</p></div>
+  </div>
+
+  <p class="nota-pie">Nota: se recomienda verificar y complementar estas referencias en Google Scholar (scholar.google.com) o en el repositorio institucional de la Universidad de Guayaquil.</p>
+</div>
+
+</div><!-- fin .container -->
+
+<script>
+/* ===================== NAVEGACIÓN DE PESTAÑAS ===================== */
+function showTab(id){
+  document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+  document.getElementById('panel-' + id).classList.add('active');
+  document.querySelector('.tab-btn[data-tab="' + id + '"]').classList.add('active');
+}
+
+/* ===================== ACORDEÓN REPASO ===================== */
+function toggleAcordeon(header){
+  header.classList.toggle('abierto');
+  var body = header.nextElementSibling;
+  body.classList.toggle('abierto');
+}
+
+/* ===================== EJERCICIO INTERACTIVO ===================== */
+var respuestasEjercicio = {
+  ei1: { correcta: "V", exp: "Correcto: la integridad exige honestidad y prohíbe registrar información falsa o engañosa." },
+  ei2: { correcta: "F", exp: "Es falso: la confidencialidad exige justamente NO divulgar información financiera de la empresa sin autorización, salvo obligación legal." },
+  ei3: { correcta: "V", exp: "Correcto: el SRI es el organismo encargado de la administración tributaria en Ecuador." },
+  ei4: { correcta: "V", exp: "Correcto: la Superintendencia de Compañías supervisa la constitución legal y la información financiera de las compañías." },
+  ei5: { correcta: "V", exp: "Correcto: el Marco Conceptual define activo, pasivo, patrimonio, ingresos y gastos como sus cinco elementos base." },
+  ei6: { correcta: "F", exp: "Es falso: relevancia y representación fiel son características cualitativas fundamentales, no de mejora. Las de mejora son comparabilidad, verificabilidad, oportunidad y comprensibilidad." },
+  ei7: { correcta: "V", exp: "Correcto: ese es precisamente el propósito de la NIC 1, asegurar comparabilidad entre periodos y entre entidades." },
+  ei8: { correcta: "F", exp: "Es falso: el principio de negocio en marcha asume que la empresa CONTINUARÁ operando en el futuro previsible, salvo evidencia de lo contrario." }
+};
+
+function verificarEjercicio(){
+  var form = document.getElementById('formEjercicio');
+  var claves = Object.keys(respuestasEjercicio);
+  var incompleto = false;
+  claves.forEach(function(k){
+    var marcado = form.querySelector('input[name="' + k + '"]:checked');
+    if(!marcado) incompleto = true;
+  });
+
+  var alerta = document.getElementById('alertaEjercicio');
+  if(incompleto){
+    alerta.style.display = 'block';
+    return;
+  }
+  alerta.style.display = 'none';
+
+  var correctas = 0;
+  claves.forEach(function(k){
+    var marcado = form.querySelector('input[name="' + k + '"]:checked').value;
+    var card = document.getElementById('card-' + k);
+    var fb = document.getElementById('fb-' + k);
+    var esCorrecta = (marcado === respuestasEjercicio[k].correcta);
+    if(esCorrecta) correctas++;
+    card.classList.remove('eval-correcto','eval-incorrecto');
+    card.classList.add(esCorrecta ? 'eval-correcto' : 'eval-incorrecto');
+    fb.classList.remove('correcto','incorrecto');
+    fb.classList.add(esCorrecta ? 'correcto' : 'incorrecto');
+    fb.style.display = 'block';
+    fb.textContent = (esCorrecta ? '✔ ' : '✘ ') + respuestasEjercicio[k].exp;
+  });
+
+  var total = claves.length;
+  var porcentaje = Math.round((correctas / total) * 100);
+  mostrarResultado('resultadoEjercicio', 'emojiEjercicio', 'calificacionEjercicio', 'barraEjercicio', correctas, total, porcentaje);
+}
+
+function reiniciarEjercicio(){
+  document.getElementById('formEjercicio').reset();
+  Object.keys(respuestasEjercicio).forEach(function(k){
+    var card = document.getElementById('card-' + k);
+    var fb = document.getElementById('fb-' + k);
+    card.classList.remove('eval-correcto','eval-incorrecto');
+    fb.style.display = 'none';
+  });
+  document.getElementById('alertaEjercicio').style.display = 'none';
+  document.getElementById('resultadoEjercicio').style.display = 'none';
+  document.getElementById('barraEjercicio').style.width = '0%';
+}
+
+/* ===================== CUESTIONARIO ===================== */
+var respuestasCuestionario = {
+  qi1: { correcta: "b", exp: "Correcto: la objetividad exige que ni prejuicios ni presiones de terceros influyan en el juicio profesional." },
+  qi2: { correcta: "b", exp: "Correcto: el SRI es el organismo encargado de la administración tributaria en Ecuador." },
+  qi3: { correcta: "b", exp: "Correcto: la Superintendencia de Compañías supervisa la constitución legal e información financiera de las compañías." },
+  qi4: { correcta: "c", exp: "Correcto: el patrimonio es la parte residual de los activos una vez deducidos los pasivos." },
+  qi5: { correcta: "a", exp: "Correcto: la comparabilidad permite comparar la información en el tiempo o entre empresas." },
+  qi6: { correcta: "b", exp: "Correcto: la NIC 1 establece las bases para la presentación de los estados financieros." },
+  qi7: { correcta: "b", exp: "Correcto: el negocio en marcha asume que la empresa seguirá operando en el futuro previsible, salvo evidencia contraria." },
+  qi8: { correcta: "b", exp: "Correcto: registrar ventas ficticias para obtener un beneficio es una violación directa al principio de integridad." },
+  qi9: { correcta: "b", exp: "Correcto: cambiar el formato de presentación sin justificación rompe la comparabilidad exigida por la NIC 1." },
+  qi10: { correcta: "b", exp: "Correcto: la Superintendencia de Compañías, Valores y Seguros es quien supervisa el cumplimiento de las NIIF por parte de las compañías en Ecuador." }
+};
+
+function verificarCuestionario(){
+  var form = document.getElementById('formCuestionario');
+  var claves = Object.keys(respuestasCuestionario);
+  var incompleto = false;
+  claves.forEach(function(k){
+    var marcado = form.querySelector('input[name="' + k + '"]:checked');
+    if(!marcado) incompleto = true;
+  });
+
+  var alerta = document.getElementById('alertaCuestionario');
+  if(incompleto){
+    alerta.style.display = 'block';
+    return;
+  }
+  alerta.style.display = 'none';
+
+  var correctas = 0;
+  claves.forEach(function(k){
+    var marcado = form.querySelector('input[name="' + k + '"]:checked').value;
+    var card = document.getElementById('card-' + k);
+    var fb = document.getElementById('fb-' + k);
+    var esCorrecta = (marcado === respuestasCuestionario[k].correcta);
+    if(esCorrecta) correctas++;
+    card.classList.remove('eval-correcto','eval-incorrecto');
+    card.classList.add(esCorrecta ? 'eval-correcto' : 'eval-incorrecto');
+    fb.classList.remove('correcto','incorrecto');
+    fb.classList.add(esCorrecta ? 'correcto' : 'incorrecto');
+    fb.style.display = 'block';
+    fb.textContent = (esCorrecta ? '✔ ' : '✘ ') + respuestasCuestionario[k].exp;
+  });
+
+  var total = claves.length;
+  var nota10 = (correctas / total) * 10;
+  var porcentaje = Math.round((correctas / total) * 100);
+
+  var emoji = '📖';
+  if(porcentaje === 100) emoji = '🏆';
+  else if(porcentaje >= 80) emoji = '🎯';
+  else if(porcentaje >= 60) emoji = '📘';
+  else if(porcentaje >= 40) emoji = '⚠️';
+
+  document.getElementById('emojiCuestionario').textContent = emoji;
+  document.getElementById('calificacionCuestionario').textContent =
+    'Calificación: ' + nota10.toFixed(1) + '/10 (' + porcentaje + '%)';
+  document.getElementById('resultadoCuestionario').style.display = 'block';
+
+  var barra = document.getElementById('barraCuestionario');
+  barra.style.width = '0%';
+  setTimeout(function(){ barra.style.width = porcentaje + '%'; }, 60);
+}
+
+function reiniciarCuestionario(){
+  document.getElementById('formCuestionario').reset();
+  Object.keys(respuestasCuestionario).forEach(function(k){
+    var card = document.getElementById('card-' + k);
+    var fb = document.getElementById('fb-' + k);
+    card.classList.remove('eval-correcto','eval-incorrecto');
+    fb.style.display = 'none';
+  });
+  document.getElementById('alertaCuestionario').style.display = 'none';
+  document.getElementById('resultadoCuestionario').style.display = 'none';
+  document.getElementById('barraCuestionario').style.width = '0%';
+}
+
+/* ===================== FUNCIÓN COMPARTIDA DE RESULTADO (EJERCICIO) ===================== */
+function mostrarResultado(idBox, idEmoji, idCalif, idBarra, correctas, total, porcentaje){
+  var emoji = '📖';
+  if(porcentaje === 100) emoji = '🏆';
+  else if(porcentaje >= 80) emoji = '🎯';
+  else if(porcentaje >= 60) emoji = '📘';
+  else if(porcentaje >= 40) emoji = '⚠️';
+
+  document.getElementById(idEmoji).textContent = emoji;
+  document.getElementById(idCalif).textContent =
+    'Resultado: ' + correctas + '/' + total + ' correctas (' + porcentaje + '%)';
+  document.getElementById(idBox).style.display = 'block';
+
+  var barra = document.getElementById(idBarra);
+  barra.style.width = '0%';
+  setTimeout(function(){ barra.style.width = porcentaje + '%'; }, 60);
+}
+</script>
+</body>
+</html>

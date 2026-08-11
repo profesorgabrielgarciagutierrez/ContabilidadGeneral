@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contabilidad General - Semana 1, Día 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ===== 1. RESET Y BASE ===== */
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-family:'Source Sans 3', sans-serif;
+  background:#eef3f8;
+  color:#1a1a1a;
+  line-height:1.6;
+  padding-bottom:40px;
+}
+h1,h2,h3,h4{font-family:'Lora', serif;}
+.container{max-width:960px;margin:0 auto;padding:0 16px;}
+
+/* ===== 2. ENCABEZADO ===== */
+.header{
+  background:#003366;
+  color:#ffffff;
+  padding:24px 16px;
+  text-align:center;
+}
+.header .institucion{
+  font-size:0.85rem;
+  letter-spacing:0.5px;
+  text-transform:uppercase;
+  opacity:0.92;
+  margin-bottom:6px;
+}
+.header h1{
+  font-size:1.6rem;
+  font-weight:700;
+  color:#ffffff;
+  margin-bottom:4px;
+}
+.header .subtitulo{
+  font-size:1rem;
+  color:#cfe3ff;
+  font-weight:500;
+}
+.header .meta{
+  margin-top:10px;
+  font-size:0.85rem;
+  color:#ffffff;
+  background:rgba(255,255,255,0.12);
+  display:inline-block;
+  padding:6px 14px;
+  border-radius:20px;
+}
+
+/* ===== 3. MENÚ DE PESTAÑAS ===== */
+.tabs-nav-wrapper{
+  background:#87CEEB;
+  overflow-x:auto;
+  white-space:nowrap;
+  border-bottom:3px solid #003366;
+}
+.tabs-nav{
+  display:inline-flex;
+  min-width:100%;
+}
+.tab-btn{
+  background:#87CEEB;
+  border:none;
+  color:#0d1b2a;
+  font-family:'Source Sans 3', sans-serif;
+  font-weight:600;
+  font-size:0.92rem;
+  padding:14px 18px;
+  cursor:pointer;
+  border-right:1px solid rgba(0,51,102,0.15);
+  transition:background 0.2s ease;
+  flex-shrink:0;
+}
+.tab-btn:hover{background:#a4d9ef;}
+.tab-btn.active{
+  background:#ffffff;
+  color:#003366;
+  font-weight:700;
+  box-shadow:inset 0 -3px 0 #003366;
+}
+
+/* ===== 4. PANELES DE CONTENIDO ===== */
+.tab-panel{
+  display:none;
+  background:#ffffff;
+  padding:28px 20px;
+  margin:18px auto;
+  max-width:960px;
+  border-radius:10px;
+  box-shadow:0 2px 10px rgba(0,51,102,0.08);
+}
+.tab-panel.active{display:block;}
+
+.panel-title{
+  color:#003366;
+  font-size:1.4rem;
+  margin-bottom:6px;
+  border-bottom:3px solid #87CEEB;
+  padding-bottom:10px;
+}
+.panel-subtitle{
+  color:#4a4a4a;
+  font-size:0.95rem;
+  margin-bottom:20px;
+  font-style:italic;
+}
+
+/* ===== 5. REPASO (ACORDEÓN) ===== */
+.acordeon-item{
+  border:1px solid #cfe0ee;
+  border-radius:8px;
+  margin-bottom:12px;
+  overflow:hidden;
+}
+.acordeon-header{
+  background:#f0f6fc;
+  color:#003366;
+  padding:14px 16px;
+  font-weight:600;
+  cursor:pointer;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.acordeon-header .flecha{transition:transform 0.25s ease;}
+.acordeon-header.abierto .flecha{transform:rotate(90deg);}
+.acordeon-body{
+  max-height:0;
+  overflow:hidden;
+  transition:max-height 0.3s ease;
+  padding:0 16px;
+  background:#ffffff;
+}
+.acordeon-body.abierto{
+  max-height:1200px;
+  padding:16px 16px 20px 16px;
+}
+
+/* ===== 6. BLOQUES DE TEMA ===== */
+.definicion-box{
+  background:#f0f6fc;
+  border-left:5px solid #003366;
+  padding:16px 18px;
+  border-radius:6px;
+  margin:16px 0;
+}
+.definicion-box strong{color:#003366;}
+.ejemplo-box{
+  background:#fff8ec;
+  border-left:5px solid #d99a1b;
+  padding:16px 18px;
+  border-radius:6px;
+  margin:16px 0;
+}
+.ejemplo-box .etiqueta{
+  font-weight:700;
+  color:#a86a00;
+  text-transform:uppercase;
+  font-size:0.8rem;
+  letter-spacing:0.5px;
+  margin-bottom:6px;
+  display:block;
+}
+.conclusion-box{
+  background:#003366;
+  color:#ffffff;
+  padding:16px 18px;
+  border-radius:6px;
+  margin:20px 0 6px 0;
+}
+.conclusion-box .etiqueta{
+  font-weight:700;
+  text-transform:uppercase;
+  font-size:0.8rem;
+  letter-spacing:0.5px;
+  color:#87CEEB;
+  display:block;
+  margin-bottom:6px;
+}
+p{margin-bottom:12px;}
+ul{margin:0 0 12px 22px;}
+li{margin-bottom:6px;}
+
+/* ===== 7. EJERCICIO / CUESTIONARIO ===== */
+.item-card{
+  border:1px solid #d7e3ef;
+  border-radius:8px;
+  padding:16px;
+  margin-bottom:16px;
+  background:#fbfdff;
+}
+.item-card .pregunta-texto{
+  font-weight:600;
+  color:#1a1a1a;
+  margin-bottom:12px;
+}
+.badge{
+  display:inline-block;
+  font-size:0.7rem;
+  font-weight:700;
+  padding:3px 10px;
+  border-radius:12px;
+  margin-bottom:8px;
+  text-transform:uppercase;
+  letter-spacing:0.4px;
+}
+.badge-teorica{background:#dbeafe;color:#003366;}
+.badge-caso{background:#fde8cc;color:#a86a00;}
+.opciones label{
+  display:block;
+  padding:8px 10px;
+  border:1px solid #dde7f0;
+  border-radius:6px;
+  margin-bottom:8px;
+  cursor:pointer;
+  transition:background 0.15s ease;
+}
+.opciones label:hover{background:#f0f6fc;}
+.opciones input{margin-right:8px;}
+.feedback{
+  display:none;
+  margin-top:10px;
+  padding:10px 12px;
+  border-radius:6px;
+  font-size:0.92rem;
+}
+.feedback.correcto{background:#e3f7e8;color:#1e7a34;border-left:4px solid #1e7a34;}
+.feedback.incorrecto{background:#fdeaea;color:#a3262d;border-left:4px solid #a3262d;}
+.item-card.eval-correcto{border-color:#1e7a34;}
+.item-card.eval-incorrecto{border-color:#a3262d;}
+
+.btn{
+  background:#003366;
+  color:#ffffff;
+  border:none;
+  padding:12px 26px;
+  border-radius:8px;
+  font-weight:700;
+  font-size:0.95rem;
+  cursor:pointer;
+  font-family:'Source Sans 3', sans-serif;
+  transition:background 0.2s ease;
+}
+.btn:hover{background:#00509e;}
+.btn-secundario{
+  background:#ffffff;
+  color:#003366;
+  border:2px solid #003366;
+}
+.btn-secundario:hover{background:#f0f6fc;}
+.botones-accion{margin-top:20px;display:flex;gap:12px;flex-wrap:wrap;}
+
+.alerta-incompleto{
+  display:none;
+  background:#fff3cd;
+  color:#7a5c00;
+  border-left:4px solid #d99a1b;
+  padding:10px 14px;
+  border-radius:6px;
+  margin-bottom:16px;
+  font-weight:600;
+}
+
+.resultado-box{
+  display:none;
+  text-align:center;
+  background:#f0f6fc;
+  border-radius:10px;
+  padding:22px;
+  margin-top:22px;
+}
+.resultado-box .emoji{font-size:2.6rem;}
+.resultado-box .calificacion{
+  font-size:1.6rem;
+  font-weight:700;
+  color:#003366;
+  margin:8px 0;
+}
+.barra-container{
+  background:#dde7f0;
+  border-radius:20px;
+  height:20px;
+  overflow:hidden;
+  margin:14px auto;
+  max-width:400px;
+}
+.barra-animada{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#003366,#0074d9);
+  border-radius:20px;
+  transition:width 1.2s ease;
+}
+
+/* ===== 8. ACTIVIDAD IA / REFLEXIÓN ===== */
+.ia-prompt-box{
+  background:#0d1b2a;
+  color:#e8f1ff;
+  padding:18px;
+  border-radius:8px;
+  font-family:'Source Sans 3', monospace;
+  font-size:0.9rem;
+  margin:16px 0;
+  white-space:pre-wrap;
+  line-height:1.7;
+}
+.reflexion-pregunta{
+  background:#f0f6fc;
+  border-left:5px solid #87CEEB;
+  padding:14px 18px;
+  border-radius:6px;
+  margin-bottom:14px;
+  font-weight:500;
+}
+
+/* ===== 9. BIBLIOGRAFÍA ===== */
+.biblio-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(260px,1fr));
+  gap:16px;
+  margin-top:16px;
+}
+.biblio-card{
+  background:#f0f6fc;
+  border-top:4px solid #003366;
+  border-radius:8px;
+  padding:16px;
+  font-size:0.92rem;
+}
+.biblio-card .num{
+  color:#87CEEB;
+  font-family:'Lora', serif;
+  font-weight:700;
+  font-size:1.3rem;
+}
+.nota-pie{
+  margin-top:18px;
+  font-size:0.85rem;
+  color:#5a5a5a;
+  font-style:italic;
+  border-top:1px solid #dde7f0;
+  padding-top:12px;
+}
+
+@media(max-width:600px){
+  .header h1{font-size:1.25rem;}
+  .tab-btn{padding:12px 14px;font-size:0.85rem;}
+  .tab-panel{padding:18px 14px;}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="institucion">Universidad de Guayaquil &middot; Facultad de Ciencias Administrativas &middot; Negocios Internacionales</div>
+  <h1>Contabilidad General</h1>
+  <div class="subtitulo">Periodo Académico Extraordinario 2026</div>
+  <div class="meta">Semana 1 &middot; Día 1 &middot; Martes 11 de agosto de 2026 &middot; Unidad 1: Introducción a la Contabilidad</div>
+</div>
+
+<div class="tabs-nav-wrapper">
+  <div class="tabs-nav" id="tabsNav">
+    <button class="tab-btn active" data-tab="repaso" onclick="showTab('repaso')">Repaso</button>
+    <button class="tab-btn" data-tab="tema1" onclick="showTab('tema1')">Tema 1</button>
+    <button class="tab-btn" data-tab="tema2" onclick="showTab('tema2')">Tema 2</button>
+    <button class="tab-btn" data-tab="ejercicio" onclick="showTab('ejercicio')">Ejercicio Interactivo</button>
+    <button class="tab-btn" data-tab="cuestionario" onclick="showTab('cuestionario')">Cuestionario</button>
+    <button class="tab-btn" data-tab="ia" onclick="showTab('ia')">Actividad con IA</button>
+    <button class="tab-btn" data-tab="reflexion" onclick="showTab('reflexion')">Reflexión</button>
+    <button class="tab-btn" data-tab="biblio" onclick="showTab('biblio')">Bibliografía</button>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ===================== PESTAÑA: REPASO ===================== -->
+<div class="tab-panel active" id="panel-repaso">
+  <h2 class="panel-title">Repaso</h2>
+  <p class="panel-subtitle">Contenido de clases anteriores</p>
+
+  <div class="acordeon-item">
+    <div class="acordeon-header" onclick="toggleAcordeon(this)">
+      <span>Bienvenida al curso &mdash; Día 1, Semana 1</span>
+      <span class="flecha">&#9654;</span>
+    </div>
+    <div class="acordeon-body">
+      <p>Este es el <strong>primer día de clases</strong> del Periodo Académico Extraordinario 2026 de la asignatura Contabilidad General, correspondiente al primer semestre de la carrera de Negocios Internacionales. Por tratarse de la clase inaugural, todavía no existe contenido previo que repasar.</p>
+      <p>A partir del Día 2 encontrarás en esta pestaña, en formato de acordeón, un resumen de lo aprendido en la sesión anterior antes de avanzar hacia nuevos temas. Esto te permitirá construir tu aprendizaje de manera acumulativa, tal como lo exige el estudio autónomo de esta modalidad virtual.</p>
+      <p>Por ahora, te invitamos a abrir la mente con una pregunta inicial: <em>¿alguna vez has necesitado saber con exactitud cuánto dinero entra y sale de tu bolsillo, de un emprendimiento familiar o de un negocio que conoces?</em> Esa necesidad de orden y control es, en esencia, el punto de partida de la contabilidad que estudiarás hoy.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PESTAÑA: TEMA 1 ===================== -->
+<div class="tab-panel" id="panel-tema1">
+  <h2 class="panel-title">Tema 1 &mdash; La Contabilidad como Sistema de Información</h2>
+  <p class="panel-subtitle">Definiciones básicas, objetivo de la contabilidad y principios básicos de las NIIF</p>
+
+  <h3>1. La contabilidad como sistema de información</h3>
+  <p>Antes de definir la contabilidad, es necesario entender qué es un <strong>sistema de información</strong>: es un conjunto ordenado de elementos (entradas, procesos y salidas) que trabajan juntos para capturar datos, procesarlos y entregar información útil para quien la necesita. Bajo esta idea, la contabilidad no es simplemente "anotar números"; es un sistema completo que recibe como entrada las transacciones económicas de una entidad (compras, ventas, pagos, cobros, préstamos, etc.), las procesa mediante técnicas específicas (registro, clasificación, resumen) y entrega como salida información financiera lista para la toma de decisiones.</p>
+
+  <div class="definicion-box">
+    <strong>Definición &mdash; Contabilidad:</strong> es la ciencia y técnica que permite identificar, medir, registrar, clasificar, resumir, interpretar y comunicar de manera sistemática y cronológica las operaciones económicas y financieras que realiza una entidad (empresa, negocio o persona), con el fin de producir información útil, confiable y comparable para la toma de decisiones de sus distintos usuarios.
+  </div>
+
+  <p>Nota que la definición contiene varias palabras clave que conviene aclarar de inmediato, porque las usarás en toda la asignatura:</p>
+  <ul>
+    <li><strong>Transacción económica:</strong> todo hecho que modifica el patrimonio de una entidad y puede expresarse en dinero (por ejemplo, comprar mercadería, pagar un sueldo, vender un producto).</li>
+    <li><strong>Registrar:</strong> dejar constancia escrita (física o digital) de una transacción en un documento o sistema contable.</li>
+    <li><strong>Clasificar:</strong> agrupar las transacciones según su naturaleza (por ejemplo, todo lo relacionado con "Bancos" en un grupo, todo lo relacionado con "Ventas" en otro).</li>
+    <li><strong>Resumir:</strong> condensar la información clasificada en reportes breves y comprensibles, como los estados financieros.</li>
+  </ul>
+
+  <h3>2. Definiciones básicas y objetivo de la contabilidad</h3>
+  <p>El <strong>objetivo principal de la contabilidad</strong> no es, como muchas personas creen, calcular únicamente los impuestos que debe pagar una empresa. Ese es solo uno de sus muchos usos. El verdadero objetivo es <strong>generar información financiera confiable, oportuna y comprensible</strong> para que distintos usuarios &mdash;que estudiarás en el Tema 2&mdash; puedan tomar decisiones acertadas: un gerente decide si conviene abrir una nueva sucursal, un banco decide si otorga un crédito, un inversionista decide si compra acciones de la empresa, y el propio dueño decide si el negocio es rentable o no.</p>
+
+  <div class="definicion-box">
+    <strong>Objetivo de la contabilidad:</strong> producir información financiera razonable y oportuna, expresada principalmente en los Estados Financieros, que sirva de base objetiva para la toma de decisiones económicas de los distintos usuarios internos y externos de una entidad.
+  </div>
+
+  <h3>3. Principios básicos de las normas contables (introducción a las NIIF)</h3>
+  <p>Para que la información contable sea útil y, sobre todo, <strong>comparable entre empresas y países</strong>, no puede elaborarse de cualquier manera: debe seguir reglas comunes. Estas reglas se conocen como <strong>Normas Internacionales de Información Financiera (NIIF)</strong>, en inglés <em>International Financial Reporting Standards (IFRS)</em>.</p>
+
+  <div class="definicion-box">
+    <strong>Definición &mdash; NIIF:</strong> conjunto de normas contables emitidas por el <em>International Accounting Standards Board</em> (IASB), a través de la Fundación IFRS, que establecen los criterios técnicos para el reconocimiento, medición, presentación y revelación de las transacciones económicas en los estados financieros, con el propósito de lograr un lenguaje contable único y comparable a nivel mundial.
+  </div>
+
+  <p>En Ecuador, la aplicación de las NIIF es <strong>obligatoria</strong> para las compañías reguladas por la Superintendencia de Compañías, Valores y Seguros, y constituye el marco técnico bajo el cual desarrollarás todos los ejercicios de este curso. Recuerda: cada vez que en el sílabo veas la sigla "NIIF" o "NIC" (Norma Internacional de Contabilidad, el nombre que recibían las normas antes de 2001 y que muchas siguen conservando), se está haciendo referencia a este mismo marco normativo internacional.</p>
+
+  <div class="ejemplo-box">
+    <span class="etiqueta">Ejemplo aplicado &mdash; Contexto ecuatoriano</span>
+    <p>Imagina una pequeña distribuidora de electrodomésticos en Guayaquil. Si su dueño solo anota en un cuaderno "vendí 3 licuadoras" sin fecha, sin precio exacto y sin ningún orden, esa anotación no es información contable útil: no permite saber cuánto ganó, cuánto debe pagar de impuestos, ni si el negocio crece o decrece mes a mes. En cambio, si la misma distribuidora aplica un sistema contable bajo NIIF, cada venta se registra con fecha, valor, forma de pago e impuestos correspondientes (IVA), y al final del mes puede generar un <em>Estado de Resultados</em> confiable. Ese reporte le permitirá, por ejemplo, decidir si conviene importar más electrodomésticos para el siguiente trimestre o si debe reducir sus gastos operativos.</p>
+  </div>
+
+  <div class="conclusion-box">
+    <span class="etiqueta">Idea clave</span>
+    La contabilidad es mucho más que "anotar números": es un sistema de información completo cuyo objetivo es producir datos financieros confiables para la toma de decisiones, y que se rige por reglas comunes (las NIIF) para que esa información sea comparable en cualquier parte del mundo.
+  </div>
+</div>
+
+<!-- ===================== PESTAÑA: TEMA 2 ===================== -->
+<div class="tab-panel" id="panel-tema2">
+  <h2 class="panel-title">Tema 2 &mdash; Clasificación de las Empresas, Usuarios de la Información y Tipos de Contabilidad</h2>
+  <p class="panel-subtitle">Cómo se clasifican las empresas, quién usa la información financiera y qué ramas tiene la contabilidad</p>
+
+  <h3>1. Clasificación de las empresas</h3>
+  <p>Antes de estudiar la contabilidad de un negocio, es indispensable saber <strong>qué tipo de empresa es</strong>, porque de ello depende, entre otras cosas, qué cuentas contables utilizará y cómo se registran sus operaciones. Las empresas se pueden clasificar bajo distintos criterios; en este curso trabajarás principalmente con dos:</p>
+
+  <div class="definicion-box">
+    <strong>Según su naturaleza jurídica:</strong>
+    <ul>
+      <li><strong>Empresa unipersonal:</strong> pertenece a una sola persona natural, quien responde con su propio patrimonio por las deudas del negocio.</li>
+      <li><strong>Sociedad o compañía:</strong> pertenece a dos o más personas (naturales o jurídicas) que aportan capital y comparten utilidades y riesgos; en Ecuador, las más comunes son la Compañía Limitada (Cía. Ltda.) y la Sociedad Anónima (S.A.).</li>
+    </ul>
+  </div>
+
+  <div class="definicion-box">
+    <strong>Según su actividad económica:</strong>
+    <ul>
+      <li><strong>Empresa comercial:</strong> compra bienes ya elaborados y los vende sin transformarlos (ejemplo: un supermercado).</li>
+      <li><strong>Empresa industrial (o de manufactura):</strong> transforma materia prima en un producto terminado distinto (ejemplo: una fábrica textil que convierte algodón en camisetas).</li>
+      <li><strong>Empresa de servicios:</strong> no vende bienes tangibles, sino que presta un servicio (ejemplo: una consultora, una clínica, una compañía de transporte).</li>
+    </ul>
+  </div>
+
+  <p>Esta clasificación será clave a lo largo del curso: en la Unidad 2 practicarás con una empresa de servicios y en la Unidad 3 con una empresa comercial, precisamente porque cada tipo de empresa exige un tratamiento contable ligeramente distinto (por ejemplo, solo las empresas comerciales e industriales manejan inventarios de mercadería, tema que estudiarás en la Unidad 3 con la NIC 2).</p>
+
+  <h3>2. Usuarios de la información administrativa y financiera</h3>
+  <p>Ya sabes que el objetivo de la contabilidad es generar información útil para la toma de decisiones. Pero, ¿quién toma esas decisiones? A estas personas o entidades se les llama <strong>usuarios de la información financiera</strong>, y se dividen en dos grandes grupos:</p>
+
+  <div class="definicion-box">
+    <strong>Usuarios internos:</strong> forman parte de la propia empresa y usan la información para la gestión diaria del negocio. Incluyen a los gerentes, administradores, jefes de área y, en general, al personal directivo que toma decisiones operativas y estratégicas.
+    <br><br>
+    <strong>Usuarios externos:</strong> no forman parte de la empresa, pero se relacionan con ella y necesitan su información financiera para tomar decisiones propias. Incluyen a inversionistas, bancos y entidades de crédito, proveedores, clientes, el Servicio de Rentas Internas (SRI) como organismo de control tributario, y la Superintendencia de Compañías, Valores y Seguros.
+  </div>
+
+  <div class="ejemplo-box">
+    <span class="etiqueta">Ejemplo aplicado &mdash; Contexto ecuatoriano</span>
+    <p>Piensa en una empresa exportadora de banano en la provincia de El Oro. Su gerente general (usuario interno) revisa mensualmente los reportes de costos de producción para decidir si conviene aumentar la superficie sembrada. Al mismo tiempo, un banco ecuatoriano (usuario externo) le solicita sus estados financieros de los últimos dos años antes de aprobarle un préstamo para comprar nueva maquinaria, y el SRI (también usuario externo) revisa la información para verificar el correcto pago del Impuesto a la Renta. Los tres necesitan la misma información contable, pero cada uno la usa con un propósito distinto.</p>
+  </div>
+
+  <h3>3. Tipos de contabilidad</h3>
+  <p>Así como existen distintos tipos de empresa, la contabilidad se organiza en distintas ramas según el objetivo específico de la información que produce. En este primer módulo conocerás sus nombres; en semestres posteriores profundizarás en cada una como asignaturas independientes:</p>
+  <ul>
+    <li><strong>Contabilidad financiera:</strong> registra y resume las operaciones generales de la empresa para producir los estados financieros básicos (Estado de Situación Financiera y Estado de Resultados), orientados principalmente a usuarios externos. Es la base de todo este curso.</li>
+    <li><strong>Contabilidad de costos:</strong> se enfoca en el registro, análisis y control de los costos de producción de una empresa industrial o de manufactura (materia prima, mano de obra y costos indirectos de fabricación).</li>
+    <li><strong>Contabilidad administrativa o gerencial:</strong> genera información interna, no necesariamente bajo NIIF, orientada a la planificación y control por parte de la gerencia.</li>
+    <li><strong>Contabilidad tributaria o fiscal:</strong> se enfoca en el cumplimiento de las obligaciones ante el SRI, tema que profundizarás en la Unidad 2 de este curso.</li>
+  </ul>
+
+  <div class="conclusion-box">
+    <span class="etiqueta">Idea clave</span>
+    Toda empresa se puede clasificar por su naturaleza jurídica (unipersonal o societaria) y por su actividad económica (comercial, industrial o de servicios); esa clasificación determina qué usuarios internos y externos necesitan su información, y qué rama de la contabilidad (financiera, de costos, administrativa o tributaria) resulta más relevante en cada caso.
+  </div>
+</div>
+
+<!-- ===================== PESTAÑA: EJERCICIO INTERACTIVO ===================== -->
+<div class="tab-panel" id="panel-ejercicio">
+  <h2 class="panel-title">Ejercicio Interactivo</h2>
+  <p class="panel-subtitle">Verdadero o Falso &mdash; Responde los 8 ítems y luego presiona "Verificar respuestas"</p>
+
+  <div class="alerta-incompleto" id="alertaEjercicio">⚠️ Debes responder todos los ítems antes de verificar.</div>
+
+  <form id="formEjercicio">
+    <div class="item-card" id="card-ei1">
+      <p class="pregunta-texto">1. La contabilidad es un sistema de información que permite registrar, clasificar y resumir las transacciones económicas de una entidad.</p>
+      <div class="opciones">
+        <label><input type="radio" name="ei1" value="V"> Verdadero</label>
+        <label><input type="radio" name="ei1" value="F"> Falso</label>
+      </div>
+      <div class="feedback" id="fb-ei1"></div>
+    </div>
+
+    <div class="item-card" id="card-ei2">
+      <p class="pregunta-texto">2. El objetivo principal de la contabilidad es únicamente calcular el valor de los impuestos que debe pagar una empresa.</p>
+      <div class="opciones">
+        <label><input type="radio" name="ei2" value="V"> Verdadero</label>
+        <label><input type="radio" name="ei2" value="F"> Falso</label>
+      </div>
+      <div class="feedback" id="fb-ei2"></div>
+    </div>
+
+    <div class="item-card" id="card-ei3">
+      <p class="pregunta-texto">3. Las Normas Internacionales de Información Financiera (NIIF) buscan uniformar el lenguaje contable a nivel mundial.</p>
+      <div class="opciones">
+        <label><input type="radio" name="ei3" value="V"> Verdadero</label>
+        <label><input type="radio" name="ei3" value="F"> Falso</label>
+      </div>
+      <div class="feedback" id="fb-ei3"></div>
+    </div>
+
+    <div class="item-card" id="card-ei4">
+      <p class="pregunta-texto">4. Una empresa unipersonal y una sociedad anónima se clasifican de la misma manera según su naturaleza jurídica.</p>
+      <div class="opciones">
+        <label><input type="radio" name="ei4" value="V"> Verdadero</label>
+        <label><input type="radio" name="ei4" value="F"> Falso</label>
+      </div>
+      <div class="feedback" id="fb-ei4"></div>
+    </div>
+
+    <div class="item-card" id="card-ei5">
+      <p class="pregunta-texto">5. Los usuarios internos de la información financiera incluyen a los gerentes y administradores de la empresa.</p>
+      <div class="opciones">
+        <label><input type="radio" name="ei5" value="V"> Verdadero</label>
+        <label><input type="radio" name="ei5" value="F"> Falso</label>
+      </div>
+      <div class="feedback" id="fb-ei5"></div>
+    </div>
+
+    <div class="item-card" id="card-ei6">
+      <p class="pregunta-texto">6. Los usuarios externos de la información financiera nunca incluyen al Servicio de Rentas Internas (SRI).</p>
+      <div class="opciones">
+        <label><input type="radio" name="ei6" value="V"> Verdadero</label>
+        <label><input type="radio" name="ei6" value="F"> Falso</label>
+      </div>
+      <div class="feedback" id="fb-ei6"></div>
+    </div>
+
+    <div class="item-card" id="card-ei7">
+      <p class="pregunta-texto">7. La contabilidad de costos se enfoca en el registro y análisis de los costos de producción de una empresa industrial.</p>
+      <div class="opciones">
+        <label><input type="radio" name="ei7" value="V"> Verdadero</label>
+        <label><input type="radio" name="ei7" value="F"> Falso</label>
+      </div>
+      <div class="feedback" id="fb-ei7"></div>
+    </div>
+
+    <div class="item-card" id="card-ei8">
+      <p class="pregunta-texto">8. Según su actividad económica, todas las empresas se clasifican únicamente en comerciales, sin distinguir entre industriales o de servicios.</p>
+      <div class="opciones">
+        <label><input type="radio" name="ei8" value="V"> Verdadero</label>
+        <label><input type="radio" name="ei8" value="F"> Falso</label>
+      </div>
+      <div class="feedback" id="fb-ei8"></div>
+    </div>
+
+    <div class="botones-accion">
+      <button type="button" class="btn" onclick="verificarEjercicio()">Verificar respuestas</button>
+      <button type="button" class="btn btn-secundario" onclick="reiniciarEjercicio()">Reiniciar</button>
+    </div>
+  </form>
+
+  <div class="resultado-box" id="resultadoEjercicio">
+    <div class="emoji" id="emojiEjercicio"></div>
+    <div class="calificacion" id="calificacionEjercicio"></div>
+    <div class="barra-container"><div class="barra-animada" id="barraEjercicio"></div></div>
+  </div>
+</div>
+
+<!-- ===================== PESTAÑA: CUESTIONARIO ===================== -->
+<div class="tab-panel" id="panel-cuestionario">
+  <h2 class="panel-title">Cuestionario</h2>
+  <p class="panel-subtitle">10 preguntas de opción múltiple: 7 teóricas + 3 de análisis de caso &mdash; responde todas y luego presiona "Verificar respuestas"</p>
+
+  <div class="alerta-incompleto" id="alertaCuestionario">⚠️ Debes responder todas las preguntas antes de verificar.</div>
+
+  <form id="formCuestionario">
+    <div class="item-card" id="card-qi1">
+      <span class="badge badge-teorica">Teórica</span>
+      <p class="pregunta-texto">1. ¿Cuál es la definición más precisa de contabilidad como sistema de información?</p>
+      <div class="opciones">
+        <label><input type="radio" name="qi1" value="a"> a) Un método exclusivo para calcular impuestos</label>
+        <label><input type="radio" name="qi1" value="b"> b) Un sistema que identifica, registra, clasifica y comunica información económica-financiera para la toma de decisiones</label>
+        <label><input type="radio" name="qi1" value="c"> c) Un listado de facturas de compra y venta</label>
+        <label><input type="radio" name="qi1" value="d"> d) Un programa informático de facturación electrónica</label>
+      </div>
+      <div class="feedback" id="fb-qi1"></div>
+    </div>
+
+    <div class="item-card" id="card-qi2">
+      <span class="badge badge-teorica">Teórica</span>
+      <p class="pregunta-texto">2. El objetivo principal de la contabilidad es:</p>
+      <div class="opciones">
+        <label><input type="radio" name="qi2" value="a"> a) Cumplir únicamente con el SRI</label>
+        <label><input type="radio" name="qi2" value="b"> b) Generar información financiera confiable y oportuna para la toma de decisiones</label>
+        <label><input type="radio" name="qi2" value="c"> c) Sustituir la auditoría externa</label>
+        <label><input type="radio" name="qi2" value="d"> d) Elaborar el organigrama de la empresa</label>
+      </div>
+      <div class="feedback" id="fb-qi2"></div>
+    </div>
+
+    <div class="item-card" id="card-qi3">
+      <span class="badge badge-teorica">Teórica</span>
+      <p class="pregunta-texto">3. Las NIIF son emitidas por:</p>
+      <div class="opciones">
+        <label><input type="radio" name="qi3" value="a"> a) El Servicio de Rentas Internas (SRI)</label>
+        <label><input type="radio" name="qi3" value="b"> b) La Superintendencia de Compañías</label>
+        <label><input type="radio" name="qi3" value="c"> c) El IASB, a través de la Fundación IFRS</label>
+        <label><input type="radio" name="qi3" value="d"> d) El Ministerio del Trabajo</label>
+      </div>
+      <div class="feedback" id="fb-qi3"></div>
+    </div>
+
+    <div class="item-card" id="card-qi4">
+      <span class="badge badge-teorica">Teórica</span>
+      <p class="pregunta-texto">4. Según su naturaleza jurídica, una empresa puede clasificarse como:</p>
+      <div class="opciones">
+        <label><input type="radio" name="qi4" value="a"> a) Unipersonal o societaria</label>
+        <label><input type="radio" name="qi4" value="b"> b) Grande o pequeña únicamente</label>
+        <label><input type="radio" name="qi4" value="c"> c) Pública únicamente</label>
+        <label><input type="radio" name="qi4" value="d"> d) Rentable o no rentable</label>
+      </div>
+      <div class="feedback" id="fb-qi4"></div>
+    </div>
+
+    <div class="item-card" id="card-qi5">
+      <span class="badge badge-teorica">Teórica</span>
+      <p class="pregunta-texto">5. Según su actividad económica, una empresa que transforma materia prima en productos terminados se clasifica como:</p>
+      <div class="opciones">
+        <label><input type="radio" name="qi5" value="a"> a) Comercial</label>
+        <label><input type="radio" name="qi5" value="b"> b) De servicios</label>
+        <label><input type="radio" name="qi5" value="c"> c) Industrial</label>
+        <label><input type="radio" name="qi5" value="d"> d) Financiera</label>
+      </div>
+      <div class="feedback" id="fb-qi5"></div>
+    </div>
+
+    <div class="item-card" id="card-qi6">
+      <span class="badge badge-teorica">Teórica</span>
+      <p class="pregunta-texto">6. Un usuario interno de la información financiera es:</p>
+      <div class="opciones">
+        <label><input type="radio" name="qi6" value="a"> a) El SRI</label>
+        <label><input type="radio" name="qi6" value="b"> b) Un proveedor</label>
+        <label><input type="radio" name="qi6" value="c"> c) El gerente general de la empresa</label>
+        <label><input type="radio" name="qi6" value="d"> d) Un banco acreedor</label>
+      </div>
+      <div class="feedback" id="fb-qi6"></div>
+    </div>
+
+    <div class="item-card" id="card-qi7">
+      <span class="badge badge-teorica">Teórica</span>
+      <p class="pregunta-texto">7. La contabilidad de costos se distingue de la contabilidad financiera porque:</p>
+      <div class="opciones">
+        <label><input type="radio" name="qi7" value="a"> a) Solo se usa en empresas de servicios</label>
+        <label><input type="radio" name="qi7" value="b"> b) Se enfoca en el análisis y control de los costos de producción</label>
+        <label><input type="radio" name="qi7" value="c"> c) No requiere el uso de asientos contables</label>
+        <label><input type="radio" name="qi7" value="d"> d) Se rige por normas distintas a las NIIF en todos los casos</label>
+      </div>
+      <div class="feedback" id="fb-qi7"></div>
+    </div>
+
+    <div class="item-card" id="card-qi8">
+      <span class="badge badge-caso">Análisis de caso</span>
+      <p class="pregunta-texto">8. Una pequeña empresa familiar en Guayaquil vende ropa importada al por menor y no lleva ningún registro contable, solo anota ventas en un cuaderno. ¿Cuál es el principal riesgo de esta práctica?</p>
+      <div class="opciones">
+        <label><input type="radio" name="qi8" value="a"> a) Ninguno, es suficiente para una empresa pequeña</label>
+        <label><input type="radio" name="qi8" value="b"> b) Puede perder información confiable para tomar decisiones y cumplir obligaciones tributarias</label>
+        <label><input type="radio" name="qi8" value="c"> c) Solo afecta la imagen de la empresa, no sus finanzas</label>
+        <label><input type="radio" name="qi8" value="d"> d) El SRI no puede solicitar dicha información</label>
+      </div>
+      <div class="feedback" id="fb-qi8"></div>
+    </div>
+
+    <div class="item-card" id="card-qi9">
+      <span class="badge badge-caso">Análisis de caso</span>
+      <p class="pregunta-texto">9. Un inversionista extranjero evalúa comprar acciones de una compañía ecuatoriana y solicita sus estados financieros bajo NIIF. ¿Por qué es relevante que estén bajo NIIF?</p>
+      <div class="opciones">
+        <label><input type="radio" name="qi9" value="a"> a) Porque son obligatorias solo para empresas públicas</label>
+        <label><input type="radio" name="qi9" value="b"> b) Porque garantizan comparabilidad y transparencia internacional de la información financiera</label>
+        <label><input type="radio" name="qi9" value="c"> c) Porque reducen el pago de impuestos</label>
+        <label><input type="radio" name="qi9" value="d"> d) Porque sustituyen la necesidad de auditoría</label>
+      </div>
+      <div class="feedback" id="fb-qi9"></div>
+    </div>
+
+    <div class="item-card" id="card-qi10">
+      <span class="badge badge-caso">Análisis de caso</span>
+      <p class="pregunta-texto">10. Una fábrica de calzado en Ecuador compra cuero, lo transforma en zapatos y los vende a distribuidores. Un banco quiere otorgarle un crédito. ¿Qué tipo de usuario de la información financiera es el banco?</p>
+      <div class="opciones">
+        <label><input type="radio" name="qi10" value="a"> a) Usuario interno</label>
+        <label><input type="radio" name="qi10" value="b"> b) Usuario externo</label>
+        <label><input type="radio" name="qi10" value="c"> c) No es usuario de la información financiera</label>
+        <label><input type="radio" name="qi10" value="d"> d) Es parte de la gerencia</label>
+      </div>
+      <div class="feedback" id="fb-qi10"></div>
+    </div>
+
+    <div class="botones-accion">
+      <button type="button" class="btn" onclick="verificarCuestionario()">Verificar respuestas</button>
+      <button type="button" class="btn btn-secundario" onclick="reiniciarCuestionario()">Reiniciar</button>
+    </div>
+  </form>
+
+  <div class="resultado-box" id="resultadoCuestionario">
+    <div class="emoji" id="emojiCuestionario"></div>
+    <div class="calificacion" id="calificacionCuestionario"></div>
+    <div class="barra-container"><div class="barra-animada" id="barraCuestionario"></div></div>
+  </div>
+</div>
+
+<!-- ===================== PESTAÑA: ACTIVIDAD CON IA ===================== -->
+<div class="tab-panel" id="panel-ia">
+  <h2 class="panel-title">Actividad con IA</h2>
+  <p class="panel-subtitle">Actividad ejecutable gratis con Claude (claude.ai)</p>
+
+  <p>Ingresa a <strong>claude.ai</strong> (puedes usar la versión gratuita) y copia exactamente el siguiente prompt en el chat:</p>
+
+  <div class="ia-prompt-box">Actúa como un consultor contable. Dame un ejemplo real y detallado de una empresa ecuatoriana (puede ser comercial, industrial o de servicios, tú eliges) y explica cómo un usuario interno (por ejemplo el gerente) y un usuario externo (por ejemplo un banco o el SRI) utilizarían de manera diferente la información financiera de esa empresa. Luego, explícame qué consecuencias reales podría enfrentar esa empresa si NO aplicara las NIIF en la elaboración de sus estados financieros.</div>
+
+  <p><strong>Qué hacer con la respuesta:</strong></p>
+  <ul>
+    <li>Identifica en la respuesta de Claude si distingue con claridad la diferencia entre usuario interno y usuario externo, usando ejemplos concretos (no solo definiciones repetidas).</li>
+    <li>Verifica si las consecuencias de no aplicar NIIF son realistas y específicas (por ejemplo: dificultad para acceder a crédito, sanciones, pérdida de confianza de inversionistas) y no genéricas.</li>
+    <li>Escribe, en tus propias palabras, un párrafo de 5 a 7 líneas donde expliques si estás de acuerdo con el ejemplo que dio Claude y por qué, relacionándolo con lo aprendido en el Tema 1 y el Tema 2 de hoy.</li>
+  </ul>
+
+  <div class="definicion-box">
+    <strong>Criterio para distinguir pensamiento crítico de copia simple:</strong> copiar y pegar la respuesta de Claude sin análisis propio es copia simple. Pensamiento crítico es cuando tú evalúas si el ejemplo es correcto, si le faltó algo, si lo aplicarías distinto en un caso ecuatoriano que tú conozcas (un negocio familiar, una empresa donde trabajas o trabajó un familiar, etc.), y si puedes explicar la diferencia entre usuario interno y externo sin necesidad de releer la respuesta de la IA.
+  </div>
+</div>
+
+<!-- ===================== PESTAÑA: REFLEXIÓN ===================== -->
+<div class="tab-panel" id="panel-reflexion">
+  <h2 class="panel-title">Reflexión</h2>
+  <p class="panel-subtitle">Preguntas abiertas &mdash; no tienen una respuesta correcta o incorrecta</p>
+
+  <div class="reflexion-pregunta">1. En tu vida diaria, ¿llevas algún tipo de "registro" de tus ingresos y gastos personales (aunque sea informal)? ¿Cómo te ha ayudado o cómo crees que te ayudaría a tomar mejores decisiones si lo hicieras con más orden?</div>
+  <div class="reflexion-pregunta">2. Como futuro profesional de Negocios Internacionales, ¿por qué crees que es importante que puedas leer e interpretar información financiera, incluso si tu rol futuro no será el de contador?</div>
+  <div class="reflexion-pregunta">3. Piensa en una decisión importante que hayas tomado (personal, familiar o académica) sin contar con toda la información necesaria. ¿Qué aprendiste de esa experiencia y cómo se relaciona con la idea de que la contabilidad busca reducir la incertidumbre al tomar decisiones?</div>
+  <div class="reflexion-pregunta">4. La honestidad y la ética fueron mencionadas en el sílabo como valores centrales de esta carrera. ¿Qué relación encuentras entre "decir la verdad en los números" de una empresa y la confianza que las personas depositan en ti como profesional?</div>
+</div>
+
+<!-- ===================== PESTAÑA: BIBLIOGRAFÍA ===================== -->
+<div class="tab-panel" id="panel-biblio">
+  <h2 class="panel-title">Bibliografía</h2>
+  <p class="panel-subtitle">Referencias en formato APA 7.ª edición</p>
+
+  <div class="biblio-grid">
+    <div class="biblio-card"><span class="num">1</span><p>Zapata Sánchez, P. (2011). <em>Laboratorio de contabilidad general</em> (7.ª ed.). McGraw-Hill.</p></div>
+    <div class="biblio-card"><span class="num">2</span><p>Vite Rangel, V. T. (s.f.). <em>Contabilidad general</em>. Editorial digital UNID. https://elibro.net/es/ereader/uguayaquil/41179</p></div>
+    <div class="biblio-card"><span class="num">3</span><p>Moreno Fernández, J. A. (s.f.). <em>Contabilidad básica</em> (4.ª ed.). Grupo Editorial Patria. https://elibro.net/es/ereader/uguayaquil/39416</p></div>
+    <div class="biblio-card"><span class="num">4</span><p>IFRS Foundation. (s.f.). <em>NIC 1: Presentación de estados financieros</em>. IFRS Foundation. https://www.ifrs.org</p></div>
+    <div class="biblio-card"><span class="num">5</span><p>Servicio de Rentas Internas del Ecuador. (s.f.). <em>Portal institucional</em>. https://www.sri.gob.ec</p></div>
+    <div class="biblio-card"><span class="num">6</span><p>Superintendencia de Compañías, Valores y Seguros del Ecuador. (s.f.). <em>Portal institucional</em>. https://www.supercias.gob.ec</p></div>
+  </div>
+
+  <p class="nota-pie">Nota: se recomienda verificar y complementar estas referencias en Google Scholar (scholar.google.com) o en el repositorio institucional de la Universidad de Guayaquil.</p>
+</div>
+
+</div><!-- fin .container -->
+
+<script>
+/* ===================== NAVEGACIÓN DE PESTAÑAS ===================== */
+function showTab(id){
+  document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+  document.getElementById('panel-' + id).classList.add('active');
+  document.querySelector('.tab-btn[data-tab="' + id + '"]').classList.add('active');
+}
+
+/* ===================== ACORDEÓN REPASO ===================== */
+function toggleAcordeon(header){
+  header.classList.toggle('abierto');
+  var body = header.nextElementSibling;
+  body.classList.toggle('abierto');
+}
+
+/* ===================== EJERCICIO INTERACTIVO ===================== */
+var respuestasEjercicio = {
+  ei1: { correcta: "V", exp: "Correcto: la contabilidad es precisamente ese sistema de información que identifica, registra, clasifica y resume las transacciones económicas." },
+  ei2: { correcta: "F", exp: "Es falso: calcular impuestos es solo uno de los usos de la contabilidad; su objetivo principal es generar información financiera confiable para la toma de decisiones en general." },
+  ei3: { correcta: "V", exp: "Correcto: el propósito central de las NIIF es lograr un lenguaje contable único y comparable a nivel mundial." },
+  ei4: { correcta: "F", exp: "Es falso: la empresa unipersonal pertenece a una sola persona natural, mientras que la sociedad anónima es una compañía con capital dividido en acciones y varios socios; son categorías distintas." },
+  ei5: { correcta: "V", exp: "Correcto: los usuarios internos son quienes forman parte de la empresa, como gerentes y administradores." },
+  ei6: { correcta: "F", exp: "Es falso: el SRI sí es un usuario externo, ya que utiliza la información financiera para verificar el cumplimiento de obligaciones tributarias." },
+  ei7: { correcta: "V", exp: "Correcto: la contabilidad de costos se enfoca justamente en el registro y análisis de los costos de producción en empresas industriales." },
+  ei8: { correcta: "F", exp: "Es falso: según su actividad económica las empresas se clasifican en comerciales, industriales y de servicios, no únicamente en comerciales." }
+};
+
+function verificarEjercicio(){
+  var form = document.getElementById('formEjercicio');
+  var claves = Object.keys(respuestasEjercicio);
+  var incompleto = false;
+  claves.forEach(function(k){
+    var marcado = form.querySelector('input[name="' + k + '"]:checked');
+    if(!marcado) incompleto = true;
+  });
+
+  var alerta = document.getElementById('alertaEjercicio');
+  if(incompleto){
+    alerta.style.display = 'block';
+    return;
+  }
+  alerta.style.display = 'none';
+
+  var correctas = 0;
+  claves.forEach(function(k){
+    var marcado = form.querySelector('input[name="' + k + '"]:checked').value;
+    var card = document.getElementById('card-' + k);
+    var fb = document.getElementById('fb-' + k);
+    var esCorrecta = (marcado === respuestasEjercicio[k].correcta);
+    if(esCorrecta) correctas++;
+    card.classList.remove('eval-correcto','eval-incorrecto');
+    card.classList.add(esCorrecta ? 'eval-correcto' : 'eval-incorrecto');
+    fb.classList.remove('correcto','incorrecto');
+    fb.classList.add(esCorrecta ? 'correcto' : 'incorrecto');
+    fb.style.display = 'block';
+    fb.textContent = (esCorrecta ? '✔ ' : '✘ ') + respuestasEjercicio[k].exp;
+  });
+
+  var total = claves.length;
+  var porcentaje = Math.round((correctas / total) * 100);
+  mostrarResultado('resultadoEjercicio', 'emojiEjercicio', 'calificacionEjercicio', 'barraEjercicio', correctas, total, porcentaje);
+}
+
+function reiniciarEjercicio(){
+  document.getElementById('formEjercicio').reset();
+  Object.keys(respuestasEjercicio).forEach(function(k){
+    var card = document.getElementById('card-' + k);
+    var fb = document.getElementById('fb-' + k);
+    card.classList.remove('eval-correcto','eval-incorrecto');
+    fb.style.display = 'none';
+  });
+  document.getElementById('alertaEjercicio').style.display = 'none';
+  document.getElementById('resultadoEjercicio').style.display = 'none';
+  document.getElementById('barraEjercicio').style.width = '0%';
+}
+
+/* ===================== CUESTIONARIO ===================== */
+var respuestasCuestionario = {
+  qi1: { correcta: "b", exp: "Correcto: la contabilidad es un sistema que identifica, registra, clasifica y comunica información económica-financiera para la toma de decisiones." },
+  qi2: { correcta: "b", exp: "Correcto: el objetivo principal es generar información financiera confiable y oportuna, no solo cumplir con el SRI." },
+  qi3: { correcta: "c", exp: "Correcto: las NIIF son emitidas por el IASB a través de la Fundación IFRS." },
+  qi4: { correcta: "a", exp: "Correcto: según su naturaleza jurídica, una empresa es unipersonal o societaria." },
+  qi5: { correcta: "c", exp: "Correcto: transformar materia prima en un producto terminado distinto es la actividad propia de una empresa industrial." },
+  qi6: { correcta: "c", exp: "Correcto: el gerente general forma parte de la empresa, por lo tanto es un usuario interno." },
+  qi7: { correcta: "b", exp: "Correcto: la contabilidad de costos se enfoca en el análisis y control de los costos de producción." },
+  qi8: { correcta: "b", exp: "Correcto: sin registros contables la empresa puede perder información confiable para decidir y para cumplir sus obligaciones tributarias ante el SRI." },
+  qi9: { correcta: "b", exp: "Correcto: las NIIF garantizan comparabilidad y transparencia internacional, algo esencial para un inversionista extranjero." },
+  qi10: { correcta: "b", exp: "Correcto: el banco no pertenece a la fábrica, por lo tanto es un usuario externo que evalúa el crédito con base en la información financiera." }
+};
+
+function verificarCuestionario(){
+  var form = document.getElementById('formCuestionario');
+  var claves = Object.keys(respuestasCuestionario);
+  var incompleto = false;
+  claves.forEach(function(k){
+    var marcado = form.querySelector('input[name="' + k + '"]:checked');
+    if(!marcado) incompleto = true;
+  });
+
+  var alerta = document.getElementById('alertaCuestionario');
+  if(incompleto){
+    alerta.style.display = 'block';
+    return;
+  }
+  alerta.style.display = 'none';
+
+  var correctas = 0;
+  claves.forEach(function(k){
+    var marcado = form.querySelector('input[name="' + k + '"]:checked').value;
+    var card = document.getElementById('card-' + k);
+    var fb = document.getElementById('fb-' + k);
+    var esCorrecta = (marcado === respuestasCuestionario[k].correcta);
+    if(esCorrecta) correctas++;
+    card.classList.remove('eval-correcto','eval-incorrecto');
+    card.classList.add(esCorrecta ? 'eval-correcto' : 'eval-incorrecto');
+    fb.classList.remove('correcto','incorrecto');
+    fb.classList.add(esCorrecta ? 'correcto' : 'incorrecto');
+    fb.style.display = 'block';
+    fb.textContent = (esCorrecta ? '✔ ' : '✘ ') + respuestasCuestionario[k].exp;
+  });
+
+  var total = claves.length;
+  var nota10 = (correctas / total) * 10;
+  var porcentaje = Math.round((correctas / total) * 100);
+
+  var emoji = '📖';
+  if(porcentaje === 100) emoji = '🏆';
+  else if(porcentaje >= 80) emoji = '🎯';
+  else if(porcentaje >= 60) emoji = '📘';
+  else if(porcentaje >= 40) emoji = '⚠️';
+
+  document.getElementById('emojiCuestionario').textContent = emoji;
+  document.getElementById('calificacionCuestionario').textContent =
+    'Calificación: ' + nota10.toFixed(1) + '/10 (' + porcentaje + '%)';
+  document.getElementById('resultadoCuestionario').style.display = 'block';
+
+  var barra = document.getElementById('barraCuestionario');
+  barra.style.width = '0%';
+  setTimeout(function(){ barra.style.width = porcentaje + '%'; }, 60);
+}
+
+function reiniciarCuestionario(){
+  document.getElementById('formCuestionario').reset();
+  Object.keys(respuestasCuestionario).forEach(function(k){
+    var card = document.getElementById('card-' + k);
+    var fb = document.getElementById('fb-' + k);
+    card.classList.remove('eval-correcto','eval-incorrecto');
+    fb.style.display = 'none';
+  });
+  document.getElementById('alertaCuestionario').style.display = 'none';
+  document.getElementById('resultadoCuestionario').style.display = 'none';
+  document.getElementById('barraCuestionario').style.width = '0%';
+}
+
+/* ===================== FUNCIÓN COMPARTIDA DE RESULTADO (EJERCICIO) ===================== */
+function mostrarResultado(idBox, idEmoji, idCalif, idBarra, correctas, total, porcentaje){
+  var emoji = '📖';
+  if(porcentaje === 100) emoji = '🏆';
+  else if(porcentaje >= 80) emoji = '🎯';
+  else if(porcentaje >= 60) emoji = '📘';
+  else if(porcentaje >= 40) emoji = '⚠️';
+
+  document.getElementById(idEmoji).textContent = emoji;
+  document.getElementById(idCalif).textContent =
+    'Resultado: ' + correctas + '/' + total + ' correctas (' + porcentaje + '%)';
+  document.getElementById(idBox).style.display = 'block';
+
+  var barra = document.getElementById(idBarra);
+  barra.style.width = '0%';
+  setTimeout(function(){ barra.style.width = porcentaje + '%'; }, 60);
+}
+</script>
+</body>
+</html>

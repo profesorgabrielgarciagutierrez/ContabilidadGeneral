@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Contabilidad como Lenguaje de los Negocios Internacionales - Widget de Comprensión Lectora</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Source Sans 3', sans-serif;background:#eef3f8;color:#1a1a1a;line-height:1.6;padding-bottom:40px;}
+h1,h2,h3,h4{font-family:'Lora', serif;}
+.container{max-width:960px;margin:0 auto;padding:0 16px;}
+
+.header{background:#003366;color:#ffffff;padding:24px 16px;text-align:center;}
+.header .institucion{font-size:0.85rem;letter-spacing:0.5px;text-transform:uppercase;opacity:0.92;margin-bottom:6px;}
+.header h1{font-size:1.5rem;font-weight:700;color:#ffffff;margin-bottom:4px;}
+.header .subtitulo{font-size:1rem;color:#cfe3ff;font-weight:500;}
+.header .meta{margin-top:10px;font-size:0.85rem;color:#ffffff;background:rgba(255,255,255,0.12);display:inline-block;padding:6px 14px;border-radius:20px;}
+
+.tabs-nav-wrapper{background:#87CEEB;overflow-x:auto;white-space:nowrap;border-bottom:3px solid #003366;}
+.tabs-nav{display:inline-flex;min-width:100%;}
+.tab-btn{background:#87CEEB;border:none;color:#0d1b2a;font-family:'Source Sans 3', sans-serif;font-weight:600;font-size:0.92rem;padding:14px 18px;cursor:pointer;border-right:1px solid rgba(0,51,102,0.15);transition:background 0.2s ease;flex-shrink:0;}
+.tab-btn:hover{background:#a4d9ef;}
+.tab-btn.active{background:#ffffff;color:#003366;font-weight:700;box-shadow:inset 0 -3px 0 #003366;}
+
+.tab-panel{display:none;background:#ffffff;padding:28px 20px;margin:18px auto;max-width:960px;border-radius:10px;box-shadow:0 2px 10px rgba(0,51,102,0.08);}
+.tab-panel.active{display:block;}
+.panel-title{color:#003366;font-size:1.4rem;margin-bottom:6px;border-bottom:3px solid #87CEEB;padding-bottom:10px;}
+.panel-subtitle{color:#4a4a4a;font-size:0.95rem;margin-bottom:20px;font-style:italic;}
+
+.definicion-box{background:#f0f6fc;border-left:5px solid #003366;padding:16px 18px;border-radius:6px;margin:16px 0;}
+.definicion-box strong{color:#003366;}
+.ejemplo-box{background:#fff8ec;border-left:5px solid #d99a1b;padding:16px 18px;border-radius:6px;margin:16px 0;}
+.ejemplo-box .etiqueta{font-weight:700;color:#a86a00;text-transform:uppercase;font-size:0.8rem;letter-spacing:0.5px;margin-bottom:6px;display:block;}
+.conclusion-box{background:#003366;color:#ffffff;padding:16px 18px;border-radius:6px;margin:20px 0 6px 0;}
+.conclusion-box .etiqueta{font-weight:700;text-transform:uppercase;font-size:0.8rem;letter-spacing:0.5px;color:#87CEEB;display:block;margin-bottom:6px;}
+.carrera-box{background:#eaf7f0;border-left:5px solid #1e7a34;padding:16px 18px;border-radius:6px;margin:20px 0;}
+.carrera-box .etiqueta{font-weight:700;color:#1e7a34;text-transform:uppercase;font-size:0.8rem;letter-spacing:0.5px;margin-bottom:6px;display:block;}
+p{margin-bottom:12px;}
+ul,ol{margin:0 0 12px 22px;}
+li{margin-bottom:6px;}
+
+.cadena-box{background:#f0f6fc;border:1px dashed #003366;border-radius:8px;padding:14px 16px;margin:16px 0;font-weight:600;color:#003366;text-align:center;}
+
+.item-card{border:1px solid #d7e3ef;border-radius:8px;padding:16px;margin-bottom:16px;background:#fbfdff;}
+.item-card .pregunta-texto{font-weight:600;color:#1a1a1a;margin-bottom:12px;}
+.badge{display:inline-block;font-size:0.7rem;font-weight:700;padding:3px 10px;border-radius:12px;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.4px;}
+.badge-teorica{background:#dbeafe;color:#003366;}
+.opciones label{display:block;padding:8px 10px;border:1px solid #dde7f0;border-radius:6px;margin-bottom:8px;cursor:pointer;transition:background 0.15s ease;}
+.opciones label:hover{background:#f0f6fc;}
+.opciones input{margin-right:8px;}
+.feedback{display:none;margin-top:10px;padding:10px 12px;border-radius:6px;font-size:0.92rem;}
+.feedback.correcto{background:#e3f7e8;color:#1e7a34;border-left:4px solid #1e7a34;}
+.feedback.incorrecto{background:#fdeaea;color:#a3262d;border-left:4px solid #a3262d;}
+.item-card.eval-correcto{border-color:#1e7a34;}
+.item-card.eval-incorrecto{border-color:#a3262d;}
+
+.btn{background:#003366;color:#ffffff;border:none;padding:12px 26px;border-radius:8px;font-weight:700;font-size:0.95rem;cursor:pointer;font-family:'Source Sans 3', sans-serif;transition:background 0.2s ease;}
+.btn:hover{background:#00509e;}
+.btn-secundario{background:#ffffff;color:#003366;border:2px solid #003366;}
+.btn-secundario:hover{background:#f0f6fc;}
+.botones-accion{margin-top:20px;display:flex;gap:12px;flex-wrap:wrap;}
+
+.alerta-incompleto{display:none;background:#fff3cd;color:#7a5c00;border-left:4px solid #d99a1b;padding:10px 14px;border-radius:6px;margin-bottom:16px;font-weight:600;}
+
+.resultado-box{display:none;text-align:center;background:#f0f6fc;border-radius:10px;padding:22px;margin-top:22px;}
+.resultado-box .emoji{font-size:2.6rem;}
+.resultado-box .calificacion{font-size:1.6rem;font-weight:700;color:#003366;margin:8px 0;}
+.barra-container{background:#dde7f0;border-radius:20px;height:20px;overflow:hidden;margin:14px auto;max-width:400px;}
+.barra-animada{height:100%;width:0%;background:linear-gradient(90deg,#003366,#0074d9);border-radius:20px;transition:width 1.2s ease;}
+
+.ia-prompt-box{background:#0d1b2a;color:#e8f1ff;padding:18px;border-radius:8px;font-family:'Source Sans 3', monospace;font-size:0.9rem;margin:16px 0;white-space:pre-wrap;line-height:1.7;}
+.tabla-trazabilidad{width:100%;border-collapse:collapse;margin:16px 0;font-size:0.9rem;}
+.tabla-trazabilidad th{background:#003366;color:#fff;padding:10px;text-align:left;}
+.tabla-trazabilidad td{padding:10px;border-bottom:1px solid #dde7f0;}
+.tabla-trazabilidad tr:nth-child(even){background:#f7fafd;}
+
+.reflexion-pregunta{background:#f0f6fc;border-left:5px solid #87CEEB;padding:14px 18px;border-radius:6px;margin-bottom:14px;font-weight:500;}
+.reflexion-intro{background:#eaf7f0;border-left:5px solid #1e7a34;padding:16px 18px;border-radius:6px;margin-bottom:20px;}
+.reflexion-intro strong{color:#1e7a34;}
+
+.nota-pie{margin-top:18px;font-size:0.85rem;color:#5a5a5a;font-style:italic;border-top:1px solid #dde7f0;padding-top:12px;}
+
+@media(max-width:600px){
+  .header h1{font-size:1.2rem;}
+  .tab-btn{padding:12px 14px;font-size:0.85rem;}
+  .tab-panel{padding:18px 14px;}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="institucion">Universidad de Guayaquil &middot; Facultad de Ciencias Administrativas &middot; Negocios Internacionales</div>
+  <h1>La Contabilidad como Lenguaje de los Negocios Internacionales</h1>
+  <div class="subtitulo">Material complementario &mdash; Widget de comprensión lectora</div>
+  <div class="meta">Contabilidad General &middot; Periodo Académico Extraordinario 2026</div>
+</div>
+
+<div class="tabs-nav-wrapper">
+  <div class="tabs-nav" id="tabsNav">
+    <button class="tab-btn active" data-tab="sobre" onclick="showTab('sobre')">Sobre el Documento</button>
+    <button class="tab-btn" data-tab="cuestionario" onclick="showTab('cuestionario')">Cuestionario Evaluado</button>
+    <button class="tab-btn" data-tab="ia" onclick="showTab('ia')">Actividad con IA</button>
+    <button class="tab-btn" data-tab="reflexion" onclick="showTab('reflexion')">Reflexión</button>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ===================== PESTAÑA: SOBRE EL DOCUMENTO ===================== -->
+<div class="tab-panel active" id="panel-sobre">
+  <h2 class="panel-title">Sobre el Documento</h2>
+  <p class="panel-subtitle">Material complementario: "La Contabilidad como Lenguaje de los Negocios Internacionales"</p>
+
+  <p>Este material que tu docente compartió parte de una idea sencilla pero poderosa: <strong>la contabilidad está detrás de cada negocio, y los negocios internacionales no son otra cosa que negocios que cruzan fronteras.</strong> A través de ejemplos cotidianos &mdash;un celular, un café, unos audífonos, el cacao ecuatoriano, un automóvil&mdash; el documento muestra cómo cualquier objeto que usas a diario pasó, antes de llegar a tus manos, por una larga cadena de decisiones económicas que la contabilidad permite entender.</p>
+
+  <div class="definicion-box">
+    <strong>Idea central del documento:</strong> cada vez que ves una cuenta, una factura, una compra, una venta, un asiento contable o un estado financiero, detrás de ese número existe un negocio real, y detrás de ese negocio existe una decisión.
+  </div>
+
+  <p>El documento recorre varios ejemplos concretos (audífonos, celular, café, cacao, zapatos, automóvil, supermercado) para mostrar que, sin importar el producto, siempre aparecen los mismos elementos contables: costos, ingresos, activos, pasivos, impuestos, inventarios, cuentas por cobrar y por pagar. También introduce dos ideas clave que usarás durante todo el curso:</p>
+
+  <div class="cadena-box">VENTAS ≠ UTILIDAD &nbsp;&nbsp;&mdash;&nbsp;&nbsp; Ingresos &minus; Costos &minus; Gastos = Resultado</div>
+
+  <p>Y presenta el "mapa mental" completo de la asignatura, que conecta una simple transacción cotidiana con la toma de decisiones empresariales:</p>
+
+  <div class="cadena-box">Producto → Transacción → Documento → Registro → Partida Doble → Mayorización → Estados Financieros → Análisis → Decisión → Negociación</div>
+
+  <div class="carrera-box">
+    <span class="etiqueta">Conexión con tu carrera</span>
+    <p>Este documento es, en el fondo, una demostración de que Negocios Internacionales no es solo "negociar": cada ejemplo que viste (importar audífonos, exportar cacao, fabricar un automóvil con piezas de varios países) atraviesa comercio exterior, finanzas internacionales y marco legal, y en todos los casos la contabilidad es la herramienta que permite responder la pregunta que resume todo el documento: <strong>¿fue un buen negocio?</strong></p>
+  </div>
+
+  <p class="nota-pie">Ve a la pestaña <strong>Cuestionario Evaluado</strong> para comprobar tu comprensión del documento.</p>
+</div>
+
+<!-- ===================== PESTAÑA: CUESTIONARIO EVALUADO ===================== -->
+<div class="tab-panel" id="panel-cuestionario">
+  <h2 class="panel-title">Cuestionario Evaluado</h2>
+  <p class="panel-subtitle">18 preguntas de opción múltiple basadas exclusivamente en el documento &mdash; responde todas y luego presiona "Verificar respuestas"</p>
+
+  <div class="alerta-incompleto" id="alertaCuestionario">⚠️ Debes responder todas las preguntas antes de verificar.</div>
+
+  <form id="formCuestionario">
+
+    <div class="item-card" id="card-qi1">
+      <span class="badge badge-teorica">Comprensión</span>
+      <p class="pregunta-texto">1. Según el documento, ¿cuál es la idea central que sirve de hilo conductor?</p>
+      <div class="opciones">
+        <label><input type="radio" name="qi1" value="a"> a) La contabilidad es una materia aislada de "cuentas y números"</label>
+        <label><input type="radio" name="qi1" value="b"> b) La contabilidad está detrás de cada negocio, y los negocios internacionales son negocios que cruzan fronteras</label>
+        <label><input type="radio" name="qi1" value="c"> c) Solo las grandes empresas necesitan contabilidad</label>
+        <label><input type="radio" name="qi1" value="d"> d) Los negocios internacionales no requieren información contable</label>
+      </div>
+      <div class="feedback" id="fb-qi1"></div>
+    </div>
+
+    <div class="item-card" id="card-qi2">
+      <span class="badge badge-teorica">Comprensión</span>
+      <p class="pregunta-texto">2. El esquema presentado en la primera sección del documento es:</p>
+      <div class="opciones">
+        <label><input type="radio" name="qi2" value="a"> a) Compra → venta → utilidad → contabilidad</label>
+        <label><input type="radio" name="qi2" value="b"> b) Vida cotidiana → compra → venta → dinero → documentos → impuestos → costos → utilidad → empresa → comercio internacional → contabilidad</label>
+        <label><input type="radio" name="qi2" value="c"> c) Contabilidad → vida cotidiana → negocio</label>
+        <label><input type="radio" name="qi2" value="d"> d) Documentos → impuestos → vida cotidiana</label>
+      </div>
+      <div class="feedback" id="fb-qi2"></div>
+    </div>
+
+    <div class="item-card" id="card-qi3">
+      <span class="badge badge-teorica">Comprensión</span>
+      <p class="pregunta-texto">3. Según el ejemplo de los audífonos de $25, ¿cuál es la secuencia mencionada en el documento?</p>
+      <div class="opciones">
+        <label><input type="radio" name="qi3" value="a"> a) Cliente → tienda → distribuidor → fabricante</label>
+        <label><input type="radio" name="qi3" value="b"> b) Materia prima → fabricante → proveedor → transporte → exportación → importación → aduana → impuestos → distribuidor → tienda → cliente</label>
+        <label><input type="radio" name="qi3" value="c"> c) Fabricante → cliente directamente</label>
+        <label><input type="radio" name="qi3" value="d"> d) Aduana → materia prima → cliente</label>
+      </div>
+      <div class="feedback" id="fb-qi3"></div>
+    </div>
+
+    <div class="item-card" id="card-qi4">
+      <span class="badge badge-teorica">Comprensión</span>
+      <p class="pregunta-texto">4. Los cuatro pasos del esquema "Todo lo que Tienes Pasó por un Negocio" son:</p>
+      <div class="opciones">
+        <label><input type="radio" name="qi4" value="a"> a) Vida Cotidiana, Impuestos y Costos, Comercio Internacional, Contabilidad</label>
+        <label><input type="radio" name="qi4" value="b"> b) Producción, Distribución, Venta, Cobro</label>
+        <label><input type="radio" name="qi4" value="c"> c) Diseño, Fabricación, Transporte, Venta</label>
+        <label><input type="radio" name="qi4" value="d"> d) Registro, Medición, Decisión, Negociación</label>
+      </div>
+      <div class="feedback" id="fb-qi4"></div>
+    </div>
+
+    <div class="item-card" id="card-qi5">
+      <span class="badge badge-teorica">Comprensión</span>
+      <p class="pregunta-texto">5. Según el documento, ¿los negocios internacionales comercian solamente bienes físicos?</p>
+      <div class="opciones">
+        <label><input type="radio" name="qi5" value="a"> a) Sí, exclusivamente bienes físicos</label>
+        <label><input type="radio" name="qi5" value="b"> b) No, también comercian servicios como Netflix, Spotify, Microsoft, Google o Apple</label>
+        <label><input type="radio" name="qi5" value="c"> c) No, comercian únicamente servicios</label>
+        <label><input type="radio" name="qi5" value="d"> d) El documento no menciona servicios</label>
+      </div>
+      <div class="feedback" id="fb-qi5"></div>
+    </div>
+
+    <div class="item-card" id="card-qi6">
+      <span class="badge badge-teorica">Comprensión</span>
+      <p class="pregunta-texto">6. Según la sección "El Celular como Puerta de Entrada", la pregunta contable fundamental que se plantea es:</p>
+      <div class="opciones">
+        <label><input type="radio" name="qi6" value="a"> a) ¿Quién diseñó el celular?</label>
+        <label><input type="radio" name="qi6" value="b"> b) ¿Cuánto costó realmente llevar ese producto desde su origen hasta las manos del consumidor?</label>
+        <label><input type="radio" name="qi6" value="c"> c) ¿Qué color tiene el celular?</label>
+        <label><input type="radio" name="qi6" value="d"> d) ¿Cuántas unidades se vendieron?</label>
+      </div>
+      <div class="feedback" id="fb-qi6"></div>
+    </div>
+
+    <div class="item-card" id="card-qi7">
+      <span class="badge badge-teorica">Comprensión</span>
+      <p class="pregunta-texto">7. Según el documento, la respuesta pedagógica a "¿Dónde termina el cacao ecuatoriano y dónde comienza la contabilidad?" es:</p>
+      <div class="opciones">
+        <label><input type="radio" name="qi7" value="a"> a) Termina el cacao donde el agricultor entrega el producto</label>
+        <label><input type="radio" name="qi7" value="b"> b) No existe un punto donde termine uno y comience el otro; la contabilidad acompaña toda la operación</label>
+        <label><input type="radio" name="qi7" value="c"> c) La contabilidad comienza solo cuando el producto cruza la frontera</label>
+        <label><input type="radio" name="qi7" value="d"> d) La contabilidad no tiene relación con el cacao</label>
+      </div>
+      <div class="feedback" id="fb-qi7"></div>
+    </div>
+
+    <div class="item-card" id="card-qi8">
+      <span class="badge badge-teorica">Comprensión</span>
+      <p class="pregunta-texto">8. Según la sección del automóvil, ¿cómo sabe una empresa cuánto le costó fabricar un vehículo?</p>
+      <div class="opciones">
+        <label><input type="radio" name="qi8" value="a"> a) Por intuición del gerente</label>
+        <label><input type="radio" name="qi8" value="b"> b) A través de información contable</label>
+        <label><input type="radio" name="qi8" value="c"> c) Preguntando al cliente</label>
+        <label><input type="radio" name="qi8" value="d"> d) No es posible saberlo con precisión</label>
+      </div>
+      <div class="feedback" id="fb-qi8"></div>
+    </div>
+
+    <div class="item-card" id="card-qi9">
+      <span class="badge badge-teorica">Comprensión</span>
+      <p class="pregunta-texto">9. Según el ejemplo de la empresa ecuatoriana que exporta banano a Europa, ¿cómo sabe si esa exportación es rentable?</p>
+      <div class="opciones">
+        <label><input type="radio" name="qi9" value="a"> a) Por intuición</label>
+        <label><input type="radio" name="qi9" value="b"> b) Mediante información financiera</label>
+        <label><input type="radio" name="qi9" value="c"> c) Preguntando al comprador extranjero</label>
+        <label><input type="radio" name="qi9" value="d"> d) No puede saberlo hasta el año siguiente</label>
+      </div>
+      <div class="feedback" id="fb-qi9"></div>
+    </div>
+
+    <div class="item-card" id="card-qi10">
+      <span class="badge badge-teorica">Comprensión</span>
+      <p class="pregunta-texto">10. La frase "Vender no significa ganar" se resume en el documento como el pilar:</p>
+      <div class="opciones">
+        <label><input type="radio" name="qi10" value="a"> a) COSTOS = INGRESOS</label>
+        <label><input type="radio" name="qi10" value="b"> b) VENTAS ≠ UTILIDAD</label>
+        <label><input type="radio" name="qi10" value="c"> c) COMPRAS = VENTAS</label>
+        <label><input type="radio" name="qi10" value="d"> d) UTILIDAD = PRECIO</label>
+      </div>
+      <div class="feedback" id="fb-qi10"></div>
+    </div>
+
+    <div class="item-card" id="card-qi11">
+      <span class="badge badge-teorica">Aplicación</span>
+      <p class="pregunta-texto">11. Según el ejemplo del producto comprado en China por $10, si los costos adicionales llevan el costo real a $17 y se vende a $18, la utilidad aproximada es:</p>
+      <div class="opciones">
+        <label><input type="radio" name="qi11" value="a"> a) $8</label>
+        <label><input type="radio" name="qi11" value="b"> b) $10</label>
+        <label><input type="radio" name="qi11" value="c"> c) Aproximadamente $1</label>
+        <label><input type="radio" name="qi11" value="d"> d) $17</label>
+      </div>
+      <div class="feedback" id="fb-qi11"></div>
+    </div>
+
+    <div class="item-card" id="card-qi12">
+      <span class="badge badge-teorica">Comprensión</span>
+      <p class="pregunta-texto">12. Según el documento, la definición de partida doble es:</p>
+      <div class="opciones">
+        <label><input type="radio" name="qi12" value="a"> a) Todo hecho económico tiene, como mínimo, dos efectos contables relacionados</label>
+        <label><input type="radio" name="qi12" value="b"> b) Toda venta debe registrarse dos veces</label>
+        <label><input type="radio" name="qi12" value="c"> c) Todo documento debe firmarse por duplicado</label>
+        <label><input type="radio" name="qi12" value="d"> d) Toda empresa debe tener dos contadores</label>
+      </div>
+      <div class="feedback" id="fb-qi12"></div>
+    </div>
+
+    <div class="item-card" id="card-qi13">
+      <span class="badge badge-teorica">Comprensión</span>
+      <p class="pregunta-texto">13. Según el documento, la secuencia desde la partida doble hacia los reportes finales es:</p>
+      <div class="opciones">
+        <label><input type="radio" name="qi13" value="a"> a) Estados Financieros → Libro Mayor → Libro Diario → Balance de Comprobación</label>
+        <label><input type="radio" name="qi13" value="b"> b) Libro Diario → Libro Mayor → Balance de Comprobación → Estados Financieros</label>
+        <label><input type="radio" name="qi13" value="c"> c) Balance de Comprobación → Libro Diario → Estados Financieros → Libro Mayor</label>
+        <label><input type="radio" name="qi13" value="d"> d) Libro Mayor → Estados Financieros → Libro Diario → Balance de Comprobación</label>
+      </div>
+      <div class="feedback" id="fb-qi13"></div>
+    </div>
+
+    <div class="item-card" id="card-qi14">
+      <span class="badge badge-teorica">Comprensión</span>
+      <p class="pregunta-texto">14. Frente a la pregunta "¿Qué pasaría si desapareciera la contabilidad?", la frase clave del documento es:</p>
+      <div class="opciones">
+        <label><input type="radio" name="qi14" value="a"> a) "Sin contabilidad no puede existir comercio"</label>
+        <label><input type="radio" name="qi14" value="b"> b) "Sin contabilidad puede existir comercio; lo que resulta mucho más difícil es administrar, controlar y demostrar que ese comercio es rentable y sostenible"</label>
+        <label><input type="radio" name="qi14" value="c"> c) "La contabilidad es opcional para empresas internacionales"</label>
+        <label><input type="radio" name="qi14" value="d"> d) "La contabilidad solo importa para empresas grandes"</label>
+      </div>
+      <div class="feedback" id="fb-qi14"></div>
+    </div>
+
+    <div class="item-card" id="card-qi15">
+      <span class="badge badge-teorica">Comprensión</span>
+      <p class="pregunta-texto">15. Las cinco palabras que forman la identidad visual de la cátedra, según el documento, son:</p>
+      <div class="opciones">
+        <label><input type="radio" name="qi15" value="a"> a) Comprar, Vender, Importar, Exportar, Negociar</label>
+        <label><input type="radio" name="qi15" value="b"> b) Registrar, Medir, Comprender, Decidir, Negociar</label>
+        <label><input type="radio" name="qi15" value="c"> c) Producto, Transacción, Documento, Registro, Decisión</label>
+        <label><input type="radio" name="qi15" value="d"> d) Activo, Pasivo, Patrimonio, Ingreso, Gasto</label>
+      </div>
+      <div class="feedback" id="fb-qi15"></div>
+    </div>
+
+    <div class="item-card" id="card-qi16">
+      <span class="badge badge-teorica">Comprensión</span>
+      <p class="pregunta-texto">16. Según el documento, la cadena completa del "mapa mental" del curso es:</p>
+      <div class="opciones">
+        <label><input type="radio" name="qi16" value="a"> a) Producto → Transacción → Documento → Registro → Partida Doble → Mayorización → Estados Financieros → Análisis → Decisión → Negociación</label>
+        <label><input type="radio" name="qi16" value="b"> b) Producto → Contabilidad → Decisión → Venta</label>
+        <label><input type="radio" name="qi16" value="c"> c) Transacción → Producto → Decisión → Registro</label>
+        <label><input type="radio" name="qi16" value="d"> d) Documento → Producto → Mayorización → Transacción</label>
+      </div>
+      <div class="feedback" id="fb-qi16"></div>
+    </div>
+
+    <div class="item-card" id="card-qi17">
+      <span class="badge badge-teorica">Comprensión</span>
+      <p class="pregunta-texto">17. Según la frase de cierre del documento, ¿dónde comienza y dónde termina la contabilidad?</p>
+      <div class="opciones">
+        <label><input type="radio" name="qi17" value="a"> a) Comienza donde se toma una decisión y termina donde ocurre una transacción</label>
+        <label><input type="radio" name="qi17" value="b"> b) Comienza donde ocurre una transacción y termina donde se toma una decisión</label>
+        <label><input type="radio" name="qi17" value="c"> c) Comienza y termina en el mismo punto: la venta</label>
+        <label><input type="radio" name="qi17" value="d"> d) No tiene un punto de inicio ni de fin definido</label>
+      </div>
+      <div class="feedback" id="fb-qi17"></div>
+    </div>
+
+    <div class="item-card" id="card-qi18">
+      <span class="badge badge-teorica">Aplicación</span>
+      <p class="pregunta-texto">18. Según el ejemplo del café de $2,50, el documento concluye que la participación de productos o servicios fabricados fuera del país de residencia:</p>
+      <div class="opciones">
+        <label><input type="radio" name="qi18" value="a"> a) No tiene relación con la contabilidad</label>
+        <label><input type="radio" name="qi18" value="b"> b) Involucra obligatoriamente la contabilidad con los negocios internacionales</label>
+        <label><input type="radio" name="qi18" value="c"> c) Solo aplica a productos, nunca a servicios</label>
+        <label><input type="radio" name="qi18" value="d"> d) Es un tema exclusivo de las grandes corporaciones</label>
+      </div>
+      <div class="feedback" id="fb-qi18"></div>
+    </div>
+
+    <div class="botones-accion">
+      <button type="button" class="btn" onclick="verificarCuestionario()">Verificar respuestas</button>
+      <button type="button" class="btn btn-secundario" onclick="reiniciarCuestionario()">Reiniciar</button>
+    </div>
+  </form>
+
+  <div class="resultado-box" id="resultadoCuestionario">
+    <div class="emoji" id="emojiCuestionario"></div>
+    <div class="calificacion" id="calificacionCuestionario"></div>
+    <div class="barra-container"><div class="barra-animada" id="barraCuestionario"></div></div>
+  </div>
+</div>
+
+<!-- ===================== PESTAÑA: ACTIVIDAD CON IA ===================== -->
+<div class="tab-panel" id="panel-ia">
+  <h2 class="panel-title">Actividad con IA</h2>
+  <p class="panel-subtitle">Trazabilidad: del productor/campesino al consumidor final, en clave de Negocios Internacionales</p>
+
+  <p>El documento usó el ejemplo del <strong>cacao ecuatoriano</strong> para mostrar la cadena: agricultor → productor → procesador → fabricante → exportador → importador → distribuidor → supermercado → consumidor. Ahora vas a construir esa misma trazabilidad con ayuda de Claude, pero identificando en cada eslabón <strong>qué operación contable ocurre</strong> y <strong>qué elemento de negocios internacionales aparece</strong>.</p>
+
+  <p>Ingresa a <strong>claude.ai</strong> (puedes usar la versión gratuita) y copia exactamente el siguiente prompt en el chat:</p>
+
+  <div class="ia-prompt-box">Actúa como consultor en comercio exterior y contabilidad. Toma como referencia la cadena del cacao ecuatoriano: agricultor → productor → procesador → fabricante → exportador → importador → distribuidor → supermercado → consumidor final. Para cada uno de estos 9 actores, dime en una tabla: (1) qué operación económica realiza ese actor (compra, venta, transformación, transporte, etc.), (2) qué elemento contable se genera ahí (ingreso, gasto, costo, inventario, cuenta por cobrar, cuenta por pagar, impuesto), y (3) qué elemento de negocios internacionales aparece en ese eslabón (exportación, importación, aduana, tipo de cambio, arancel, Incoterm, etc.), únicamente cuando ese eslabón cruce una frontera. Al final, explícame en un párrafo por qué ningún actor de esta cadena podría responder "¿fue un buen negocio?" sin información contable.</div>
+
+  <p><strong>Qué hacer con la respuesta:</strong></p>
+  <ul>
+    <li>Revisa que la tabla tenga los 9 actores completos, sin saltarse ninguno, y que la operación contable de cada uno tenga sentido (por ejemplo, el agricultor no "importa", pero sí puede tener costos de producción e ingresos por venta).</li>
+    <li>Verifica que los elementos de negocios internacionales (aduana, exportación, tipo de cambio) aparezcan únicamente donde la cadena realmente cruza una frontera &mdash;normalmente entre exportador e importador&mdash;, y no en cada eslabón.</li>
+    <li>Elige un producto distinto al cacao (banano, camarón, café, flores, o cualquier otro que exporte Ecuador) y repite mentalmente el ejercicio sin usar la IA: escribe tú mismo, en tus propias palabras, los 9 eslabones y al menos un elemento contable por cada uno.</li>
+  </ul>
+
+  <div class="definicion-box">
+    <strong>Criterio para distinguir pensamiento crítico de copia simple:</strong> copiar y pegar la tabla de Claude sin revisarla es copia simple. Pensamiento crítico es cuando detectas si algún eslabón de la tabla generada por la IA tiene un error de lógica (por ejemplo, si le asigna "importación" al agricultor, que nunca ocurre en la vida real), y cuando logras construir tú mismo, sin ayuda, la cadena de un producto distinto usando el mismo razonamiento.
+  </div>
+</div>
+
+<!-- ===================== PESTAÑA: REFLEXIÓN ===================== -->
+<div class="tab-panel" id="panel-reflexion">
+  <h2 class="panel-title">Reflexión</h2>
+  <p class="panel-subtitle">Preguntas abiertas &mdash; no tienen una respuesta correcta o incorrecta</p>
+
+  <div class="reflexion-intro">
+    <strong>Antes de responder, recuerda:</strong> Negocios Internacionales no es solo "negociar" con otro país. Es poder gestionar comercio exterior, finanzas internacionales, marketing/negociación y marco legal entre empresas de distintos países. El documento que acabas de leer muestra que la contabilidad es el hilo que conecta todos esos actores, desde el agricultor hasta el consumidor final.
+  </div>
+
+  <div class="reflexion-pregunta">1. Piensa en un objeto que tengas contigo ahora mismo y que no se haya fabricado en Ecuador. Sin buscarlo en internet, intenta reconstruir su cadena completa &mdash;como hiciste con el cacao en la actividad de IA&mdash; desde la materia prima hasta que llegó a tus manos. ¿Cuántos actores distintos crees que estuvieron involucrados?</div>
+
+  <div class="reflexion-pregunta">2. El documento afirma que "vender no significa ganar". ¿Recuerdas alguna situación de tu vida (un emprendimiento familiar, una venta personal, o incluso una decisión de compra) donde asumiste que algo era "un buen negocio" solo por el precio, sin considerar todos los costos reales involucrados? ¿Qué aprendiste de esa experiencia?</div>
+
+  <div class="reflexion-pregunta">3. El documento cierra con la idea de que "la contabilidad comienza donde ocurre una transacción y termina donde se toma una decisión". En tu vida diaria, ¿tomas tus decisiones (de gasto, de estudio, de tiempo) basándote en información real, o muchas veces decides "por intuición", como el documento advierte que no deberían hacer las empresas?</div>
+
+  <div class="reflexion-pregunta">4. De las cinco palabras del mapa mental del curso (Registrar, Medir, Comprender, Decidir, Negociar), ¿cuál sientes que se conecta más con el área de Negocios Internacionales en la que te gustaría trabajar en el futuro (comercio exterior, finanzas internacionales, marketing/negociación, o marco legal)? Explica tu respuesta con tus propias palabras.</div>
+</div>
+
+</div><!-- fin .container -->
+
+<script>
+/* ===================== NAVEGACIÓN DE PESTAÑAS ===================== */
+function showTab(id){
+  document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+  document.getElementById('panel-' + id).classList.add('active');
+  document.querySelector('.tab-btn[data-tab="' + id + '"]').classList.add('active');
+}
+
+/* ===================== CUESTIONARIO EVALUADO ===================== */
+var respuestasCuestionario = {
+  qi1: { correcta: "b", exp: "Correcto: la idea central es que la contabilidad está detrás de cada negocio, y los negocios internacionales son negocios que cruzan fronteras." },
+  qi2: { correcta: "b", exp: "Correcto: ese es el esquema textual de la primera sección del documento." },
+  qi3: { correcta: "b", exp: "Correcto: esa es la secuencia exacta usada en el ejemplo de los audífonos de $25." },
+  qi4: { correcta: "a", exp: "Correcto: los cuatro pasos mencionados son Vida Cotidiana, Impuestos y Costos, Comercio Internacional y Contabilidad." },
+  qi5: { correcta: "b", exp: "Correcto: el documento aclara explícitamente que también se comercian servicios como Netflix, Spotify, Microsoft, Google o Apple." },
+  qi6: { correcta: "b", exp: "Correcto: esa es la pregunta contable fundamental planteada en la sección del celular." },
+  qi7: { correcta: "b", exp: "Correcto: el documento afirma que no existe un punto donde termine uno y comience el otro; la contabilidad acompaña toda la operación." },
+  qi8: { correcta: "b", exp: "Correcto: el documento indica que la empresa sabe el costo real de fabricación a través de información contable." },
+  qi9: { correcta: "b", exp: "Correcto: el documento afirma que la empresa no lo sabe por intuición, sino mediante información financiera." },
+  qi10: { correcta: "b", exp: "Correcto: el pilar mencionado es VENTAS ≠ UTILIDAD." },
+  qi11: { correcta: "c", exp: "Correcto: el documento indica que la utilidad es aproximadamente $1, no $8, porque el costo real (incluyendo transporte, seguro, impuestos, etc.) llega a $17." },
+  qi12: { correcta: "a", exp: "Correcto: la partida doble se define como que todo hecho económico tiene, como mínimo, dos efectos contables relacionados." },
+  qi13: { correcta: "b", exp: "Correcto: la secuencia textual del documento es Libro Diario → Libro Mayor → Balance de Comprobación → Estados Financieros." },
+  qi14: { correcta: "b", exp: "Correcto: esa es la frase clave textual del documento sobre qué pasaría si desapareciera la contabilidad." },
+  qi15: { correcta: "b", exp: "Correcto: las cinco palabras son Registrar, Medir, Comprender, Decidir y Negociar." },
+  qi16: { correcta: "a", exp: "Correcto: esa es la cadena completa del mapa mental presentada textualmente en el documento." },
+  qi17: { correcta: "b", exp: "Correcto: la frase de cierre indica que la contabilidad comienza donde ocurre una transacción y termina donde se toma una decisión." },
+  qi18: { correcta: "b", exp: "Correcto: el documento concluye que esto involucra obligatoriamente la contabilidad con los negocios internacionales." }
+};
+
+function verificarCuestionario(){
+  var form = document.getElementById('formCuestionario');
+  var claves = Object.keys(respuestasCuestionario);
+  var incompleto = false;
+  claves.forEach(function(k){
+    var marcado = form.querySelector('input[name="' + k + '"]:checked');
+    if(!marcado) incompleto = true;
+  });
+
+  var alerta = document.getElementById('alertaCuestionario');
+  if(incompleto){
+    alerta.style.display = 'block';
+    return;
+  }
+  alerta.style.display = 'none';
+
+  var correctas = 0;
+  claves.forEach(function(k){
+    var marcado = form.querySelector('input[name="' + k + '"]:checked').value;
+    var card = document.getElementById('card-' + k);
+    var fb = document.getElementById('fb-' + k);
+    var esCorrecta = (marcado === respuestasCuestionario[k].correcta);
+    if(esCorrecta) correctas++;
+    card.classList.remove('eval-correcto','eval-incorrecto');
+    card.classList.add(esCorrecta ? 'eval-correcto' : 'eval-incorrecto');
+    fb.classList.remove('correcto','incorrecto');
+    fb.classList.add(esCorrecta ? 'correcto' : 'incorrecto');
+    fb.style.display = 'block';
+    fb.textContent = (esCorrecta ? '✔ ' : '✘ ') + respuestasCuestionario[k].exp;
+  });
+
+  var total = claves.length;
+  var nota10 = (correctas / total) * 10;
+  var porcentaje = Math.round((correctas / total) * 100);
+
+  var emoji = '📖';
+  if(porcentaje === 100) emoji = '🏆';
+  else if(porcentaje >= 80) emoji = '🎯';
+  else if(porcentaje >= 60) emoji = '📘';
+  else if(porcentaje >= 40) emoji = '⚠️';
+
+  document.getElementById('emojiCuestionario').textContent = emoji;
+  document.getElementById('calificacionCuestionario').textContent =
+    'Calificación: ' + nota10.toFixed(1) + '/10 (' + porcentaje + '%)';
+  document.getElementById('resultadoCuestionario').style.display = 'block';
+
+  var barra = document.getElementById('barraCuestionario');
+  barra.style.width = '0%';
+  setTimeout(function(){ barra.style.width = porcentaje + '%'; }, 60);
+}
+
+function reiniciarCuestionario(){
+  document.getElementById('formCuestionario').reset();
+  Object.keys(respuestasCuestionario).forEach(function(k){
+    var card = document.getElementById('card-' + k);
+    var fb = document.getElementById('fb-' + k);
+    card.classList.remove('eval-correcto','eval-incorrecto');
+    fb.style.display = 'none';
+  });
+  document.getElementById('alertaCuestionario').style.display = 'none';
+  document.getElementById('resultadoCuestionario').style.display = 'none';
+  document.getElementById('barraCuestionario').style.width = '0%';
+}
+</script>
+</body>
+</html>

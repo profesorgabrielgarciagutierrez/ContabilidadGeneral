@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Práctica · Cadena de valor internacional · Contabilidad General</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Source Sans 3', sans-serif; color: #1a1a1a; background: #f4f6f8; line-height: 1.65; padding-bottom: 50px; }
+h1,h2,h3,h4 { font-family: 'Lora', serif; color: #003366; }
+header.site-header { background: #003366; color: #fff; padding: 22px 20px; text-align: center; }
+header.site-header .institucion { font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.9; margin-bottom: 6px; }
+header.site-header h1 { color: #fff; font-size: 1.4rem; margin-bottom: 6px; }
+header.site-header .subtitulo { font-size: 0.98rem; color: #cfe3f7; }
+main { max-width: 940px; margin: 0 auto; padding: 24px 16px 10px; }
+h2 { font-size: 1.4rem; border-bottom: 3px solid #87CEEB; padding-bottom: 10px; margin: 30px 0 16px; }
+h3 { font-size: 1.1rem; color: #0057a3; margin: 18px 0 10px; }
+p { margin-bottom: 12px; }
+.caja { background: #fff; border: 1px solid #d9e2ec; border-radius: 10px; padding: 16px 20px; margin: 14px 0; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+.caja-vidareal { background: #f3eefc; border-left: 5px solid #7b3fb5; }
+.caja-negocio { background: #fff8ea; border-left: 5px solid #d99b0f; }
+.caja-conclusion { background: #003366; color: #fff; border-radius: 10px; padding: 18px 20px; margin: 18px 0; }
+.caja-conclusion h4 { color: #fff; margin-bottom: 8px; }
+.etiqueta { display: inline-block; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 3px 10px; border-radius: 12px; margin-bottom: 8px; }
+.etiqueta-vidareal { background: #7b3fb5; color: #fff; }
+.etiqueta-negocio { background: #d99b0f; color: #fff; }
+table.tabla-contable { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.9rem; }
+table.tabla-contable th, table.tabla-contable td { border: 1px solid #c9d6e3; padding: 7px 10px; text-align: left; }
+table.tabla-contable th { background: #003366; color: #fff; }
+table.tabla-contable tr:nth-child(even) { background: #f2f6fa; }
+table.tabla-contable td.num, table.tabla-contable th.num { text-align: right; }
+
+.escenario { border: 2px solid #d9e2ec; border-radius: 12px; padding: 20px 22px; margin: 20px 0; background: #fff; }
+.escenario-1 { border-top: 6px solid #4c9a2a; }
+.escenario-2 { border-top: 6px solid #0057a3; }
+.escenario-3 { border-top: 6px solid #d99b0f; }
+.escenario-titulo { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.escenario-num { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; color: #fff; font-family: 'Lora', serif; font-weight: 700; font-size: 1.1rem; flex-shrink: 0; }
+.escenario-1 .escenario-num { background: #4c9a2a; }
+.escenario-2 .escenario-num { background: #0057a3; }
+.escenario-3 .escenario-num { background: #d99b0f; }
+
+.resultado-caja { background: #eef5fc; border-radius: 8px; padding: 14px 18px; margin-top: 12px; }
+.resultado-caja .linea { display: flex; justify-content: space-between; padding: 3px 0; font-size: 0.94rem; }
+.resultado-caja .linea.total { border-top: 2px solid #003366; margin-top: 6px; padding-top: 8px; font-weight: 700; color: #003366; }
+.resultado-caja .margen { text-align: center; margin-top: 10px; font-family: 'Lora', serif; font-size: 1.15rem; color: #4c9a2a; font-weight: 700; }
+
+.flujo-precio { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; margin: 22px 0; }
+.flujo-caja { background: #eef5fc; border: 2px solid #0057a3; border-radius: 10px; padding: 10px 14px; text-align: center; min-width: 118px; }
+.flujo-caja .etq { font-size: 0.72rem; color: #5a6b7a; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 4px; }
+.flujo-caja .val { font-family: 'Lora', serif; font-weight: 700; font-size: 1.1rem; color: #003366; }
+.flujo-flecha { font-size: 1.4rem; color: #0057a3; font-weight: 700; }
+
+.tabla-comparativa th { background: #003366; color: #fff; }
+.tabla-comparativa .fila-productor { background: #eaf5e2; }
+.tabla-comparativa .fila-importador { background: #e4eefc; }
+.tabla-comparativa .fila-minorista { background: #fdf3de; }
+
+footer.nota-final { text-align: center; font-size: 0.85rem; color: #5a6b7a; padding: 24px 16px 40px; }
+
+@media (max-width: 640px) {
+  header.site-header h1 { font-size: 1.15rem; }
+  h2 { font-size: 1.15rem; }
+  .flujo-caja { min-width: 90px; padding: 8px 10px; }
+  .flujo-caja .val { font-size: 0.95rem; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="institucion">Universidad de Guayaquil · Facultad de Ciencias Administrativas · Negocios Internacionales</div>
+  <h1>Práctica complementaria — Contabilidad General</h1>
+  <div class="subtitulo">La cadena de valor internacional en 3 asientos contables: Productor → Importador → Minorista</div>
+</header>
+
+<main>
+<p>Un mismo producto pasa por varias manos antes de llegar al consumidor final, y en cada una de ellas se genera un asiento contable distinto. Aquí vamos a seguir <strong>el mismo lote de mercadería</strong> a través de tres negocios reales de la cadena internacional, para que veas cómo el costo de uno se convierte en el ingreso del siguiente, y cómo cada actor responde la misma pregunta: <strong>¿fue un buen negocio?</strong></p>
+
+<div class="caja caja-vidareal">
+  <span class="etiqueta etiqueta-vidareal">Desde la vida real</span>
+  <p>Piensa en una camiseta que compras en un centro comercial en Guayaquil a $28. Antes de llegar a esa percha, esa misma camiseta fue fabricada por una empresa textil en el extranjero (que le puso un precio de venta), luego un importador ecuatoriano la trajo pagando aranceles y flete (y le subió un margen), y finalmente la tienda donde tú la compraste también le agregó su propia ganancia. Un mismo producto, tres negocios, tres asientos contables distintos, tres "utilidades" distintas — y tú, al final, pagas la suma acumulada de todo ese camino.</p>
+</div>
+
+<div class="flujo-precio">
+  <div class="flujo-caja"><div class="etq">Materia prima</div><div class="val">$5.000</div></div>
+  <div class="flujo-flecha">→</div>
+  <div class="flujo-caja"><div class="etq">Producto terminado</div><div class="val">$8.000</div></div>
+  <div class="flujo-flecha">→</div>
+  <div class="flujo-caja"><div class="etq">Precio de exportación</div><div class="val">$12.000</div></div>
+  <div class="flujo-flecha">→</div>
+  <div class="flujo-caja"><div class="etq">Costo nacionalizado</div><div class="val">$14.000</div></div>
+  <div class="flujo-flecha">→</div>
+  <div class="flujo-caja"><div class="etq">Precio al minorista</div><div class="val">$20.000</div></div>
+  <div class="flujo-flecha">→</div>
+  <div class="flujo-caja"><div class="etq">Precio al consumidor</div><div class="val">$28.000</div></div>
+</div>
+<h2>Escenario 1 — El productor en el extranjero (con departamento de ventas)</h2>
+
+<div class="escenario escenario-1">
+  <div class="escenario-titulo"><span class="escenario-num">1</span><h3 style="margin:0;">"Textiles del Pacífico S.A.S." — fábrica textil en Colombia</h3></div>
+  <p>Esta empresa fabrica prendas: compra materia prima, la transforma en su planta y la vende terminada. Al ser una industria, maneja <strong>tres tipos de inventario</strong> (materia prima, productos en proceso y productos terminados) y tiene un <strong>departamento de ventas</strong> que gestiona sus exportaciones, con su propio gasto asociado (comisiones, logística de exportación).</p>
+
+  <table class="tabla-contable">
+    <tr><th>#</th><th>Transacción</th><th>Cuenta</th><th class="num">Debe</th><th class="num">Haber</th></tr>
+    <tr><td rowspan="2">1</td><td rowspan="2">Compra de materia prima (tela, hilos) a crédito</td><td>Inventario Materia Prima</td><td class="num">5.000</td><td class="num"></td></tr>
+    <tr><td>Proveedores por Pagar</td><td class="num"></td><td class="num">5.000</td></tr>
+    <tr><td rowspan="2">2</td><td rowspan="2">Materia prima enviada a producción</td><td>Inventario Productos en Proceso</td><td class="num">5.000</td><td class="num"></td></tr>
+    <tr><td>Inventario Materia Prima</td><td class="num"></td><td class="num">5.000</td></tr>
+    <tr><td rowspan="2">3</td><td rowspan="2">Se agrega mano de obra y costos de fábrica; el producto termina el proceso</td><td>Inventario Productos Terminados</td><td class="num">8.000</td><td class="num"></td></tr>
+    <tr><td>Inventario Productos en Proceso</td><td class="num"></td><td class="num">8.000</td></tr>
+    <tr><td rowspan="4">4</td><td rowspan="4">Venta de exportación a crédito al importador ecuatoriano (asiento compuesto: registra el ingreso y, a la vez, saca el costo del inventario)</td><td>Cuentas por Cobrar Exterior</td><td class="num">12.000</td><td class="num"></td></tr>
+    <tr><td>Ventas (Exportación)</td><td class="num"></td><td class="num">12.000</td></tr>
+    <tr><td>Costo de Ventas</td><td class="num">8.000</td><td class="num"></td></tr>
+    <tr><td>Inventario Productos Terminados</td><td class="num"></td><td class="num">8.000</td></tr>
+    <tr><td rowspan="2">5</td><td rowspan="2">Departamento de ventas paga comisión de exportación en efectivo</td><td>Gasto de Ventas</td><td class="num">500</td><td class="num"></td></tr>
+    <tr><td>Bancos</td><td class="num"></td><td class="num">500</td></tr>
+  </table>
+
+  <div class="resultado-caja">
+    <div class="linea"><span>Ventas (exportación)</span><span>$ 12.000</span></div>
+    <div class="linea"><span>(−) Costo de Ventas</span><span>$ 8.000</span></div>
+    <div class="linea"><span>(−) Gasto de Ventas</span><span>$ 500</span></div>
+    <div class="linea total"><span>Utilidad del productor</span><span>$ 3.500</span></div>
+    <div class="margen">Margen de utilidad: 3.500 ÷ 12.000 = 29,2%</div>
+  </div>
+
+  <div class="caja caja-negocio" style="margin-top:16px;">
+    <span class="etiqueta etiqueta-negocio">¿Fue un buen negocio?</span>
+    <p>Sí: por cada dólar que Textiles del Pacífico S.A.S. vendió al exterior, le quedó cerca de 29 centavos de utilidad neta, después de cubrir el costo completo de fabricar la prenda (materia prima + mano de obra + costos de fábrica) y el gasto de su propio departamento de ventas. El precio de exportación ($12.000) es el <strong>origen</strong> del costo que asumirá el siguiente eslabón: el importador ecuatoriano.</p>
+  </div>
+</div>
+<h2>Escenario 2 — El importador (con vendedores hacia minoristas)</h2>
+
+<div class="escenario escenario-2">
+  <div class="escenario-titulo"><span class="escenario-num">2</span><h3 style="margin:0;">"Importadora Andina S.A." — Guayaquil, Ecuador</h3></div>
+  <p>Esta empresa no fabrica nada: <strong>compra</strong> la mercadería ya terminada al productor extranjero y la revende, ya nacionalizada, a comerciantes minoristas. A diferencia del productor, su inventario es un solo tipo ("Mercadería"), pero su costo incluye rubros propios del comercio exterior: <strong>aranceles, flete y seguro de importación</strong>, que se suman al costo antes de poder vender. Su equipo de vendedores atiende a los minoristas, no al consumidor final.</p>
+
+  <table class="tabla-contable">
+    <tr><th>#</th><th>Transacción</th><th>Cuenta</th><th class="num">Debe</th><th class="num">Haber</th></tr>
+    <tr><td rowspan="2">1</td><td rowspan="2">Compra de mercadería a crédito al proveedor extranjero (precio de exportación del productor)</td><td>Mercadería en Tránsito</td><td class="num">12.000</td><td class="num"></td></tr>
+    <tr><td>Cuentas por Pagar Exterior</td><td class="num"></td><td class="num">12.000</td></tr>
+    <tr><td rowspan="2">2</td><td rowspan="2">Pago de aranceles de aduana en efectivo (se capitaliza al costo de la mercadería)</td><td>Mercadería en Tránsito</td><td class="num">1.500</td><td class="num"></td></tr>
+    <tr><td>Bancos</td><td class="num"></td><td class="num">1.500</td></tr>
+    <tr><td rowspan="2">3</td><td rowspan="2">Pago de flete y seguro internacional en efectivo (también se capitaliza al costo)</td><td>Mercadería en Tránsito</td><td class="num">500</td><td class="num"></td></tr>
+    <tr><td>Bancos</td><td class="num"></td><td class="num">500</td></tr>
+    <tr><td rowspan="2">4</td><td rowspan="2">Mercadería nacionalizada, lista para la venta: se reclasifica a Inventario</td><td>Inventario de Mercadería</td><td class="num">14.000</td><td class="num"></td></tr>
+    <tr><td>Mercadería en Tránsito</td><td class="num"></td><td class="num">14.000</td></tr>
+    <tr><td rowspan="4">5</td><td rowspan="4">Venta a crédito a comerciantes minoristas (asiento compuesto: ingreso + salida de costo)</td><td>Cuentas por Cobrar</td><td class="num">20.000</td><td class="num"></td></tr>
+    <tr><td>Ventas</td><td class="num"></td><td class="num">20.000</td></tr>
+    <tr><td>Costo de Ventas</td><td class="num">14.000</td><td class="num"></td></tr>
+    <tr><td>Inventario de Mercadería</td><td class="num"></td><td class="num">14.000</td></tr>
+    <tr><td rowspan="2">6</td><td rowspan="2">Pago de comisiones al equipo de vendedores, en efectivo</td><td>Gasto de Ventas</td><td class="num">1.000</td><td class="num"></td></tr>
+    <tr><td>Bancos</td><td class="num"></td><td class="num">1.000</td></tr>
+  </table>
+
+  <div class="resultado-caja">
+    <div class="linea"><span>Ventas (a minoristas)</span><span>$ 20.000</span></div>
+    <div class="linea"><span>(−) Costo de Ventas</span><span>$ 14.000</span></div>
+    <div class="linea"><span>(−) Gasto de Ventas</span><span>$ 1.000</span></div>
+    <div class="linea total"><span>Utilidad del importador</span><span>$ 5.000</span></div>
+    <div class="margen">Margen de utilidad: 5.000 ÷ 20.000 = 25,0%</div>
+  </div>
+
+  <div class="caja caja-negocio" style="margin-top:16px;">
+    <span class="etiqueta etiqueta-negocio">¿Fue un buen negocio?</span>
+    <p>Sí: la utilidad de $5.000 representa un margen del 25%, ligeramente menor al del productor pero sobre un volumen de venta mayor. Nota algo clave: el costo del importador ($14.000) <strong>no es igual</strong> al precio que pagó por la mercadería ($12.000); tuvo que sumarle $2.000 de aranceles, flete y seguro para poder nacionalizarla y venderla. Ese es el "peaje" real de operar en comercio exterior, y quien no lo contabiliza correctamente puede pensar que ganó más de lo que realmente ganó.</p>
+  </div>
+</div>
+<h2>Escenario 3 — El vendedor minorista (al consumidor final)</h2>
+
+<div class="escenario escenario-3">
+  <div class="escenario-titulo"><span class="escenario-num">3</span><h3 style="margin:0;">"Comercial El Buen Precio" — tienda al detalle en Guayaquil</h3></div>
+  <p>Este es el comercio más sencillo de los tres: compra mercadería ya lista para vender y la ofrece directamente al <strong>consumidor final</strong>, normalmente de contado. Su estructura contable es la más simple: stock de mercadería, ventas, costo de ventas y gastos operativos propios de una tienda (arriendo, sueldos de vendedores de piso).</p>
+
+  <table class="tabla-contable">
+    <tr><th>#</th><th>Transacción</th><th>Cuenta</th><th class="num">Debe</th><th class="num">Haber</th></tr>
+    <tr><td rowspan="2">1</td><td rowspan="2">Compra de mercadería a crédito al importador (precio que pagó "Comercial El Buen Precio")</td><td>Inventario de Mercadería</td><td class="num">20.000</td><td class="num"></td></tr>
+    <tr><td>Proveedores por Pagar</td><td class="num"></td><td class="num">20.000</td></tr>
+    <tr><td rowspan="4">2</td><td rowspan="4">Venta de contado al consumidor final (asiento compuesto: ingreso + salida de costo)</td><td>Caja</td><td class="num">28.000</td><td class="num"></td></tr>
+    <tr><td>Ventas</td><td class="num"></td><td class="num">28.000</td></tr>
+    <tr><td>Costo de Ventas</td><td class="num">20.000</td><td class="num"></td></tr>
+    <tr><td>Inventario de Mercadería</td><td class="num"></td><td class="num">20.000</td></tr>
+    <tr><td rowspan="2">3</td><td rowspan="2">Pago de gastos operativos del mes (arriendo del local, sueldos de vendedores) en efectivo</td><td>Gastos Operativos</td><td class="num">3.000</td><td class="num"></td></tr>
+    <tr><td>Caja</td><td class="num"></td><td class="num">3.000</td></tr>
+  </table>
+
+  <div class="resultado-caja">
+    <div class="linea"><span>Ventas (al consumidor final)</span><span>$ 28.000</span></div>
+    <div class="linea"><span>(−) Costo de Ventas</span><span>$ 20.000</span></div>
+    <div class="linea"><span>(−) Gastos Operativos</span><span>$ 3.000</span></div>
+    <div class="linea total"><span>Utilidad del minorista</span><span>$ 5.000</span></div>
+    <div class="margen">Margen de utilidad: 5.000 ÷ 28.000 = 17,9%</div>
+  </div>
+
+  <div class="caja caja-negocio" style="margin-top:16px;">
+    <span class="etiqueta etiqueta-negocio">¿Fue un buen negocio?</span>
+    <p>Sí, la tienda también ganó $5.000 en dólares absolutos, igual que el importador, pero su <strong>margen porcentual (17,9%)</strong> es el más bajo de los tres eslabones, porque sus gastos operativos (arriendo, personal de piso) pesan más sobre un ingreso que ya venía "cargado" con todo el costo acumulado de la cadena. El consumidor final, al pagar $28.000 (en este ejemplo a escala, imagina los mismos números divididos entre cientos de unidades), está pagando en realidad la suma de la utilidad de los tres negocios más todos los costos que se fueron sumando en el camino.</p>
+  </div>
+</div>
+
+<h2>Comparación final — la misma cadena, tres formas de medir "un buen negocio"</h2>
+
+<table class="tabla-contable tabla-comparativa">
+  <tr><th>Actor</th><th class="num">Ventas</th><th class="num">Costo de Ventas</th><th class="num">Gastos</th><th class="num">Utilidad</th><th class="num">Margen de utilidad</th></tr>
+  <tr class="fila-productor"><td>1. Productor (extranjero)</td><td class="num">12.000</td><td class="num">8.000</td><td class="num">500</td><td class="num">3.500</td><td class="num">29,2%</td></tr>
+  <tr class="fila-importador"><td>2. Importador (Ecuador)</td><td class="num">20.000</td><td class="num">14.000</td><td class="num">1.000</td><td class="num">5.000</td><td class="num">25,0%</td></tr>
+  <tr class="fila-minorista"><td>3. Minorista (Ecuador)</td><td class="num">28.000</td><td class="num">20.000</td><td class="num">3.000</td><td class="num">5.000</td><td class="num">17,9%</td></tr>
+</table>
+
+<div class="caja caja-negocio">
+  <span class="etiqueta etiqueta-negocio">Hacia los negocios internacionales — la lectura completa de la cadena</span>
+  <p>Observa algo importante: el <strong>costo de ventas de cada eslabón es, casi siempre, el precio de venta del eslabón anterior</strong> (8.000 → 12.000 → 14.000 → 20.000 → 20.000 → 28.000). Esa es la trazabilidad que estudiamos en el Día 3: cada asiento contable de cada empresa es, a la vez, el eco del asiento de la empresa anterior en la cadena, hasta llegar al consumidor final. Ningún eslabón "gana más" solo por vender más caro: el productor tuvo el margen porcentual más alto porque no cargó con aranceles ni gastos operativos de tienda; el minorista, aunque ganó lo mismo en dólares que el importador, tuvo el margen más ajustado porque sostiene la estructura de atención directa al público. Entender esta cadena es exactamente lo que le permite a un profesional de Negocios Internacionales evaluar en qué eslabón conviene participar, negociar mejor con proveedores o compradores, y detectar en qué punto de la cadena se puede mejorar la rentabilidad.</p>
+</div>
+
+<div class="caja caja-conclusion">
+  <h4>Idea clave</h4>
+  <p>"¿Fue un buen negocio?" no se responde solo mirando cuántos dólares quedaron de utilidad: se responde comparando esa utilidad contra las ventas (margen porcentual) y entendiendo qué costos y gastos son propios de la naturaleza de cada actor de la cadena (producción, importación o venta al detalle). Los tres negocios de este ejemplo fueron rentables, pero cada uno lo fue por razones distintas — y esa lectura fina es la que distingue a un profesional de Negocios Internacionales que solo mira el precio final, de uno que entiende toda la cadena de valor.</p>
+</div>
+
+</main>
+
+<footer class="nota-final">
+  Universidad de Guayaquil · Facultad de Ciencias Administrativas · Negocios Internacionales · Contabilidad General (091601124) · Práctica complementaria — Día 3
+</footer>
+
+</body>
+</html>

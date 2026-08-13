@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Día 3 · Semana 1 · Contabilidad General</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ===================== RESET Y BASE ===================== */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Source Sans 3', sans-serif;
+  color: #1a1a1a;
+  background: #f4f6f8;
+  line-height: 1.65;
+  padding-bottom: 60px;
+}
+h1, h2, h3, h4 { font-family: 'Lora', serif; color: #003366; }
+a { color: #0057a3; }
+img { max-width: 100%; }
+
+/* ===================== ENCABEZADO ===================== */
+header.site-header {
+  background: #003366;
+  color: #ffffff;
+  padding: 22px 20px;
+  text-align: center;
+}
+header.site-header .institucion {
+  font-size: 0.82rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  opacity: 0.9;
+  margin-bottom: 6px;
+}
+header.site-header h1 {
+  color: #ffffff;
+  font-size: 1.55rem;
+  margin-bottom: 6px;
+}
+header.site-header .subtitulo {
+  font-size: 1rem;
+  color: #cfe3f7;
+}
+header.site-header .meta-dia {
+  margin-top: 10px;
+  display: inline-block;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.35);
+  border-radius: 20px;
+  padding: 5px 16px;
+  font-size: 0.85rem;
+}
+
+/* ===================== NAV DE PESTAÑAS ===================== */
+nav.tabs {
+  background: #87CEEB;
+  display: flex;
+  overflow-x: auto;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+nav.tabs button {
+  font-family: 'Source Sans 3', sans-serif;
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: #06283d;
+  background: transparent;
+  border: none;
+  padding: 14px 16px;
+  cursor: pointer;
+  flex-shrink: 0;
+  border-bottom: 3px solid transparent;
+  transition: background 0.15s ease;
+}
+nav.tabs button:hover { background: rgba(255,255,255,0.35); }
+nav.tabs button.active {
+  background: #ffffff;
+  color: #003366;
+  font-weight: 700;
+  border-bottom: 3px solid #003366;
+}
+
+/* ===================== CONTENEDOR PRINCIPAL ===================== */
+main { max-width: 900px; margin: 0 auto; padding: 22px 16px 10px; }
+.panel { display: none; animation: fadeIn 0.25s ease; }
+.panel.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.panel h2 {
+  font-size: 1.5rem;
+  border-bottom: 3px solid #87CEEB;
+  padding-bottom: 10px;
+  margin-bottom: 18px;
+}
+.panel h3 {
+  font-size: 1.15rem;
+  color: #0057a3;
+  margin: 22px 0 10px;
+}
+.panel p { margin-bottom: 12px; }
+.panel ul, .panel ol { margin: 0 0 14px 22px; }
+.panel li { margin-bottom: 6px; }
+
+/* ===================== CAJAS DE CONTENIDO ===================== */
+.caja {
+  background: #ffffff;
+  border: 1px solid #d9e2ec;
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin: 14px 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.caja-definicion {
+  background: #eef5fc;
+  border-left: 5px solid #0057a3;
+}
+.caja-ejemplo {
+  background: #f6faf1;
+  border-left: 5px solid #4c9a2a;
+}
+.caja-conclusion {
+  background: #003366;
+  color: #ffffff;
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin: 18px 0;
+}
+.caja-conclusion h4 { color: #ffffff; margin-bottom: 8px; }
+.caja-negocio {
+  background: #fff8ea;
+  border-left: 5px solid #d99b0f;
+}
+.caja-vidareal {
+  background: #f3eefc;
+  border-left: 5px solid #7b3fb5;
+}
+.etiqueta {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 3px 10px;
+  border-radius: 12px;
+  margin-bottom: 8px;
+}
+.etiqueta-def { background: #0057a3; color: #fff; }
+.etiqueta-ej { background: #4c9a2a; color: #fff; }
+.etiqueta-negocio { background: #d99b0f; color: #fff; }
+.etiqueta-vidareal { background: #7b3fb5; color: #fff; }
+
+table.tabla-contable {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 14px 0;
+  font-size: 0.92rem;
+}
+table.tabla-contable th, table.tabla-contable td {
+  border: 1px solid #c9d6e3;
+  padding: 8px 10px;
+  text-align: left;
+}
+table.tabla-contable th { background: #003366; color: #fff; }
+table.tabla-contable tr:nth-child(even) { background: #f2f6fa; }
+
+/* ===================== ACORDEÓN REPASO ===================== */
+.acordeon-item {
+  border: 1px solid #d9e2ec;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.acordeon-cabecera {
+  background: #eef5fc;
+  color: #003366;
+  font-family: 'Lora', serif;
+  font-weight: 600;
+  padding: 14px 16px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: none;
+  width: 100%;
+  text-align: left;
+  font-size: 1rem;
+}
+.acordeon-cabecera .flecha { transition: transform 0.2s ease; font-size: 0.85rem; }
+.acordeon-cabecera.abierto .flecha { transform: rotate(90deg); }
+.acordeon-panel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  padding: 0 18px;
+  background: #ffffff;
+}
+.acordeon-panel.abierto {
+  max-height: 3000px;
+  padding: 14px 18px 18px;
+}
+
+/* ===================== EJERCICIO / CUESTIONARIO ===================== */
+.item-pregunta {
+  background: #ffffff;
+  border: 1px solid #d9e2ec;
+  border-radius: 10px;
+  padding: 16px 18px;
+  margin-bottom: 14px;
+}
+.item-pregunta .num-item {
+  font-weight: 700;
+  color: #003366;
+  margin-bottom: 8px;
+}
+.badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 9px;
+  border-radius: 10px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+.badge-teorica { background: #cfe3f7; color: #003366; }
+.badge-caso { background: #ffe1b3; color: #7a4a00; }
+.opciones label {
+  display: block;
+  background: #f7f9fb;
+  border: 1px solid #dbe4ec;
+  border-radius: 7px;
+  padding: 9px 12px;
+  margin-bottom: 7px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.opciones label:hover { background: #eaf1f8; }
+.opciones input { margin-right: 8px; }
+.retro {
+  display: none;
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 7px;
+  font-size: 0.92rem;
+}
+.retro.correcta { display: block; background: #e5f5e0; border-left: 4px solid #4c9a2a; color: #2c5c17; }
+.retro.incorrecta { display: block; background: #fdeaea; border-left: 4px solid #cc3333; color: #7a1f1f; }
+.item-pregunta.ok { border-color: #4c9a2a; }
+.item-pregunta.mal { border-color: #cc3333; }
+
+.btn-principal {
+  background: #003366;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 26px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Source Sans 3', sans-serif;
+  margin: 10px 6px 10px 0;
+}
+.btn-principal:hover { background: #00509e; }
+.btn-secundario {
+  background: #ffffff;
+  color: #003366;
+  border: 2px solid #003366;
+  border-radius: 8px;
+  padding: 10px 24px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Source Sans 3', sans-serif;
+  margin: 10px 6px 10px 0;
+}
+.alerta-incompleto {
+  display: none;
+  background: #fff3cd;
+  border-left: 4px solid #d99b0f;
+  padding: 10px 14px;
+  border-radius: 7px;
+  margin-bottom: 14px;
+  color: #6b4c00;
+  font-weight: 600;
+}
+
+.barra-progreso-cont {
+  background: #e2e8f0;
+  border-radius: 20px;
+  overflow: hidden;
+  height: 26px;
+  margin: 14px 0 6px;
+}
+.barra-progreso {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #0057a3, #4c9a2a);
+  transition: width 1s ease;
+  border-radius: 20px;
+}
+.resultado-final {
+  text-align: center;
+  padding: 20px;
+  background: #eef5fc;
+  border-radius: 10px;
+  margin-top: 16px;
+  display: none;
+}
+.resultado-final .nota { font-size: 2.4rem; font-family: 'Lora', serif; color: #003366; font-weight: 700; }
+.resultado-final .emoji { font-size: 2.6rem; }
+
+/* ===================== IA / REFLEXIÓN / BIBLIOGRAFÍA ===================== */
+.prompt-ia {
+  background: #1c2b3a;
+  color: #d8ecff;
+  font-family: 'Source Sans 3', monospace;
+  padding: 16px 18px;
+  border-radius: 10px;
+  white-space: pre-wrap;
+  font-size: 0.92rem;
+  margin: 12px 0;
+  border-left: 5px solid #4c9a2a;
+}
+.pregunta-reflexion {
+  background: #f3eefc;
+  border-left: 5px solid #7b3fb5;
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin-bottom: 12px;
+}
+.ficha-biblio {
+  background: #ffffff;
+  border: 1px solid #d9e2ec;
+  border-left: 5px solid #003366;
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin-bottom: 12px;
+}
+.ficha-biblio .tipo { font-size: 0.75rem; text-transform: uppercase; color: #0057a3; font-weight: 700; letter-spacing: 0.5px; }
+footer.nota-final {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #5a6b7a;
+  padding: 24px 16px 40px;
+}
+
+@media (max-width: 600px) {
+  header.site-header h1 { font-size: 1.25rem; }
+  nav.tabs button { padding: 12px 12px; font-size: 0.85rem; }
+  .panel h2 { font-size: 1.25rem; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="institucion">Universidad de Guayaquil · Facultad de Ciencias Administrativas · Negocios Internacionales</div>
+  <h1>Contabilidad General</h1>
+  <div class="subtitulo">Unidad 1 — Introducción a la Contabilidad</div>
+  <div class="meta-dia">Día 3 · Semana 1 · Jueves 13 de agosto de 2026 · Jornada de 5 horas</div>
+</header>
+
+<nav class="tabs" id="navTabs">
+  <button class="tab-btn active" data-tab="repaso" onclick="showTab('repaso')">Repaso</button>
+  <button class="tab-btn" data-tab="tema1" onclick="showTab('tema1')">Tema 1</button>
+  <button class="tab-btn" data-tab="tema2" onclick="showTab('tema2')">Tema 2</button>
+  <button class="tab-btn" data-tab="tema3" onclick="showTab('tema3')">Tema 3</button>
+  <button class="tab-btn" data-tab="ejercicio" onclick="showTab('ejercicio')">Ejercicio Interactivo</button>
+  <button class="tab-btn" data-tab="cuestionario" onclick="showTab('cuestionario')">Cuestionario</button>
+  <button class="tab-btn" data-tab="ia" onclick="showTab('ia')">Actividad con IA</button>
+  <button class="tab-btn" data-tab="reflexion" onclick="showTab('reflexion')">Reflexión</button>
+  <button class="tab-btn" data-tab="bibliografia" onclick="showTab('bibliografia')">Bibliografía</button>
+</nav>
+
+<main>
+
+<!-- ===================== PESTAÑA: REPASO ===================== -->
+<section id="panel-repaso" class="panel active">
+  <h2>Repaso de clases anteriores</h2>
+  <p>Antes de avanzar, recordemos brevemente lo que ya construimos en la Semana 1. Haz clic en cada día para desplegar su contenido.</p>
+
+  <div class="acordeon-item">
+    <button class="acordeon-cabecera" onclick="toggleAcordeon(this)">
+      <span>Día 1 (Martes 11 de agosto) — La contabilidad como sistema de información</span>
+      <span class="flecha">▶</span>
+    </button>
+    <div class="acordeon-panel">
+      <p><strong>Tema 1 — La contabilidad como sistema de información y sus definiciones básicas.</strong> Vimos que la contabilidad es un sistema que <strong>captura, registra, clasifica, resume y comunica</strong> información económica de una empresa, de forma similar a como el sistema circulatorio de un cuerpo humano lleva información (oxígeno y nutrientes) a cada órgano para que este funcione. La contabilidad convierte hechos económicos (una venta, una compra, un pago) en información financiera útil para tomar decisiones. También revisamos que su objetivo central es producir <strong>Estados Financieros razonables</strong>, y que estos deben cumplir con las <strong>Normas Internacionales de Información Financiera (NIIF)</strong>, el "idioma contable" común que permite que una empresa ecuatoriana sea entendida financieramente por un banco, inversionista o socio comercial en cualquier parte del mundo.</p>
+      <p><strong>Tema 2 — Clasificación de las empresas, usuarios de la información y tipos de contabilidad.</strong> Aprendimos que las empresas se clasifican según su actividad (industriales, comerciales, de servicios), su tamaño y su origen de capital (públicas, privadas, mixtas). También identificamos a los <strong>usuarios de la información financiera</strong>: usuarios internos (dueños, gerentes, empleados) y usuarios externos (SRI, Superintendencia de Compañías, bancos, proveedores, inversionistas). Cerramos con los tipos de contabilidad — financiera, de costos, administrativa, gubernamental, tributaria — como distintas "cámaras" que observan la misma realidad económica desde ángulos distintos.</p>
+    </div>
+  </div>
+
+  <div class="acordeon-item">
+    <button class="acordeon-cabecera" onclick="toggleAcordeon(this)">
+      <span>Día 2 (Miércoles 12 de agosto) — Ética profesional y Marco Conceptual de las NIIF</span>
+      <span class="flecha">▶</span>
+    </button>
+    <div class="acordeon-panel">
+      <p><strong>Tema 1 — Principios éticos de la profesión contable y organismos de control.</strong> Estudiamos que la contabilidad no es solo técnica: exige <strong>integridad, objetividad, confidencialidad y competencia profesional</strong>, porque de los números que un contador entrega dependen decisiones de miles de personas (empleados que cobran sueldo, bancos que prestan dinero, el Estado que cobra impuestos). Conocimos a los organismos de control en Ecuador: el <strong>Servicio de Rentas Internas (SRI)</strong>, que vigila el cumplimiento tributario, y la <strong>Superintendencia de Compañías, Valores y Seguros</strong>, que supervisa a las empresas societarias.</p>
+      <p><strong>Tema 2 — Marco Conceptual de las NIIF y NIC 1.</strong> Revisamos el <strong>Marco Conceptual</strong> como la "constitución" que da las reglas generales para elaborar información financiera (características cualitativas como relevancia y representación fiel), y la <strong>NIC 1 — Presentación de Estados Financieros</strong>, que establece cómo deben presentarse ordenadamente esos estados para que cualquier usuario, en cualquier país, los entienda de la misma manera.</p>
+    </div>
+  </div>
+
+  <div class="caja caja-conclusion">
+    <h4>¿Por qué importa este repaso hoy?</h4>
+    <p>Hoy vamos a <strong>cerrar la Unidad 1</strong>. Todo lo que aprendimos —qué es la contabilidad, quién la usa, bajo qué normas y con qué ética se elabora— es la base sobre la que hoy construiremos las herramientas técnicas reales: la estructura de los Estados Financieros, la cuenta contable, la partida doble y los asientos contables. Sin el Día 1 y el Día 2, el Día 3 no tendría sentido: hoy pasamos de la teoría a la técnica.</p>
+  </div>
+</section>
+
+<!-- ===================== PESTAÑA: TEMA 1 ===================== -->
+<section id="panel-tema1" class="panel">
+  <h2>Tema 1 — Estructura del Estado de Situación Financiera y del Estado de Resultados</h2>
+
+  <div class="caja caja-vidareal">
+    <span class="etiqueta etiqueta-vidareal">Desde la vida real</span>
+    <p>Imagina que llegas a fin de mes y decides hacer dos cosas: primero, <strong>revisar cuánto tienes</strong> en este momento (el dinero en tu billetera, tu saldo en el banco, tu celular, tu moto, pero también lo que debes de la tarjeta de crédito o del préstamo del banco); y segundo, <strong>revisar qué pasó durante el mes</strong> (cuánto ganaste trabajando, cuánto gastaste en comida, transporte, entretenimiento, y si al final el mes te dejó una ganancia o una pérdida). Sin darte cuenta, acabas de hacer exactamente lo que hace una empresa con sus dos estados financieros más importantes: una "foto" de lo que tiene y debe en un momento exacto, y una "película" de lo que ganó y gastó durante un periodo. Eso es, en esencia, el Estado de Situación Financiera y el Estado de Resultados.</p>
+  </div>
+
+  <h3>1.1 Estado de Situación Financiera (ESF) — la "foto" de la empresa</h3>
+  <div class="caja caja-definicion">
+    <span class="etiqueta etiqueta-def">Definición</span>
+    <p>El <strong>Estado de Situación Financiera</strong> (antes llamado Balance General) es el estado financiero que muestra, en una <strong>fecha específica</strong> (como una fotografía tomada en un instante exacto), todo lo que la empresa <strong>posee</strong> (Activos), todo lo que <strong>debe</strong> (Pasivos) y lo que realmente le <strong>pertenece a los dueños</strong> una vez descontadas las deudas (Patrimonio). Según la NIC 1 — Presentación de Estados Financieros, este estado debe presentar razonablemente la situación financiera de la entidad (Consejo de Normas Internacionales de Contabilidad [IASB], 2021).</p>
+  </div>
+
+  <p>Su estructura se basa en tres grandes grupos, ordenados siempre de la misma manera:</p>
+
+  <table class="tabla-contable">
+    <tr><th>Elemento</th><th>¿Qué representa?</th><th>Ejemplo cotidiano equivalente</th></tr>
+    <tr><td><strong>Activo</strong></td><td>Todo lo que la empresa posee y le generará beneficio económico futuro: efectivo, cuentas por cobrar, inventario, muebles, vehículos, edificios.</td><td>Tu casa, tu carro, el dinero que te deben tus amigos, tus ahorros.</td></tr>
+    <tr><td><strong>Pasivo</strong></td><td>Todo lo que la empresa debe a terceros: préstamos bancarios, cuentas por pagar a proveedores, impuestos por pagar al SRI.</td><td>El saldo pendiente de tu tarjeta de crédito, la cuota del préstamo del banco.</td></tr>
+    <tr><td><strong>Patrimonio</strong></td><td>Lo que verdaderamente pertenece a los dueños: capital aportado más utilidades acumuladas, una vez restado el pasivo del activo.</td><td>Lo que "de verdad" es tuyo si hoy pagaras todas tus deudas: Activo − Pasivo = Patrimonio.</td></tr>
+  </table>
+
+  <div class="caja caja-ejemplo">
+    <span class="etiqueta etiqueta-ej">Ejemplo aplicado — Ecuador</span>
+    <p>"Importadora Andina S.A.", una pyme guayaquileña que importa repuestos automotrices desde Corea del Sur, cierra el 31 de diciembre con: efectivo en banco $8.000, inventario de repuestos $22.000, un vehículo de reparto $15.000 (Activo total = $45.000); debe $10.000 a su banco y $5.000 a su proveedor coreano (Pasivo total = $15.000). Su Patrimonio, entonces, es $45.000 − $15.000 = $30.000. Esa cifra le dice al dueño, en segundos, cuánto vale realmente su empresa ese día.</p>
+  </div>
+
+  <h3>1.2 Estado de Resultados (ER) — la "película" del periodo</h3>
+  <div class="caja caja-definicion">
+    <span class="etiqueta etiqueta-def">Definición</span>
+    <p>El <strong>Estado de Resultados</strong> (también llamado Estado de Resultado Integral) mide el desempeño de la empresa <strong>durante un periodo de tiempo</strong> (un mes, un trimestre, un año), mostrando los <strong>Ingresos</strong> generados, restando los <strong>Gastos y Costos</strong> incurridos para generarlos, y arrojando como resultado una <strong>Utilidad</strong> (ganancia) o una <strong>Pérdida</strong> (Zapata Sánchez, 2011).</p>
+  </div>
+
+  <table class="tabla-contable">
+    <tr><th>Elemento</th><th>¿Qué representa?</th><th>Ejemplo cotidiano equivalente</th></tr>
+    <tr><td><strong>Ingresos</strong></td><td>Valor de las ventas o servicios prestados en el periodo.</td><td>Tu sueldo mensual o lo que cobraste por un trabajo freelance.</td></tr>
+    <tr><td><strong>Costos y Gastos</strong></td><td>Lo que la empresa consumió para poder generar esos ingresos: costo de la mercadería vendida, sueldos, arriendo, servicios básicos.</td><td>Tu arriendo, comida, transporte, datos móviles.</td></tr>
+    <tr><td><strong>Utilidad o Pérdida</strong></td><td>Ingresos − Costos − Gastos. Si es positivo, hubo utilidad; si es negativo, hubo pérdida.</td><td>Lo que te sobró (o lo que te faltó) a fin de mes.</td></tr>
+  </table>
+
+  <div class="caja caja-ejemplo">
+    <span class="etiqueta etiqueta-ej">Ejemplo aplicado — Ecuador</span>
+    <p>Ese mismo mes, "Importadora Andina S.A." vendió repuestos por $18.000 (Ingresos). El costo de esos repuestos importados fue $11.000, pagó $2.500 de sueldos, $800 de arriendo de bodega y $300 de servicios básicos (Gastos totales = $14.100). Su Estado de Resultados muestra: $18.000 − $14.100 = <strong>$3.900 de utilidad</strong> ese mes. Esa utilidad, al acumularse con la de otros meses, es justamente lo que hace crecer el Patrimonio en el Estado de Situación Financiera.</p>
+  </div>
+
+  <div class="caja caja-negocio">
+    <span class="etiqueta etiqueta-negocio">Hacia los negocios internacionales</span>
+    <p>Cuando "Importadora Andina S.A." necesita ampliar su línea de crédito con su proveedor coreano, o solicitar un préstamo a un banco extranjero, lo primero que le van a pedir es su <strong>Estado de Situación Financiera</strong> y su <strong>Estado de Resultados</strong>, preparados bajo NIIF. ¿Por qué? Porque un inversionista en Seúl, un banco en Miami o un proveedor en Shanghái no conocen personalmente al dueño de la empresa ecuatoriana; confían en que estos dos documentos, elaborados bajo el mismo lenguaje contable internacional, les digan la verdad sobre la solidez (ESF) y la rentabilidad (ER) del negocio. Así, un simple estado financiero se convierte en el pasaporte financiero que abre o cierra puertas de comercio internacional.</p>
+  </div>
+
+  <div class="caja caja-conclusion">
+    <h4>Idea clave</h4>
+    <p>El Estado de Situación Financiera responde <strong>"¿qué tengo y qué debo HOY?"</strong>; el Estado de Resultados responde <strong>"¿qué gané o perdí DURANTE este periodo?"</strong>. Uno es una foto, el otro es una película, y ambos están conectados: la utilidad de la película termina engrosando el patrimonio de la foto.</p>
+  </div>
+</section>
+
+<!-- ===================== PESTAÑA: TEMA 2 ===================== -->
+<section id="panel-tema2" class="panel">
+  <h2>Tema 2 — Cuenta contable, naturaleza de las cuentas, plan de cuentas y partida doble</h2>
+
+  <div class="caja caja-vidareal">
+    <span class="etiqueta etiqueta-vidareal">Desde la vida real</span>
+    <p>Piensa en tu clóset. No guardas toda tu ropa amontonada: tienes un cajón para medias, un espacio para camisas, un gancho para pantalones, una caja para zapatos. Cada "cajón" tiene un nombre y guarda solo un tipo de cosa, y así, cuando necesitas una media, sabes exactamente dónde buscar sin revisar todo el clóset. La contabilidad hace lo mismo con el dinero y las obligaciones de una empresa: en lugar de un cajón para medias, tiene una <strong>cuenta</strong> para "Caja", otra para "Bancos", otra para "Cuentas por Pagar Proveedores". Cada cuenta es un "cajón" donde se guarda y ordena un tipo específico de valor.</p>
+  </div>
+
+  <h3>2.1 La cuenta contable</h3>
+  <div class="caja caja-definicion">
+    <span class="etiqueta etiqueta-def">Definición</span>
+    <p>Una <strong>cuenta contable</strong> es el nombre técnico y el registro individual que se usa para clasificar, acumular y controlar los aumentos y disminuciones de un elemento específico del Activo, Pasivo, Patrimonio, Ingreso o Gasto de una empresa (Zapata Sánchez, 2011). Cada cuenta tiene un nombre (por ejemplo, "Bancos", "Vehículos", "Proveedores"), y dentro de ella se registran todos los movimientos —entradas y salidas— relacionados con ese concepto.</p>
+  </div>
+
+  <div class="caja caja-ejemplo">
+    <span class="etiqueta etiqueta-ej">Ejemplo aplicado — Ecuador</span>
+    <p>La cuenta "Bancos" de una comercializadora en Guayaquil registrará cada depósito (aumento) y cada pago o retiro (disminución) que hace desde su cuenta en Banco Pichincha. Nunca se mezclará con la cuenta "Inventario", porque cada "cajón" contable guarda solo lo que le corresponde: así, cuando el contador necesita saber cuánto dinero hay disponible en el banco, revisa únicamente esa cuenta, sin tener que rastrear todos los movimientos de la empresa.</p>
+  </div>
+
+  <h3>2.2 La naturaleza de las cuentas: deudora y acreedora</h3>
+  <div class="caja caja-definicion">
+    <span class="etiqueta etiqueta-def">Definición</span>
+    <p>La <strong>naturaleza de una cuenta</strong> es el lado (Débito o Crédito) en el cual normalmente aumenta su saldo. Toda cuenta tiene dos lados: el lado izquierdo, llamado <strong>Débito (Debe)</strong>, y el lado derecho, llamado <strong>Crédito (Haber)</strong>. Dependiendo del grupo al que pertenece la cuenta, aumentará por el Débito o por el Crédito.</p>
+  </div>
+
+  <table class="tabla-contable">
+    <tr><th>Grupo</th><th>Naturaleza</th><th>Aumenta con</th><th>Disminuye con</th></tr>
+    <tr><td>Activo</td><td>Deudora</td><td>Débito</td><td>Crédito</td></tr>
+    <tr><td>Gasto</td><td>Deudora</td><td>Débito</td><td>Crédito</td></tr>
+    <tr><td>Pasivo</td><td>Acreedora</td><td>Crédito</td><td>Débito</td></tr>
+    <tr><td>Patrimonio</td><td>Acreedora</td><td>Crédito</td><td>Débito</td></tr>
+    <tr><td>Ingreso</td><td>Acreedora</td><td>Crédito</td><td>Débito</td></tr>
+  </table>
+
+  <div class="caja caja-vidareal">
+    <span class="etiqueta etiqueta-vidareal">Metáfora para recordarlo</span>
+    <p>Piensa en una balanza de dos platos. El plato izquierdo (Débito) es donde "entra" valor a lo que la empresa <strong>tiene</strong> o <strong>gasta</strong> (Activos y Gastos): entre más pongas ahí, más "tienes" o más "gastaste". El plato derecho (Crédito) es donde "entra" valor a lo que la empresa <strong>debe</strong> o a lo que le <strong>pertenece a los dueños</strong> o <strong>ganó</strong> (Pasivo, Patrimonio, Ingreso): entre más pongas ahí, más "debe", más "vale para el dueño" o más "ganó". Ningún lado es "bueno" o "malo"; simplemente cada grupo de cuentas tiene su lado natural de crecimiento.</p>
+  </div>
+
+  <h3>2.3 El plan de cuentas</h3>
+  <div class="caja caja-definicion">
+    <span class="etiqueta etiqueta-def">Definición</span>
+    <p>El <strong>plan de cuentas</strong> (o catálogo de cuentas) es el listado ordenado y codificado de todas las cuentas contables que una empresa utilizará para registrar sus transacciones, organizado según los grupos de los Estados Financieros (Activo, Pasivo, Patrimonio, Ingreso, Gasto) y presentado con una codificación numérica que facilita su ubicación (Vite Rangel, s.f.).</p>
+  </div>
+
+  <div class="caja caja-ejemplo">
+    <span class="etiqueta etiqueta-ej">Ejemplo aplicado — Ecuador</span>
+    <table class="tabla-contable">
+      <tr><th>Código</th><th>Cuenta</th><th>Grupo</th></tr>
+      <tr><td>1.1.01</td><td>Caja</td><td>Activo Corriente</td></tr>
+      <tr><td>1.1.02</td><td>Bancos</td><td>Activo Corriente</td></tr>
+      <tr><td>1.1.05</td><td>Inventario de Mercadería</td><td>Activo Corriente</td></tr>
+      <tr><td>2.1.01</td><td>Proveedores por Pagar</td><td>Pasivo Corriente</td></tr>
+      <tr><td>2.1.05</td><td>IVA por Pagar (SRI)</td><td>Pasivo Corriente</td></tr>
+      <tr><td>3.1.01</td><td>Capital Social</td><td>Patrimonio</td></tr>
+      <tr><td>4.1.01</td><td>Ventas</td><td>Ingreso</td></tr>
+      <tr><td>5.1.01</td><td>Sueldos y Salarios</td><td>Gasto</td></tr>
+    </table>
+    <p>Este catálogo es, para una empresa, lo mismo que el índice numerado de un directorio telefónico o la organización de contactos en tu celular por categorías (familia, trabajo, amigos): permite ubicar de inmediato la cuenta correcta sin confusión, sin importar cuántas transacciones se registren al día.</p>
+  </div>
+
+  <h3>2.4 La partida doble</h3>
+  <div class="caja caja-definicion">
+    <span class="etiqueta etiqueta-def">Definición</span>
+    <p>La <strong>partida doble</strong> es el principio fundamental de la contabilidad que establece que <strong>toda transacción económica afecta como mínimo a dos cuentas contables</strong>, de manera que el total de los valores registrados en el Débito sea siempre igual al total registrado en el Crédito. Este principio, atribuido históricamente a Fray Luca Pacioli (1494), garantiza que la ecuación contable permanezca siempre en equilibrio (Moreno Fernández, s.f.).</p>
+  </div>
+
+  <div class="caja caja-vidareal">
+    <span class="etiqueta etiqueta-vidareal">Desde la vida real</span>
+    <p>Cuando retiras $50 del cajero automático, no es que "aparece" dinero de la nada: tu saldo en el banco <strong>disminuye</strong> $50 y el efectivo en tu billetera <strong>aumenta</strong> $50. Un solo hecho económico afectó dos "cajones" a la vez. Eso es exactamente la partida doble: nada se mueve solo, todo movimiento tiene una contraparte, como una balanza que, para mantenerse equilibrada, necesita que lo que se agrega en un lado tenga su origen en el otro.</p>
+  </div>
+
+  <div class="caja caja-ejemplo">
+    <span class="etiqueta etiqueta-ej">Ejemplo aplicado — Ecuador</span>
+    <p>"Importadora Andina S.A." paga $5.000 en efectivo desde su cuenta bancaria para cancelar parte de la deuda con su proveedor coreano. Este único hecho económico afecta dos cuentas: <strong>disminuye</strong> "Bancos" (Activo, se acredita porque disminuye) y <strong>disminuye</strong> "Proveedores por Pagar" (Pasivo, se debita porque disminuye). El Débito ($5.000 en Proveedores) es igual al Crédito ($5.000 en Bancos): la balanza permanece equilibrada.</p>
+  </div>
+
+  <div class="caja caja-negocio">
+    <span class="etiqueta etiqueta-negocio">Hacia los negocios internacionales</span>
+    <p>Cuando una empresa ecuatoriana importa mercadería, cada dólar que sale hacia un proveedor en el exterior queda perfectamente rastreado gracias a la partida doble: se puede reconstruir el <strong>origen</strong> del pago (¿vino de un préstamo bancario? ¿de ventas propias? ¿de capital de los socios?) y su <strong>destino</strong> (¿a qué proveedor, de qué país, por qué mercadería?). Esta trazabilidad es exactamente lo que un auditor, un banco internacional o una aduana exige revisar antes de aprobar una carta de crédito o una línea de financiamiento para comercio exterior: sin partida doble, no habría manera confiable de probar de dónde vino y hacia dónde fue cada dólar.</p>
+  </div>
+
+  <div class="caja caja-conclusion">
+    <h4>Idea clave</h4>
+    <p>La cuenta contable es el "cajón" donde se guarda cada tipo de valor; su naturaleza (deudora o acreedora) define el lado por el cual normalmente crece; el plan de cuentas es el índice ordenado de todos esos cajones; y la partida doble es la regla que obliga a que cada movimiento tenga siempre una causa y un efecto registrados en dos cuentas, manteniendo el equilibrio contable en todo momento.</p>
+  </div>
+</section>
+
+<!-- ===================== PESTAÑA: TEMA 3 ===================== -->
+<section id="panel-tema3" class="panel">
+  <h2>Tema 3 — Ecuación contable y tipos de asientos contables (práctica) · Cierre de Unidad 1</h2>
+
+  <div class="caja caja-vidareal">
+    <span class="etiqueta etiqueta-vidareal">Desde la vida real</span>
+    <p>Piensa en comprar una casa de $100.000: pones $30.000 de tus ahorros y pides un préstamo hipotecario de $70.000. La casa (lo que tienes) vale exactamente lo mismo que la suma de lo que debes al banco más lo que pusiste tú mismo: $100.000 = $70.000 + $30.000. No importa cómo se combine, siempre hay un equilibrio perfecto entre lo que posees y la forma en que lo financiaste (deuda propia + deuda con terceros). Esa igualdad, aplicada a una empresa, es precisamente la ecuación contable.</p>
+  </div>
+
+  <h3>3.1 La ecuación contable</h3>
+  <div class="caja caja-definicion">
+    <span class="etiqueta etiqueta-def">Definición</span>
+    <p>La <strong>ecuación contable</strong> (o ecuación patrimonial) es la fórmula fundamental que expresa que los <strong>Activos</strong> de una empresa siempre son iguales a la suma de sus <strong>Pasivos</strong> más su <strong>Patrimonio</strong>. Es la representación matemática de la partida doble y el fundamento de todo el sistema contable (Zapata Sánchez, 2011).</p>
+    <table class="tabla-contable">
+      <tr><th colspan="3" style="text-align:center;">ACTIVO = PASIVO + PATRIMONIO</th></tr>
+      <tr><td>Lo que la empresa <strong>tiene</strong></td><td>=</td><td>Lo que <strong>debe</strong> a terceros + lo que <strong>pertenece</strong> a los dueños</td></tr>
+    </table>
+  </div>
+
+  <div class="caja caja-ejemplo">
+    <span class="etiqueta etiqueta-ej">Ejemplo aplicado — Ecuador</span>
+    <p>Retomando a "Importadora Andina S.A.": Activo $45.000 = Pasivo $15.000 + Patrimonio $30.000. Si mañana la empresa compra un nuevo vehículo de $8.000 pagando de contado desde el banco, el Activo "Vehículos" sube $8.000 pero el Activo "Bancos" baja $8.000: el Activo total sigue siendo $45.000. La ecuación <strong>nunca</strong> se rompe, porque cada transacción se registra siempre con partida doble.</p>
+  </div>
+
+  <div class="caja caja-negocio">
+    <span class="etiqueta etiqueta-negocio">Hacia los negocios internacionales</span>
+    <p>Un inversionista extranjero que evalúa asociarse con una empresa ecuatoriana revisa la ecuación contable para entender su <strong>estructura de financiamiento</strong>: ¿la empresa depende mayormente de deuda (Pasivo alto) o tiene solidez patrimonial propia (Patrimonio alto)? Una empresa con demasiado Pasivo frente a su Patrimonio puede representar mayor riesgo para un proveedor internacional que evalúa otorgarle crédito a 90 o 120 días para futuras importaciones.</p>
+  </div>
+
+  <h3>3.2 Tipos de asientos contables</h3>
+  <div class="caja caja-definicion">
+    <span class="etiqueta etiqueta-def">Definición</span>
+    <p>Un <strong>asiento contable</strong> es el registro formal de una transacción en el Libro Diario, aplicando la partida doble: identifica qué cuenta(s) se debita(n), qué cuenta(s) se acredita(n) y por qué valor. Existen varios tipos según el número de cuentas involucradas (Vite Rangel, s.f.):</p>
+  </div>
+
+  <table class="tabla-contable">
+    <tr><th>Tipo de asiento</th><th>Descripción</th></tr>
+    <tr><td><strong>Simple</strong></td><td>Afecta exactamente dos cuentas: una se debita y otra se acredita.</td></tr>
+    <tr><td><strong>Compuesto</strong></td><td>Afecta más de dos cuentas: puede haber varias cuentas debitadas y/o varias acreditadas, siempre que la suma de débitos sea igual a la suma de créditos.</td></tr>
+    <tr><td><strong>De apertura</strong></td><td>Registra los saldos iniciales con los que una empresa comienza su ejercicio contable o sus operaciones.</td></tr>
+    <tr><td><strong>De ajuste</strong></td><td>Corrige o actualiza saldos al cierre de un periodo (se profundizará en la Unidad 3).</td></tr>
+    <tr><td><strong>De cierre</strong></td><td>Cierra las cuentas de Ingresos y Gastos al final de un periodo para determinar la utilidad o pérdida (se profundizará en la Unidad 4).</td></tr>
+  </table>
+
+  <div class="caja caja-ejemplo">
+    <span class="etiqueta etiqueta-ej">Ejemplo aplicado — Ecuador (asiento simple)</span>
+    <p>"Importadora Andina S.A." deposita $2.000 en efectivo a su cuenta del Banco Pichincha.</p>
+    <table class="tabla-contable">
+      <tr><th>Cuenta</th><th>Debe</th><th>Haber</th></tr>
+      <tr><td>Bancos</td><td>2.000</td><td></td></tr>
+      <tr><td>Caja</td><td></td><td>2.000</td></tr>
+    </table>
+    <p>Solo dos cuentas se ven afectadas: Bancos aumenta (se debita, porque es Activo) y Caja disminuye (se acredita, porque es Activo que baja).</p>
+  </div>
+
+  <div class="caja caja-ejemplo">
+    <span class="etiqueta etiqueta-ej">Ejemplo aplicado — Ecuador (asiento compuesto)</span>
+    <p>"Importadora Andina S.A." compra mercadería por $10.000: paga $4.000 en efectivo y el resto queda pendiente con el proveedor.</p>
+    <table class="tabla-contable">
+      <tr><th>Cuenta</th><th>Debe</th><th>Haber</th></tr>
+      <tr><td>Inventario de Mercadería</td><td>10.000</td><td></td></tr>
+      <tr><td>Caja</td><td></td><td>4.000</td></tr>
+      <tr><td>Proveedores por Pagar</td><td></td><td>6.000</td></tr>
+    </table>
+    <p>Aquí se afectan tres cuentas: una debitada (Inventario, aumenta) y dos acreditadas (Caja disminuye, Proveedores aumenta). El total del Debe (10.000) sigue siendo igual al total del Haber (4.000 + 6.000 = 10.000).</p>
+  </div>
+
+  <div class="caja caja-negocio">
+    <span class="etiqueta etiqueta-negocio">Hacia los negocios internacionales — trazabilidad</span>
+    <p>Cada asiento contable construye una <strong>cadena de trazabilidad</strong>: desde el origen del recurso (un aporte de capital, un préstamo, una venta) hasta su destino final (el pago a un proveedor extranjero, la compra de un activo, el pago de impuestos al SRI). Cuando una empresa ecuatoriana crece y comienza a negociar con comerciantes de otros países o incluso a exportar hacia consumidores finales en el exterior, esta cadena de asientos —perfectamente documentada y sustentada bajo NIIF— es lo que permite reconstruir la historia financiera completa de la empresa ante cualquier auditor, banco, aduana o socio internacional. Ningún comerciante serio en el mundo hace negocios con una empresa cuyos números no se puedan rastrear con claridad desde su origen.</p>
+  </div>
+
+  <div class="caja caja-conclusion">
+    <h4>Idea clave — cierre de la Unidad 1</h4>
+    <p>La ecuación contable (Activo = Pasivo + Patrimonio) es la ley de equilibrio que nunca se rompe, y los asientos contables son la herramienta técnica que traduce cada transacción real en ese lenguaje de partida doble. Con esto cerramos la Unidad 1: ya conoces qué es la contabilidad, quién la usa, bajo qué ética y normas se rige, cómo se estructuran sus estados financieros, y cómo se registra técnicamente cada movimiento. A partir de la próxima clase (Día 4), entramos a la Unidad 2: normas tributarias ecuatorianas y el proceso contable completo.</p>
+  </div>
+</section>
+
+<!-- ===================== PESTAÑA: EJERCICIO INTERACTIVO ===================== -->
+<section id="panel-ejercicio" class="panel">
+  <h2>Ejercicio Interactivo — Clasifica la cuenta contable</h2>
+  <p>Para cada cuenta, selecciona el grupo al que pertenece (Activo, Pasivo, Patrimonio, Ingreso o Gasto). Responde <strong>todos</strong> los ítems y luego presiona "Verificar respuestas".</p>
+
+  <div class="alerta-incompleto" id="alertaEjercicio">⚠️ Falta responder uno o más ítems. Revisa los que aparecen sin marcar antes de verificar.</div>
+
+  <div class="item-pregunta" id="ei-item-1">
+    <div class="num-item">1. Bancos</div>
+    <div class="opciones">
+      <label><input type="radio" name="ei1" value="Activo"> Activo</label>
+      <label><input type="radio" name="ei1" value="Pasivo"> Pasivo</label>
+      <label><input type="radio" name="ei1" value="Patrimonio"> Patrimonio</label>
+      <label><input type="radio" name="ei1" value="Ingreso"> Ingreso</label>
+      <label><input type="radio" name="ei1" value="Gasto"> Gasto</label>
+    </div>
+    <div class="retro" id="retro-ei1"></div>
+  </div>
+
+  <div class="item-pregunta" id="ei-item-2">
+    <div class="num-item">2. Proveedores por Pagar</div>
+    <div class="opciones">
+      <label><input type="radio" name="ei2" value="Activo"> Activo</label>
+      <label><input type="radio" name="ei2" value="Pasivo"> Pasivo</label>
+      <label><input type="radio" name="ei2" value="Patrimonio"> Patrimonio</label>
+      <label><input type="radio" name="ei2" value="Ingreso"> Ingreso</label>
+      <label><input type="radio" name="ei2" value="Gasto"> Gasto</label>
+    </div>
+    <div class="retro" id="retro-ei2"></div>
+  </div>
+
+  <div class="item-pregunta" id="ei-item-3">
+    <div class="num-item">3. Capital Social</div>
+    <div class="opciones">
+      <label><input type="radio" name="ei3" value="Activo"> Activo</label>
+      <label><input type="radio" name="ei3" value="Pasivo"> Pasivo</label>
+      <label><input type="radio" name="ei3" value="Patrimonio"> Patrimonio</label>
+      <label><input type="radio" name="ei3" value="Ingreso"> Ingreso</label>
+      <label><input type="radio" name="ei3" value="Gasto"> Gasto</label>
+    </div>
+    <div class="retro" id="retro-ei3"></div>
+  </div>
+
+  <div class="item-pregunta" id="ei-item-4">
+    <div class="num-item">4. Ventas</div>
+    <div class="opciones">
+      <label><input type="radio" name="ei4" value="Activo"> Activo</label>
+      <label><input type="radio" name="ei4" value="Pasivo"> Pasivo</label>
+      <label><input type="radio" name="ei4" value="Patrimonio"> Patrimonio</label>
+      <label><input type="radio" name="ei4" value="Ingreso"> Ingreso</label>
+      <label><input type="radio" name="ei4" value="Gasto"> Gasto</label>
+    </div>
+    <div class="retro" id="retro-ei4"></div>
+  </div>
+
+  <div class="item-pregunta" id="ei-item-5">
+    <div class="num-item">5. Sueldos y Salarios</div>
+    <div class="opciones">
+      <label><input type="radio" name="ei5" value="Activo"> Activo</label>
+      <label><input type="radio" name="ei5" value="Pasivo"> Pasivo</label>
+      <label><input type="radio" name="ei5" value="Patrimonio"> Patrimonio</label>
+      <label><input type="radio" name="ei5" value="Ingreso"> Ingreso</label>
+      <label><input type="radio" name="ei5" value="Gasto"> Gasto</label>
+    </div>
+    <div class="retro" id="retro-ei5"></div>
+  </div>
+
+  <div class="item-pregunta" id="ei-item-6">
+    <div class="num-item">6. Inventario de Mercadería</div>
+    <div class="opciones">
+      <label><input type="radio" name="ei6" value="Activo"> Activo</label>
+      <label><input type="radio" name="ei6" value="Pasivo"> Pasivo</label>
+      <label><input type="radio" name="ei6" value="Patrimonio"> Patrimonio</label>
+      <label><input type="radio" name="ei6" value="Ingreso"> Ingreso</label>
+      <label><input type="radio" name="ei6" value="Gasto"> Gasto</label>
+    </div>
+    <div class="retro" id="retro-ei6"></div>
+  </div>
+
+  <div class="item-pregunta" id="ei-item-7">
+    <div class="num-item">7. IVA por Pagar (SRI)</div>
+    <div class="opciones">
+      <label><input type="radio" name="ei7" value="Activo"> Activo</label>
+      <label><input type="radio" name="ei7" value="Pasivo"> Pasivo</label>
+      <label><input type="radio" name="ei7" value="Patrimonio"> Patrimonio</label>
+      <label><input type="radio" name="ei7" value="Ingreso"> Ingreso</label>
+      <label><input type="radio" name="ei7" value="Gasto"> Gasto</label>
+    </div>
+    <div class="retro" id="retro-ei7"></div>
+  </div>
+
+  <div class="item-pregunta" id="ei-item-8">
+    <div class="num-item">8. Arriendo de Bodega (pagado)</div>
+    <div class="opciones">
+      <label><input type="radio" name="ei8" value="Activo"> Activo</label>
+      <label><input type="radio" name="ei8" value="Pasivo"> Pasivo</label>
+      <label><input type="radio" name="ei8" value="Patrimonio"> Patrimonio</label>
+      <label><input type="radio" name="ei8" value="Ingreso"> Ingreso</label>
+      <label><input type="radio" name="ei8" value="Gasto"> Gasto</label>
+    </div>
+    <div class="retro" id="retro-ei8"></div>
+  </div>
+
+  <button class="btn-principal" onclick="verificarEjercicio()">Verificar respuestas</button>
+  <button class="btn-secundario" onclick="reiniciarEjercicio()">Reiniciar</button>
+
+  <div class="barra-progreso-cont" id="barraContEjercicio" style="display:none;">
+    <div class="barra-progreso" id="barraEjercicio"></div>
+  </div>
+  <div class="resultado-final" id="resultadoEjercicio">
+    <div class="emoji" id="emojiEjercicio"></div>
+    <div class="nota" id="notaEjercicio"></div>
+    <p id="textoResultadoEjercicio"></p>
+  </div>
+</section>
+
+<!-- ===================== PESTAÑA: CUESTIONARIO ===================== -->
+<section id="panel-cuestionario" class="panel">
+  <h2>Cuestionario — 10 preguntas</h2>
+  <p>7 preguntas teóricas sobre el contenido de hoy y 3 preguntas de análisis de caso. Responde todas y presiona "Calificar cuestionario".</p>
+
+  <div class="alerta-incompleto" id="alertaCuestionario">⚠️ Falta responder una o más preguntas. Revísalas antes de calificar.</div>
+
+  <div class="item-pregunta" id="q-item-1">
+    <div class="num-item">1. ¿Qué representa el Estado de Situación Financiera? <span class="badge badge-teorica">Teórica</span></div>
+    <div class="opciones">
+      <label><input type="radio" name="qi1" value="a"> a) El desempeño de la empresa durante un año completo</label>
+      <label><input type="radio" name="qi1" value="b"> b) Una "foto" de lo que la empresa tiene y debe en una fecha específica</label>
+      <label><input type="radio" name="qi1" value="c"> c) Únicamente las ventas realizadas en el mes</label>
+      <label><input type="radio" name="qi1" value="d"> d) El detalle de los sueldos de los empleados</label>
+    </div>
+    <div class="retro" id="retro-qi1"></div>
+  </div>
+
+  <div class="item-pregunta" id="q-item-2">
+    <div class="num-item">2. El Estado de Resultados mide: <span class="badge badge-teorica">Teórica</span></div>
+    <div class="opciones">
+      <label><input type="radio" name="qi2" value="a"> a) Lo que la empresa posee en un instante exacto</label>
+      <label><input type="radio" name="qi2" value="b"> b) El desempeño (ingresos, costos, gastos y utilidad o pérdida) durante un periodo</label>
+      <label><input type="radio" name="qi2" value="c"> c) El listado de proveedores de la empresa</label>
+      <label><input type="radio" name="qi2" value="d"> d) El plan de cuentas de la empresa</label>
+    </div>
+    <div class="retro" id="retro-qi2"></div>
+  </div>
+
+  <div class="item-pregunta" id="q-item-3">
+    <div class="num-item">3. Una cuenta contable es: <span class="badge badge-teorica">Teórica</span></div>
+    <div class="opciones">
+      <label><input type="radio" name="qi3" value="a"> a) Un documento tributario emitido por el SRI</label>
+      <label><input type="radio" name="qi3" value="b"> b) El registro individual que clasifica y acumula los movimientos de un elemento específico (Activo, Pasivo, Patrimonio, Ingreso o Gasto)</label>
+      <label><input type="radio" name="qi3" value="c"> c) El total de ventas de un mes</label>
+      <label><input type="radio" name="qi3" value="d"> d) Un tipo de impuesto</label>
+    </div>
+    <div class="retro" id="retro-qi3"></div>
+  </div>
+
+  <div class="item-pregunta" id="q-item-4">
+    <div class="num-item">4. Las cuentas de naturaleza <strong>deudora</strong> (aumentan por el Débito) son: <span class="badge badge-teorica">Teórica</span></div>
+    <div class="opciones">
+      <label><input type="radio" name="qi4" value="a"> a) Pasivo e Ingreso</label>
+      <label><input type="radio" name="qi4" value="b"> b) Patrimonio e Ingreso</label>
+      <label><input type="radio" name="qi4" value="c"> c) Activo y Gasto</label>
+      <label><input type="radio" name="qi4" value="d"> d) Pasivo y Patrimonio</label>
+    </div>
+    <div class="retro" id="retro-qi4"></div>
+  </div>
+
+  <div class="item-pregunta" id="q-item-5">
+    <div class="num-item">5. El plan de cuentas de una empresa es: <span class="badge badge-teorica">Teórica</span></div>
+    <div class="opciones">
+      <label><input type="radio" name="qi5" value="a"> a) El listado ordenado y codificado de todas las cuentas que la empresa usará para registrar sus transacciones</label>
+      <label><input type="radio" name="qi5" value="b"> b) El resumen de utilidades de los últimos cinco años</label>
+      <label><input type="radio" name="qi5" value="c"> c) Un formulario exclusivo del SRI</label>
+      <label><input type="radio" name="qi5" value="d"> d) La lista de clientes morosos</label>
+    </div>
+    <div class="retro" id="retro-qi5"></div>
+  </div>
+
+  <div class="item-pregunta" id="q-item-6">
+    <div class="num-item">6. El principio de partida doble establece que: <span class="badge badge-teorica">Teórica</span></div>
+    <div class="opciones">
+      <label><input type="radio" name="qi6" value="a"> a) Toda transacción se registra dos veces en la misma cuenta</label>
+      <label><input type="radio" name="qi6" value="b"> b) Toda transacción afecta como mínimo a dos cuentas, y el total del Debe siempre es igual al total del Haber</label>
+      <label><input type="radio" name="qi6" value="c"> c) Solo las compras requieren registro contable</label>
+      <label><input type="radio" name="qi6" value="d"> d) Las cuentas de Pasivo no se registran</label>
+    </div>
+    <div class="retro" id="retro-qi6"></div>
+  </div>
+
+  <div class="item-pregunta" id="q-item-7">
+    <div class="num-item">7. La ecuación contable se expresa como: <span class="badge badge-teorica">Teórica</span></div>
+    <div class="opciones">
+      <label><input type="radio" name="qi7" value="a"> a) Ingreso = Gasto + Utilidad</label>
+      <label><input type="radio" name="qi7" value="b"> b) Activo = Pasivo + Patrimonio</label>
+      <label><input type="radio" name="qi7" value="c"> c) Patrimonio = Activo + Pasivo</label>
+      <label><input type="radio" name="qi7" value="d"> d) Pasivo = Activo − Ingreso</label>
+    </div>
+    <div class="retro" id="retro-qi7"></div>
+  </div>
+
+  <div class="item-pregunta" id="q-item-8">
+    <div class="num-item">8. Caso: Una empresa recibe un préstamo bancario de $5.000 en efectivo, depositado directamente en su cuenta. ¿Qué asiento corresponde? <span class="badge badge-caso">Análisis de caso</span></div>
+    <div class="opciones">
+      <label><input type="radio" name="qi8" value="a"> a) Se debita Bancos $5.000 y se acredita Préstamos por Pagar $5.000</label>
+      <label><input type="radio" name="qi8" value="b"> b) Se debita Préstamos por Pagar $5.000 y se acredita Bancos $5.000</label>
+      <label><input type="radio" name="qi8" value="c"> c) Se debita Ventas $5.000 y se acredita Caja $5.000</label>
+      <label><input type="radio" name="qi8" value="d"> d) No se requiere ningún registro porque es un préstamo</label>
+    </div>
+    <div class="retro" id="retro-qi8"></div>
+  </div>
+
+  <div class="item-pregunta" id="q-item-9">
+    <div class="num-item">9. Caso: Una empresa paga $300 en efectivo por el arriendo del local del mes. ¿Cómo se registra? <span class="badge badge-caso">Análisis de caso</span></div>
+    <div class="opciones">
+      <label><input type="radio" name="qi9" value="a"> a) Se debita Caja $300 y se acredita Gasto Arriendo $300</label>
+      <label><input type="radio" name="qi9" value="b"> b) Se debita Gasto Arriendo $300 y se acredita Caja $300</label>
+      <label><input type="radio" name="qi9" value="c"> c) Se debita Proveedores por Pagar $300 y se acredita Bancos $300</label>
+      <label><input type="radio" name="qi9" value="d"> d) Se debita Capital Social $300 y se acredita Caja $300</label>
+    </div>
+    <div class="retro" id="retro-qi9"></div>
+  </div>
+
+  <div class="item-pregunta" id="q-item-10">
+    <div class="num-item">10. Caso: Una empresa compra mercadería por $3.000: paga $1.000 en efectivo y el resto queda a crédito con el proveedor. ¿Qué tipo de asiento es y qué cuentas participan? <span class="badge badge-caso">Análisis de caso</span></div>
+    <div class="opciones">
+      <label><input type="radio" name="qi10" value="a"> a) Asiento simple: solo se afecta Inventario y Caja</label>
+      <label><input type="radio" name="qi10" value="b"> b) Asiento compuesto: se debita Inventario $3.000; se acredita Caja $1.000 y Proveedores por Pagar $2.000</label>
+      <label><input type="radio" name="qi10" value="c"> c) Asiento de cierre: se cancelan las cuentas de Ingreso</label>
+      <label><input type="radio" name="qi10" value="d"> d) Asiento de apertura: se registran saldos iniciales del ejercicio</label>
+    </div>
+    <div class="retro" id="retro-qi10"></div>
+  </div>
+
+  <button class="btn-principal" onclick="verificarCuestionario()">Calificar cuestionario</button>
+  <button class="btn-secundario" onclick="reiniciarCuestionario()">Reiniciar</button>
+
+  <div class="barra-progreso-cont" id="barraContCuestionario" style="display:none;">
+    <div class="barra-progreso" id="barraCuestionario"></div>
+  </div>
+  <div class="resultado-final" id="resultadoCuestionario">
+    <div class="emoji" id="emojiCuestionario"></div>
+    <div class="nota" id="notaCuestionario"></div>
+    <p id="textoResultadoCuestionario"></p>
+  </div>
+</section>
+
+<!-- ===================== PESTAÑA: ACTIVIDAD CON IA ===================== -->
+<section id="panel-ia" class="panel">
+  <h2>Actividad con IA</h2>
+  <p>Esta actividad usa <strong>Claude</strong> (<a href="https://claude.ai" target="_blank" rel="noopener">claude.ai</a>), gratuito para crear una cuenta y usar en su versión estándar. La usarás para construir y verificar tu propio caso contable, no para que Claude "te dé la respuesta" sin que tú pienses primero.</p>
+
+  <h3>Paso 1 — Inventa tu propia empresa</h3>
+  <p>Antes de abrir Claude, en un papel o documento, inventa una pequeña empresa ecuatoriana (nombre, actividad, si importa o exporta algo) y escribe <strong>tú mismo, sin ayuda de IA</strong>, tres transacciones que esa empresa podría tener en un día (por ejemplo: pagar un arriendo, comprar mercadería a crédito, depositar dinero en el banco). Para cada una, intenta identificar qué cuentas se afectan y si se debitan o acreditan.</p>
+
+  <h3>Paso 2 — Pide a Claude que audite tu razonamiento</h3>
+  <p>Copia y pega el siguiente prompt en claude.ai, reemplazando los corchetes con tus propios datos:</p>
+  <div class="prompt-ia">Actúa como un profesor de Contabilidad General que revisa el trabajo de un estudiante que recién está aprendiendo la partida doble.
+
+Mi empresa se llama: [nombre de tu empresa inventada]
+Actividad: [qué vende o qué servicio presta, y si importa/exporta algo]
+
+Estas son mis 3 transacciones y cómo yo creo que se registran (cuenta que se debita, cuenta que se acredita, y el valor):
+
+1. [transacción 1 + tu propuesta de asiento]
+2. [transacción 2 + tu propuesta de asiento]
+3. [transacción 3 + tu propuesta de asiento]
+
+Por favor:
+1. Dime si cada asiento respeta la partida doble (Debe = Haber) y la naturaleza correcta de cada cuenta (deudora o acreedora).
+2. Si me equivoqué en algo, NO me des directamente la respuesta correcta: hazme una pregunta guía que me ayude a encontrar mi error por mí mismo.
+3. Al final, dime si mis 3 transacciones, en conjunto, mantendrían equilibrada la ecuación contable (Activo = Pasivo + Patrimonio).</div>
+
+  <h3>Paso 3 — Qué hacer con la respuesta de Claude</h3>
+  <p>Lee la respuesta completa. Si Claude te hizo una pregunta guía, respóndela tú mismo antes de pedirle la solución directa. Corrige tus 3 transacciones en tu documento original según lo que descubriste, y anota en una frase qué error cometiste (si lo hubo) y por qué ocurrió — ese es el verdadero aprendizaje.</p>
+
+  <div class="caja caja-conclusion">
+    <h4>Criterio: pensamiento crítico vs. copia simple</h4>
+    <p><strong>Pensamiento crítico:</strong> propones tus propias transacciones y asientos antes de usar la IA, intentas responder las preguntas guía por ti mismo antes de pedir la respuesta directa, y puedes explicar con tus propias palabras por qué un asiento estaba bien o mal. <strong>Copia simple:</strong> le pides a Claude que "invente y resuelva todo" sin haber pensado primero, copias la respuesta sin entenderla, o no puedes explicar después por qué una cuenta se debita o se acredita. El objetivo de hoy no es tener 3 asientos correctos en un papel; es que puedas explicarle este ejercicio a un compañero sin ayuda de nadie.</p>
+  </div>
+</section>
+
+<!-- ===================== PESTAÑA: REFLEXIÓN ===================== -->
+<section id="panel-reflexion" class="panel">
+  <h2>Reflexión</h2>
+  <p>No hay respuestas correctas o incorrectas. El objetivo es que conectes lo aprendido hoy con tu propia vida y, desde ahí, con el mundo de los negocios internacionales.</p>
+
+  <div class="pregunta-reflexion">
+    <p><strong>1.</strong> Piensa en un día reciente en el que tomaste una decisión de dinero (comprar algo, prestar, pedir prestado, ahorrar). Si tuvieras que registrar esa decisión como un asiento contable de partida doble, ¿qué dos "cuentas" de tu propia vida se habrían afectado? ¿Qué te dice esto sobre cómo, sin saberlo, ya pensabas en equilibrio antes de esta clase?</p>
+  </div>
+
+  <div class="pregunta-reflexion">
+    <p><strong>2.</strong> La ecuación contable dice que todo lo que tienes viene de una deuda o de algo que verdaderamente es tuyo (Activo = Pasivo + Patrimonio). Trasladado a tu vida personal —no solo al dinero, sino a tus logros, tu tiempo, tus relaciones— ¿qué proporción sientes que hoy es "deuda" (dependes de otros, de circunstancias externas) y qué proporción es genuinamente "tuya"? ¿Cómo te hace sentir esa proporción?</p>
+  </div>
+
+  <div class="pregunta-reflexion">
+    <p><strong>3.</strong> Hoy aprendiste que un negocio internacional confía en una empresa desconocida solo porque sus números son trazables y transparentes bajo reglas comunes (NIIF, partida doble). ¿En qué área de tu propia vida —amistades, familia, trabajo— la confianza también se construye porque la otra persona es "trazable": cumple lo que dice, es consistente entre lo que promete y lo que hace? ¿Qué tan trazable eres tú mismo para las personas que te rodean?</p>
+  </div>
+
+  <div class="pregunta-reflexion">
+    <p><strong>4.</strong> Si en el futuro fueras tú quien negocia con un proveedor o cliente en otro país, y esa persona solo pudiera "conocerte" a través de tus reportes financieros, tus asientos contables y tu forma de cumplir tus compromisos: ¿qué impresión de ti como profesional dejarían esos números y esos actos, tal como te comportas hoy?</p>
+  </div>
+</section>
+
+<!-- ===================== PESTAÑA: BIBLIOGRAFÍA ===================== -->
+<section id="panel-bibliografia" class="panel">
+  <h2>Bibliografía</h2>
+  <p>Referencias en formato APA 7.ª edición, correspondientes al Sílabo de la asignatura Contabilidad General (Código 091601124).</p>
+
+  <div class="ficha-biblio">
+    <div class="tipo">Libro — Básica</div>
+    <p>Zapata Sánchez, P. (2011). <em>Laboratorio de contabilidad general</em> (7.ª ed.). McGraw-Hill.</p>
+  </div>
+
+  <div class="ficha-biblio">
+    <div class="tipo">Libro electrónico — Básica</div>
+    <p>Vite Rangel, V. T. (s.f.). <em>Contabilidad general</em>. Editorial Digital UNID. https://elibro.net/es/ereader/uguayaquil/41179</p>
+  </div>
+
+  <div class="ficha-biblio">
+    <div class="tipo">Libro electrónico — Básica</div>
+    <p>Moreno Fernández, J. A. (s.f.). <em>Contabilidad básica</em> (4.ª ed.). Grupo Editorial Patria. https://elibro.net/es/ereader/uguayaquil/39416</p>
+  </div>
+
+  <div class="ficha-biblio">
+    <div class="tipo">Norma internacional — Sitio web</div>
+    <p>IFRS Foundation. (s.f.). <em>NIC 1 — Presentación de estados financieros</em>. International Accounting Standards Board. https://www.ifrs.org</p>
+  </div>
+
+  <div class="ficha-biblio">
+    <div class="tipo">Organismo de control — Sitio web</div>
+    <p>Servicio de Rentas Internas. (s.f.). <em>Portal institucional del SRI</em>. Gobierno del Ecuador. https://www.sri.gob.ec</p>
+  </div>
+
+  <div class="ficha-biblio">
+    <div class="tipo">Organismo de control — Sitio web</div>
+    <p>Superintendencia de Compañías, Valores y Seguros. (s.f.). <em>Portal institucional</em>. Gobierno del Ecuador. https://www.supercias.gob.ec</p>
+  </div>
+
+  <p style="font-size:0.85rem; color:#5a6b7a; margin-top:18px;"><em>Nota: se recomienda verificar la edición vigente de cada obra y ampliar la consulta en Google Scholar o en el repositorio institucional de la Universidad de Guayaquil.</em></p>
+</section>
+
+</main>
+
+<footer class="nota-final">
+  Universidad de Guayaquil · Facultad de Ciencias Administrativas · Negocios Internacionales · Contabilidad General (091601124) · Día 3, Semana 1
+</footer>
+
+<script>
+/* ===================== NAVEGACIÓN DE PESTAÑAS ===================== */
+function showTab(id) {
+  document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active'); });
+  document.getElementById('panel-' + id).classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+  document.querySelector('.tab-btn[data-tab="' + id + '"]').classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ===================== ACORDEÓN REPASO ===================== */
+function toggleAcordeon(btn) {
+  var panel = btn.nextElementSibling;
+  var abierto = panel.classList.contains('abierto');
+  if (abierto) {
+    panel.classList.remove('abierto');
+    btn.classList.remove('abierto');
+    btn.querySelector('.flecha').textContent = '▶';
+  } else {
+    panel.classList.add('abierto');
+    btn.classList.add('abierto');
+    btn.querySelector('.flecha').textContent = '▼';
+  }
+}
+
+/* ===================== EJERCICIO INTERACTIVO ===================== */
+var respuestasEjercicio = {
+  ei1: { correcta: 'Activo', explicacion: 'Bancos es Activo: representa dinero de la empresa disponible en una institución financiera, un recurso que le generará beneficio futuro.' },
+  ei2: { correcta: 'Pasivo', explicacion: 'Proveedores por Pagar es Pasivo: es una obligación de la empresa con terceros (a quienes debe pagar por mercadería o servicios recibidos).' },
+  ei3: { correcta: 'Patrimonio', explicacion: 'Capital Social es Patrimonio: representa el aporte de los dueños y, junto con las utilidades acumuladas, lo que verdaderamente les pertenece.' },
+  ei4: { correcta: 'Ingreso', explicacion: 'Ventas es Ingreso: refleja el valor generado por la actividad principal de la empresa durante un periodo.' },
+  ei5: { correcta: 'Gasto', explicacion: 'Sueldos y Salarios es Gasto: es un recurso que la empresa consume (paga a sus empleados) para poder operar y generar ingresos.' },
+  ei6: { correcta: 'Activo', explicacion: 'Inventario de Mercadería es Activo: son los bienes que la empresa posee para la venta, un recurso que generará beneficio económico futuro.' },
+  ei7: { correcta: 'Pasivo', explicacion: 'IVA por Pagar (SRI) es Pasivo: es una obligación tributaria pendiente de pago con el Servicio de Rentas Internas.' },
+  ei8: { correcta: 'Gasto', explicacion: 'Arriendo de Bodega (pagado) es Gasto: es un recurso que la empresa consume periódicamente para poder operar, sin que se convierta en un bien propio.' }
+};
+
+function verificarEjercicio() {
+  var claves = Object.keys(respuestasEjercicio);
+  var faltantes = claves.filter(function(k) {
+    return !document.querySelector('input[name="' + k + '"]:checked');
+  });
+  if (faltantes.length > 0) {
+    document.getElementById('alertaEjercicio').style.display = 'block';
+    document.getElementById(faltantes[0].replace('ei', 'ei-item-')).scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+  document.getElementById('alertaEjercicio').style.display = 'none';
+
+  var correctas = 0;
+  claves.forEach(function(k) {
+    var seleccionado = document.querySelector('input[name="' + k + '"]:checked').value;
+    var item = document.getElementById(k.replace('ei', 'ei-item-'));
+    var retro = document.getElementById('retro-' + k);
+    var esCorrecta = seleccionado === respuestasEjercicio[k].correcta;
+    if (esCorrecta) {
+      correctas++;
+      item.classList.add('ok');
+      item.classList.remove('mal');
+      retro.className = 'retro correcta';
+      retro.textContent = '✅ Correcto. ' + respuestasEjercicio[k].explicacion;
+    } else {
+      item.classList.add('mal');
+      item.classList.remove('ok');
+      retro.className = 'retro incorrecta';
+      retro.textContent = '❌ Incorrecto. La respuesta correcta es "' + respuestasEjercicio[k].correcta + '". ' + respuestasEjercicio[k].explicacion;
+    }
+  });
+
+  var total = claves.length;
+  var porcentaje = Math.round((correctas / total) * 100);
+  document.getElementById('barraContEjercicio').style.display = 'block';
+  var barra = document.getElementById('barraEjercicio');
+  setTimeout(function() { barra.style.width = porcentaje + '%'; }, 100);
+
+  var resultado = document.getElementById('resultadoEjercicio');
+  resultado.style.display = 'block';
+  document.getElementById('notaEjercicio').textContent = correctas + ' / ' + total;
+  document.getElementById('textoResultadoEjercicio').textContent = 'Clasificaste correctamente ' + correctas + ' de ' + total + ' cuentas (' + porcentaje + '%).';
+  document.getElementById('emojiEjercicio').textContent = emojiSegunPorcentaje(porcentaje);
+  resultado.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function reiniciarEjercicio() {
+  Object.keys(respuestasEjercicio).forEach(function(k) {
+    var radios = document.querySelectorAll('input[name="' + k + '"]');
+    radios.forEach(function(r) { r.checked = false; });
+    var item = document.getElementById(k.replace('ei', 'ei-item-'));
+    item.classList.remove('ok', 'mal');
+    var retro = document.getElementById('retro-' + k);
+    retro.className = 'retro';
+    retro.textContent = '';
+  });
+  document.getElementById('alertaEjercicio').style.display = 'none';
+  document.getElementById('barraContEjercicio').style.display = 'none';
+  document.getElementById('barraEjercicio').style.width = '0%';
+  document.getElementById('resultadoEjercicio').style.display = 'none';
+}
+
+/* ===================== CUESTIONARIO ===================== */
+var respuestasCuestionario = {
+  qi1: { correcta: 'b', explicacion: 'El Estado de Situación Financiera muestra, en una fecha específica, los Activos, Pasivos y Patrimonio de la empresa: es una "foto" en un instante exacto.' },
+  qi2: { correcta: 'b', explicacion: 'El Estado de Resultados mide el desempeño durante un periodo, mostrando Ingresos, Costos y Gastos, y el resultado final (utilidad o pérdida).' },
+  qi3: { correcta: 'b', explicacion: 'Una cuenta contable es el registro individual que clasifica y acumula los aumentos y disminuciones de un elemento del Activo, Pasivo, Patrimonio, Ingreso o Gasto.' },
+  qi4: { correcta: 'c', explicacion: 'Activo y Gasto son de naturaleza deudora: aumentan por el Débito. Pasivo, Patrimonio e Ingreso son de naturaleza acreedora: aumentan por el Crédito.' },
+  qi5: { correcta: 'a', explicacion: 'El plan de cuentas es el listado ordenado y codificado de todas las cuentas que la empresa usará, organizado por grupos (Activo, Pasivo, Patrimonio, Ingreso, Gasto).' },
+  qi6: { correcta: 'b', explicacion: 'La partida doble establece que toda transacción afecta como mínimo a dos cuentas, manteniendo siempre el equilibrio entre el total del Debe y el total del Haber.' },
+  qi7: { correcta: 'b', explicacion: 'La ecuación contable es Activo = Pasivo + Patrimonio: lo que la empresa tiene siempre es igual a lo que debe más lo que pertenece a los dueños.' },
+  qi8: { correcta: 'a', explicacion: 'Al recibir dinero en el banco por un préstamo, Bancos (Activo) aumenta y se debita; Préstamos por Pagar (Pasivo) aumenta y se acredita. El Debe y el Haber quedan iguales en $5.000.' },
+  qi9: { correcta: 'b', explicacion: 'El pago de arriendo es un Gasto que aumenta (se debita) porque la empresa consume ese recurso; Caja (Activo) disminuye y se acredita porque salió efectivo.' },
+  qi10: { correcta: 'b', explicacion: 'Es un asiento compuesto porque afecta tres cuentas: se debita Inventario $3.000 (aumenta el Activo); se acredita Caja $1.000 (disminuye el Activo) y Proveedores por Pagar $2.000 (aumenta el Pasivo). El Debe (3.000) es igual a la suma del Haber (1.000+2.000=3.000).' }
+};
+
+function verificarCuestionario() {
+  var claves = Object.keys(respuestasCuestionario);
+  var faltantes = claves.filter(function(k) {
+    return !document.querySelector('input[name="' + k + '"]:checked');
+  });
+  if (faltantes.length > 0) {
+    document.getElementById('alertaCuestionario').style.display = 'block';
+    document.getElementById(faltantes[0].replace('qi', 'q-item-')).scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+  document.getElementById('alertaCuestionario').style.display = 'none';
+
+  var correctas = 0;
+  claves.forEach(function(k) {
+    var seleccionado = document.querySelector('input[name="' + k + '"]:checked').value;
+    var item = document.getElementById(k.replace('qi', 'q-item-'));
+    var retro = document.getElementById('retro-' + k);
+    var esCorrecta = seleccionado === respuestasCuestionario[k].correcta;
+    if (esCorrecta) {
+      correctas++;
+      item.classList.add('ok');
+      item.classList.remove('mal');
+      retro.className = 'retro correcta';
+      retro.textContent = '✅ Correcto. ' + respuestasCuestionario[k].explicacion;
+    } else {
+      item.classList.add('mal');
+      item.classList.remove('ok');
+      retro.className = 'retro incorrecta';
+      retro.textContent = '❌ Incorrecto. ' + respuestasCuestionario[k].explicacion;
+    }
+  });
+
+  var total = claves.length;
+  var nota10 = (correctas / total) * 10;
+  var porcentaje = Math.round((correctas / total) * 100);
+  document.getElementById('barraContCuestionario').style.display = 'block';
+  var barra = document.getElementById('barraCuestionario');
+  setTimeout(function() { barra.style.width = porcentaje + '%'; }, 100);
+
+  var resultado = document.getElementById('resultadoCuestionario');
+  resultado.style.display = 'block';
+  document.getElementById('notaCuestionario').textContent = nota10.toFixed(1) + ' / 10';
+  document.getElementById('textoResultadoCuestionario').textContent = 'Respondiste correctamente ' + correctas + ' de ' + total + ' preguntas (' + porcentaje + '%).';
+  document.getElementById('emojiCuestionario').textContent = emojiSegunPorcentaje(porcentaje);
+  resultado.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function reiniciarCuestionario() {
+  Object.keys(respuestasCuestionario).forEach(function(k) {
+    var radios = document.querySelectorAll('input[name="' + k + '"]');
+    radios.forEach(function(r) { r.checked = false; });
+    var item = document.getElementById(k.replace('qi', 'q-item-'));
+    item.classList.remove('ok', 'mal');
+    var retro = document.getElementById('retro-' + k);
+    retro.className = 'retro';
+    retro.textContent = '';
+  });
+  document.getElementById('alertaCuestionario').style.display = 'none';
+  document.getElementById('barraContCuestionario').style.display = 'none';
+  document.getElementById('barraCuestionario').style.width = '0%';
+  document.getElementById('resultadoCuestionario').style.display = 'none';
+}
+
+/* ===================== UTILIDAD COMPARTIDA ===================== */
+function emojiSegunPorcentaje(p) {
+  if (p === 100) return '🏆';
+  if (p >= 80) return '🎯';
+  if (p >= 60) return '📘';
+  if (p >= 40) return '⚠️';
+  return '📖';
+}
+</script>
+</body>
+</html>

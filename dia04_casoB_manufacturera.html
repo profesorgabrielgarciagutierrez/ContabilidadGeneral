@@ -1,0 +1,2246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Día 4 · Caso B — Empresa Manufacturera | Contabilidad General</title>
+<!--
+=========================================================================
+ PLAN DE CONSTRUCCIÓN (fragmentos)
+ 1) head + CSS completo + header + nav + inicio pestaña "Información del mes"
+ 2) resto Información del mes + Libro Diario asientos 1-9
+ 3) Libro Diario asientos 10-18 + inicio Mayorización (cuentas T)
+ 4) Mayorización: formato folio + resumen de saldos
+ 5) Ejercicio interactivo + Cuestionario
+ 6) Actividad con IA + Reflexión + Bibliografía + JS
+=========================================================================
+-->
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+/* ============ BASE ============ */
+*{box-sizing:border-box;}
+body{margin:0;padding:0;font-family:'Source Sans 3',Arial,sans-serif;font-size:17px;line-height:1.75;color:#22262b;background:#eef2f6;}
+.container{max-width:1080px;margin:0 auto;background:#ffffff;box-shadow:0 0 22px rgba(0,0,0,.10);}
+h1,h2,h3,h4{font-family:'Lora',Georgia,serif;color:#003366;line-height:1.3;}
+p{margin:0 0 14px 0;text-align:justify;}
+ul,ol{margin:0 0 16px 0;padding-left:26px;}
+li{margin-bottom:9px;text-align:justify;}
+strong{color:#00264d;}
+a{color:#0b5394;}
+
+/* ============ ENCABEZADO ============ */
+.header{background:#003366;color:#ffffff;padding:26px 24px 22px 24px;}
+.header h1{color:#ffffff;margin:0 0 6px 0;font-size:26px;}
+.header .inst{font-size:14px;letter-spacing:.4px;text-transform:uppercase;color:#cfe3f7;margin:0 0 12px 0;font-weight:600;}
+.header .meta{font-size:15px;color:#e6f0fa;margin:0;}
+.header .pill{display:inline-block;background:#ffffff;color:#003366;font-weight:700;border-radius:20px;padding:3px 14px;font-size:13px;margin:8px 8px 0 0;}
+.header .pill.alt{background:#87CEEB;color:#00264d;}
+
+/* ============ PESTAÑAS ============ */
+.tabs{background:#87CEEB;display:flex;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;border-bottom:3px solid #003366;}
+.tab-btn{flex:0 0 auto;background:#87CEEB;color:#000000;border:none;outline:none;cursor:pointer;font-family:'Source Sans 3',Arial,sans-serif;font-size:15px;font-weight:600;padding:14px 18px;white-space:nowrap;border-right:1px solid #6fb9dd;}
+.tab-btn:hover{background:#a5daf0;}
+.tab-btn.active{background:#ffffff;color:#003366;font-weight:700;}
+.panel{display:none;padding:26px 26px 44px 26px;}
+.panel.active{display:block;}
+
+/* ============ CAJAS DIDÁCTICAS ============ */
+.def-box{background:#f2f7fd;border-left:6px solid #003366;padding:15px 18px;margin:18px 0;border-radius:0 8px 8px 0;}
+.def-box h4{margin:0 0 8px 0;font-size:18px;}
+.ejemplo-box{background:#fff8e8;border-left:6px solid #d99400;padding:15px 18px;margin:18px 0;border-radius:0 8px 8px 0;}
+.ejemplo-box h4{margin:0 0 8px 0;font-size:18px;color:#8a5c00;}
+.clave-box{background:#eaf3ff;border:2px solid #003366;padding:16px 18px;margin:22px 0;border-radius:10px;}
+.clave-box h4{margin:0 0 8px 0;font-size:18px;}
+.carrera-box{background:#eaf7ed;border:2px solid #1e7d34;padding:16px 18px;margin:24px 0;border-radius:10px;}
+.carrera-box h4{margin:0 0 10px 0;font-size:18px;color:#14602a;}
+.carrera-box li{margin-bottom:8px;}
+.alerta-box{background:#fdf0f0;border-left:6px solid #b32020;padding:15px 18px;margin:18px 0;border-radius:0 8px 8px 0;}
+.alerta-box h4{margin:0 0 8px 0;font-size:18px;color:#8c1616;}
+.nota-box{background:#f4f4f6;border:1px dashed #9aa2ad;padding:13px 16px;margin:16px 0;border-radius:8px;font-size:16px;}
+.nota-box h4{margin:0 0 6px 0;font-size:17px;}
+.continuidad{background:#f3edfa;border-left:6px solid #5b3f96;padding:15px 18px;margin:18px 0;border-radius:0 8px 8px 0;}
+.continuidad h4{margin:0 0 8px 0;font-size:18px;color:#4a3080;}
+
+/* ============ TABLAS GENERALES ============ */
+.scroll-x{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:16px 0;}
+table.data{border-collapse:collapse;width:100%;font-size:15.5px;min-width:560px;}
+table.data th{background:#003366;color:#ffffff;text-align:left;padding:9px 10px;font-weight:600;border:1px solid #002247;}
+table.data td{padding:8px 10px;border:1px solid #c9d3de;vertical-align:top;}
+table.data tr:nth-child(even) td{background:#f6f9fc;}
+table.data td.num,table.data th.num{text-align:right;font-family:'Courier New',Courier,monospace;white-space:nowrap;}
+table.data td.cod{font-family:'Courier New',Courier,monospace;white-space:nowrap;}
+table.data tr.total td{background:#dbe8f5;font-weight:700;border-top:2px solid #003366;}
+table.data tr.grupo td{background:#00264d;color:#ffffff;font-weight:700;}
+
+/* ============ LIBRO DIARIO ============ */
+.asiento{border:1px solid #b9c6d4;border-radius:10px;margin:26px 0;overflow:hidden;background:#ffffff;}
+.asiento-head{background:#003366;color:#ffffff;padding:10px 14px;font-family:'Lora',Georgia,serif;font-size:17px;font-weight:600;}
+.asiento-head .fecha{float:right;font-family:'Source Sans 3',Arial,sans-serif;font-size:14px;font-weight:400;color:#cfe3f7;}
+table.diario{border-collapse:collapse;width:100%;font-size:15.5px;min-width:600px;}
+table.diario th{background:#dbe8f5;color:#003366;padding:8px 10px;text-align:left;border-bottom:2px solid #003366;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:.3px;}
+table.diario th.num{text-align:right;}
+table.diario td{padding:7px 10px;border-bottom:1px solid #e2e8ef;vertical-align:top;}
+table.diario td.cod{font-family:'Courier New',Courier,monospace;white-space:nowrap;color:#4a5560;font-size:14.5px;}
+table.diario td.num{text-align:right;font-family:'Courier New',Courier,monospace;white-space:nowrap;}
+table.diario td.acreedora{padding-left:40px;}
+table.diario tr.suman td{border-top:3px double #003366;border-bottom:none;font-weight:700;background:#f2f7fd;padding-top:9px;}
+.glosa{font-style:italic;color:#3d4a57;padding:10px 14px;background:#f6f9fc;border-top:1px solid #e2e8ef;font-size:15.5px;}
+.calculo{background:#fffdf5;border-top:1px solid #e8dcc0;border-bottom:1px solid #e8dcc0;padding:12px 14px;font-size:15.5px;}
+.calculo h5{margin:0 0 8px 0;font-family:'Lora',Georgia,serif;font-size:16px;color:#8a5c00;}
+table.calc{border-collapse:collapse;font-size:15px;min-width:340px;}
+table.calc td{padding:4px 12px 4px 0;border:none;}
+table.calc td.num{text-align:right;font-family:'Courier New',Courier,monospace;white-space:nowrap;padding-right:0;}
+table.calc tr.res td{border-top:1px solid #b9a76a;font-weight:700;}
+
+/* ============ CUENTAS T ============ */
+.t-grid{display:flex;flex-wrap:wrap;gap:16px;margin:18px 0;}
+.t-account{flex:1 1 320px;min-width:290px;border:1px solid #b9c6d4;border-radius:8px;overflow:hidden;background:#ffffff;}
+.t-head{background:#003366;color:#ffffff;padding:7px 10px;font-size:14.5px;font-weight:700;font-family:'Lora',Georgia,serif;}
+.t-head span{display:block;font-family:'Courier New',Courier,monospace;font-size:12.5px;font-weight:400;color:#cfe3f7;}
+table.tcta{border-collapse:collapse;width:100%;font-size:14px;}
+table.tcta th{background:#dbe8f5;color:#003366;padding:5px 8px;font-size:12.5px;text-transform:uppercase;letter-spacing:.3px;}
+table.tcta th:first-child{border-right:2px solid #003366;}
+table.tcta td{padding:4px 8px;vertical-align:top;width:50%;font-family:'Courier New',Courier,monospace;font-size:13.5px;}
+table.tcta td:first-child{border-right:2px solid #003366;}
+table.tcta tr.tsum td{border-top:3px double #003366;font-weight:700;background:#f2f7fd;}
+table.tcta tr.tsaldo td{background:#eaf3ff;font-weight:700;}
+.t-lbl{font-family:'Source Sans 3',Arial,sans-serif;color:#5a6572;font-size:12px;}
+
+/* ============ FOLIO ============ */
+table.folio{border-collapse:collapse;width:100%;font-size:15px;min-width:620px;}
+table.folio caption{caption-side:top;text-align:left;font-family:'Lora',Georgia,serif;font-weight:700;color:#003366;padding:8px 0;font-size:17px;}
+table.folio th{background:#003366;color:#ffffff;padding:8px 10px;border:1px solid #002247;font-size:14px;}
+table.folio th.num{text-align:right;}
+table.folio td{padding:6px 10px;border:1px solid #c9d3de;}
+table.folio td.num{text-align:right;font-family:'Courier New',Courier,monospace;white-space:nowrap;}
+table.folio tr:nth-child(even) td{background:#f6f9fc;}
+table.folio tr.total td{background:#dbe8f5;font-weight:700;border-top:3px double #003366;}
+
+/* ============ EJERCICIO Y CUESTIONARIO ============ */
+.item{border:1px solid #c9d3de;border-radius:10px;padding:16px 18px;margin:18px 0;background:#fbfcfe;}
+.item .enunciado{font-weight:600;color:#00264d;margin-bottom:10px;display:block;}
+.badge{display:inline-block;font-size:12px;font-weight:700;border-radius:14px;padding:2px 11px;margin-right:8px;text-transform:uppercase;letter-spacing:.4px;vertical-align:middle;}
+.badge-teorica{background:#003366;color:#ffffff;}
+.badge-caso{background:#d99400;color:#ffffff;}
+.opciones label{display:block;padding:8px 10px;border:1px solid #dde4ec;border-radius:7px;margin-bottom:7px;cursor:pointer;background:#ffffff;}
+.opciones label:hover{background:#eef5fc;}
+.opciones input{margin-right:9px;}
+.feedback{display:none;margin-top:12px;padding:12px 14px;border-radius:8px;font-size:15.5px;}
+.feedback.visible{display:block;}
+.feedback.correcto{background:#e8f6ec;border-left:6px solid #1e7d34;}
+.feedback.incorrecto{background:#fdeeee;border-left:6px solid #b32020;}
+.feedback .veredicto{font-weight:700;display:block;margin-bottom:5px;}
+.feedback.correcto .veredicto{color:#14602a;}
+.feedback.incorrecto .veredicto{color:#8c1616;}
+.acciones{margin:24px 0 10px 0;display:flex;gap:12px;flex-wrap:wrap;}
+.btn{font-family:'Source Sans 3',Arial,sans-serif;font-size:16px;font-weight:700;border:none;border-radius:8px;padding:12px 24px;cursor:pointer;}
+.btn-verificar{background:#003366;color:#ffffff;}
+.btn-verificar:hover{background:#00264d;}
+.btn-reiniciar{background:#ffffff;color:#003366;border:2px solid #003366;}
+.btn-reiniciar:hover{background:#eaf3ff;}
+.resultado{display:none;margin:22px 0;padding:20px;border:2px solid #003366;border-radius:12px;background:#f2f7fd;text-align:center;}
+.resultado.visible{display:block;}
+.resultado .emoji{font-size:44px;line-height:1;display:block;margin-bottom:8px;}
+.resultado .puntaje{font-family:'Lora',Georgia,serif;font-size:26px;font-weight:700;color:#003366;}
+.resultado .detalle{font-size:16px;color:#3d4a57;margin-top:6px;}
+.barra{height:22px;background:#dbe8f5;border-radius:12px;overflow:hidden;margin:14px auto 0 auto;max-width:520px;}
+.barra-fill{height:100%;width:0%;background:#003366;border-radius:12px;transition:width 1.1s ease-out;}
+.aviso{display:none;margin:14px 0;padding:12px 14px;border-radius:8px;background:#fff4d6;border-left:6px solid #d99400;font-weight:600;color:#8a5c00;}
+.aviso.visible{display:block;}
+
+/* ============ REFLEXIÓN Y BIBLIOGRAFÍA ============ */
+.reflexion-q{background:#ffffff;border:1px solid #c9d3de;border-left:6px solid #5b3f96;border-radius:0 10px 10px 0;padding:14px 18px;margin:16px 0;}
+.reflexion-q .num{font-family:'Lora',Georgia,serif;font-weight:700;color:#5b3f96;margin-right:8px;}
+.bib-card{background:#ffffff;border:1px solid #c9d3de;border-radius:10px;padding:14px 18px;margin:14px 0;border-top:5px solid #003366;}
+.bib-card .tipo{display:inline-block;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#ffffff;background:#003366;border-radius:12px;padding:2px 11px;margin-bottom:8px;}
+.bib-card p{margin:0;font-size:16px;text-indent:-26px;padding-left:26px;}
+.footer-nota{font-size:14.5px;color:#5a6572;border-top:1px solid #d5dde6;padding-top:14px;margin-top:26px;}
+
+/* ============ RESPONSIVO ============ */
+@media (max-width:700px){
+ body{font-size:16px;}
+ .panel{padding:18px 14px 36px 14px;}
+ .header{padding:20px 16px;}
+ .header h1{font-size:21px;}
+ .tab-btn{font-size:14px;padding:12px 13px;}
+ .t-account{min-width:260px;}
+ table.data td.acreedora,table.diario td.acreedora{padding-left:26px;}
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ================= ENCABEZADO ================= -->
+<div class="header">
+  <p class="inst">Universidad de Guayaquil · Facultad de Ciencias Administrativas · Negocios Internacionales</p>
+  <h1>Día 4 — Caso B: Empresa Manufacturera</h1>
+  <p class="meta">Contabilidad General (091601124) · Unidad 2: Normas tributarias y pasos del proceso contable (I parte) · Viernes 14 de agosto de 2026 · Periodo Académico Extraordinario 2026</p>
+  <span class="pill">Trabajo autónomo de fin de semana</span>
+  <span class="pill alt">Mes contable: 1 al 31 de julio de 2026</span>
+  <span class="pill alt">Foco: los sueldos dentro del costo del producto</span>
+</div>
+
+<!-- ================= PESTAÑAS ================= -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('info',this)">Información del mes</button>
+  <button class="tab-btn" onclick="showTab('diario',this)">Libro Diario General</button>
+  <button class="tab-btn" onclick="showTab('mayor',this)">Mayorización</button>
+  <button class="tab-btn" onclick="showTab('ejercicio',this)">Ejercicio interactivo</button>
+  <button class="tab-btn" onclick="showTab('cuestionario',this)">Cuestionario</button>
+  <button class="tab-btn" onclick="showTab('ia',this)">Actividad con IA</button>
+  <button class="tab-btn" onclick="showTab('reflexion',this)">Reflexión</button>
+  <button class="tab-btn" onclick="showTab('biblio',this)">Bibliografía</button>
+</div>
+
+<!-- ================= PANEL 1: INFORMACIÓN DEL MES ================= -->
+<div class="panel active" id="info">
+
+<h2>Antes de empezar: qué vas a ver y por qué importa</h2>
+
+<p>Hasta ahora trabajaste con empresas que <em>compran algo hecho y lo venden tal como llegó</em>. Este caso es distinto: aquí la empresa <strong>fabrica</strong>. Compra papel, lo transforma con máquinas y con el trabajo de personas, y de esa transformación sale un producto nuevo que antes no existía. Ese detalle —aparentemente pequeño— cambia por completo la contabilidad.</p>
+
+<p>El aprendizaje central de este caso es uno solo, y conviene que lo tengas presente en cada asiento que leas: <strong>el sueldo de un trabajador de planta no es un gasto del mes; es una parte física del producto</strong>. Cuando el operario arma una caja de cartón, su hora de trabajo queda literalmente incorporada al valor de esa caja, igual que el papel y la goma. Por eso, cuando la empresa venda esa caja, estará recuperando también ese sueldo. Y por eso, cuando esa caja cruce la frontera dentro de un contenedor de banano, el sueldo de un obrero guayaquileño estará viajando dentro del precio FOB de una exportación ecuatoriana.</p>
+
+<div class="alerta-box">
+  <h4>Alcance de este caso: hasta dónde llegamos y hasta dónde no</h4>
+  <p>Este es un <strong>tratamiento introductorio</strong>. El objetivo es que entiendas el <em>comportamiento contable</em> de una empresa manufacturera, no que domines el costeo. Queda expresamente fuera de este caso y se estudia después:</p>
+  <ul>
+    <li><strong>El costeo formal</strong> —elementos del costo, hoja de costos, sistemas de costeo por órdenes de producción y por procesos, tasas predeterminadas de aplicación de costos indirectos, variaciones— corresponde a la asignatura de <strong>Contabilidad de Costos</strong>, posterior a este curso.</li>
+    <li><strong>La valoración de inventarios según la NIC 2</strong> —costo, valor razonable, valor neto realizable, métodos FIFO y promedio ponderado, Kardex— se estudia en la <strong>Unidad 3 de esta misma asignatura</strong> (días 7 a 13). Aquí los valores de inventario se te entregan ya calculados por el informe de producción, para que puedas concentrarte en el registro.</li>
+    <li><strong>Los asientos de ajuste y la depreciación</strong> de la maquinaria se ven en la <strong>Unidad 3</strong> (día 11). Por eso verás la maquinaria registrada sin depreciación acumulada: todavía no corresponde.</li>
+    <li><strong>Los estados financieros</strong> —Estado de Resultado Integral y Estado de Situación Financiera— se elaboran en la <strong>Unidad 4</strong> (días 14 a 18). Este mes de julio de 2026 lo vamos a retomar allí con esta misma empresa.</li>
+  </ul>
+</div>
+
+<div class="continuidad">
+  <h4>Los tres personajes del curso</h4>
+  <p>Este widget es el <strong>Caso B</strong> de una serie de tres empresas que te van a acompañar todo el semestre y que trabajan el mismo mes: <strong>julio de 2026</strong>.</p>
+  <ul>
+    <li><strong>Caso A —</strong> una comercializadora minorista: compra hecho y vende hecho.</li>
+    <li><strong>Caso B —</strong> esta empresa: una <strong>manufacturera</strong>, que transforma.</li>
+    <li><strong>Caso C —</strong> una persona natural que presta servicios profesionales: no tiene inventarios.</li>
+  </ul>
+  <p>Volveremos sobre las tres en la Unidad 3 (inventarios y ajustes) y en la Unidad 4 (estados financieros). Guarda tus papeles de trabajo: los vas a necesitar.</p>
+</div>
+
+<h2>Vocabulario mínimo (ningún término queda sin definir)</h2>
+
+<div class="def-box">
+  <h4>Empresa manufacturera o industrial</h4>
+  <p>Es aquella que <strong>compra materiales, los transforma y vende un producto distinto del que compró</strong>. Una panadería compra harina y vende pan; una fábrica de cartón compra papel y vende cajas. Se diferencia de la <em>comercial</em> (compra y vende lo mismo, solo cambia de dueño) y de la <em>de servicios</em> (no vende objetos, vende trabajo o conocimiento).</p>
+</div>
+
+<div class="def-box">
+  <h4>Materia prima</h4>
+  <p>Es el <strong>material que se puede identificar físicamente dentro del producto terminado y cuyo valor es significativo</strong>. En una fábrica de cajas de cartón, la materia prima es el papel kraft: si abres la caja, ahí está el papel. Se registra en la cuenta de activo <em>Inventario de Materia Prima</em> mientras está en bodega.</p>
+</div>
+
+<div class="def-box">
+  <h4>Materiales indirectos</h4>
+  <p>Son materiales que <strong>sí se usan en la fabricación, pero que no se pueden identificar ni medir razonablemente en cada unidad producida</strong>, o cuyo valor es tan pequeño que no vale la pena rastrearlos uno por uno: la goma, la tinta del sello, las grapas, la cinta de embalaje, el aceite lubricante de la máquina. Nadie va a calcular cuántos mililitros de goma lleva <em>esta</em> caja en particular. Por eso no se cargan al producto directamente: se acumulan como costo indirecto.</p>
+</div>
+
+<div class="def-box">
+  <h4>Mano de obra directa (MOD)</h4>
+  <p>Es el <strong>sueldo —y todo lo que ese sueldo arrastra: aportes patronales, décimo tercero, décimo cuarto, vacaciones— del personal que trabaja físicamente sobre el producto</strong>. El operario que corta el cartón, el que lo troquela, el que lo pega. Si esa persona deja de trabajar, ese día no sale producto. La MOD <strong>no es un gasto</strong>: se carga a la cuenta de activo <em>Inventario de Productos en Proceso</em>, porque su trabajo se quedó dentro del producto.</p>
+</div>
+
+<div class="def-box">
+  <h4>Mano de obra indirecta (MOI)</h4>
+  <p>Es el <strong>sueldo y sus beneficios del personal que trabaja en la planta pero no sobre el producto</strong>: el supervisor de producción, el mecánico de mantenimiento, el bodeguero de materia prima, el guardia de la nave industrial. Su trabajo es indispensable para que la fábrica funcione, pero no se puede decir "esta caja lleva tantos minutos de supervisor". Por eso no va al producto de forma directa: se acumula en los <strong>costos indirectos de fabricación</strong> y desde ahí se aplica al producto.</p>
+</div>
+
+<div class="def-box">
+  <h4>Costos indirectos de fabricación (CIF)</h4>
+  <p>Es la <strong>bolsa donde se acumula todo lo que se consume en la planta y no es materia prima ni mano de obra directa</strong>: mano de obra indirecta, materiales indirectos, arriendo de la nave, energía eléctrica de la fábrica, mantenimiento de las máquinas. Es una cuenta <em>puente</em>: durante el mes recibe cargos (Debe) y al cierre se vacía completa (Haber) contra <em>Inventario de Productos en Proceso</em>. Al final del mes su saldo debe quedar en cero.</p>
+</div>
+
+<div class="def-box">
+  <h4>Los tres inventarios de una manufacturera</h4>
+  <p>Una empresa comercial tiene <strong>un</strong> inventario. Una manufacturera tiene <strong>tres</strong>, porque el material va cambiando de estado y el dinero lo va siguiendo:</p>
+  <ul>
+    <li><strong>Inventario de Materia Prima:</strong> el papel que llegó y está en bodega, todavía sin tocar.</li>
+    <li><strong>Inventario de Productos en Proceso:</strong> lo que ya está en la máquina, a medio hacer. Aquí se van sumando el papel requisado, la mano de obra directa y los costos indirectos aplicados. Es la cuenta más importante del caso.</li>
+    <li><strong>Inventario de Productos Terminados:</strong> las cajas ya listas, apiladas y esperando al cliente.</li>
+  </ul>
+  <p>El valor viaja en una sola dirección: <strong>Materia Prima → Productos en Proceso → Productos Terminados → Costo de Ventas</strong>. Cada flecha es un asiento contable.</p>
+</div>
+
+<div class="def-box">
+  <h4>Requisición de materiales</h4>
+  <p>Es el <strong>documento interno con el que producción le pide a bodega el material que va a usar</strong>. No es una compra ni una venta: no interviene ningún tercero, no hay IVA ni retenciones. Solo mueve valor de una cuenta de inventario a otra dentro de la misma empresa.</p>
+</div>
+
+<div class="def-box">
+  <h4>Agente de retención</h4>
+  <p>Es el contribuyente a quien el Servicio de Rentas Internas (SRI) le asigna la obligación de <strong>retener una parte del impuesto que le corresponde pagar a su proveedor, y entregarla directamente al Estado</strong>. Actúa como recaudador. Cuando nuestra empresa compra, retiene; cuando vende a otro agente de retención, le retienen a ella.</p>
+</div>
+
+<h2>Perfil de la empresa</h2>
+
+<div class="scroll-x">
+<table class="data">
+<tr><th style="width:32%">Dato</th><th>Detalle</th></tr>
+<tr><td><strong>Razón social</strong></td><td>CARTONERA DEL LITORAL CÍA. LTDA.</td></tr>
+<tr><td><strong>RUC</strong></td><td class="cod">0991234581001</td></tr>
+<tr><td><strong>Actividad económica</strong></td><td>Fabricación de cajas de cartón corrugado para empaque de fruta de exportación</td></tr>
+<tr><td><strong>Domicilio</strong></td><td>Cantón Durán, provincia del Guayas (periferia de Guayaquil), km 4½ vía Durán–Tambo</td></tr>
+<tr><td><strong>Tipo de contribuyente</strong></td><td>Sociedad obligada a llevar contabilidad</td></tr>
+<tr><td><strong>Calificación SRI</strong></td><td><strong>Agente de retención</strong> · <strong>NO</strong> es contribuyente especial</td></tr>
+<tr><td><strong>Régimen</strong></td><td>Régimen General (no RIMPE)</td></tr>
+<tr><td><strong>Principal cliente</strong></td><td>EXPORTADORA BANANERA DEL PACÍFICO S.A. (agente de retención)</td></tr>
+<tr><td><strong>Producto</strong></td><td>Caja de cartón corrugado tipo banano, 43 × 33 × 25 cm</td></tr>
+<tr><td><strong>Personal</strong></td><td>11 trabajadores: 6 operarios de producción, 2 de planta (supervisión y mantenimiento), 3 de administración y ventas</td></tr>
+<tr><td><strong>Mes contable</strong></td><td>1 al 31 de julio de 2026</td></tr>
+</table>
+</div>
+
+<div class="nota-box">
+  <h4>¿Por qué importa que sea agente de retención y no contribuyente especial?</h4>
+  <p>Porque las dos condiciones son distintas y determinan porcentajes distintos. <strong>Agente de retención</strong> significa que la empresa está obligada a retener a sus proveedores. <strong>Contribuyente especial</strong> es otra calificación, que hace que <em>a la empresa le retengan</em> porcentajes reducidos de IVA (10 % en bienes y 20 % en servicios en lugar de 30 % y 70 %). Como CARTONERA DEL LITORAL <em>no</em> es contribuyente especial, cuando le compren le retendrán los porcentajes generales.</p>
+</div>
+
+<h2>Plan de cuentas</h2>
+
+<p>Un <strong>plan de cuentas</strong> es la lista ordenada y codificada de todas las cuentas que la empresa puede usar. El código no es un adorno: su estructura indica la naturaleza de la cuenta. El primer dígito dice a qué grupo pertenece (1 activo, 2 pasivo, 3 patrimonio, 4 ingreso, 5 costo, 6 gasto) y los siguientes van abriendo subgrupos cada vez más específicos.</p>
+
+<div class="scroll-x">
+<table class="data">
+<tr><th style="width:18%">Código</th><th>Cuenta</th><th style="width:22%">Naturaleza</th></tr>
+<tr class="grupo"><td class="cod">1</td><td colspan="2">ACTIVO</td></tr>
+<tr><td class="cod">1.1.01.01</td><td>Caja</td><td>Deudora</td></tr>
+<tr><td class="cod">1.1.01.02</td><td>Bancos — Banco del Pacífico cta. cte.</td><td>Deudora</td></tr>
+<tr><td class="cod">1.1.02.01</td><td>Cuentas por cobrar clientes</td><td>Deudora</td></tr>
+<tr><td class="cod">1.1.03.01</td><td>Crédito tributario IVA en compras</td><td>Deudora</td></tr>
+<tr><td class="cod">1.1.03.02</td><td>Crédito tributario — IVA retenido por clientes</td><td>Deudora</td></tr>
+<tr><td class="cod">1.1.03.03</td><td>Anticipo IR — retenciones en la fuente recibidas</td><td>Deudora</td></tr>
+<tr><td class="cod">1.1.04.01</td><td>Inventario de Materia Prima</td><td>Deudora</td></tr>
+<tr><td class="cod">1.1.04.02</td><td>Inventario de Productos en Proceso</td><td>Deudora</td></tr>
+<tr><td class="cod">1.1.04.03</td><td>Inventario de Productos Terminados</td><td>Deudora</td></tr>
+<tr><td class="cod">1.1.04.04</td><td>Inventario de Materiales Indirectos</td><td>Deudora</td></tr>
+<tr><td class="cod">1.2.01.01</td><td>Maquinaria y equipo de planta</td><td>Deudora</td></tr>
+<tr><td class="cod">1.2.01.02</td><td>Muebles y enseres</td><td>Deudora</td></tr>
+<tr class="grupo"><td class="cod">2</td><td colspan="2">PASIVO</td></tr>
+<tr><td class="cod">2.1.01.01</td><td>Cuentas por pagar proveedores</td><td>Acreedora</td></tr>
+<tr><td class="cod">2.1.02.01</td><td>IVA en ventas</td><td>Acreedora</td></tr>
+<tr><td class="cod">2.1.02.02</td><td>Retenciones de IVA por pagar</td><td>Acreedora</td></tr>
+<tr><td class="cod">2.1.02.03</td><td>Retenciones en la fuente de IR por pagar</td><td>Acreedora</td></tr>
+<tr><td class="cod">2.1.02.04</td><td>IVA por pagar</td><td>Acreedora</td></tr>
+<tr><td class="cod">2.1.03.01</td><td>Sueldos por pagar</td><td>Acreedora</td></tr>
+<tr><td class="cod">2.1.03.02</td><td>IESS por pagar</td><td>Acreedora</td></tr>
+<tr><td class="cod">2.1.03.03</td><td>Provisión décimo tercer sueldo</td><td>Acreedora</td></tr>
+<tr><td class="cod">2.1.03.04</td><td>Provisión décimo cuarto sueldo</td><td>Acreedora</td></tr>
+<tr><td class="cod">2.1.03.05</td><td>Provisión vacaciones</td><td>Acreedora</td></tr>
+<tr class="grupo"><td class="cod">3</td><td colspan="2">PATRIMONIO</td></tr>
+<tr><td class="cod">3.1.01.01</td><td>Capital social</td><td>Acreedora</td></tr>
+<tr><td class="cod">3.2.01.01</td><td>Resultados acumulados</td><td>Acreedora</td></tr>
+<tr class="grupo"><td class="cod">4</td><td colspan="2">INGRESOS</td></tr>
+<tr><td class="cod">4.1.01.01</td><td>Ventas</td><td>Acreedora</td></tr>
+<tr class="grupo"><td class="cod">5</td><td colspan="2">COSTOS</td></tr>
+<tr><td class="cod">5.1.01.01</td><td>Costos Indirectos de Fabricación (cuenta control)</td><td>Deudora (se liquida)</td></tr>
+<tr><td class="cod">5.2.01.01</td><td>Costo de ventas</td><td>Deudora</td></tr>
+<tr class="grupo"><td class="cod">6</td><td colspan="2">GASTOS</td></tr>
+<tr><td class="cod">6.1.01.01</td><td>Gasto sueldos administración y ventas</td><td>Deudora</td></tr>
+<tr><td class="cod">6.1.01.02</td><td>Gasto beneficios sociales y aporte patronal adm. y ventas</td><td>Deudora</td></tr>
+<tr><td class="cod">6.2.01.01</td><td>Gasto de venta — fletes</td><td>Deudora</td></tr>
+</table>
+</div>
+
+<div class="clave-box">
+  <h4>Idea clave del plan de cuentas de una manufacturera</h4>
+  <p>Fíjate en algo que no aparece en una empresa comercial: existen <strong>cuatro cuentas de inventario</strong> (materia prima, productos en proceso, productos terminados y materiales indirectos) y una cuenta de <strong>costo que no es costo de ventas</strong>: los Costos Indirectos de Fabricación. Esa cuenta 5.1.01.01 es un embudo temporal. Todo lo que cae ahí termina, antes de cerrar el mes, dentro del inventario de productos en proceso.</p>
+</div>
+
+<h2>Saldos iniciales al 1 de julio de 2026</h2>
+
+<div class="scroll-x">
+<table class="data">
+<tr><th style="width:16%">Código</th><th>Cuenta</th><th class="num" style="width:17%">Debe</th><th class="num" style="width:17%">Haber</th></tr>
+<tr><td class="cod">1.1.01.01</td><td>Caja</td><td class="num">1.500,00</td><td class="num"></td></tr>
+<tr><td class="cod">1.1.01.02</td><td>Bancos — Banco del Pacífico</td><td class="num">28.400,00</td><td class="num"></td></tr>
+<tr><td class="cod">1.1.02.01</td><td>Cuentas por cobrar clientes</td><td class="num">9.200,00</td><td class="num"></td></tr>
+<tr><td class="cod">1.1.04.01</td><td>Inventario de Materia Prima</td><td class="num">12.000,00</td><td class="num"></td></tr>
+<tr><td class="cod">1.1.04.02</td><td>Inventario de Productos en Proceso</td><td class="num">3.500,00</td><td class="num"></td></tr>
+<tr><td class="cod">1.1.04.03</td><td>Inventario de Productos Terminados</td><td class="num">6.800,00</td><td class="num"></td></tr>
+<tr><td class="cod">1.1.04.04</td><td>Inventario de Materiales Indirectos</td><td class="num">1.200,00</td><td class="num"></td></tr>
+<tr><td class="cod">1.2.01.01</td><td>Maquinaria y equipo de planta</td><td class="num">45.000,00</td><td class="num"></td></tr>
+<tr><td class="cod">1.2.01.02</td><td>Muebles y enseres</td><td class="num">4.400,00</td><td class="num"></td></tr>
+<tr><td class="cod">2.1.01.01</td><td>Cuentas por pagar proveedores</td><td class="num"></td><td class="num">14.000,00</td></tr>
+<tr><td class="cod">2.1.03.02</td><td>IESS por pagar</td><td class="num"></td><td class="num">2.000,00</td></tr>
+<tr><td class="cod">3.1.01.01</td><td>Capital social</td><td class="num"></td><td class="num">80.000,00</td></tr>
+<tr><td class="cod">3.2.01.01</td><td>Resultados acumulados</td><td class="num"></td><td class="num">16.000,00</td></tr>
+<tr class="total"><td colspan="2">TOTALES</td><td class="num">112.000,00</td><td class="num">112.000,00</td></tr>
+</table>
+</div>
+
+<div class="nota-box">
+  <h4>Dos observaciones sobre estos saldos</h4>
+  <p><strong>1.</strong> La maquinaria aparece sin depreciación acumulada. No es un olvido: la depreciación es un <em>asiento de ajuste</em> y se estudia en la <strong>Unidad 3, día 11</strong>. Cuando lleguemos ahí, volveremos sobre esta misma maquinaria.</p>
+  <p><strong>2.</strong> La empresa arranca julio con productos en proceso por USD 3.500,00. Eso significa que el 30 de junio quedaron cajas a medio hacer dentro de la máquina. En una manufacturera esto es completamente normal: la producción no se detiene porque el calendario cambie de mes.</p>
+</div>
+
+<h2>Nómina del mes de julio de 2026</h2>
+
+<p>Este cuadro es el corazón del caso. Léelo despacio: la columna de la derecha decide el destino contable de cada sueldo.</p>
+
+<div class="scroll-x">
+<table class="data">
+<tr><th>Puesto</th><th class="num">N.º</th><th class="num">Sueldo total</th><th>Clasificación</th><th>Cuenta que se debita</th></tr>
+<tr><td>Operarios de corte, troquelado y pegado</td><td class="num">6</td><td class="num">3.600,00</td><td><strong>Mano de obra directa</strong></td><td>1.1.04.02 Productos en Proceso <em>(activo)</em></td></tr>
+<tr><td>Supervisor de planta</td><td class="num">1</td><td class="num">960,00</td><td><strong>Mano de obra indirecta</strong></td><td>5.1.01.01 CIF <em>(costo)</em></td></tr>
+<tr><td>Mecánico de mantenimiento</td><td class="num">1</td><td class="num">720,00</td><td><strong>Mano de obra indirecta</strong></td><td>5.1.01.01 CIF <em>(costo)</em></td></tr>
+<tr><td>Gerente</td><td class="num">1</td><td class="num">1.200,00</td><td>Administración</td><td>6.1.01.01 Gasto sueldos <em>(gasto)</em></td></tr>
+<tr><td>Contadora</td><td class="num">1</td><td class="num">780,00</td><td>Administración</td><td>6.1.01.01 Gasto sueldos <em>(gasto)</em></td></tr>
+<tr><td>Vendedor</td><td class="num">1</td><td class="num">780,00</td><td>Ventas</td><td>6.1.01.01 Gasto sueldos <em>(gasto)</em></td></tr>
+<tr class="total"><td>TOTAL NÓMINA</td><td class="num">11</td><td class="num">8.040,00</td><td colspan="2"></td></tr>
+</table>
+</div>
+
+<div class="ejemplo-box">
+  <h4>La misma cantidad de dinero, tres destinos distintos</h4>
+  <p>Supón que tres personas ganan exactamente USD 780,00 en julio: un operario, el mecánico de la planta y la contadora. Sale el mismo dinero del banco para los tres. Pero contablemente:</p>
+  <ul>
+    <li>El del <strong>operario</strong> se convierte en <em>activo</em> (queda dentro de las cajas fabricadas). Solo se volverá gasto —costo de ventas— el día que esas cajas se vendan. Si no se venden en julio, ese sueldo <strong>no aparece</strong> en el resultado de julio.</li>
+    <li>El del <strong>mecánico</strong> también se convierte en activo, pero da un rodeo: primero se acumula en CIF y de ahí pasa a productos en proceso.</li>
+    <li>El de la <strong>contadora</strong> es <em>gasto</em> de julio, se venda o no se venda una sola caja.</li>
+  </ul>
+  <p>Esa diferencia explica algo que a los estudiantes suele sorprenderles: <strong>dos fábricas idénticas pueden reportar utilidades distintas solo por cómo clasificaron su nómina</strong>. Por eso las NIIF y el SRI se toman este tema tan en serio.</p>
+</div>
+
+<h2>Los porcentajes de nómina que se aplican en Ecuador</h2>
+
+<div class="scroll-x">
+<table class="data">
+<tr><th>Concepto</th><th class="num" style="width:14%">Porcentaje</th><th>Base de cálculo</th><th>¿Quién lo asume?</th></tr>
+<tr><td>Aporte personal al IESS</td><td class="num">9,45 %</td><td>Sueldo del mes</td><td>El <strong>trabajador</strong> (se le descuenta del sueldo)</td></tr>
+<tr><td>Aporte patronal al IESS</td><td class="num">11,15 %</td><td>Sueldo del mes</td><td>El <strong>empleador</strong> (costo o gasto adicional)</td></tr>
+<tr><td>Aporte al IECE</td><td class="num">0,50 %</td><td>Sueldo del mes</td><td>El <strong>empleador</strong></td></tr>
+<tr><td>Aporte al SECAP</td><td class="num">0,50 %</td><td>Sueldo del mes</td><td>El <strong>empleador</strong></td></tr>
+<tr class="total"><td>Total a cargo del empleador</td><td class="num">12,15 %</td><td colspan="2">11,15 % + 0,50 % + 0,50 %</td></tr>
+<tr><td>Décimo tercer sueldo (provisión mensual)</td><td class="num">1/12</td><td>Sueldo del mes ÷ 12</td><td>El <strong>empleador</strong></td></tr>
+<tr><td>Décimo cuarto sueldo (provisión mensual)</td><td class="num">SBU ÷ 12</td><td>Salario Básico Unificado ÷ 12, <strong>por cada trabajador</strong></td><td>El <strong>empleador</strong></td></tr>
+<tr><td>Vacaciones (provisión mensual)</td><td class="num">1/24</td><td>Sueldo del mes ÷ 24</td><td>El <strong>empleador</strong></td></tr>
+</table>
+</div>
+
+<div class="def-box">
+  <h4>¿Qué es una provisión?</h4>
+  <p>Es el <strong>reconocimiento mensual de una obligación que todavía no se paga, pero que ya se está causando</strong>. El décimo tercer sueldo se paga en diciembre; sin embargo, el trabajador lo va ganando mes a mes. Si la empresa esperara a diciembre para reconocerlo, todos los meses del año mostrarían un costo demasiado bajo y diciembre uno absurdamente alto. Provisionar significa "ir apartando contablemente" lo que ya se debe. El asiento debita costo o gasto (según el tipo de trabajador) y acredita un <strong>pasivo</strong>.</p>
+</div>
+
+<div class="def-box">
+  <h4>Diferencia entre décimo tercero y décimo cuarto</h4>
+  <p>El <strong>décimo tercer sueldo</strong> es proporcional a lo que gana cada persona: quien gana más recibe más (sueldo anual ÷ 12). El <strong>décimo cuarto sueldo</strong> es <strong>igual para todos</strong>: un Salario Básico Unificado (SBU) completo por trabajador, sin importar cuánto gane. Por eso el décimo tercero se calcula sobre la nómina y el décimo cuarto se calcula <em>contando cabezas</em>.</p>
+</div>
+
+<div class="alerta-box">
+  <h4>Advertencia sobre valores y porcentajes</h4>
+  <p>En este caso se usa un <strong>SBU referencial de USD 490,00</strong> únicamente con fines didácticos. Los porcentajes de aportación al IESS y el valor del SBU se fijan por norma y cambian. <strong>Antes de cualquier aplicación profesional verifica el SBU vigente en el Ministerio del Trabajo (trabajo.gob.ec), las tasas en el IESS (iess.gob.ec) y los porcentajes de retención en sri.gob.ec.</strong> Un contador que aplica porcentajes de memoria comete errores caros.</p>
+</div>
+
+<h2>Marco tributario aplicable en julio de 2026</h2>
+
+<div class="scroll-x">
+<table class="data">
+<tr><th colspan="3">RETENCIÓN DE IVA — Resolución NAC-DGERCGC20-00000061</th></tr>
+<tr><th style="width:14%">Porcentaje</th><th colspan="2">Se aplica cuando…</th></tr>
+<tr><td class="num">30 %</td><td colspan="2">se adquieren <strong>bienes</strong></td></tr>
+<tr><td class="num">70 %</td><td colspan="2">se adquieren <strong>servicios</strong>, derechos, comisiones y consultoría</td></tr>
+<tr><td class="num">100 %</td><td colspan="2">servicios profesionales de personas naturales con título; <strong>arrendamiento de inmuebles de personas naturales no obligadas a llevar contabilidad</strong>; dietas; liquidaciones de compra</td></tr>
+<tr><td class="num">10 % / 20 %</td><td colspan="2">el proveedor es <strong>contribuyente especial</strong> (10 % en bienes, 20 % en servicios)</td></tr>
+</table>
+</div>
+
+<div class="scroll-x">
+<table class="data">
+<tr><th colspan="2">RETENCIÓN EN LA FUENTE DE IMPUESTO A LA RENTA — Resolución NAC-DGERCGC26-00000009<br><span style="font-weight:400;font-size:14px">Vigente desde el 1 de marzo de 2026; derogó la tabla anterior</span></th></tr>
+<tr><th class="num" style="width:14%">%</th><th>Concepto</th></tr>
+<tr><td class="num">0 %</td><td>Intereses pagados a entidades del sistema financiero y a RIMPE Negocios Populares</td></tr>
+<tr><td class="num">1 %</td><td>Transporte privado de pasajeros y <strong>transporte de carga</strong>; bienes agrícolas comprados al productor; RIMPE Emprendedores</td></tr>
+<tr><td class="num">1,75 %</td><td>Bienes agrícolas comprados a comercializadores</td></tr>
+<tr><td class="num">2 %</td><td><strong>Adquisición de bienes muebles de naturaleza corporal</strong>; energía eléctrica; seguros; arrendamiento mercantil; construcción</td></tr>
+<tr><td class="num">3 %</td><td>Servicios de personas naturales donde prevalece la mano de obra; publicidad y comunicación; rendimientos financieros; liquidaciones de compra; <strong>porcentaje residual</strong></td></tr>
+<tr><td class="num">5 %</td><td>Servicios profesionales prestados por sociedades; comisiones a sociedades</td></tr>
+<tr><td class="num">10 %</td><td>Honorarios a personas naturales donde prevalece el intelecto; docencia; regalías; <strong>arrendamiento de bienes inmuebles</strong></td></tr>
+</table>
+</div>
+
+<div class="alerta-box">
+  <h4>Los porcentajes se fijan por resolución</h4>
+  <p>Las tarifas de retención <strong>no están en la ley: se establecen por resolución del SRI y pueden cambiar de un año a otro</strong>. La tabla de retención en la fuente que estás usando entró en vigencia el 1 de marzo de 2026 y derogó a la anterior. <strong>Verifica siempre en sri.gob.ec antes de cada aplicación profesional.</strong> Un porcentaje mal aplicado genera glosas, multas e intereses para tu empresa —y, si eres tú quien firma, para ti.</p>
+</div>
+
+<h2>Transacciones del mes — julio de 2026</h2>
+
+<p>Las 18 operaciones siguientes son las que vas a registrar. Léelas completas antes de pasar a la pestaña del Libro Diario: notarás que están ordenadas de modo que el material entra, se transforma, se termina y sale.</p>
+
+<div class="scroll-x">
+<table class="data">
+<tr><th style="width:8%">N.º</th><th style="width:12%">Fecha</th><th>Operación</th></tr>
+<tr><td class="num">1</td><td>01/07/2026</td><td>Se registran los <strong>saldos iniciales</strong> de la empresa (asiento de apertura).</td></tr>
+<tr><td class="num">2</td><td>02/07/2026</td><td>Se compra <strong>materia prima</strong> (papel kraft y almidón) a PAPELERA NACIONAL S.A. por USD 8.000,00 más IVA, <strong>a crédito 30 días</strong>. Factura 001-002-000014567.</td></tr>
+<tr><td class="num">3</td><td>03/07/2026</td><td>Se compran <strong>materiales indirectos</strong> (tinta, goma, grapas y cinta) a INSUMOS DEL SUR S.A. por USD 900,00 más IVA, <strong>al contado</strong> con cheque. Factura 002-001-000008812.</td></tr>
+<tr><td class="num">4</td><td>06/07/2026</td><td>Se contrata el <strong>mantenimiento preventivo de la corrugadora</strong> a TECNIMAQ CÍA. LTDA. por USD 1.200,00 más IVA, pagado con transferencia. Factura 001-001-000003390.</td></tr>
+<tr><td class="num">5</td><td>08/07/2026</td><td><strong>Requisición 07-014:</strong> bodega entrega a producción materia prima por USD 9.500,00.</td></tr>
+<tr><td class="num">6</td><td>10/07/2026</td><td><strong>Requisición 07-015:</strong> bodega entrega a planta materiales indirectos por USD 700,00.</td></tr>
+<tr><td class="num">7</td><td>15/07/2026</td><td>Se paga la <strong>planilla de energía eléctrica de la nave industrial</strong> a CNEL EP por USD 850,00. Servicio público: <strong>tarifa 0 % de IVA</strong>.</td></tr>
+<tr><td class="num">8</td><td>15/07/2026</td><td>Se paga el <strong>arriendo de la nave industrial</strong> al Sr. Manuel Cedeño, <strong>persona natural no obligada a llevar contabilidad</strong>, USD 1.500,00 más IVA.</td></tr>
+<tr><td class="num">9</td><td>30/07/2026</td><td><strong>Rol de pagos de julio:</strong> nómina de USD 8.040,00 separada en mano de obra directa, mano de obra indirecta y personal administrativo y de ventas, con descuento del aporte personal al IESS (9,45 %).</td></tr>
+<tr><td class="num">10</td><td>30/07/2026</td><td><strong>Rol de provisiones:</strong> aporte patronal (12,15 %), décimo tercero, décimo cuarto y vacaciones, distribuidos según el tipo de trabajador.</td></tr>
+<tr><td class="num">11</td><td>30/07/2026</td><td>Se <strong>paga el líquido de la nómina</strong> mediante acreditación en las cuentas de los trabajadores.</td></tr>
+<tr><td class="num">12</td><td>31/07/2026</td><td>Se <strong>aplican los costos indirectos de fabricación</strong> acumulados en el mes a la producción en proceso.</td></tr>
+<tr><td class="num">13</td><td>31/07/2026</td><td><strong>Informe de producción:</strong> se transfieren a productos terminados cajas por USD 22.000,00; el resto queda en proceso.</td></tr>
+<tr><td class="num">14</td><td>31/07/2026</td><td>Se <strong>venden cajas</strong> a EXPORTADORA BANANERA DEL PACÍFICO S.A. (<strong>agente de retención</strong>) por USD 26.000,00 más IVA, a crédito. Factura 001-001-000000742.</td></tr>
+<tr><td class="num">15</td><td>31/07/2026</td><td>Se registra el <strong>costo de las cajas vendidas</strong>, USD 20.500,00 según informe de producción.</td></tr>
+<tr><td class="num">16</td><td>31/07/2026</td><td>Se paga el <strong>flete</strong> de entrega al cliente a TRANSPORTES DEL LITORAL CÍA. LTDA., USD 450,00. Transporte de carga: <strong>tarifa 0 % de IVA</strong>.</td></tr>
+<tr><td class="num">17</td><td>31/07/2026</td><td><strong>Liquidación del IVA del mes.</strong></td></tr>
+<tr><td class="num">18</td><td>24/08/2026</td><td><strong>Pago de las obligaciones tributarias de julio</strong> (IVA y retenciones), en la fecha que corresponde al noveno dígito del RUC.</td></tr>
+</table>
+</div>
+
+<div class="carrera-box">
+  <h4>Este caso y las cuatro áreas de Negocios Internacionales</h4>
+  <p>Negocios Internacionales <strong>no es solo negociar</strong>. La carrera se sostiene sobre cuatro áreas, y esta fábrica de cajas de Durán las toca todas al mismo tiempo:</p>
+  <ul>
+    <li><strong>Comercio exterior:</strong> esta caja no se exporta sola, pero viaja dentro de un contenedor de banano hacia Rotterdam o Novorossiysk. El empaque es parte de la cadena logística de exportación: si la caja falla, la fruta llega magullada y el contrato se cae. Un profesional de comercio exterior debe saber que el costo del empaque forma parte del valor FOB de la exportación ecuatoriana.</li>
+    <li><strong>Finanzas internacionales:</strong> el precio al que esta fábrica puede vender depende de cuánto le cuesta producir, y ese costo está determinado en gran medida por la nómina. Cuando compares la competitividad del Ecuador frente a Colombia o Perú, estarás comparando —entre otras cosas— estructuras de costo laboral como la que estás registrando aquí.</li>
+    <li><strong>Marketing y negociación internacional:</strong> nadie puede negociar un precio que no conoce. Saber leer una hoja de costos es la diferencia entre ceder un 5 % de descuento con criterio y ceder un 5 % que te deja bajo el punto de equilibrio. La información contable es tu piso de negociación.</li>
+    <li><strong>Marco legal y normativo:</strong> cada asiento de este mes está condicionado por la LRTI, por dos resoluciones del SRI, por el Código del Trabajo y por la Ley de Seguridad Social. La contabilidad es el lugar donde la norma jurídica se vuelve número.</li>
+  </ul>
+</div>
+
+</div><!-- fin panel info -->
+
+<!-- ================= PANEL 2: LIBRO DIARIO ================= -->
+<div class="panel" id="diario">
+
+<h2>Libro Diario General</h2>
+
+<div class="def-box">
+  <h4>Libro Diario</h4>
+  <p>Es el <strong>libro principal donde se registran, en orden cronológico y sin dejar espacios, todas las operaciones de la empresa</strong>. Cada registro se llama <em>asiento contable</em>. La operación de registrar en el Diario se denomina <strong>jornalización</strong> (del francés <em>journal</em>, diario). Ningún hecho económico puede llegar al mayor ni a los estados financieros si antes no pasó por aquí.</p>
+</div>
+
+<div class="def-box">
+  <h4>Glosa</h4>
+  <p>Es la <strong>explicación breve escrita al pie de cada asiento</strong> que dice qué se registró y con qué documento. Por convención en el Ecuador empieza con las siglas <strong>P/R</strong>, que significan <em>"por registro de"</em> o <em>"para registrar"</em>. La glosa no es un adorno: es la que permite que otra persona —un auditor, el SRI, tu profesor— entienda el asiento sin tener que adivinar.</p>
+</div>
+
+<div class="nota-box">
+  <h4>Cómo leer estos asientos</h4>
+  <p>Antes de cada asiento encontrarás un recuadro amarillo con el <strong>cálculo desglosado</strong>: base imponible, IVA, retenciones y valor neto. Ese cálculo no es opcional. En la práctica profesional el error casi nunca está en el asiento: está en el cálculo previo. Haz el cálculo primero, comprueba que cuadra, y recién entonces escribe el asiento.</p>
+  <p>Las <strong>cuentas acreedoras aparecen indentadas</strong> (movidas hacia la derecha). Es una convención universal de presentación del Diario: de un vistazo se distingue lo que va al Debe de lo que va al Haber.</p>
+</div>
+
+<!-- ---------- ASIENTO 1 ---------- -->
+<div class="asiento">
+  <div class="asiento-head">Asiento N.º 1 — Apertura del ejercicio<span class="fecha">01/07/2026</span></div>
+  <div class="scroll-x">
+  <table class="diario">
+    <tr><th style="width:11%">Fecha</th><th style="width:14%">Código</th><th>Detalle</th><th class="num" style="width:15%">Debe</th><th class="num" style="width:15%">Haber</th></tr>
+    <tr><td>01/07/2026</td><td class="cod">1.1.01.01</td><td>Caja</td><td class="num">1.500,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">1.1.01.02</td><td>Bancos — Banco del Pacífico</td><td class="num">28.400,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">1.1.02.01</td><td>Cuentas por cobrar clientes</td><td class="num">9.200,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">1.1.04.01</td><td>Inventario de Materia Prima</td><td class="num">12.000,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">1.1.04.02</td><td>Inventario de Productos en Proceso</td><td class="num">3.500,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">1.1.04.03</td><td>Inventario de Productos Terminados</td><td class="num">6.800,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">1.1.04.04</td><td>Inventario de Materiales Indirectos</td><td class="num">1.200,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">1.2.01.01</td><td>Maquinaria y equipo de planta</td><td class="num">45.000,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">1.2.01.02</td><td>Muebles y enseres</td><td class="num">4.400,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">2.1.01.01</td><td class="acreedora">Cuentas por pagar proveedores</td><td class="num"></td><td class="num">14.000,00</td></tr>
+    <tr><td></td><td class="cod">2.1.03.02</td><td class="acreedora">IESS por pagar</td><td class="num"></td><td class="num">2.000,00</td></tr>
+    <tr><td></td><td class="cod">3.1.01.01</td><td class="acreedora">Capital social</td><td class="num"></td><td class="num">80.000,00</td></tr>
+    <tr><td></td><td class="cod">3.2.01.01</td><td class="acreedora">Resultados acumulados</td><td class="num"></td><td class="num">16.000,00</td></tr>
+    <tr class="suman"><td></td><td></td><td>SUMAN</td><td class="num">112.000,00</td><td class="num">112.000,00</td></tr>
+  </table>
+  </div>
+  <div class="glosa">P/R Apertura del mes de julio de 2026 con los saldos trasladados del balance al 30 de junio de 2026.</div>
+</div>
+
+<div class="nota-box">
+  <p>Comprueba la <strong>ecuación contable</strong> en este asiento: Activo (112.000,00) = Pasivo (16.000,00) + Patrimonio (96.000,00). Si la apertura no cuadra, todo el mes queda contaminado.</p>
+</div>
+
+<!-- ---------- ASIENTO 2 ---------- -->
+<div class="asiento">
+  <div class="asiento-head">Asiento N.º 2 — Compra de materia prima a crédito<span class="fecha">02/07/2026</span></div>
+  <div class="calculo">
+    <h5>Cálculo desglosado — Factura 001-002-000014567, PAPELERA NACIONAL S.A. (sociedad, régimen general)</h5>
+    <table class="calc">
+      <tr><td>Base imponible (papel kraft y almidón)</td><td class="num">8.000,00</td></tr>
+      <tr><td>(+) IVA 15 %  →  8.000,00 × 15 %</td><td class="num">1.200,00</td></tr>
+      <tr class="res"><td>Total factura</td><td class="num">9.200,00</td></tr>
+      <tr><td>(−) Retención IR 2 % (bienes muebles corporales) → 8.000,00 × 2 %</td><td class="num">160,00</td></tr>
+      <tr><td>(−) Retención IVA 30 % (bienes) → 1.200,00 × 30 %</td><td class="num">360,00</td></tr>
+      <tr class="res"><td><strong>Valor neto a pagar al proveedor</strong></td><td class="num"><strong>8.680,00</strong></td></tr>
+    </table>
+  </div>
+  <div class="scroll-x">
+  <table class="diario">
+    <tr><th style="width:11%">Fecha</th><th style="width:14%">Código</th><th>Detalle</th><th class="num" style="width:15%">Debe</th><th class="num" style="width:15%">Haber</th></tr>
+    <tr><td>02/07/2026</td><td class="cod">1.1.04.01</td><td>Inventario de Materia Prima</td><td class="num">8.000,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">1.1.03.01</td><td>Crédito tributario IVA en compras</td><td class="num">1.200,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">2.1.02.03</td><td class="acreedora">Retenciones en la fuente de IR por pagar</td><td class="num"></td><td class="num">160,00</td></tr>
+    <tr><td></td><td class="cod">2.1.02.02</td><td class="acreedora">Retenciones de IVA por pagar</td><td class="num"></td><td class="num">360,00</td></tr>
+    <tr><td></td><td class="cod">2.1.01.01</td><td class="acreedora">Cuentas por pagar proveedores</td><td class="num"></td><td class="num">8.680,00</td></tr>
+    <tr class="suman"><td></td><td></td><td>SUMAN</td><td class="num">9.200,00</td><td class="num">9.200,00</td></tr>
+  </table>
+  </div>
+  <div class="glosa">P/R Compra de materia prima a PAPELERA NACIONAL S.A. según factura 001-002-000014567 y comprobante de retención 001-001-000001834, a crédito 30 días.</div>
+</div>
+
+<div class="ejemplo-box">
+  <h4>Por qué el IVA de la compra es un activo y no un gasto</h4>
+  <p>Los USD 1.200,00 de IVA que pagó la empresa <strong>no se pierden</strong>: el Estado permite descontarlos del IVA que la empresa cobre en sus ventas. Por eso se llaman <em>crédito tributario</em> y viven en el activo. Es dinero que la empresa recuperará contra su propia obligación. En cambio, un consumidor final sí lo pierde: por eso el IVA es un impuesto <strong>al consumo final</strong> y no a la producción.</p>
+</div>
+
+<!-- ---------- ASIENTO 3 ---------- -->
+<div class="asiento">
+  <div class="asiento-head">Asiento N.º 3 — Compra de materiales indirectos al contado<span class="fecha">03/07/2026</span></div>
+  <div class="calculo">
+    <h5>Cálculo desglosado — Factura 002-001-000008812, INSUMOS DEL SUR S.A.</h5>
+    <table class="calc">
+      <tr><td>Base imponible (tinta, goma, grapas, cinta)</td><td class="num">900,00</td></tr>
+      <tr><td>(+) IVA 15 %  →  900,00 × 15 %</td><td class="num">135,00</td></tr>
+      <tr class="res"><td>Total factura</td><td class="num">1.035,00</td></tr>
+      <tr><td>(−) Retención IR 2 % (bienes) → 900,00 × 2 %</td><td class="num">18,00</td></tr>
+      <tr><td>(−) Retención IVA 30 % (bienes) → 135,00 × 30 %</td><td class="num">40,50</td></tr>
+      <tr class="res"><td><strong>Valor del cheque girado</strong></td><td class="num"><strong>976,50</strong></td></tr>
+    </table>
+  </div>
+  <div class="scroll-x">
+  <table class="diario">
+    <tr><th style="width:11%">Fecha</th><th style="width:14%">Código</th><th>Detalle</th><th class="num" style="width:15%">Debe</th><th class="num" style="width:15%">Haber</th></tr>
+    <tr><td>03/07/2026</td><td class="cod">1.1.04.04</td><td>Inventario de Materiales Indirectos</td><td class="num">900,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">1.1.03.01</td><td>Crédito tributario IVA en compras</td><td class="num">135,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">2.1.02.03</td><td class="acreedora">Retenciones en la fuente de IR por pagar</td><td class="num"></td><td class="num">18,00</td></tr>
+    <tr><td></td><td class="cod">2.1.02.02</td><td class="acreedora">Retenciones de IVA por pagar</td><td class="num"></td><td class="num">40,50</td></tr>
+    <tr><td></td><td class="cod">1.1.01.02</td><td class="acreedora">Bancos — Banco del Pacífico</td><td class="num"></td><td class="num">976,50</td></tr>
+    <tr class="suman"><td></td><td></td><td>SUMAN</td><td class="num">1.035,00</td><td class="num">1.035,00</td></tr>
+  </table>
+  </div>
+  <div class="glosa">P/R Compra de materiales indirectos a INSUMOS DEL SUR S.A. según factura 002-001-000008812, pagada con cheque 000412 del Banco del Pacífico.</div>
+</div>
+
+<div class="nota-box">
+  <p><strong>Ojo con un error frecuente:</strong> aunque la compra se pague al contado, <strong>la retención se practica igual</strong>. El proveedor recibe menos dinero y a cambio recibe un comprobante de retención que después usará como crédito frente al SRI. Retener no es descontar por gusto: es recaudar en nombre del Estado.</p>
+</div>
+
+<!-- ---------- ASIENTO 4 ---------- -->
+<div class="asiento">
+  <div class="asiento-head">Asiento N.º 4 — Mantenimiento de la corrugadora (servicio de planta)<span class="fecha">06/07/2026</span></div>
+  <div class="calculo">
+    <h5>Cálculo desglosado — Factura 001-001-000003390, TECNIMAQ CÍA. LTDA. (sociedad)</h5>
+    <table class="calc">
+      <tr><td>Base imponible (mantenimiento preventivo)</td><td class="num">1.200,00</td></tr>
+      <tr><td>(+) IVA 15 %  →  1.200,00 × 15 %</td><td class="num">180,00</td></tr>
+      <tr class="res"><td>Total factura</td><td class="num">1.380,00</td></tr>
+      <tr><td>(−) Retención IR 3 % (porcentaje residual de servicios) → 1.200,00 × 3 %</td><td class="num">36,00</td></tr>
+      <tr><td>(−) Retención IVA 70 % (servicios) → 180,00 × 70 %</td><td class="num">126,00</td></tr>
+      <tr class="res"><td><strong>Valor transferido</strong></td><td class="num"><strong>1.218,00</strong></td></tr>
+    </table>
+  </div>
+  <div class="scroll-x">
+  <table class="diario">
+    <tr><th style="width:11%">Fecha</th><th style="width:14%">Código</th><th>Detalle</th><th class="num" style="width:15%">Debe</th><th class="num" style="width:15%">Haber</th></tr>
+    <tr><td>06/07/2026</td><td class="cod">5.1.01.01</td><td>Costos Indirectos de Fabricación — mantenimiento de planta</td><td class="num">1.200,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">1.1.03.01</td><td>Crédito tributario IVA en compras</td><td class="num">180,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">2.1.02.03</td><td class="acreedora">Retenciones en la fuente de IR por pagar</td><td class="num"></td><td class="num">36,00</td></tr>
+    <tr><td></td><td class="cod">2.1.02.02</td><td class="acreedora">Retenciones de IVA por pagar</td><td class="num"></td><td class="num">126,00</td></tr>
+    <tr><td></td><td class="cod">1.1.01.02</td><td class="acreedora">Bancos — Banco del Pacífico</td><td class="num"></td><td class="num">1.218,00</td></tr>
+    <tr class="suman"><td></td><td></td><td>SUMAN</td><td class="num">1.380,00</td><td class="num">1.380,00</td></tr>
+  </table>
+  </div>
+  <div class="glosa">P/R Pago del mantenimiento preventivo de la corrugadora a TECNIMAQ CÍA. LTDA. según factura 001-001-000003390 y comprobante de retención 001-001-000001835.</div>
+</div>
+
+<div class="ejemplo-box">
+  <h4>Dos decisiones distintas en un mismo asiento</h4>
+  <p><strong>Decisión tributaria:</strong> es un servicio prestado por una sociedad que no es "servicio profesional" (no lo presta un profesional con título en ejercicio de su profesión). Por eso no aplica el 5 %, sino el <strong>3 % residual</strong>. En IVA, en cambio, sí es un servicio sin más matices: <strong>70 %</strong>.</p>
+  <p><strong>Decisión contable:</strong> mantener la máquina de producción no es un gasto administrativo. Es un costo que existe <em>porque hay fábrica</em>, y no puede rastrearse a una caja en particular. Por lo tanto, va a <strong>Costos Indirectos de Fabricación</strong>. Si en cambio se hubiera reparado la impresora de la oficina de contabilidad, sería gasto administrativo.</p>
+</div>
+
+<!-- ---------- ASIENTO 5 ---------- -->
+<div class="asiento">
+  <div class="asiento-head">Asiento N.º 5 — Requisición de materia prima a producción<span class="fecha">08/07/2026</span></div>
+  <div class="calculo">
+    <h5>Cálculo desglosado — Requisición interna 07-014</h5>
+    <table class="calc">
+      <tr><td>Papel kraft entregado a producción</td><td class="num">9.500,00</td></tr>
+      <tr><td>IVA</td><td class="num">no aplica</td></tr>
+      <tr><td>Retenciones</td><td class="num">no aplica</td></tr>
+      <tr class="res"><td><strong>Valor transferido entre inventarios</strong></td><td class="num"><strong>9.500,00</strong></td></tr>
+    </table>
+  </div>
+  <div class="scroll-x">
+  <table class="diario">
+    <tr><th style="width:11%">Fecha</th><th style="width:14%">Código</th><th>Detalle</th><th class="num" style="width:15%">Debe</th><th class="num" style="width:15%">Haber</th></tr>
+    <tr><td>08/07/2026</td><td class="cod">1.1.04.02</td><td>Inventario de Productos en Proceso</td><td class="num">9.500,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">1.1.04.01</td><td class="acreedora">Inventario de Materia Prima</td><td class="num"></td><td class="num">9.500,00</td></tr>
+    <tr class="suman"><td></td><td></td><td>SUMAN</td><td class="num">9.500,00</td><td class="num">9.500,00</td></tr>
+  </table>
+  </div>
+  <div class="glosa">P/R Requisición 07-014 de materia prima entregada por bodega al área de producción para la orden del mes de julio.</div>
+</div>
+
+<div class="clave-box">
+  <h4>Un asiento sin IVA, sin retenciones y sin terceros</h4>
+  <p>Este es el primer asiento <strong>puramente interno</strong> del caso. No hay factura, no hay proveedor, no hay impuesto: el papel simplemente <strong>cambió de lugar dentro de la empresa</strong>, de la bodega a la máquina. Contablemente, el valor se mueve de una cuenta de activo a otra cuenta de activo. El activo total no cambia; lo que cambia es su composición.</p>
+  <p>Muchos estudiantes intentan poner IVA aquí por costumbre. Recuérdalo así: <strong>el IVA nace cuando hay una transferencia de dominio entre dos personas distintas</strong>. Aquí no hay dos personas: hay una sola empresa moviendo sus cosas.</p>
+</div>
+
+<!-- ---------- ASIENTO 6 ---------- -->
+<div class="asiento">
+  <div class="asiento-head">Asiento N.º 6 — Consumo de materiales indirectos en planta<span class="fecha">10/07/2026</span></div>
+  <div class="calculo">
+    <h5>Cálculo desglosado — Requisición interna 07-015</h5>
+    <table class="calc">
+      <tr><td>Tinta, goma, grapas y cinta entregadas a planta</td><td class="num">700,00</td></tr>
+      <tr class="res"><td><strong>Valor cargado a costos indirectos</strong></td><td class="num"><strong>700,00</strong></td></tr>
+    </table>
+  </div>
+  <div class="scroll-x">
+  <table class="diario">
+    <tr><th style="width:11%">Fecha</th><th style="width:14%">Código</th><th>Detalle</th><th class="num" style="width:15%">Debe</th><th class="num" style="width:15%">Haber</th></tr>
+    <tr><td>10/07/2026</td><td class="cod">5.1.01.01</td><td>Costos Indirectos de Fabricación — materiales indirectos</td><td class="num">700,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">1.1.04.04</td><td class="acreedora">Inventario de Materiales Indirectos</td><td class="num"></td><td class="num">700,00</td></tr>
+    <tr class="suman"><td></td><td></td><td>SUMAN</td><td class="num">700,00</td><td class="num">700,00</td></tr>
+  </table>
+  </div>
+  <div class="glosa">P/R Requisición 07-015 de materiales indirectos consumidos en planta durante julio de 2026.</div>
+</div>
+
+<div class="nota-box">
+  <p><strong>Compara los asientos 5 y 6.</strong> Los dos son requisiciones internas, los dos sacan material de bodega. Pero el material <em>directo</em> entra al producto (Productos en Proceso) y el <em>indirecto</em> entra a la bolsa de costos indirectos (CIF). La diferencia no está en el documento: está en si el material se puede identificar dentro de la unidad producida.</p>
+</div>
+
+<!-- ---------- ASIENTO 7 ---------- -->
+<div class="asiento">
+  <div class="asiento-head">Asiento N.º 7 — Energía eléctrica de la nave industrial<span class="fecha">15/07/2026</span></div>
+  <div class="calculo">
+    <h5>Cálculo desglosado — Planilla CNEL EP, medidor industrial</h5>
+    <table class="calc">
+      <tr><td>Consumo de energía eléctrica de la nave</td><td class="num">850,00</td></tr>
+      <tr><td>IVA: servicio público de energía eléctrica → <strong>tarifa 0 %</strong> (Art. 56 LRTI)</td><td class="num">0,00</td></tr>
+      <tr><td>Retención en la fuente de IR</td><td class="num">0,00</td></tr>
+      <tr class="res"><td><strong>Valor pagado</strong></td><td class="num"><strong>850,00</strong></td></tr>
+    </table>
+  </div>
+  <div class="scroll-x">
+  <table class="diario">
+    <tr><th style="width:11%">Fecha</th><th style="width:14%">Código</th><th>Detalle</th><th class="num" style="width:15%">Debe</th><th class="num" style="width:15%">Haber</th></tr>
+    <tr><td>15/07/2026</td><td class="cod">5.1.01.01</td><td>Costos Indirectos de Fabricación — energía eléctrica de planta</td><td class="num">850,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">1.1.01.02</td><td class="acreedora">Bancos — Banco del Pacífico</td><td class="num"></td><td class="num">850,00</td></tr>
+    <tr class="suman"><td></td><td></td><td>SUMAN</td><td class="num">850,00</td><td class="num">850,00</td></tr>
+  </table>
+  </div>
+  <div class="glosa">P/R Pago de la planilla de energía eléctrica de la nave industrial correspondiente a julio de 2026, servicio público con tarifa 0 % de IVA.</div>
+</div>
+
+<div class="alerta-box">
+  <h4>Dos trampas clásicas en este asiento</h4>
+  <p><strong>Primera:</strong> la energía eléctrica prestada como <em>servicio público</em> está gravada con <strong>tarifa 0 % de IVA</strong> (artículo 56 de la Ley de Régimen Tributario Interno). Tarifa 0 % <strong>no es lo mismo</strong> que "exento" ni que "no hay que declararlo": la transacción se declara igual, simplemente el impuesto calculado es cero. Y como el IVA es cero, tampoco hay retención de IVA que practicar: el 30 % o el 70 % se calculan <em>sobre el IVA</em>, y el 70 % de cero es cero.</p>
+  <p><strong>Segunda:</strong> la tabla de retención en la fuente contempla un 2 % para energía eléctrica, pero ese porcentaje aplica cuando el proveedor es una empresa privada. CNEL EP es una <strong>empresa pública</strong>, y los ingresos de las empresas públicas están exonerados del impuesto a la renta (Art. 9 de la LRTI); sobre un ingreso exento no procede retención. Por eso el asiento no registra retención alguna. Cuando la fábrica compra energía a un generador privado, la historia cambia y el 2 % sí se aplica.</p>
+</div>
+
+<!-- ---------- ASIENTO 8 ---------- -->
+<div class="asiento">
+  <div class="asiento-head">Asiento N.º 8 — Arriendo de la nave industrial<span class="fecha">15/07/2026</span></div>
+  <div class="calculo">
+    <h5>Cálculo desglosado — Sr. Manuel Cedeño, persona natural <strong>no obligada</strong> a llevar contabilidad</h5>
+    <table class="calc">
+      <tr><td>Canon de arriendo de la nave (base imponible)</td><td class="num">1.500,00</td></tr>
+      <tr><td>(+) IVA 15 %  →  1.500,00 × 15 %</td><td class="num">225,00</td></tr>
+      <tr class="res"><td>Total factura</td><td class="num">1.725,00</td></tr>
+      <tr><td>(−) Retención IR 10 % (arrendamiento de bienes inmuebles) → 1.500,00 × 10 %</td><td class="num">150,00</td></tr>
+      <tr><td>(−) Retención IVA <strong>100 %</strong> (arriendo de inmueble de persona natural no obligada a llevar contabilidad) → 225,00 × 100 %</td><td class="num">225,00</td></tr>
+      <tr class="res"><td><strong>Valor pagado al arrendador</strong></td><td class="num"><strong>1.350,00</strong></td></tr>
+    </table>
+  </div>
+  <div class="scroll-x">
+  <table class="diario">
+    <tr><th style="width:11%">Fecha</th><th style="width:14%">Código</th><th>Detalle</th><th class="num" style="width:15%">Debe</th><th class="num" style="width:15%">Haber</th></tr>
+    <tr><td>15/07/2026</td><td class="cod">5.1.01.01</td><td>Costos Indirectos de Fabricación — arriendo de la nave industrial</td><td class="num">1.500,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">1.1.03.01</td><td>Crédito tributario IVA en compras</td><td class="num">225,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">2.1.02.03</td><td class="acreedora">Retenciones en la fuente de IR por pagar</td><td class="num"></td><td class="num">150,00</td></tr>
+    <tr><td></td><td class="cod">2.1.02.02</td><td class="acreedora">Retenciones de IVA por pagar</td><td class="num"></td><td class="num">225,00</td></tr>
+    <tr><td></td><td class="cod">1.1.01.02</td><td class="acreedora">Bancos — Banco del Pacífico</td><td class="num"></td><td class="num">1.350,00</td></tr>
+    <tr class="suman"><td></td><td></td><td>SUMAN</td><td class="num">1.725,00</td><td class="num">1.725,00</td></tr>
+  </table>
+  </div>
+  <div class="glosa">P/R Pago del arriendo de la nave industrial de julio de 2026 al Sr. Manuel Cedeño, con retención del 10 % de IR y del 100 % del IVA.</div>
+</div>
+
+<div class="ejemplo-box">
+  <h4>El caso del 100 % de retención de IVA</h4>
+  <p>Es uno de los pocos supuestos en los que el arrendador <strong>no recibe ni un centavo del IVA</strong>: la empresa se lo entrega íntegramente al SRI. La lógica es de control: el arrendador es una persona natural que no lleva contabilidad y podría no declarar ese IVA, de modo que el Estado prefiere cobrarlo en la fuente. Fíjate además en el detalle: el crédito tributario del IVA (USD 225,00) sí queda en el activo de la empresa, porque el impuesto se pagó —solo que se pagó al SRI en lugar de al arrendador.</p>
+  <p>Y un contraste útil: si el arrendador fuera una <em>sociedad</em>, la retención de IVA sería del 70 % (servicio) y no del 100 %. La condición del proveedor cambia el porcentaje.</p>
+</div>
+
+<!-- ---------- ASIENTO 9 ---------- -->
+<div class="asiento">
+  <div class="asiento-head">Asiento N.º 9 — Rol de pagos de julio (sueldos ganados)<span class="fecha">30/07/2026</span></div>
+  <div class="calculo">
+    <h5>Cálculo desglosado — Rol de pagos, aporte personal al IESS 9,45 %</h5>
+    <div class="scroll-x">
+    <table class="data" style="min-width:520px;font-size:15px">
+      <tr><th>Grupo</th><th class="num">Sueldo</th><th class="num">Aporte personal 9,45 %</th><th class="num">Líquido a recibir</th></tr>
+      <tr><td>Mano de obra <strong>directa</strong> (6 operarios)</td><td class="num">3.600,00</td><td class="num">340,20</td><td class="num">3.259,80</td></tr>
+      <tr><td>Mano de obra <strong>indirecta</strong> (supervisor y mecánico)</td><td class="num">1.680,00</td><td class="num">158,76</td><td class="num">1.521,24</td></tr>
+      <tr><td>Administración y ventas (3 personas)</td><td class="num">2.760,00</td><td class="num">260,82</td><td class="num">2.499,18</td></tr>
+      <tr class="total"><td>TOTALES</td><td class="num">8.040,00</td><td class="num">759,78</td><td class="num">7.280,22</td></tr>
+    </table>
+    </div>
+  </div>
+  <div class="scroll-x">
+  <table class="diario">
+    <tr><th style="width:11%">Fecha</th><th style="width:14%">Código</th><th>Detalle</th><th class="num" style="width:15%">Debe</th><th class="num" style="width:15%">Haber</th></tr>
+    <tr><td>30/07/2026</td><td class="cod">1.1.04.02</td><td>Inventario de Productos en Proceso — mano de obra directa</td><td class="num">3.600,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">5.1.01.01</td><td>Costos Indirectos de Fabricación — mano de obra indirecta</td><td class="num">1.680,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">6.1.01.01</td><td>Gasto sueldos administración y ventas</td><td class="num">2.760,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">2.1.03.02</td><td class="acreedora">IESS por pagar — aporte personal 9,45 %</td><td class="num"></td><td class="num">759,78</td></tr>
+    <tr><td></td><td class="cod">2.1.03.01</td><td class="acreedora">Sueldos por pagar</td><td class="num"></td><td class="num">7.280,22</td></tr>
+    <tr class="suman"><td></td><td></td><td>SUMAN</td><td class="num">8.040,00</td><td class="num">8.040,00</td></tr>
+  </table>
+  </div>
+  <div class="glosa">P/R Rol de pagos del mes de julio de 2026 de 11 trabajadores, con descuento del aporte personal al IESS del 9,45 %.</div>
+</div>
+
+<div class="clave-box">
+  <h4>El asiento más importante de todo el caso</h4>
+  <p>Mira las tres cuentas del Debe. Sale una sola nómina de USD 8.040,00 y se parte en tres destinos distintos:</p>
+  <ul>
+    <li><strong>3.600,00 → activo</strong> (Inventario de Productos en Proceso). El sueldo del operario <em>entró en la caja de cartón</em>.</li>
+    <li><strong>1.680,00 → costo indirecto</strong> (CIF), que en pocos días también terminará dentro del producto.</li>
+    <li><strong>2.760,00 → gasto</strong> del mes de julio, que ya afectó el resultado y no volverá.</li>
+  </ul>
+  <p>De los USD 8.040,00 de nómina, <strong>USD 5.280,00 (el 65,7 %) no son gasto: son inventario</strong>. Si esta empresa no vendiera ni una sola caja en julio, ese dinero seguiría figurando en el activo del Estado de Situación Financiera. Ahí está, en una sola cifra, la razón por la cual una manufacturera se contabiliza distinto de una comercial.</p>
+  <p>Y una última observación: el aporte personal del 9,45 % <strong>no es un costo para la empresa</strong>. Es dinero del trabajador que la empresa retiene y entrega al IESS. Por eso no aparece en el Debe: aparece en el Haber, como pasivo.</p>
+</div>
+
+<!-- ---------- ASIENTO 10 ---------- -->
+<div class="asiento">
+  <div class="asiento-head">Asiento N.º 10 — Aporte patronal y provisiones de beneficios sociales<span class="fecha">30/07/2026</span></div>
+  <div class="calculo">
+    <h5>Cálculo desglosado — Rol de provisiones (SBU referencial USD 490,00; 11 trabajadores)</h5>
+    <div class="scroll-x">
+    <table class="data" style="min-width:660px;font-size:15px">
+      <tr><th>Grupo</th><th class="num">Sueldo</th><th class="num">Patronal 12,15 %</th><th class="num">XIII (÷12)</th><th class="num">XIV (SBU÷12)</th><th class="num">Vacac. (÷24)</th><th class="num">Total</th></tr>
+      <tr><td>Mano de obra <strong>directa</strong> (6)</td><td class="num">3.600,00</td><td class="num">437,40</td><td class="num">300,00</td><td class="num">245,00</td><td class="num">150,00</td><td class="num">1.132,40</td></tr>
+      <tr><td>Mano de obra <strong>indirecta</strong> (2)</td><td class="num">1.680,00</td><td class="num">204,12</td><td class="num">140,00</td><td class="num">81,67</td><td class="num">70,00</td><td class="num">495,79</td></tr>
+      <tr><td>Administración y ventas (3)</td><td class="num">2.760,00</td><td class="num">335,34</td><td class="num">230,00</td><td class="num">122,50</td><td class="num">115,00</td><td class="num">802,84</td></tr>
+      <tr class="total"><td>TOTALES</td><td class="num">8.040,00</td><td class="num">976,86</td><td class="num">670,00</td><td class="num">449,17</td><td class="num">335,00</td><td class="num">2.431,03</td></tr>
+    </table>
+    </div>
+    <p style="margin:10px 0 0 0;font-size:15px">Décimo cuarto: 6 × (490,00 ÷ 12) = 245,00 · 2 × (490,00 ÷ 12) = 81,67 · 3 × (490,00 ÷ 12) = 122,50. Se cuenta <strong>por trabajador</strong>, no por sueldo.</p>
+  </div>
+  <div class="scroll-x">
+  <table class="diario">
+    <tr><th style="width:11%">Fecha</th><th style="width:14%">Código</th><th>Detalle</th><th class="num" style="width:15%">Debe</th><th class="num" style="width:15%">Haber</th></tr>
+    <tr><td>30/07/2026</td><td class="cod">1.1.04.02</td><td>Inventario de Productos en Proceso — beneficios sociales MOD</td><td class="num">1.132,40</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">5.1.01.01</td><td>Costos Indirectos de Fabricación — beneficios sociales MOI</td><td class="num">495,79</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">6.1.01.02</td><td>Gasto beneficios sociales y aporte patronal adm. y ventas</td><td class="num">802,84</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">2.1.03.02</td><td class="acreedora">IESS por pagar — aporte patronal 12,15 %</td><td class="num"></td><td class="num">976,86</td></tr>
+    <tr><td></td><td class="cod">2.1.03.03</td><td class="acreedora">Provisión décimo tercer sueldo</td><td class="num"></td><td class="num">670,00</td></tr>
+    <tr><td></td><td class="cod">2.1.03.04</td><td class="acreedora">Provisión décimo cuarto sueldo</td><td class="num"></td><td class="num">449,17</td></tr>
+    <tr><td></td><td class="cod">2.1.03.05</td><td class="acreedora">Provisión vacaciones</td><td class="num"></td><td class="num">335,00</td></tr>
+    <tr class="suman"><td></td><td></td><td>SUMAN</td><td class="num">2.431,03</td><td class="num">2.431,03</td></tr>
+  </table>
+  </div>
+  <div class="glosa">P/R Provisión del aporte patronal al IESS (11,15 % + 0,50 % IECE + 0,50 % SECAP) y de los beneficios sociales de ley correspondientes a julio de 2026.</div>
+</div>
+
+<div class="clave-box">
+  <h4>Lo que un sueldo cuesta de verdad</h4>
+  <p>Los operarios ganan USD 3.600,00, pero le cuestan a la empresa <strong>USD 4.732,40</strong> (3.600,00 + 1.132,40): un <strong>31,5 % adicional</strong> sobre el sueldo nominal. Ese porcentaje —que en la jerga se llama <em>carga social</em>— es exactamente lo que un empresario evalúa cuando decide contratar, y lo que un analista compara cuando estudia la competitividad laboral entre países.</p>
+  <p>Fíjate también en que <strong>todo ese recargo siguió el mismo camino que el sueldo</strong>: el de los operarios fue a inventario, el del supervisor a CIF, el del personal de oficina a gasto. La clasificación del trabajador arrastra consigo absolutamente todo lo que ese trabajador genera.</p>
+</div>
+
+<div class="continuidad">
+  <h4>Señal de continuidad</h4>
+  <p>Las provisiones que acabas de registrar son <strong>pasivos que se pagarán en otras fechas</strong>: el décimo tercero hasta el 24 de diciembre, el décimo cuarto en marzo (región Costa) y las vacaciones cuando el trabajador las tome. El tratamiento de estos pasivos al cierre del ejercicio y su presentación en el Estado de Situación Financiera se trabaja en la <strong>Unidad 4</strong> de este curso.</p>
+</div>
+
+<!-- ---------- ASIENTO 11 ---------- -->
+<div class="asiento">
+  <div class="asiento-head">Asiento N.º 11 — Pago del líquido de la nómina<span class="fecha">30/07/2026</span></div>
+  <div class="calculo">
+    <h5>Cálculo desglosado</h5>
+    <table class="calc">
+      <tr><td>Total sueldos ganados</td><td class="num">8.040,00</td></tr>
+      <tr><td>(−) Aporte personal al IESS 9,45 %</td><td class="num">759,78</td></tr>
+      <tr class="res"><td><strong>Líquido acreditado a los trabajadores</strong></td><td class="num"><strong>7.280,22</strong></td></tr>
+    </table>
+  </div>
+  <div class="scroll-x">
+  <table class="diario">
+    <tr><th style="width:11%">Fecha</th><th style="width:14%">Código</th><th>Detalle</th><th class="num" style="width:15%">Debe</th><th class="num" style="width:15%">Haber</th></tr>
+    <tr><td>30/07/2026</td><td class="cod">2.1.03.01</td><td>Sueldos por pagar</td><td class="num">7.280,22</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">1.1.01.02</td><td class="acreedora">Bancos — Banco del Pacífico</td><td class="num"></td><td class="num">7.280,22</td></tr>
+    <tr class="suman"><td></td><td></td><td>SUMAN</td><td class="num">7.280,22</td><td class="num">7.280,22</td></tr>
+  </table>
+  </div>
+  <div class="glosa">P/R Pago del líquido de la nómina de julio de 2026 mediante acreditación en las cuentas de los 11 trabajadores.</div>
+</div>
+
+<div class="nota-box">
+  <p><strong>Por qué el rol se registra en dos momentos.</strong> Primero se reconoce la <em>obligación</em> (asiento 9: el trabajador ya se ganó el sueldo) y después se reconoce el <em>pago</em> (asiento 11: el dinero sale del banco). Esto es aplicación directa del <strong>principio de devengo</strong>: los hechos se registran cuando ocurren, no cuando se cobra o se paga. Si la empresa pagara los sueldos el 5 de agosto, el asiento 9 seguiría siendo de julio y solo el asiento 11 se movería a agosto.</p>
+</div>
+
+<!-- ---------- ASIENTO 12 ---------- -->
+<div class="asiento">
+  <div class="asiento-head">Asiento N.º 12 — Aplicación de los costos indirectos de fabricación<span class="fecha">31/07/2026</span></div>
+  <div class="calculo">
+    <h5>Cálculo desglosado — CIF acumulados durante julio</h5>
+    <table class="calc">
+      <tr><td>Asiento 4 · Mantenimiento de la corrugadora</td><td class="num">1.200,00</td></tr>
+      <tr><td>Asiento 6 · Materiales indirectos consumidos</td><td class="num">700,00</td></tr>
+      <tr><td>Asiento 7 · Energía eléctrica de la nave</td><td class="num">850,00</td></tr>
+      <tr><td>Asiento 8 · Arriendo de la nave industrial</td><td class="num">1.500,00</td></tr>
+      <tr><td>Asiento 9 · Mano de obra indirecta (sueldos)</td><td class="num">1.680,00</td></tr>
+      <tr><td>Asiento 10 · Mano de obra indirecta (beneficios)</td><td class="num">495,79</td></tr>
+      <tr class="res"><td><strong>Total CIF del mes</strong></td><td class="num"><strong>6.425,79</strong></td></tr>
+    </table>
+  </div>
+  <div class="scroll-x">
+  <table class="diario">
+    <tr><th style="width:11%">Fecha</th><th style="width:14%">Código</th><th>Detalle</th><th class="num" style="width:15%">Debe</th><th class="num" style="width:15%">Haber</th></tr>
+    <tr><td>31/07/2026</td><td class="cod">1.1.04.02</td><td>Inventario de Productos en Proceso</td><td class="num">6.425,79</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">5.1.01.01</td><td class="acreedora">Costos Indirectos de Fabricación</td><td class="num"></td><td class="num">6.425,79</td></tr>
+    <tr class="suman"><td></td><td></td><td>SUMAN</td><td class="num">6.425,79</td><td class="num">6.425,79</td></tr>
+  </table>
+  </div>
+  <div class="glosa">P/R Aplicación a la producción en proceso de los costos indirectos de fabricación efectivamente incurridos en julio de 2026.</div>
+</div>
+
+<div class="continuidad">
+  <h4>Aquí estamos simplificando a propósito</h4>
+  <p>En este caso aplicamos al producto <strong>exactamente lo que se gastó</strong> (costeo real). En la práctica industrial esto no se hace así: se usa una <strong>tasa predeterminada de costos indirectos</strong>, calculada al inicio del año sobre una base de aplicación (horas máquina, horas de mano de obra directa, unidades producidas), porque la fábrica necesita costear cada orden sin esperar a fin de mes a que llegue la planilla de luz. La diferencia entre lo aplicado y lo real genera <em>variaciones</em> de costos indirectos, sub o sobreaplicados.</p>
+  <p>Todo eso —tasas, bases de aplicación, variaciones, hoja de costos, sistemas por órdenes y por procesos— <strong>corresponde a la asignatura de Contabilidad de Costos</strong>, que cursarás después de esta. Aquí solo necesitas ver el camino que recorre el dinero.</p>
+</div>
+
+<!-- ---------- ASIENTO 13 ---------- -->
+<div class="asiento">
+  <div class="asiento-head">Asiento N.º 13 — Transferencia de productos en proceso a productos terminados<span class="fecha">31/07/2026</span></div>
+  <div class="calculo">
+    <h5>Cálculo desglosado — Informe de producción de julio de 2026</h5>
+    <table class="calc">
+      <tr><td>Saldo inicial de productos en proceso (01/07)</td><td class="num">3.500,00</td></tr>
+      <tr><td>(+) Materia prima requisada (asiento 5)</td><td class="num">9.500,00</td></tr>
+      <tr><td>(+) Mano de obra directa — sueldos (asiento 9)</td><td class="num">3.600,00</td></tr>
+      <tr><td>(+) Mano de obra directa — beneficios (asiento 10)</td><td class="num">1.132,40</td></tr>
+      <tr><td>(+) Costos indirectos aplicados (asiento 12)</td><td class="num">6.425,79</td></tr>
+      <tr class="res"><td>Costo total acumulado en proceso</td><td class="num">24.158,19</td></tr>
+      <tr><td>(−) Producción terminada y trasladada a bodega</td><td class="num">22.000,00</td></tr>
+      <tr class="res"><td><strong>Saldo que queda en proceso al 31/07</strong></td><td class="num"><strong>2.158,19</strong></td></tr>
+    </table>
+  </div>
+  <div class="scroll-x">
+  <table class="diario">
+    <tr><th style="width:11%">Fecha</th><th style="width:14%">Código</th><th>Detalle</th><th class="num" style="width:15%">Debe</th><th class="num" style="width:15%">Haber</th></tr>
+    <tr><td>31/07/2026</td><td class="cod">1.1.04.03</td><td>Inventario de Productos Terminados</td><td class="num">22.000,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">1.1.04.02</td><td class="acreedora">Inventario de Productos en Proceso</td><td class="num"></td><td class="num">22.000,00</td></tr>
+    <tr class="suman"><td></td><td></td><td>SUMAN</td><td class="num">22.000,00</td><td class="num">22.000,00</td></tr>
+  </table>
+  </div>
+  <div class="glosa">P/R Traslado a bodega de producto terminado de las cajas concluidas en julio de 2026, según informe de producción 07-2026.</div>
+</div>
+
+<div class="clave-box">
+  <h4>El recorrido completo del valor</h4>
+  <p>Detente un momento y observa lo que acaba de ocurrir en cinco asientos:</p>
+  <ul>
+    <li>El papel salió de bodega y entró a la máquina (asiento 5).</li>
+    <li>El trabajo del operario se sumó al papel (asientos 9 y 10).</li>
+    <li>La luz, el arriendo, el mantenimiento y el supervisor se sumaron también (asiento 12).</li>
+    <li>El resultado —papel + trabajo + fábrica— salió como caja terminada (asiento 13).</li>
+  </ul>
+  <p>Nada de esto tocó todavía el resultado del mes: <strong>todo sigue siendo activo</strong>. La utilidad o la pérdida aparecerán recién cuando se venda. Esa es la diferencia esencial entre <em>costo</em> (se activa, espera dentro del inventario) y <em>gasto</em> (se consume, afecta el resultado de inmediato).</p>
+</div>
+
+<!-- ---------- ASIENTO 14 ---------- -->
+<div class="asiento">
+  <div class="asiento-head">Asiento N.º 14 — Venta de producto terminado a cliente agente de retención<span class="fecha">31/07/2026</span></div>
+  <div class="calculo">
+    <h5>Cálculo desglosado — Factura 001-001-000000742, EXPORTADORA BANANERA DEL PACÍFICO S.A. (<strong>agente de retención</strong>)</h5>
+    <table class="calc">
+      <tr><td>Venta de cajas de cartón corrugado (base imponible)</td><td class="num">26.000,00</td></tr>
+      <tr><td>(+) IVA 15 %  →  26.000,00 × 15 %</td><td class="num">3.900,00</td></tr>
+      <tr class="res"><td>Total facturado</td><td class="num">29.900,00</td></tr>
+      <tr><td>(−) Retención IR 2 % que <em>nos</em> practica el cliente (bienes) → 26.000,00 × 2 %</td><td class="num">520,00</td></tr>
+      <tr><td>(−) Retención IVA 30 % que <em>nos</em> practica el cliente (bienes) → 3.900,00 × 30 %</td><td class="num">1.170,00</td></tr>
+      <tr class="res"><td><strong>Valor neto por cobrar</strong></td><td class="num"><strong>28.210,00</strong></td></tr>
+    </table>
+  </div>
+  <div class="scroll-x">
+  <table class="diario">
+    <tr><th style="width:11%">Fecha</th><th style="width:14%">Código</th><th>Detalle</th><th class="num" style="width:15%">Debe</th><th class="num" style="width:15%">Haber</th></tr>
+    <tr><td>31/07/2026</td><td class="cod">1.1.02.01</td><td>Cuentas por cobrar clientes</td><td class="num">28.210,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">1.1.03.03</td><td>Anticipo IR — retenciones en la fuente recibidas</td><td class="num">520,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">1.1.03.02</td><td>Crédito tributario — IVA retenido por clientes</td><td class="num">1.170,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">4.1.01.01</td><td class="acreedora">Ventas</td><td class="num"></td><td class="num">26.000,00</td></tr>
+    <tr><td></td><td class="cod">2.1.02.01</td><td class="acreedora">IVA en ventas</td><td class="num"></td><td class="num">3.900,00</td></tr>
+    <tr class="suman"><td></td><td></td><td>SUMAN</td><td class="num">29.900,00</td><td class="num">29.900,00</td></tr>
+  </table>
+  </div>
+  <div class="glosa">P/R Venta de cajas de cartón corrugado a EXPORTADORA BANANERA DEL PACÍFICO S.A. según factura 001-001-000000742, con comprobante de retención 001-004-000029117 recibido del cliente.</div>
+</div>
+
+<div class="ejemplo-box">
+  <h4>Cuando la retenida es la empresa</h4>
+  <p>Hasta ahora nuestra fábrica venía reteniendo a sus proveedores. Aquí ocurre lo contrario: el cliente también es agente de retención, así que <strong>le retiene a ella</strong>. Y lo que para el proveedor era pasivo (una obligación con el SRI), para el retenido es <strong>activo</strong>: dinero ya entregado al Estado que se descontará después.</p>
+  <ul>
+    <li>Los USD 520,00 de IR son un <strong>anticipo del impuesto a la renta anual</strong>. En abril del año siguiente, cuando la empresa liquide su impuesto a la renta, restará todas las retenciones que le hicieron durante el año.</li>
+    <li>Los USD 1.170,00 de IVA retenido son <strong>crédito tributario inmediato</strong>: se descuentan en la declaración de IVA del propio mes de julio. Lo verás en el asiento 17.</li>
+  </ul>
+  <p>Observa que la empresa <strong>vende por USD 29.900,00 pero solo cobrará USD 28.210,00</strong>. Esa diferencia no es una pérdida: es impuesto adelantado. Confundir esto es uno de los errores que más problemas de flujo de caja causa en empresas pequeñas.</p>
+</div>
+
+<!-- ---------- ASIENTO 15 ---------- -->
+<div class="asiento">
+  <div class="asiento-head">Asiento N.º 15 — Costo de las cajas vendidas<span class="fecha">31/07/2026</span></div>
+  <div class="calculo">
+    <h5>Cálculo desglosado — según informe de producción 07-2026</h5>
+    <table class="calc">
+      <tr><td>Saldo inicial de productos terminados (01/07)</td><td class="num">6.800,00</td></tr>
+      <tr><td>(+) Producción terminada del mes (asiento 13)</td><td class="num">22.000,00</td></tr>
+      <tr class="res"><td>Disponible para la venta</td><td class="num">28.800,00</td></tr>
+      <tr><td>(−) Costo de las cajas entregadas al cliente</td><td class="num">20.500,00</td></tr>
+      <tr class="res"><td><strong>Saldo en bodega de producto terminado al 31/07</strong></td><td class="num"><strong>8.300,00</strong></td></tr>
+    </table>
+  </div>
+  <div class="scroll-x">
+  <table class="diario">
+    <tr><th style="width:11%">Fecha</th><th style="width:14%">Código</th><th>Detalle</th><th class="num" style="width:15%">Debe</th><th class="num" style="width:15%">Haber</th></tr>
+    <tr><td>31/07/2026</td><td class="cod">5.2.01.01</td><td>Costo de ventas</td><td class="num">20.500,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">1.1.04.03</td><td class="acreedora">Inventario de Productos Terminados</td><td class="num"></td><td class="num">20.500,00</td></tr>
+    <tr class="suman"><td></td><td></td><td>SUMAN</td><td class="num">20.500,00</td><td class="num">20.500,00</td></tr>
+  </table>
+  </div>
+  <div class="glosa">P/R Costo de las cajas de cartón entregadas a EXPORTADORA BANANERA DEL PACÍFICO S.A. según factura 001-001-000000742.</div>
+</div>
+
+<div class="continuidad">
+  <h4>De dónde salen esos USD 20.500,00</h4>
+  <p>El valor te fue entregado por el informe de producción, y eso es deliberado. <strong>Determinar cuánto vale exactamente cada unidad que sale del inventario es el problema que resuelve la NIC 2</strong>, mediante métodos de valoración —primeras entradas primeras salidas (FIFO) y costo promedio ponderado— registrados en una tarjeta llamada <strong>Kardex</strong>. Ese es el contenido de la <strong>Unidad 3 de este mismo curso</strong> (días 7 a 13). Cuando llegues ahí, vas a poder calcular tú mismo esta cifra en lugar de recibirla hecha.</p>
+  <p>Por ahora quédate con la lógica del asiento, que no cambia nunca: <strong>al vender, el inventario se descarga y nace el costo de ventas</strong>. Es el momento exacto en que el sueldo del operario —que había sido activo durante todo el mes— por fin se convierte en costo del período.</p>
+</div>
+
+<!-- ---------- ASIENTO 16 ---------- -->
+<div class="asiento">
+  <div class="asiento-head">Asiento N.º 16 — Flete de entrega al cliente (tarifa 0 %)<span class="fecha">31/07/2026</span></div>
+  <div class="calculo">
+    <h5>Cálculo desglosado — Factura 001-001-000001208, TRANSPORTES DEL LITORAL CÍA. LTDA.</h5>
+    <table class="calc">
+      <tr><td>Servicio de transporte de carga (base imponible)</td><td class="num">450,00</td></tr>
+      <tr><td>IVA: transporte terrestre de carga → <strong>tarifa 0 %</strong> (Art. 56 LRTI)</td><td class="num">0,00</td></tr>
+      <tr><td>(−) Retención IR <strong>1 %</strong> (transporte de carga) → 450,00 × 1 %</td><td class="num">4,50</td></tr>
+      <tr><td>(−) Retención de IVA: 70 % × 0,00</td><td class="num">0,00</td></tr>
+      <tr class="res"><td><strong>Valor pagado al transportista</strong></td><td class="num"><strong>445,50</strong></td></tr>
+    </table>
+  </div>
+  <div class="scroll-x">
+  <table class="diario">
+    <tr><th style="width:11%">Fecha</th><th style="width:14%">Código</th><th>Detalle</th><th class="num" style="width:15%">Debe</th><th class="num" style="width:15%">Haber</th></tr>
+    <tr><td>31/07/2026</td><td class="cod">6.2.01.01</td><td>Gasto de venta — fletes</td><td class="num">450,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">2.1.02.03</td><td class="acreedora">Retenciones en la fuente de IR por pagar</td><td class="num"></td><td class="num">4,50</td></tr>
+    <tr><td></td><td class="cod">1.1.01.02</td><td class="acreedora">Bancos — Banco del Pacífico</td><td class="num"></td><td class="num">445,50</td></tr>
+    <tr class="suman"><td></td><td></td><td>SUMAN</td><td class="num">450,00</td><td class="num">450,00</td></tr>
+  </table>
+  </div>
+  <div class="glosa">P/R Pago del flete de entrega de las cajas al cliente, servicio de transporte de carga con tarifa 0 % de IVA y retención del 1 % de impuesto a la renta.</div>
+</div>
+
+<div class="alerta-box">
+  <h4>Tarifa 0 % de IVA no significa "sin retención de renta"</h4>
+  <p>Son dos impuestos distintos y hay que pensarlos por separado. El transporte terrestre de carga está gravado con <strong>tarifa 0 % de IVA</strong> por el artículo 56 de la LRTI, de modo que no hay IVA ni, en consecuencia, retención de IVA. Pero el transportista <strong>sí obtiene un ingreso gravado con impuesto a la renta</strong>, y por lo tanto sí procede la retención en la fuente del <strong>1 %</strong> que fija la Resolución NAC-DGERCGC26-00000009.</p>
+  <p>Un detalle contable adicional: este flete es de <strong>entrega al cliente</strong>, por eso es <em>gasto de venta</em>. Si en cambio hubiera sido el flete de traer el papel kraft desde la papelera hasta la fábrica, formaría parte del <strong>costo de la materia prima</strong>, porque el costo de un inventario incluye todo lo necesario para ponerlo en condiciones de ser usado. Este criterio lo desarrolla la NIC 2, en la Unidad 3.</p>
+</div>
+
+<!-- ---------- ASIENTO 17 ---------- -->
+<div class="asiento">
+  <div class="asiento-head">Asiento N.º 17 — Liquidación del IVA del mes de julio<span class="fecha">31/07/2026</span></div>
+  <div class="calculo">
+    <h5>Cálculo desglosado — Declaración de IVA, formulario 104, julio de 2026</h5>
+    <table class="calc">
+      <tr><td><strong>IVA generado en ventas</strong> (asiento 14)</td><td class="num">3.900,00</td></tr>
+      <tr><td>(−) Crédito tributario IVA en compras: 1.200,00 + 135,00 + 180,00 + 225,00</td><td class="num">1.740,00</td></tr>
+      <tr><td>(−) IVA que nos retuvo el cliente (asiento 14)</td><td class="num">1.170,00</td></tr>
+      <tr class="res"><td><strong>IVA a pagar al SRI</strong></td><td class="num"><strong>990,00</strong></td></tr>
+    </table>
+  </div>
+  <div class="scroll-x">
+  <table class="diario">
+    <tr><th style="width:11%">Fecha</th><th style="width:14%">Código</th><th>Detalle</th><th class="num" style="width:15%">Debe</th><th class="num" style="width:15%">Haber</th></tr>
+    <tr><td>31/07/2026</td><td class="cod">2.1.02.01</td><td>IVA en ventas</td><td class="num">3.900,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">1.1.03.01</td><td class="acreedora">Crédito tributario IVA en compras</td><td class="num"></td><td class="num">1.740,00</td></tr>
+    <tr><td></td><td class="cod">1.1.03.02</td><td class="acreedora">Crédito tributario — IVA retenido por clientes</td><td class="num"></td><td class="num">1.170,00</td></tr>
+    <tr><td></td><td class="cod">2.1.02.04</td><td class="acreedora">IVA por pagar</td><td class="num"></td><td class="num">990,00</td></tr>
+    <tr class="suman"><td></td><td></td><td>SUMAN</td><td class="num">3.900,00</td><td class="num">3.900,00</td></tr>
+  </table>
+  </div>
+  <div class="glosa">P/R Liquidación del IVA correspondiente a julio de 2026, compensando el crédito tributario en compras y las retenciones de IVA soportadas.</div>
+</div>
+
+<div class="ejemplo-box">
+  <h4>Cómo leer la liquidación del IVA</h4>
+  <p>El IVA que la empresa cobró a su cliente <strong>nunca fue suyo</strong>: lo cobró por cuenta del Estado. La liquidación consiste en devolver ese dinero, descontando lo que la empresa ya pagó por adelantado:</p>
+  <ul>
+    <li><strong>Cobró</strong> USD 3.900,00 en la venta.</li>
+    <li><strong>Ya pagó</strong> USD 1.740,00 al comprar (crédito tributario).</li>
+    <li><strong>Ya le retuvieron</strong> USD 1.170,00 que el cliente entregó directamente al SRI.</li>
+    <li><strong>Queda debiendo</strong> USD 990,00.</li>
+  </ul>
+  <p>Nota que las cuentas de crédito tributario y de IVA en ventas quedaron en <strong>cero</strong> después de este asiento: cada mes se liquidan y vuelven a empezar. Si el crédito tributario hubiera sido mayor que el IVA en ventas, no habría nada que pagar y el saldo a favor pasaría al mes siguiente. Eso ocurre con frecuencia en empresas que están en etapa de inversión, y también en exportadoras, que venden con tarifa 0 % y compran con 15 %.</p>
+</div>
+
+<!-- ---------- ASIENTO 18 ---------- -->
+<div class="asiento">
+  <div class="asiento-head">Asiento N.º 18 — Pago de las obligaciones tributarias de julio<span class="fecha">24/08/2026</span></div>
+  <div class="calculo">
+    <h5>Cálculo desglosado — Formularios 104 (IVA) y 103 (retenciones en la fuente), periodo julio 2026</h5>
+    <table class="calc">
+      <tr><td>IVA por pagar (asiento 17)</td><td class="num">990,00</td></tr>
+      <tr><td>Retenciones de IVA practicadas: 360,00 + 40,50 + 126,00 + 225,00</td><td class="num">751,50</td></tr>
+      <tr><td>Retenciones de IR practicadas: 160,00 + 18,00 + 36,00 + 150,00 + 4,50</td><td class="num">368,50</td></tr>
+      <tr class="res"><td><strong>Total pagado al SRI</strong></td><td class="num"><strong>2.110,00</strong></td></tr>
+    </table>
+  </div>
+  <div class="scroll-x">
+  <table class="diario">
+    <tr><th style="width:11%">Fecha</th><th style="width:14%">Código</th><th>Detalle</th><th class="num" style="width:15%">Debe</th><th class="num" style="width:15%">Haber</th></tr>
+    <tr><td>24/08/2026</td><td class="cod">2.1.02.04</td><td>IVA por pagar</td><td class="num">990,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">2.1.02.02</td><td>Retenciones de IVA por pagar</td><td class="num">751,50</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">2.1.02.03</td><td>Retenciones en la fuente de IR por pagar</td><td class="num">368,50</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">1.1.01.02</td><td class="acreedora">Bancos — Banco del Pacífico</td><td class="num"></td><td class="num">2.110,00</td></tr>
+    <tr class="suman"><td></td><td></td><td>SUMAN</td><td class="num">2.110,00</td><td class="num">2.110,00</td></tr>
+  </table>
+  </div>
+  <div class="glosa">P/R Pago de las obligaciones tributarias del periodo julio de 2026, formularios 104 y 103, dentro del plazo del noveno dígito del RUC.</div>
+</div>
+
+<div class="alerta-box">
+  <h4>El mes cierra el 31 de julio, pero el SRI se paga en agosto</h4>
+  <p>Presta atención a la fecha de este asiento: <strong>24 de agosto de 2026</strong>, no 31 de julio. Las declaraciones mensuales de IVA (formulario 104) y de retenciones en la fuente (formulario 103) de un mes se presentan y pagan <strong>en el mes siguiente</strong>, en la fecha que determina el <strong>noveno dígito del RUC</strong>.</p>
+  <p>El RUC de CARTONERA DEL LITORAL CÍA. LTDA. es <strong>0991234581001</strong>. Contando desde la izquierda dentro de los diez primeros dígitos —0, 9, 9, 1, 2, 3, 4, 5, <strong>8</strong>, 1— el noveno dígito es <strong>8</strong>, al que corresponde el <strong>24 del mes siguiente</strong>.</p>
+  <p>Regla adicional que debes conocer: <strong>si la fecha de vencimiento cae en sábado, domingo o feriado, el plazo se traslada al siguiente día hábil</strong>. El 24 de agosto de 2026 es lunes, de modo que aquí no hay traslado. Declarar fuera de plazo genera multas e intereses aunque el impuesto a pagar sea cero.</p>
+</div>
+
+<div class="clave-box">
+  <h4>Resumen del mes en una sola línea</h4>
+  <p>Entró papel por USD 8.000,00, se pagó una nómina de USD 8.040,00 con un recargo social de USD 2.431,03, la fábrica consumió USD 6.425,79 en costos indirectos, salieron cajas terminadas por USD 22.000,00, se vendieron por USD 26.000,00 unas cajas que costaron USD 20.500,00, y el Estado se llevó USD 2.110,00 en impuestos recaudados. <strong>Dieciocho asientos, todos cuadrados, ninguno arbitrario.</strong></p>
+</div>
+
+</div><!-- fin panel diario -->
+
+<!-- ================= PANEL 3: MAYORIZACIÓN ================= -->
+<div class="panel" id="mayor">
+
+<h2>Mayorización</h2>
+
+<div class="def-box">
+  <h4>Mayorización</h4>
+  <p>Es el <strong>traslado de los movimientos del Libro Diario al Libro Mayor</strong>, agrupándolos por cuenta. El Diario responde a la pregunta <em>"¿qué pasó ese día?"</em>; el Mayor responde a <em>"¿cómo quedó esta cuenta?"</em>. Son los mismos datos vistos desde dos ángulos: el Diario los ordena por <strong>fecha</strong>, el Mayor los ordena por <strong>cuenta</strong>.</p>
+  <p>El Libro Mayor no inventa nada. Si un valor no está en el Diario, no puede aparecer en el Mayor; y si está en el Diario, tiene que aparecer. Esa correspondencia obligatoria es el primer control de calidad de toda la contabilidad.</p>
+</div>
+
+<div class="def-box">
+  <h4>Saldo de una cuenta</h4>
+  <p>Es la <strong>diferencia entre el total del Debe y el total del Haber</strong> de esa cuenta. Si el Debe es mayor, el saldo es <em>deudor</em>; si el Haber es mayor, el saldo es <em>acreedor</em>; si son iguales, la cuenta está <em>saldada</em> (saldo cero). Lo normal es que cada cuenta termine con un saldo de su propia naturaleza: los activos, costos y gastos, deudor; los pasivos, el patrimonio y los ingresos, acreedor. Un activo con saldo acreedor casi siempre significa que hay un error… o un sobregiro.</p>
+</div>
+
+<p>A continuación vas a ver la mayorización de julio de 2026 presentada en <strong>tres formatos distintos</strong>, uno tras otro. No son tres ejercicios diferentes: son los mismos números mostrados de tres maneras, y cada una existe porque resuelve un problema que las otras no resuelven bien. Un profesional los usa los tres, en momentos distintos.</p>
+
+<h3>(a) Cuentas T clásicas — para entender y para enseñar</h3>
+
+<div class="def-box">
+  <h4>Cuenta T</h4>
+  <p>Es la <strong>representación gráfica más simple de una cuenta contable</strong>: se traza una línea horizontal con el nombre de la cuenta encima y una línea vertical debajo, formando una letra T. A la izquierda va el <strong>Debe</strong> y a la derecha el <strong>Haber</strong>. Siempre, en toda cuenta, sin excepción: el Debe es la izquierda y el Haber es la derecha. No tiene nada que ver con "deber" en el sentido de adeudar; son solo posiciones heredadas de la contabilidad veneciana del siglo XV.</p>
+</div>
+
+<p><strong>¿Para qué sirve este formato?</strong> Para <em>ver</em>. La cuenta T es una herramienta de razonamiento, no de registro legal. Se usa en el aula para enseñar, en el borrador para pensar un asiento difícil y en la pizarra de una reunión para explicarle a alguien qué pasó con una cuenta. Su ventaja es que muestra de golpe la fuerza de cada lado; su límite es que no lleva fechas ni detalle, de modo que sirve para comprender pero no para sustentar.</p>
+
+<p>En las cuentas T que siguen, cada movimiento está identificado con el número del asiento que lo originó: <strong>A1</strong> es el asiento 1, <strong>A9</strong> el asiento 9, y así. Puedes ir y volver al Libro Diario para rastrear cualquier cifra.</p>
+
+<div class="t-grid">
+<div class="t-account">
+<div class="t-head">Caja<span>1.1.01.01</span></div>
+<table class="tcta"><tr><th>Debe</th><th>Haber</th></tr>
+<tr><td><span class="t-lbl">A1</span> 1.500,00</td><td>&nbsp;</td></tr>
+<tr class="tsum"><td>1.500,00</td><td>0,00</td></tr>
+<tr class="tsaldo"><td>Saldo deudor 1.500,00</td><td>&nbsp;</td></tr>
+</table></div>
+<div class="t-account">
+<div class="t-head">Bancos — Banco del Pacífico<span>1.1.01.02</span></div>
+<table class="tcta"><tr><th>Debe</th><th>Haber</th></tr>
+<tr><td><span class="t-lbl">A1</span> 28.400,00</td><td><span class="t-lbl">A3</span> 976,50</td></tr>
+<tr><td>&nbsp;</td><td><span class="t-lbl">A4</span> 1.218,00</td></tr>
+<tr><td>&nbsp;</td><td><span class="t-lbl">A7</span> 850,00</td></tr>
+<tr><td>&nbsp;</td><td><span class="t-lbl">A8</span> 1.350,00</td></tr>
+<tr><td>&nbsp;</td><td><span class="t-lbl">A11</span> 7.280,22</td></tr>
+<tr><td>&nbsp;</td><td><span class="t-lbl">A16</span> 445,50</td></tr>
+<tr><td>&nbsp;</td><td><span class="t-lbl">A18</span> 2.110,00</td></tr>
+<tr class="tsum"><td>28.400,00</td><td>14.230,22</td></tr>
+<tr class="tsaldo"><td>Saldo deudor 14.169,78</td><td>&nbsp;</td></tr>
+</table></div>
+<div class="t-account">
+<div class="t-head">Cuentas por cobrar clientes<span>1.1.02.01</span></div>
+<table class="tcta"><tr><th>Debe</th><th>Haber</th></tr>
+<tr><td><span class="t-lbl">A1</span> 9.200,00</td><td>&nbsp;</td></tr>
+<tr><td><span class="t-lbl">A14</span> 28.210,00</td><td>&nbsp;</td></tr>
+<tr class="tsum"><td>37.410,00</td><td>0,00</td></tr>
+<tr class="tsaldo"><td>Saldo deudor 37.410,00</td><td>&nbsp;</td></tr>
+</table></div>
+<div class="t-account">
+<div class="t-head">Crédito tributario IVA en compras<span>1.1.03.01</span></div>
+<table class="tcta"><tr><th>Debe</th><th>Haber</th></tr>
+<tr><td><span class="t-lbl">A2</span> 1.200,00</td><td><span class="t-lbl">A17</span> 1.740,00</td></tr>
+<tr><td><span class="t-lbl">A3</span> 135,00</td><td>&nbsp;</td></tr>
+<tr><td><span class="t-lbl">A4</span> 180,00</td><td>&nbsp;</td></tr>
+<tr><td><span class="t-lbl">A8</span> 225,00</td><td>&nbsp;</td></tr>
+<tr class="tsum"><td>1.740,00</td><td>1.740,00</td></tr>
+<tr class="tsaldo"><td colspan="2">Cuenta saldada — saldo 0,00</td></tr>
+</table></div>
+<div class="t-account">
+<div class="t-head">Crédito tributario — IVA retenido por clientes<span>1.1.03.02</span></div>
+<table class="tcta"><tr><th>Debe</th><th>Haber</th></tr>
+<tr><td><span class="t-lbl">A14</span> 1.170,00</td><td><span class="t-lbl">A17</span> 1.170,00</td></tr>
+<tr class="tsum"><td>1.170,00</td><td>1.170,00</td></tr>
+<tr class="tsaldo"><td colspan="2">Cuenta saldada — saldo 0,00</td></tr>
+</table></div>
+<div class="t-account">
+<div class="t-head">Anticipo IR — retenciones recibidas<span>1.1.03.03</span></div>
+<table class="tcta"><tr><th>Debe</th><th>Haber</th></tr>
+<tr><td><span class="t-lbl">A14</span> 520,00</td><td>&nbsp;</td></tr>
+<tr class="tsum"><td>520,00</td><td>0,00</td></tr>
+<tr class="tsaldo"><td>Saldo deudor 520,00</td><td>&nbsp;</td></tr>
+</table></div>
+<div class="t-account">
+<div class="t-head">Inventario de Materia Prima<span>1.1.04.01</span></div>
+<table class="tcta"><tr><th>Debe</th><th>Haber</th></tr>
+<tr><td><span class="t-lbl">A1</span> 12.000,00</td><td><span class="t-lbl">A5</span> 9.500,00</td></tr>
+<tr><td><span class="t-lbl">A2</span> 8.000,00</td><td>&nbsp;</td></tr>
+<tr class="tsum"><td>20.000,00</td><td>9.500,00</td></tr>
+<tr class="tsaldo"><td>Saldo deudor 10.500,00</td><td>&nbsp;</td></tr>
+</table></div>
+<div class="t-account">
+<div class="t-head">Inventario de Productos en Proceso<span>1.1.04.02</span></div>
+<table class="tcta"><tr><th>Debe</th><th>Haber</th></tr>
+<tr><td><span class="t-lbl">A1</span> 3.500,00</td><td><span class="t-lbl">A13</span> 22.000,00</td></tr>
+<tr><td><span class="t-lbl">A5</span> 9.500,00</td><td>&nbsp;</td></tr>
+<tr><td><span class="t-lbl">A9</span> 3.600,00</td><td>&nbsp;</td></tr>
+<tr><td><span class="t-lbl">A10</span> 1.132,40</td><td>&nbsp;</td></tr>
+<tr><td><span class="t-lbl">A12</span> 6.425,79</td><td>&nbsp;</td></tr>
+<tr class="tsum"><td>24.158,19</td><td>22.000,00</td></tr>
+<tr class="tsaldo"><td>Saldo deudor 2.158,19</td><td>&nbsp;</td></tr>
+</table></div>
+<div class="t-account">
+<div class="t-head">Inventario de Productos Terminados<span>1.1.04.03</span></div>
+<table class="tcta"><tr><th>Debe</th><th>Haber</th></tr>
+<tr><td><span class="t-lbl">A1</span> 6.800,00</td><td><span class="t-lbl">A15</span> 20.500,00</td></tr>
+<tr><td><span class="t-lbl">A13</span> 22.000,00</td><td>&nbsp;</td></tr>
+<tr class="tsum"><td>28.800,00</td><td>20.500,00</td></tr>
+<tr class="tsaldo"><td>Saldo deudor 8.300,00</td><td>&nbsp;</td></tr>
+</table></div>
+<div class="t-account">
+<div class="t-head">Inventario de Materiales Indirectos<span>1.1.04.04</span></div>
+<table class="tcta"><tr><th>Debe</th><th>Haber</th></tr>
+<tr><td><span class="t-lbl">A1</span> 1.200,00</td><td><span class="t-lbl">A6</span> 700,00</td></tr>
+<tr><td><span class="t-lbl">A3</span> 900,00</td><td>&nbsp;</td></tr>
+<tr class="tsum"><td>2.100,00</td><td>700,00</td></tr>
+<tr class="tsaldo"><td>Saldo deudor 1.400,00</td><td>&nbsp;</td></tr>
+</table></div>
+<div class="t-account">
+<div class="t-head">Maquinaria y equipo de planta<span>1.2.01.01</span></div>
+<table class="tcta"><tr><th>Debe</th><th>Haber</th></tr>
+<tr><td><span class="t-lbl">A1</span> 45.000,00</td><td>&nbsp;</td></tr>
+<tr class="tsum"><td>45.000,00</td><td>0,00</td></tr>
+<tr class="tsaldo"><td>Saldo deudor 45.000,00</td><td>&nbsp;</td></tr>
+</table></div>
+<div class="t-account">
+<div class="t-head">Muebles y enseres<span>1.2.01.02</span></div>
+<table class="tcta"><tr><th>Debe</th><th>Haber</th></tr>
+<tr><td><span class="t-lbl">A1</span> 4.400,00</td><td>&nbsp;</td></tr>
+<tr class="tsum"><td>4.400,00</td><td>0,00</td></tr>
+<tr class="tsaldo"><td>Saldo deudor 4.400,00</td><td>&nbsp;</td></tr>
+</table></div>
+<div class="t-account">
+<div class="t-head">Cuentas por pagar proveedores<span>2.1.01.01</span></div>
+<table class="tcta"><tr><th>Debe</th><th>Haber</th></tr>
+<tr><td>&nbsp;</td><td><span class="t-lbl">A1</span> 14.000,00</td></tr>
+<tr><td>&nbsp;</td><td><span class="t-lbl">A2</span> 8.680,00</td></tr>
+<tr class="tsum"><td>0,00</td><td>22.680,00</td></tr>
+<tr class="tsaldo"><td>&nbsp;</td><td>Saldo acreedor 22.680,00</td></tr>
+</table></div>
+<div class="t-account">
+<div class="t-head">IVA en ventas<span>2.1.02.01</span></div>
+<table class="tcta"><tr><th>Debe</th><th>Haber</th></tr>
+<tr><td><span class="t-lbl">A17</span> 3.900,00</td><td><span class="t-lbl">A14</span> 3.900,00</td></tr>
+<tr class="tsum"><td>3.900,00</td><td>3.900,00</td></tr>
+<tr class="tsaldo"><td colspan="2">Cuenta saldada — saldo 0,00</td></tr>
+</table></div>
+<div class="t-account">
+<div class="t-head">Retenciones de IVA por pagar<span>2.1.02.02</span></div>
+<table class="tcta"><tr><th>Debe</th><th>Haber</th></tr>
+<tr><td><span class="t-lbl">A18</span> 751,50</td><td><span class="t-lbl">A2</span> 360,00</td></tr>
+<tr><td>&nbsp;</td><td><span class="t-lbl">A3</span> 40,50</td></tr>
+<tr><td>&nbsp;</td><td><span class="t-lbl">A4</span> 126,00</td></tr>
+<tr><td>&nbsp;</td><td><span class="t-lbl">A8</span> 225,00</td></tr>
+<tr class="tsum"><td>751,50</td><td>751,50</td></tr>
+<tr class="tsaldo"><td colspan="2">Cuenta saldada — saldo 0,00</td></tr>
+</table></div>
+<div class="t-account">
+<div class="t-head">Retenciones en la fuente de IR por pagar<span>2.1.02.03</span></div>
+<table class="tcta"><tr><th>Debe</th><th>Haber</th></tr>
+<tr><td><span class="t-lbl">A18</span> 368,50</td><td><span class="t-lbl">A2</span> 160,00</td></tr>
+<tr><td>&nbsp;</td><td><span class="t-lbl">A3</span> 18,00</td></tr>
+<tr><td>&nbsp;</td><td><span class="t-lbl">A4</span> 36,00</td></tr>
+<tr><td>&nbsp;</td><td><span class="t-lbl">A8</span> 150,00</td></tr>
+<tr><td>&nbsp;</td><td><span class="t-lbl">A16</span> 4,50</td></tr>
+<tr class="tsum"><td>368,50</td><td>368,50</td></tr>
+<tr class="tsaldo"><td colspan="2">Cuenta saldada — saldo 0,00</td></tr>
+</table></div>
+<div class="t-account">
+<div class="t-head">IVA por pagar<span>2.1.02.04</span></div>
+<table class="tcta"><tr><th>Debe</th><th>Haber</th></tr>
+<tr><td><span class="t-lbl">A18</span> 990,00</td><td><span class="t-lbl">A17</span> 990,00</td></tr>
+<tr class="tsum"><td>990,00</td><td>990,00</td></tr>
+<tr class="tsaldo"><td colspan="2">Cuenta saldada — saldo 0,00</td></tr>
+</table></div>
+<div class="t-account">
+<div class="t-head">Sueldos por pagar<span>2.1.03.01</span></div>
+<table class="tcta"><tr><th>Debe</th><th>Haber</th></tr>
+<tr><td><span class="t-lbl">A11</span> 7.280,22</td><td><span class="t-lbl">A9</span> 7.280,22</td></tr>
+<tr class="tsum"><td>7.280,22</td><td>7.280,22</td></tr>
+<tr class="tsaldo"><td colspan="2">Cuenta saldada — saldo 0,00</td></tr>
+</table></div>
+<div class="t-account">
+<div class="t-head">IESS por pagar<span>2.1.03.02</span></div>
+<table class="tcta"><tr><th>Debe</th><th>Haber</th></tr>
+<tr><td>&nbsp;</td><td><span class="t-lbl">A1</span> 2.000,00</td></tr>
+<tr><td>&nbsp;</td><td><span class="t-lbl">A9</span> 759,78</td></tr>
+<tr><td>&nbsp;</td><td><span class="t-lbl">A10</span> 976,86</td></tr>
+<tr class="tsum"><td>0,00</td><td>3.736,64</td></tr>
+<tr class="tsaldo"><td>&nbsp;</td><td>Saldo acreedor 3.736,64</td></tr>
+</table></div>
+<div class="t-account">
+<div class="t-head">Provisión décimo tercer sueldo<span>2.1.03.03</span></div>
+<table class="tcta"><tr><th>Debe</th><th>Haber</th></tr>
+<tr><td>&nbsp;</td><td><span class="t-lbl">A10</span> 670,00</td></tr>
+<tr class="tsum"><td>0,00</td><td>670,00</td></tr>
+<tr class="tsaldo"><td>&nbsp;</td><td>Saldo acreedor 670,00</td></tr>
+</table></div>
+<div class="t-account">
+<div class="t-head">Provisión décimo cuarto sueldo<span>2.1.03.04</span></div>
+<table class="tcta"><tr><th>Debe</th><th>Haber</th></tr>
+<tr><td>&nbsp;</td><td><span class="t-lbl">A10</span> 449,17</td></tr>
+<tr class="tsum"><td>0,00</td><td>449,17</td></tr>
+<tr class="tsaldo"><td>&nbsp;</td><td>Saldo acreedor 449,17</td></tr>
+</table></div>
+<div class="t-account">
+<div class="t-head">Provisión vacaciones<span>2.1.03.05</span></div>
+<table class="tcta"><tr><th>Debe</th><th>Haber</th></tr>
+<tr><td>&nbsp;</td><td><span class="t-lbl">A10</span> 335,00</td></tr>
+<tr class="tsum"><td>0,00</td><td>335,00</td></tr>
+<tr class="tsaldo"><td>&nbsp;</td><td>Saldo acreedor 335,00</td></tr>
+</table></div>
+<div class="t-account">
+<div class="t-head">Capital social<span>3.1.01.01</span></div>
+<table class="tcta"><tr><th>Debe</th><th>Haber</th></tr>
+<tr><td>&nbsp;</td><td><span class="t-lbl">A1</span> 80.000,00</td></tr>
+<tr class="tsum"><td>0,00</td><td>80.000,00</td></tr>
+<tr class="tsaldo"><td>&nbsp;</td><td>Saldo acreedor 80.000,00</td></tr>
+</table></div>
+<div class="t-account">
+<div class="t-head">Resultados acumulados<span>3.2.01.01</span></div>
+<table class="tcta"><tr><th>Debe</th><th>Haber</th></tr>
+<tr><td>&nbsp;</td><td><span class="t-lbl">A1</span> 16.000,00</td></tr>
+<tr class="tsum"><td>0,00</td><td>16.000,00</td></tr>
+<tr class="tsaldo"><td>&nbsp;</td><td>Saldo acreedor 16.000,00</td></tr>
+</table></div>
+<div class="t-account">
+<div class="t-head">Ventas<span>4.1.01.01</span></div>
+<table class="tcta"><tr><th>Debe</th><th>Haber</th></tr>
+<tr><td>&nbsp;</td><td><span class="t-lbl">A14</span> 26.000,00</td></tr>
+<tr class="tsum"><td>0,00</td><td>26.000,00</td></tr>
+<tr class="tsaldo"><td>&nbsp;</td><td>Saldo acreedor 26.000,00</td></tr>
+</table></div>
+<div class="t-account">
+<div class="t-head">Costos Indirectos de Fabricación<span>5.1.01.01</span></div>
+<table class="tcta"><tr><th>Debe</th><th>Haber</th></tr>
+<tr><td><span class="t-lbl">A4</span> 1.200,00</td><td><span class="t-lbl">A12</span> 6.425,79</td></tr>
+<tr><td><span class="t-lbl">A6</span> 700,00</td><td>&nbsp;</td></tr>
+<tr><td><span class="t-lbl">A7</span> 850,00</td><td>&nbsp;</td></tr>
+<tr><td><span class="t-lbl">A8</span> 1.500,00</td><td>&nbsp;</td></tr>
+<tr><td><span class="t-lbl">A9</span> 1.680,00</td><td>&nbsp;</td></tr>
+<tr><td><span class="t-lbl">A10</span> 495,79</td><td>&nbsp;</td></tr>
+<tr class="tsum"><td>6.425,79</td><td>6.425,79</td></tr>
+<tr class="tsaldo"><td colspan="2">Cuenta saldada — saldo 0,00</td></tr>
+</table></div>
+<div class="t-account">
+<div class="t-head">Costo de ventas<span>5.2.01.01</span></div>
+<table class="tcta"><tr><th>Debe</th><th>Haber</th></tr>
+<tr><td><span class="t-lbl">A15</span> 20.500,00</td><td>&nbsp;</td></tr>
+<tr class="tsum"><td>20.500,00</td><td>0,00</td></tr>
+<tr class="tsaldo"><td>Saldo deudor 20.500,00</td><td>&nbsp;</td></tr>
+</table></div>
+<div class="t-account">
+<div class="t-head">Gasto sueldos administración y ventas<span>6.1.01.01</span></div>
+<table class="tcta"><tr><th>Debe</th><th>Haber</th></tr>
+<tr><td><span class="t-lbl">A9</span> 2.760,00</td><td>&nbsp;</td></tr>
+<tr class="tsum"><td>2.760,00</td><td>0,00</td></tr>
+<tr class="tsaldo"><td>Saldo deudor 2.760,00</td><td>&nbsp;</td></tr>
+</table></div>
+<div class="t-account">
+<div class="t-head">Gasto beneficios sociales y aporte patronal adm. y ventas<span>6.1.01.02</span></div>
+<table class="tcta"><tr><th>Debe</th><th>Haber</th></tr>
+<tr><td><span class="t-lbl">A10</span> 802,84</td><td>&nbsp;</td></tr>
+<tr class="tsum"><td>802,84</td><td>0,00</td></tr>
+<tr class="tsaldo"><td>Saldo deudor 802,84</td><td>&nbsp;</td></tr>
+</table></div>
+<div class="t-account">
+<div class="t-head">Gasto de venta — fletes<span>6.2.01.01</span></div>
+<table class="tcta"><tr><th>Debe</th><th>Haber</th></tr>
+<tr><td><span class="t-lbl">A16</span> 450,00</td><td>&nbsp;</td></tr>
+<tr class="tsum"><td>450,00</td><td>0,00</td></tr>
+<tr class="tsaldo"><td>Saldo deudor 450,00</td><td>&nbsp;</td></tr>
+</table></div>
+</div>
+
+<div class="clave-box">
+  <h4>Tres cuentas T que vale la pena mirar dos veces</h4>
+  <ul>
+    <li><strong>Inventario de Productos en Proceso.</strong> Es la cuenta que cuenta la historia completa de la fábrica: recibe cinco cargos (saldo inicial, materia prima, mano de obra directa, beneficios de la mano de obra directa y costos indirectos) y descarga uno solo (la producción terminada). Su saldo de USD 2.158,19 es, literalmente, el cartón que quedó a medio cortar dentro de la máquina el 31 de julio a las seis de la tarde.</li>
+    <li><strong>Costos Indirectos de Fabricación.</strong> Recibe seis cargos y se vacía de un solo golpe. Termina en <strong>cero</strong>, y eso no es casualidad: es la prueba de que todo lo consumido por la planta llegó al producto. Si esta cuenta quedara con saldo, algo se quedó sin aplicar.</li>
+    <li><strong>Crédito tributario IVA en compras.</strong> También queda en cero, porque el IVA se liquida mes a mes. Las cuentas tributarias tienen ese ritmo propio: se cargan durante treinta días y se descargan el último.</li>
+  </ul>
+</div>
+
+<h3>(b) Formato folio — el mayor tal como se lleva de verdad</h3>
+
+<div class="def-box">
+  <h4>Folio de mayor</h4>
+  <p>Es la <strong>hoja del Libro Mayor propiamente dicho</strong>, con las columnas <em>Fecha · Detalle · Debe · Haber · Saldo</em>. A diferencia de la cuenta T, aquí cada movimiento lleva su fecha y su explicación, y existe una <strong>columna de saldo que se recalcula después de cada línea</strong>. La palabra <em>folio</em> viene de la numeración de las hojas de los libros contables encuadernados que se usaban antes de los sistemas informáticos.</p>
+</div>
+
+<p><strong>¿Para qué sirve este formato?</strong> Para responder la pregunta que más veces te van a hacer en la vida profesional: <em>"¿cuánto teníamos en esta cuenta el día tal?"</em>. La columna de saldo permite reconstruir la situación de la cuenta en cualquier fecha, no solo al final del mes. Es el formato que usan los sistemas contables, el que se imprime para una auditoría, el que el SRI solicita en un requerimiento de información y el que un banco pide para analizar el movimiento real de una empresa antes de otorgarle un crédito.</p>
+
+<p>Se presentan seis folios seleccionados, los que más enseñan sobre una manufacturera. En un sistema real existe un folio por cada una de las treinta cuentas.</p>
+
+<div class="scroll-x"><table class="folio">
+<caption>Bancos — Banco del Pacífico &nbsp;·&nbsp; código 1.1.01.02 &nbsp;·&nbsp; naturaleza deudora</caption>
+<tr><th style="width:12%">Fecha</th><th>Detalle</th><th class="num" style="width:15%">Debe</th><th class="num" style="width:15%">Haber</th><th class="num" style="width:16%">Saldo</th></tr>
+<tr><td>01/07/2026</td><td>A1 · Saldo inicial (apertura)</td><td class="num">28.400,00</td><td class="num"></td><td class="num">28.400,00</td></tr>
+<tr><td>03/07/2026</td><td>A3 · Compra de materiales indirectos</td><td class="num"></td><td class="num">976,50</td><td class="num">27.423,50</td></tr>
+<tr><td>06/07/2026</td><td>A4 · Mantenimiento de la corrugadora</td><td class="num"></td><td class="num">1.218,00</td><td class="num">26.205,50</td></tr>
+<tr><td>15/07/2026</td><td>A7 · Energía eléctrica de la nave</td><td class="num"></td><td class="num">850,00</td><td class="num">25.355,50</td></tr>
+<tr><td>15/07/2026</td><td>A8 · Arriendo de la nave industrial</td><td class="num"></td><td class="num">1.350,00</td><td class="num">24.005,50</td></tr>
+<tr><td>30/07/2026</td><td>A11 · Pago del líquido de nómina</td><td class="num"></td><td class="num">7.280,22</td><td class="num">16.725,28</td></tr>
+<tr><td>31/07/2026</td><td>A16 · Flete de entrega al cliente</td><td class="num"></td><td class="num">445,50</td><td class="num">16.279,78</td></tr>
+<tr><td>24/08/2026</td><td>A18 · Pago de obligaciones tributarias</td><td class="num"></td><td class="num">2.110,00</td><td class="num">14.169,78</td></tr>
+<tr class="total"><td colspan="2">TOTALES Y SALDO FINAL</td><td class="num">28.400,00</td><td class="num">14.230,22</td><td class="num">14.169,78</td></tr>
+</table></div>
+<div class="scroll-x"><table class="folio">
+<caption>Inventario de Materia Prima &nbsp;·&nbsp; código 1.1.04.01 &nbsp;·&nbsp; naturaleza deudora</caption>
+<tr><th style="width:12%">Fecha</th><th>Detalle</th><th class="num" style="width:15%">Debe</th><th class="num" style="width:15%">Haber</th><th class="num" style="width:16%">Saldo</th></tr>
+<tr><td>01/07/2026</td><td>A1 · Saldo inicial (apertura)</td><td class="num">12.000,00</td><td class="num"></td><td class="num">12.000,00</td></tr>
+<tr><td>02/07/2026</td><td>A2 · Compra de materia prima</td><td class="num">8.000,00</td><td class="num"></td><td class="num">20.000,00</td></tr>
+<tr><td>08/07/2026</td><td>A5 · Requisición de materia prima</td><td class="num"></td><td class="num">9.500,00</td><td class="num">10.500,00</td></tr>
+<tr class="total"><td colspan="2">TOTALES Y SALDO FINAL</td><td class="num">20.000,00</td><td class="num">9.500,00</td><td class="num">10.500,00</td></tr>
+</table></div>
+<div class="scroll-x"><table class="folio">
+<caption>Inventario de Productos en Proceso &nbsp;·&nbsp; código 1.1.04.02 &nbsp;·&nbsp; naturaleza deudora</caption>
+<tr><th style="width:12%">Fecha</th><th>Detalle</th><th class="num" style="width:15%">Debe</th><th class="num" style="width:15%">Haber</th><th class="num" style="width:16%">Saldo</th></tr>
+<tr><td>01/07/2026</td><td>A1 · Saldo inicial (apertura)</td><td class="num">3.500,00</td><td class="num"></td><td class="num">3.500,00</td></tr>
+<tr><td>08/07/2026</td><td>A5 · Requisición de materia prima</td><td class="num">9.500,00</td><td class="num"></td><td class="num">13.000,00</td></tr>
+<tr><td>30/07/2026</td><td>A9 · Rol de pagos de julio</td><td class="num">3.600,00</td><td class="num"></td><td class="num">16.600,00</td></tr>
+<tr><td>30/07/2026</td><td>A10 · Aporte patronal y provisiones</td><td class="num">1.132,40</td><td class="num"></td><td class="num">17.732,40</td></tr>
+<tr><td>31/07/2026</td><td>A12 · Aplicación de CIF a producción</td><td class="num">6.425,79</td><td class="num"></td><td class="num">24.158,19</td></tr>
+<tr><td>31/07/2026</td><td>A13 · Transferencia a productos terminados</td><td class="num"></td><td class="num">22.000,00</td><td class="num">2.158,19</td></tr>
+<tr class="total"><td colspan="2">TOTALES Y SALDO FINAL</td><td class="num">24.158,19</td><td class="num">22.000,00</td><td class="num">2.158,19</td></tr>
+</table></div>
+<div class="scroll-x"><table class="folio">
+<caption>Inventario de Productos Terminados &nbsp;·&nbsp; código 1.1.04.03 &nbsp;·&nbsp; naturaleza deudora</caption>
+<tr><th style="width:12%">Fecha</th><th>Detalle</th><th class="num" style="width:15%">Debe</th><th class="num" style="width:15%">Haber</th><th class="num" style="width:16%">Saldo</th></tr>
+<tr><td>01/07/2026</td><td>A1 · Saldo inicial (apertura)</td><td class="num">6.800,00</td><td class="num"></td><td class="num">6.800,00</td></tr>
+<tr><td>31/07/2026</td><td>A13 · Transferencia a productos terminados</td><td class="num">22.000,00</td><td class="num"></td><td class="num">28.800,00</td></tr>
+<tr><td>31/07/2026</td><td>A15 · Costo de las cajas vendidas</td><td class="num"></td><td class="num">20.500,00</td><td class="num">8.300,00</td></tr>
+<tr class="total"><td colspan="2">TOTALES Y SALDO FINAL</td><td class="num">28.800,00</td><td class="num">20.500,00</td><td class="num">8.300,00</td></tr>
+</table></div>
+<div class="scroll-x"><table class="folio">
+<caption>Costos Indirectos de Fabricación &nbsp;·&nbsp; código 5.1.01.01 &nbsp;·&nbsp; naturaleza deudora</caption>
+<tr><th style="width:12%">Fecha</th><th>Detalle</th><th class="num" style="width:15%">Debe</th><th class="num" style="width:15%">Haber</th><th class="num" style="width:16%">Saldo</th></tr>
+<tr><td>06/07/2026</td><td>A4 · Mantenimiento de la corrugadora</td><td class="num">1.200,00</td><td class="num"></td><td class="num">1.200,00</td></tr>
+<tr><td>10/07/2026</td><td>A6 · Consumo de materiales indirectos</td><td class="num">700,00</td><td class="num"></td><td class="num">1.900,00</td></tr>
+<tr><td>15/07/2026</td><td>A7 · Energía eléctrica de la nave</td><td class="num">850,00</td><td class="num"></td><td class="num">2.750,00</td></tr>
+<tr><td>15/07/2026</td><td>A8 · Arriendo de la nave industrial</td><td class="num">1.500,00</td><td class="num"></td><td class="num">4.250,00</td></tr>
+<tr><td>30/07/2026</td><td>A9 · Rol de pagos de julio</td><td class="num">1.680,00</td><td class="num"></td><td class="num">5.930,00</td></tr>
+<tr><td>30/07/2026</td><td>A10 · Aporte patronal y provisiones</td><td class="num">495,79</td><td class="num"></td><td class="num">6.425,79</td></tr>
+<tr><td>31/07/2026</td><td>A12 · Aplicación de CIF a producción</td><td class="num"></td><td class="num">6.425,79</td><td class="num">0,00</td></tr>
+<tr class="total"><td colspan="2">TOTALES Y SALDO FINAL</td><td class="num">6.425,79</td><td class="num">6.425,79</td><td class="num">0,00</td></tr>
+</table></div>
+<div class="scroll-x"><table class="folio">
+<caption>Retenciones en la fuente de IR por pagar &nbsp;·&nbsp; código 2.1.02.03 &nbsp;·&nbsp; naturaleza acreedora</caption>
+<tr><th style="width:12%">Fecha</th><th>Detalle</th><th class="num" style="width:15%">Debe</th><th class="num" style="width:15%">Haber</th><th class="num" style="width:16%">Saldo</th></tr>
+<tr><td>02/07/2026</td><td>A2 · Compra de materia prima</td><td class="num"></td><td class="num">160,00</td><td class="num">160,00</td></tr>
+<tr><td>03/07/2026</td><td>A3 · Compra de materiales indirectos</td><td class="num"></td><td class="num">18,00</td><td class="num">178,00</td></tr>
+<tr><td>06/07/2026</td><td>A4 · Mantenimiento de la corrugadora</td><td class="num"></td><td class="num">36,00</td><td class="num">214,00</td></tr>
+<tr><td>15/07/2026</td><td>A8 · Arriendo de la nave industrial</td><td class="num"></td><td class="num">150,00</td><td class="num">364,00</td></tr>
+<tr><td>31/07/2026</td><td>A16 · Flete de entrega al cliente</td><td class="num"></td><td class="num">4,50</td><td class="num">368,50</td></tr>
+<tr><td>24/08/2026</td><td>A18 · Pago de obligaciones tributarias</td><td class="num">368,50</td><td class="num"></td><td class="num">0,00</td></tr>
+<tr class="total"><td colspan="2">TOTALES Y SALDO FINAL</td><td class="num">368,50</td><td class="num">368,50</td><td class="num">0,00</td></tr>
+</table></div>
+
+<div class="ejemplo-box">
+  <h4>Lo que muestra el folio de Bancos</h4>
+  <p>La columna de saldo cuenta una historia que el resumen final oculta: la empresa empezó julio con USD 28.400,00 y lo terminó con USD 14.169,78. Perdió la mitad de su liquidez en un mes en el que <strong>vendió por USD 26.000,00</strong>. ¿Contradicción? No: vendió <em>a crédito</em>. El dinero salió (materiales, arriendo, nómina, impuestos) pero el de la venta todavía no entra.</p>
+  <p>Este desfase entre el momento en que se gana y el momento en que se cobra se llama <strong>ciclo de conversión de efectivo</strong>, y es la causa más frecuente de quiebra de empresas <em>rentables</em>. Que una fábrica gane dinero no significa que tenga dinero. La contabilidad muestra las dos cosas por separado, y aprender a leerlas por separado es una de las competencias más valiosas que te llevarás de este curso.</p>
+</div>
+
+<div class="ejemplo-box">
+  <h4>Lo que muestra el folio de Productos en Proceso</h4>
+  <p>Sigue la columna de saldo línea por línea: 3.500,00 → 13.000,00 → 16.600,00 → 17.732,40 → 24.158,19 → 2.158,19. Esa curva es la producción del mes vista en cámara lenta. Sube cuando entra papel, sube cuando entra trabajo, sube cuando entra la fábrica, y cae de golpe cuando el producto sale terminado hacia la bodega. <strong>Ninguna otra cuenta del plan tiene ese comportamiento</strong>, y no existe en una empresa comercial ni en una de servicios.</p>
+</div>
+
+<h3>(c) Resumen de saldos — antesala del balance de comprobación</h3>
+
+<div class="def-box">
+  <h4>Resumen de saldos</h4>
+  <p>Es el <strong>listado de todas las cuentas del mayor con sus sumas totales del Debe y del Haber y su saldo final</strong>. Cuando este listado se presenta formalmente, fechado y con sus totales cuadrados, recibe el nombre de <strong>balance de comprobación</strong>. Es el puente entre el Libro Mayor y los estados financieros: ninguna cifra puede llegar a un estado financiero sin haber pasado antes por aquí.</p>
+</div>
+
+<p><strong>¿Para qué sirve este formato?</strong> Para <em>comprobar</em>. Aquí no interesa el detalle de cada movimiento sino una sola cosa: que el sistema cuadre. Deben verificarse simultáneamente dos igualdades, y si cualquiera de las dos falla hay un error que debe corregirse antes de seguir:</p>
+
+<ul>
+  <li><strong>Suma de todos los Debe = Suma de todos los Haber.</strong> Es la partida doble en su expresión más agregada.</li>
+  <li><strong>Suma de saldos deudores = Suma de saldos acreedores.</strong> Es la ecuación contable en su expresión más agregada.</li>
+</ul>
+
+<div class="scroll-x"><table class="data">
+<tr><th style="width:13%">Código</th><th>Cuenta</th><th class="num">Sumas Debe</th><th class="num">Sumas Haber</th><th class="num">Saldo deudor</th><th class="num">Saldo acreedor</th></tr>
+<tr><td class="cod">1.1.01.01</td><td>Caja</td><td class="num">1.500,00</td><td class="num">0,00</td><td class="num">1.500,00</td><td class="num"></td></tr>
+<tr><td class="cod">1.1.01.02</td><td>Bancos — Banco del Pacífico</td><td class="num">28.400,00</td><td class="num">14.230,22</td><td class="num">14.169,78</td><td class="num"></td></tr>
+<tr><td class="cod">1.1.02.01</td><td>Cuentas por cobrar clientes</td><td class="num">37.410,00</td><td class="num">0,00</td><td class="num">37.410,00</td><td class="num"></td></tr>
+<tr><td class="cod">1.1.03.01</td><td>Crédito tributario IVA en compras</td><td class="num">1.740,00</td><td class="num">1.740,00</td><td class="num"></td><td class="num"></td></tr>
+<tr><td class="cod">1.1.03.02</td><td>Crédito tributario — IVA retenido por clientes</td><td class="num">1.170,00</td><td class="num">1.170,00</td><td class="num"></td><td class="num"></td></tr>
+<tr><td class="cod">1.1.03.03</td><td>Anticipo IR — retenciones recibidas</td><td class="num">520,00</td><td class="num">0,00</td><td class="num">520,00</td><td class="num"></td></tr>
+<tr><td class="cod">1.1.04.01</td><td>Inventario de Materia Prima</td><td class="num">20.000,00</td><td class="num">9.500,00</td><td class="num">10.500,00</td><td class="num"></td></tr>
+<tr><td class="cod">1.1.04.02</td><td>Inventario de Productos en Proceso</td><td class="num">24.158,19</td><td class="num">22.000,00</td><td class="num">2.158,19</td><td class="num"></td></tr>
+<tr><td class="cod">1.1.04.03</td><td>Inventario de Productos Terminados</td><td class="num">28.800,00</td><td class="num">20.500,00</td><td class="num">8.300,00</td><td class="num"></td></tr>
+<tr><td class="cod">1.1.04.04</td><td>Inventario de Materiales Indirectos</td><td class="num">2.100,00</td><td class="num">700,00</td><td class="num">1.400,00</td><td class="num"></td></tr>
+<tr><td class="cod">1.2.01.01</td><td>Maquinaria y equipo de planta</td><td class="num">45.000,00</td><td class="num">0,00</td><td class="num">45.000,00</td><td class="num"></td></tr>
+<tr><td class="cod">1.2.01.02</td><td>Muebles y enseres</td><td class="num">4.400,00</td><td class="num">0,00</td><td class="num">4.400,00</td><td class="num"></td></tr>
+<tr><td class="cod">2.1.01.01</td><td>Cuentas por pagar proveedores</td><td class="num">0,00</td><td class="num">22.680,00</td><td class="num"></td><td class="num">22.680,00</td></tr>
+<tr><td class="cod">2.1.02.01</td><td>IVA en ventas</td><td class="num">3.900,00</td><td class="num">3.900,00</td><td class="num"></td><td class="num"></td></tr>
+<tr><td class="cod">2.1.02.02</td><td>Retenciones de IVA por pagar</td><td class="num">751,50</td><td class="num">751,50</td><td class="num"></td><td class="num"></td></tr>
+<tr><td class="cod">2.1.02.03</td><td>Retenciones en la fuente de IR por pagar</td><td class="num">368,50</td><td class="num">368,50</td><td class="num"></td><td class="num"></td></tr>
+<tr><td class="cod">2.1.02.04</td><td>IVA por pagar</td><td class="num">990,00</td><td class="num">990,00</td><td class="num"></td><td class="num"></td></tr>
+<tr><td class="cod">2.1.03.01</td><td>Sueldos por pagar</td><td class="num">7.280,22</td><td class="num">7.280,22</td><td class="num"></td><td class="num"></td></tr>
+<tr><td class="cod">2.1.03.02</td><td>IESS por pagar</td><td class="num">0,00</td><td class="num">3.736,64</td><td class="num"></td><td class="num">3.736,64</td></tr>
+<tr><td class="cod">2.1.03.03</td><td>Provisión décimo tercer sueldo</td><td class="num">0,00</td><td class="num">670,00</td><td class="num"></td><td class="num">670,00</td></tr>
+<tr><td class="cod">2.1.03.04</td><td>Provisión décimo cuarto sueldo</td><td class="num">0,00</td><td class="num">449,17</td><td class="num"></td><td class="num">449,17</td></tr>
+<tr><td class="cod">2.1.03.05</td><td>Provisión vacaciones</td><td class="num">0,00</td><td class="num">335,00</td><td class="num"></td><td class="num">335,00</td></tr>
+<tr><td class="cod">3.1.01.01</td><td>Capital social</td><td class="num">0,00</td><td class="num">80.000,00</td><td class="num"></td><td class="num">80.000,00</td></tr>
+<tr><td class="cod">3.2.01.01</td><td>Resultados acumulados</td><td class="num">0,00</td><td class="num">16.000,00</td><td class="num"></td><td class="num">16.000,00</td></tr>
+<tr><td class="cod">4.1.01.01</td><td>Ventas</td><td class="num">0,00</td><td class="num">26.000,00</td><td class="num"></td><td class="num">26.000,00</td></tr>
+<tr><td class="cod">5.1.01.01</td><td>Costos Indirectos de Fabricación</td><td class="num">6.425,79</td><td class="num">6.425,79</td><td class="num"></td><td class="num"></td></tr>
+<tr><td class="cod">5.2.01.01</td><td>Costo de ventas</td><td class="num">20.500,00</td><td class="num">0,00</td><td class="num">20.500,00</td><td class="num"></td></tr>
+<tr><td class="cod">6.1.01.01</td><td>Gasto sueldos administración y ventas</td><td class="num">2.760,00</td><td class="num">0,00</td><td class="num">2.760,00</td><td class="num"></td></tr>
+<tr><td class="cod">6.1.01.02</td><td>Gasto beneficios sociales y aporte patronal adm. y ventas</td><td class="num">802,84</td><td class="num">0,00</td><td class="num">802,84</td><td class="num"></td></tr>
+<tr><td class="cod">6.2.01.01</td><td>Gasto de venta — fletes</td><td class="num">450,00</td><td class="num">0,00</td><td class="num">450,00</td><td class="num"></td></tr>
+<tr class="total"><td colspan="2">TOTALES</td><td class="num">239.427,04</td><td class="num">239.427,04</td><td class="num">149.870,81</td><td class="num">149.870,81</td></tr>
+</table></div>
+
+<div class="clave-box">
+  <h4>Comprobación del mes</h4>
+  <ul>
+    <li><strong>Sumas:</strong> Debe USD 239.427,04 = Haber USD 239.427,04 ✔</li>
+    <li><strong>Saldos:</strong> deudores USD 149.870,81 = acreedores USD 149.870,81 ✔</li>
+  </ul>
+  <p>Y ahora la comprobación de fondo, la que realmente importa. Separa los saldos deudores en dos grupos: los que son <strong>activo</strong> (USD 125.357,97) y los que son <strong>costo y gasto</strong> (20.500,00 + 2.760,00 + 802,84 + 450,00 = USD 24.512,84). Haz lo mismo con los acreedores: <strong>pasivo</strong> (USD 27.870,81), <strong>patrimonio</strong> (USD 96.000,00) e <strong>ingresos</strong> (USD 26.000,00).</p>
+  <div class="scroll-x">
+  <table class="data" style="min-width:460px;font-size:15.5px">
+    <tr><th>Elemento</th><th class="num">Valor</th></tr>
+    <tr><td>Activo</td><td class="num">125.357,97</td></tr>
+    <tr><td>Pasivo</td><td class="num">27.870,81</td></tr>
+    <tr><td>Patrimonio (capital + resultados acumulados)</td><td class="num">96.000,00</td></tr>
+    <tr><td>Ingresos del mes</td><td class="num">26.000,00</td></tr>
+    <tr><td>Costos y gastos del mes</td><td class="num">24.512,84</td></tr>
+    <tr class="total"><td>Resultado del período (26.000,00 − 24.512,84)</td><td class="num">1.487,16</td></tr>
+  </table>
+  </div>
+  <p><strong>Ecuación contable ampliada:</strong> Activo = Pasivo + Patrimonio + Resultado → 125.357,97 = 27.870,81 + 96.000,00 + 1.487,16 ✔</p>
+  <p>Fíjate en lo modesto del resultado: <strong>USD 1.487,16 de utilidad preliminar sobre ventas de USD 26.000,00</strong>, apenas un 5,7 %. Y aún faltan los ajustes —empezando por la depreciación de una maquinaria de USD 45.000,00— que van a reducirlo todavía más. Así se ve por dentro una industria pequeña: márgenes estrechos, mucho capital inmovilizado y una nómina que pesa. Ninguna de estas cifras es una opinión: todas salieron de los dieciocho asientos que registraste.</p>
+</div>
+
+<div class="alerta-box">
+  <h4>Lo que el balance de comprobación NO detecta</h4>
+  <p>Que un balance cuadre <strong>no significa que la contabilidad esté bien</strong>. Cuadra igual si:</p>
+  <ul>
+    <li>registraste el sueldo del supervisor de planta como gasto administrativo en lugar de mano de obra indirecta (las dos son cuentas deudoras; la suma no cambia, pero el costo del producto queda subvaluado y la utilidad, inflada);</li>
+    <li>olvidaste registrar una transacción completa;</li>
+    <li>registraste dos veces el mismo asiento;</li>
+    <li>invertiste el importe entre dos cuentas del mismo lado.</li>
+  </ul>
+  <p>El primer caso es el error propio de este tema, y es el que más se repite en la práctica. Por eso la clasificación de la nómina no es un formalismo: es una decisión que cambia el resultado de la empresa sin dejar rastro aritmético.</p>
+</div>
+
+<div class="continuidad">
+  <h4>Hasta aquí llega la Unidad 2</h4>
+  <p>Este resumen de saldos es un <strong>balance de comprobación preliminar</strong> —también llamado "antes de ajustes"—. Todavía le falta:</p>
+  <ul>
+    <li><strong>Los asientos de ajuste</strong> (depreciación de la maquinaria, gastos pagados por anticipado, provisiones pendientes): <strong>Unidad 3, día 11</strong>. De ahí sale el balance de comprobación <em>ajustado</em>, que se trabaja el día 12.</li>
+    <li><strong>La valoración de los inventarios conforme a la NIC 2</strong> y el registro en Kardex: <strong>Unidad 3, días 7 a 10</strong>.</li>
+    <li><strong>Los asientos de cierre y la elaboración del Estado de Resultado Integral y del Estado de Situación Financiera</strong>: <strong>Unidad 4, días 14 a 18</strong>, donde volveremos a esta misma CARTONERA DEL LITORAL.</li>
+  </ul>
+</div>
+
+<div class="carrera-box">
+  <h4>La mayorización y las cuatro áreas de Negocios Internacionales</h4>
+  <p>Recuerda que Negocios Internacionales <strong>no se reduce a negociar</strong>: se sostiene sobre cuatro áreas, y un mayor bien llevado sirve a las cuatro.</p>
+  <ul>
+    <li><strong>Comercio exterior:</strong> el folio de Inventario de Productos Terminados es el que responde si hay stock para comprometer un embarque. Aceptar una orden de exportación sin saber cuánto producto terminado hay en bodega es aceptar un incumplimiento futuro.</li>
+    <li><strong>Finanzas internacionales:</strong> el folio de Bancos es el insumo del flujo de caja. Cuando una empresa ecuatoriana solicita una línea de crédito para financiar una exportación, el banco extranjero pide exactamente esto: movimientos, no promesas.</li>
+    <li><strong>Marketing y negociación internacional:</strong> el saldo de la cuenta de costo de ventas frente al de ventas define el margen bruto, y el margen bruto define hasta dónde puedes ceder en una mesa de negociación. Negociar sin conocer tu mayor es negociar a ciegas.</li>
+    <li><strong>Marco legal y normativo:</strong> el Libro Mayor es un libro de llevanza obligatoria. La Superintendencia de Compañías puede requerirlo, el SRI puede auditarlo y un perito puede reconstruirlo. Su integridad es una obligación legal, no una buena práctica opcional.</li>
+  </ul>
+</div>
+
+</div><!-- fin panel mayor -->
+
+<!-- ================= PANEL 4: EJERCICIO INTERACTIVO ================= -->
+<div class="panel" id="ejercicio">
+
+<h2>Ejercicio interactivo — ¿A dónde va cada valor?</h2>
+
+<p>Este es el ejercicio que decide si entendiste el caso. En una empresa manufacturera, cada dólar que se paga tiene que ir a uno de tres lugares, y elegir mal cambia el resultado de la empresa sin que ningún total deje de cuadrar.</p>
+
+<div class="def-box">
+  <h4>Los tres destinos posibles</h4>
+  <ul>
+    <li><strong>Inventario de Productos en Proceso:</strong> lo que entra al producto de forma <em>directa</em> e identificable (materia prima requisada y mano de obra directa con todos sus beneficios).</li>
+    <li><strong>Costos Indirectos de Fabricación:</strong> lo que se consume <em>en la planta</em> pero no puede identificarse con una unidad concreta (mano de obra indirecta, materiales indirectos, arriendo, energía y mantenimiento de la fábrica).</li>
+    <li><strong>Gasto del período:</strong> lo que se consume <em>fuera de la planta</em>, en administración o en ventas, y por lo tanto nunca entra al producto.</li>
+  </ul>
+  <p>Existe además un cuarto destino, para el material que todavía no se ha usado: <strong>Inventario de Materia Prima</strong>, donde el papel espera en bodega hasta que producción lo pida.</p>
+</div>
+
+<p><strong>Instrucciones:</strong> responde los nueve ítems y recién entonces presiona <em>Verificar respuestas</em>. Verás el resultado de cada uno con su explicación. No obtendrás resultados parciales: la idea es que decidas con criterio, no que adivines por ensayo y error.</p>
+
+<div class="item">
+  <span class="enunciado">1. Sueldo de los seis operarios que cortan, troquelan y pegan las cajas.</span>
+  <div class="opciones">
+    <label><input type="radio" name="ei1" value="a"> Inventario de Productos en Proceso</label>
+    <label><input type="radio" name="ei1" value="b"> Costos Indirectos de Fabricación</label>
+    <label><input type="radio" name="ei1" value="c"> Gasto del período (administración o ventas)</label>
+    <label><input type="radio" name="ei1" value="d"> Inventario de Materia Prima</label>
+  </div>
+  <div class="feedback" id="fb_ei1"></div>
+</div>
+
+<div class="item">
+  <span class="enunciado">2. Sueldo del supervisor de planta, que coordina la producción pero no opera ninguna máquina.</span>
+  <div class="opciones">
+    <label><input type="radio" name="ei2" value="a"> Inventario de Productos en Proceso</label>
+    <label><input type="radio" name="ei2" value="b"> Costos Indirectos de Fabricación</label>
+    <label><input type="radio" name="ei2" value="c"> Gasto del período (administración o ventas)</label>
+    <label><input type="radio" name="ei2" value="d"> Inventario de Materia Prima</label>
+  </div>
+  <div class="feedback" id="fb_ei2"></div>
+</div>
+
+<div class="item">
+  <span class="enunciado">3. Papel kraft comprado el 2 de julio que ingresó a bodega y que producción todavía no ha solicitado mediante requisición.</span>
+  <div class="opciones">
+    <label><input type="radio" name="ei3" value="a"> Inventario de Productos en Proceso</label>
+    <label><input type="radio" name="ei3" value="b"> Costos Indirectos de Fabricación</label>
+    <label><input type="radio" name="ei3" value="c"> Gasto del período (administración o ventas)</label>
+    <label><input type="radio" name="ei3" value="d"> Inventario de Materia Prima</label>
+  </div>
+  <div class="feedback" id="fb_ei3"></div>
+</div>
+
+<div class="item">
+  <span class="enunciado">4. Sueldo de la contadora de la empresa, que trabaja en la oficina administrativa.</span>
+  <div class="opciones">
+    <label><input type="radio" name="ei4" value="a"> Inventario de Productos en Proceso</label>
+    <label><input type="radio" name="ei4" value="b"> Costos Indirectos de Fabricación</label>
+    <label><input type="radio" name="ei4" value="c"> Gasto del período (administración o ventas)</label>
+    <label><input type="radio" name="ei4" value="d"> Inventario de Materia Prima</label>
+  </div>
+  <div class="feedback" id="fb_ei4"></div>
+</div>
+
+<div class="item">
+  <span class="enunciado">5. Aporte patronal del 12,15 % calculado sobre el sueldo de los seis operarios de producción.</span>
+  <div class="opciones">
+    <label><input type="radio" name="ei5" value="a"> Inventario de Productos en Proceso</label>
+    <label><input type="radio" name="ei5" value="b"> Costos Indirectos de Fabricación</label>
+    <label><input type="radio" name="ei5" value="c"> Gasto del período (administración o ventas)</label>
+    <label><input type="radio" name="ei5" value="d"> Inventario de Materia Prima</label>
+  </div>
+  <div class="feedback" id="fb_ei5"></div>
+</div>
+
+<div class="item">
+  <span class="enunciado">6. Arriendo mensual de la nave industrial donde funcionan las máquinas.</span>
+  <div class="opciones">
+    <label><input type="radio" name="ei6" value="a"> Inventario de Productos en Proceso</label>
+    <label><input type="radio" name="ei6" value="b"> Costos Indirectos de Fabricación</label>
+    <label><input type="radio" name="ei6" value="c"> Gasto del período (administración o ventas)</label>
+    <label><input type="radio" name="ei6" value="d"> Inventario de Materia Prima</label>
+  </div>
+  <div class="feedback" id="fb_ei6"></div>
+</div>
+
+<div class="item">
+  <span class="enunciado">7. Flete pagado para llevar las cajas ya terminadas desde la fábrica hasta la hacienda del cliente.</span>
+  <div class="opciones">
+    <label><input type="radio" name="ei7" value="a"> Inventario de Productos en Proceso</label>
+    <label><input type="radio" name="ei7" value="b"> Costos Indirectos de Fabricación</label>
+    <label><input type="radio" name="ei7" value="c"> Gasto del período (administración o ventas)</label>
+    <label><input type="radio" name="ei7" value="d"> Inventario de Materia Prima</label>
+  </div>
+  <div class="feedback" id="fb_ei7"></div>
+</div>
+
+<div class="item">
+  <span class="enunciado">8. Planilla de energía eléctrica del medidor industrial que alimenta la corrugadora.</span>
+  <div class="opciones">
+    <label><input type="radio" name="ei8" value="a"> Inventario de Productos en Proceso</label>
+    <label><input type="radio" name="ei8" value="b"> Costos Indirectos de Fabricación</label>
+    <label><input type="radio" name="ei8" value="c"> Gasto del período (administración o ventas)</label>
+    <label><input type="radio" name="ei8" value="d"> Inventario de Materia Prima</label>
+  </div>
+  <div class="feedback" id="fb_ei8"></div>
+</div>
+
+<div class="item">
+  <span class="enunciado">9. Goma, tinta y cinta entregadas a la planta mediante requisición y consumidas durante el mes.</span>
+  <div class="opciones">
+    <label><input type="radio" name="ei9" value="a"> Inventario de Productos en Proceso</label>
+    <label><input type="radio" name="ei9" value="b"> Costos Indirectos de Fabricación</label>
+    <label><input type="radio" name="ei9" value="c"> Gasto del período (administración o ventas)</label>
+    <label><input type="radio" name="ei9" value="d"> Inventario de Materia Prima</label>
+  </div>
+  <div class="feedback" id="fb_ei9"></div>
+</div>
+
+<div class="aviso" id="avisoEj">Todavía te faltan ítems por responder. Marca una opción en cada uno antes de verificar.</div>
+
+<div class="acciones">
+  <button class="btn btn-verificar" onclick="verificarEjercicio()">Verificar respuestas</button>
+  <button class="btn btn-reiniciar" onclick="reiniciarEjercicio()">Reiniciar</button>
+</div>
+
+<div class="resultado" id="resEj">
+  <span class="emoji" id="emojiEj"></span>
+  <div class="puntaje" id="puntajeEj"></div>
+  <div class="detalle" id="detalleEj"></div>
+  <div class="barra"><div class="barra-fill" id="barraEj"></div></div>
+</div>
+
+</div><!-- fin panel ejercicio -->
+
+<!-- ================= PANEL 5: CUESTIONARIO ================= -->
+<div class="panel" id="cuestionario">
+
+<h2>Cuestionario de evaluación</h2>
+
+<p>Diez preguntas de opción múltiple. Las siete primeras son <strong>teóricas</strong>: todo lo que necesitas para responderlas está en este widget. Las tres últimas son de <strong>análisis de caso</strong>: plantean situaciones nuevas de empresas distintas, para comprobar si puedes trasladar lo aprendido a un escenario que no habías visto.</p>
+
+<p>Responde las diez y presiona <em>Verificar respuestas</em>. Recibirás la explicación completa de cada una, hayas acertado o no.</p>
+
+<div class="item">
+  <span class="enunciado"><span class="badge badge-teorica">Teórica</span>1. ¿Cuál es el criterio que distingue la mano de obra directa de la mano de obra indirecta?</span>
+  <div class="opciones">
+    <label><input type="radio" name="qi1" value="a"> La mano de obra directa percibe un sueldo mayor que la indirecta.</label>
+    <label><input type="radio" name="qi1" value="b"> La mano de obra directa puede identificarse con el producto fabricado; la indirecta no.</label>
+    <label><input type="radio" name="qi1" value="c"> La mano de obra directa tiene contrato escrito y la indirecta trabaja por servicios profesionales.</label>
+    <label><input type="radio" name="qi1" value="d"> La mano de obra directa se paga mensualmente y la indirecta por horas trabajadas.</label>
+  </div>
+  <div class="feedback" id="fb_qi1"></div>
+</div>
+
+<div class="item">
+  <span class="enunciado"><span class="badge badge-teorica">Teórica</span>2. ¿Cuáles son los tres inventarios propios de una empresa manufacturera?</span>
+  <div class="opciones">
+    <label><input type="radio" name="qi2" value="a"> Mercaderías, suministros y repuestos.</label>
+    <label><input type="radio" name="qi2" value="b"> Materia prima, productos en proceso y productos terminados.</label>
+    <label><input type="radio" name="qi2" value="c"> Materia prima, mercaderías y suministros de oficina.</label>
+    <label><input type="radio" name="qi2" value="d"> Productos en proceso, mercaderías y productos terminados.</label>
+  </div>
+  <div class="feedback" id="fb_qi2"></div>
+</div>
+
+<div class="item">
+  <span class="enunciado"><span class="badge badge-teorica">Teórica</span>3. El aporte personal al IESS del 9,45 % que consta en el rol de pagos:</span>
+  <div class="opciones">
+    <label><input type="radio" name="qi3" value="a"> lo asume la empresa y se registra como costo adicional de la nómina.</label>
+    <label><input type="radio" name="qi3" value="b"> se descuenta al trabajador y la empresa lo registra como pasivo hasta entregarlo al IESS.</label>
+    <label><input type="radio" name="qi3" value="c"> se descuenta al trabajador y la empresa lo registra como gasto del período.</label>
+    <label><input type="radio" name="qi3" value="d"> no se registra en el mes; se acumula y se declara en diciembre.</label>
+  </div>
+  <div class="feedback" id="fb_qi3"></div>
+</div>
+
+<div class="item">
+  <span class="enunciado"><span class="badge badge-teorica">Teórica</span>4. ¿Cuál es el porcentaje total que asume el empleador por aporte patronal al IESS más IECE y SECAP?</span>
+  <div class="opciones">
+    <label><input type="radio" name="qi4" value="a"> 9,45 %</label>
+    <label><input type="radio" name="qi4" value="b"> 11,15 %</label>
+    <label><input type="radio" name="qi4" value="c"> 12,15 %</label>
+    <label><input type="radio" name="qi4" value="d"> 21,60 %</label>
+  </div>
+  <div class="feedback" id="fb_qi4"></div>
+</div>
+
+<div class="item">
+  <span class="enunciado"><span class="badge badge-teorica">Teórica</span>5. Un agente de retención contrata un servicio a una sociedad que <strong>no</strong> es contribuyente especial. ¿Qué porcentaje de retención de IVA aplica?</span>
+  <div class="opciones">
+    <label><input type="radio" name="qi5" value="a"> 30 %</label>
+    <label><input type="radio" name="qi5" value="b"> 70 %</label>
+    <label><input type="radio" name="qi5" value="c"> 100 %</label>
+    <label><input type="radio" name="qi5" value="d"> 10 %</label>
+  </div>
+  <div class="feedback" id="fb_qi5"></div>
+</div>
+
+<div class="item">
+  <span class="enunciado"><span class="badge badge-teorica">Teórica</span>6. Según la Resolución NAC-DGERCGC26-00000009, ¿qué porcentaje de retención en la fuente de impuesto a la renta corresponde a la adquisición de bienes muebles de naturaleza corporal?</span>
+  <div class="opciones">
+    <label><input type="radio" name="qi6" value="a"> 1 %</label>
+    <label><input type="radio" name="qi6" value="b"> 1,75 %</label>
+    <label><input type="radio" name="qi6" value="c"> 2 %</label>
+    <label><input type="radio" name="qi6" value="d"> 3 %</label>
+  </div>
+  <div class="feedback" id="fb_qi6"></div>
+</div>
+
+<div class="item">
+  <span class="enunciado"><span class="badge badge-teorica">Teórica</span>7. Al cierre del mes, la cuenta Costos Indirectos de Fabricación en este caso:</span>
+  <div class="opciones">
+    <label><input type="radio" name="qi7" value="a"> conserva un saldo deudor que se traslada al mes siguiente.</label>
+    <label><input type="radio" name="qi7" value="b"> queda saldada en cero, porque su valor se aplicó a Inventario de Productos en Proceso.</label>
+    <label><input type="radio" name="qi7" value="c"> se cierra directamente contra la cuenta Ventas.</label>
+    <label><input type="radio" name="qi7" value="d"> presenta saldo acreedor, ya que es una cuenta de pasivo.</label>
+  </div>
+  <div class="feedback" id="fb_qi7"></div>
+</div>
+
+<div class="item">
+  <span class="enunciado"><span class="badge badge-caso">Análisis de caso</span>8. Una fábrica de conservas de Manta paga en el mes: USD 4.000,00 a los operarios de la línea de enlatado, USD 1.200,00 al jefe de planta y USD 800,00 al asistente contable. ¿Qué valor se debita a Inventario de Productos en Proceso por concepto de sueldos?</span>
+  <div class="opciones">
+    <label><input type="radio" name="qi8" value="a"> USD 6.000,00</label>
+    <label><input type="radio" name="qi8" value="b"> USD 5.200,00</label>
+    <label><input type="radio" name="qi8" value="c"> USD 4.000,00</label>
+    <label><input type="radio" name="qi8" value="d"> USD 1.200,00</label>
+  </div>
+  <div class="feedback" id="fb_qi8"></div>
+</div>
+
+<div class="item">
+  <span class="enunciado"><span class="badge badge-caso">Análisis de caso</span>9. Una sociedad agente de retención compra materia prima por USD 5.000,00 más IVA del 15 % a un proveedor sociedad del régimen general. ¿Cuál es el valor neto que debe pagar al proveedor?</span>
+  <div class="opciones">
+    <label><input type="radio" name="qi9" value="a"> USD 5.750,00</label>
+    <label><input type="radio" name="qi9" value="b"> USD 5.425,00</label>
+    <label><input type="radio" name="qi9" value="c"> USD 5.650,00</label>
+    <label><input type="radio" name="qi9" value="d"> USD 5.325,00</label>
+  </div>
+  <div class="feedback" id="fb_qi9"></div>
+</div>
+
+<div class="item">
+  <span class="enunciado"><span class="badge badge-caso">Análisis de caso</span>10. Una industria de Durán contrata un servicio de transporte de carga por USD 800,00 a una compañía transportista. ¿Qué tratamiento tributario corresponde?</span>
+  <div class="opciones">
+    <label><input type="radio" name="qi10" value="a"> IVA del 15 % y retención en la fuente de IR del 2 %.</label>
+    <label><input type="radio" name="qi10" value="b"> IVA del 0 % y retención en la fuente de IR del 1 %.</label>
+    <label><input type="radio" name="qi10" value="c"> IVA del 0 % y ninguna retención, porque no hay IVA que retener.</label>
+    <label><input type="radio" name="qi10" value="d"> IVA del 15 % y retención de IVA del 70 %.</label>
+  </div>
+  <div class="feedback" id="fb_qi10"></div>
+</div>
+
+<div class="aviso" id="avisoCu">Todavía te faltan preguntas por responder. Marca una opción en cada una antes de verificar.</div>
+
+<div class="acciones">
+  <button class="btn btn-verificar" onclick="verificarCuestionario()">Verificar respuestas</button>
+  <button class="btn btn-reiniciar" onclick="reiniciarCuestionario()">Reiniciar</button>
+</div>
+
+<div class="resultado" id="resCu">
+  <span class="emoji" id="emojiCu"></span>
+  <div class="puntaje" id="puntajeCu"></div>
+  <div class="detalle" id="detalleCu"></div>
+  <div class="barra"><div class="barra-fill" id="barraCu"></div></div>
+</div>
+
+</div><!-- fin panel cuestionario -->
+
+<!-- ================= PANEL 6: ACTIVIDAD CON IA ================= -->
+<div class="panel" id="ia">
+
+<h2>Actividad con inteligencia artificial</h2>
+
+<p>Esta actividad se realiza en <strong>Claude (claude.ai)</strong>, que dispone de un plan gratuito suficiente para todo lo que se pide aquí. Solo necesitas crear una cuenta con tu correo. No se requiere pago, tarjeta ni suscripción.</p>
+
+<div class="alerta-box">
+  <h4>Antes de empezar: el punto de la actividad</h4>
+  <p>El objetivo <strong>no es que la inteligencia artificial resuelva el caso por ti</strong>. Es exactamente lo contrario: vas a entregarle a la IA un texto que <strong>contiene errores deliberados</strong>, y tu trabajo consiste en detectarlos <em>antes</em> de leer lo que ella responda, y después evaluar si la IA los detectó todos, si se le escapó alguno o si inventó uno que no existe.</p>
+  <p>Un dato que conviene que tengas claro desde el primer semestre: los modelos de lenguaje <strong>se equivocan con los porcentajes tributarios ecuatorianos</strong>, porque las resoluciones del SRI cambian y el modelo puede tener información desactualizada. Esta actividad está diseñada para que compruebes eso con tus propios ojos.</p>
+</div>
+
+<h3>Paso 1 — Detecta primero, sin ayuda (15 minutos)</h3>
+
+<p>Lee el siguiente memorando y <strong>anota en una hoja, a mano o en un documento, todos los errores que encuentres</strong>, con el número de línea y la corrección que propones. No abras Claude todavía. Este paso se califica por lo que <em>tú</em> detectaste, no por lo que detectó la máquina.</p>
+
+<div class="nota-box" style="background:#fffdf5;border:1px solid #e8dcc0">
+<p style="text-align:left"><strong>MEMORANDO INTERNO — CARTONERA DEL LITORAL CÍA. LTDA.</strong><br>
+<strong>De:</strong> Asistente contable · <strong>Para:</strong> Gerencia · <strong>Asunto:</strong> Criterios aplicados al rol de julio de 2026</p>
+<p style="text-align:left"><strong>1.</strong> El aporte personal al IESS que se descuenta al trabajador es del 11,15 % y el aporte patronal que asume la empresa es del 9,45 %.</p>
+<p style="text-align:left"><strong>2.</strong> El aporte personal descontado al trabajador se registró como gasto de la empresa, porque sale del rol de pagos.</p>
+<p style="text-align:left"><strong>3.</strong> El sueldo del supervisor de planta se clasificó como mano de obra directa y se debitó a Inventario de Productos en Proceso, ya que trabaja dentro de la fábrica.</p>
+<p style="text-align:left"><strong>4.</strong> La provisión del décimo cuarto sueldo se calculó dividiendo el sueldo de cada trabajador para 12.</p>
+<p style="text-align:left"><strong>5.</strong> En el pago del mantenimiento de la corrugadora a TECNIMAQ CÍA. LTDA. se aplicó una retención de IVA del 30 %, por tratarse de una sociedad.</p>
+<p style="text-align:left"><strong>6.</strong> El flete de entrega de las cajas al cliente se registró como costo indirecto de fabricación, porque el transporte forma parte del proceso productivo.</p>
+<p style="text-align:left"><strong>7.</strong> Como el servicio de transporte de carga tiene tarifa 0 % de IVA, tampoco se practicó retención en la fuente de impuesto a la renta.</p>
+<p style="text-align:left"><strong>8.</strong> El arriendo de la nave industrial pagado al Sr. Cedeño, persona natural no obligada a llevar contabilidad, se registró como gasto administrativo con retención de IVA del 70 %.</p>
+</div>
+
+<h3>Paso 2 — Consulta a la IA con este prompt exacto</h3>
+
+<p>Ingresa a <strong>claude.ai</strong>, abre una conversación nueva y copia el siguiente texto completo. Cópialo tal cual: el prompt está construido con una estructura de rol, contexto, tarea y formato de salida, y esa estructura es parte de lo que estás aprendiendo.</p>
+
+<div class="nota-box" style="background:#f2f7fd;border:1px solid #b9c6d4">
+<p style="text-align:left">Actúa como docente de Contabilidad General de una universidad ecuatoriana, especializado en contabilidad de empresas manufactureras y en normativa tributaria del SRI.</p>
+<p style="text-align:left">CONTEXTO: una empresa industrial domiciliada en Durán, provincia del Guayas, sociedad obligada a llevar contabilidad, calificada como agente de retención y que NO es contribuyente especial, cerró su rol de pagos de julio de 2026. Su asistente contable redactó un memorando explicando los criterios que aplicó. Ese memorando contiene errores.</p>
+<p style="text-align:left">MEMORANDO A REVISAR: [pega aquí los ocho puntos del memorando]</p>
+<p style="text-align:left">TAREA: revisa punto por punto. Para cada uno indica: (1) si es correcto o incorrecto; (2) cuál es el tratamiento correcto y por qué; (3) qué norma ecuatoriana lo sustenta, citando la disposición concreta cuando la conozcas; (4) qué efecto concreto tiene el error sobre el costo del producto y sobre la utilidad del mes.</p>
+<p style="text-align:left">CONDICIONES: no inventes porcentajes ni números de resolución. Si no estás seguro de una cifra vigente en 2026, dilo expresamente en lugar de suponerla. Distingue con claridad entre lo que es una regla contable y lo que es una regla tributaria.</p>
+<p style="text-align:left">FORMATO: una tabla con las columnas Punto · Correcto/Incorrecto · Tratamiento correcto · Norma · Efecto sobre el costo o la utilidad. Después de la tabla, un párrafo final de máximo cinco líneas explicando cuál de los ocho errores considerás más grave y por qué.</p>
+</div>
+
+<h3>Paso 3 — Verifica a la IA (esto es lo que se evalúa de verdad)</h3>
+
+<p>Ahora compara tu lista del Paso 1 con la respuesta de Claude y responde por escrito:</p>
+
+<ol>
+  <li><strong>¿Cuántos errores detectaste tú y cuántos detectó la IA?</strong> Indica cuáles coinciden, cuáles solo detectaste tú y cuáles solo detectó ella.</li>
+  <li><strong>Verifica dos porcentajes en la fuente oficial.</strong> Entra a <strong>sri.gob.ec</strong> y comprueba el porcentaje de retención de IVA en servicios y el de retención en la fuente en transporte de carga. Entra a <strong>iess.gob.ec</strong> y comprueba las tasas de aportación. Anota la dirección exacta de la página donde encontraste cada dato.</li>
+  <li><strong>¿La IA se equivocó, dudó o inventó en algún punto?</strong> Si afirmó un porcentaje que no coincide con la fuente oficial, transcribe qué dijo y qué dice el SRI. Si no se equivocó en nada, dilo también y explica cómo lo comprobaste.</li>
+  <li><strong>Discútele un punto.</strong> Elige una de sus respuestas y escríbele una réplica fundamentada: "no estoy de acuerdo porque…". Copia su contrarréplica y evalúa si te convenció o no, y por qué.</li>
+</ol>
+
+<div class="clave-box">
+  <h4>Criterio de evaluación: cómo se distingue el pensamiento crítico de la copia</h4>
+  <div class="scroll-x">
+  <table class="data" style="min-width:520px;font-size:15.5px">
+    <tr><th style="width:34%">Evidencia</th><th>Qué demuestra</th></tr>
+    <tr><td><strong>Copia simple</strong> — entrega la respuesta de Claude pegada, sin lista propia del Paso 1, sin verificación en sri.gob.ec y sin réplica.</td><td>No demuestra aprendizaje. La actividad no se considera realizada, con independencia de que el contenido pegado sea correcto.</td></tr>
+    <tr><td><strong>Uso instrumental</strong> — hay lista propia, pero coincide íntegramente con la de la IA y no hay verificación en fuente oficial.</td><td>Demuestra comprensión básica del contenido, pero no criterio profesional. Cumplimiento parcial.</td></tr>
+    <tr><td><strong>Uso crítico</strong> — hay lista propia previa, hay verificación con enlace a la fuente oficial, hay una réplica argumentada y hay una conclusión propia sobre en qué confiar y en qué no.</td><td>Es el desempeño esperado. Demuestra que el estudiante usa la IA como colega al que se contrasta, no como autoridad a la que se obedece.</td></tr>
+  </table>
+  </div>
+  <p><strong>Entrega:</strong> un documento con tu lista del Paso 1, la captura o transcripción de la respuesta de Claude, tus cuatro respuestas del Paso 3 y los enlaces verificados. Declara al inicio, con una línea, qué herramienta de IA usaste y para qué. Omitir esa declaración es una falta de integridad académica, no un descuido de formato.</p>
+</div>
+
+<div class="carrera-box">
+  <h4>Por qué esta destreza importa en Negocios Internacionales</h4>
+  <ul>
+    <li><strong>Comercio exterior:</strong> las partidas arancelarias, los requisitos sanitarios y los acuerdos comerciales cambian constantemente. Un modelo de IA puede darte una partida desactualizada y una clasificación arancelaria errónea significa multas y contenedores retenidos en puerto.</li>
+    <li><strong>Finanzas internacionales:</strong> ninguna decisión de financiamiento se toma sobre datos no verificados. Contrastar una cifra contra su fuente primaria es el hábito profesional básico del área.</li>
+    <li><strong>Marketing y negociación internacional:</strong> quien llega a una mesa con datos que no puede sustentar pierde credibilidad en el primer contraargumento. Saber de dónde salió cada número es parte del poder de negociación.</li>
+    <li><strong>Marco legal y normativo:</strong> la norma vigente está en el Registro Oficial y en el portal del SRI, no en la memoria de un modelo. Aprender a ir a la fuente es aprender a ejercer.</li>
+  </ul>
+</div>
+
+</div><!-- fin panel ia -->
+
+<!-- ================= PANEL 7: REFLEXIÓN ================= -->
+<div class="panel" id="reflexion">
+
+<h2>Reflexión</h2>
+
+<p>Antes de responder, recuerda algo que conviene repetir cada semana de este curso: <strong>Negocios Internacionales no es solamente negociar</strong>. La carrera se sostiene sobre cuatro áreas que se necesitan mutuamente: el <strong>comercio exterior</strong>, que mueve mercancías entre países; las <strong>finanzas internacionales</strong>, que hacen posible que ese movimiento se pague, se financie y se cubra del riesgo; el <strong>marketing y la negociación internacional</strong>, que consiguen y sostienen al cliente extranjero; y el <strong>marco legal y normativo</strong>, que fija las reglas dentro de las cuales todo lo anterior es lícito. Un profesional que solo sabe negociar es alguien que promete cosas cuyo costo no conoce, cuyo financiamiento no entiende y cuya legalidad no puede garantizar. La contabilidad es el idioma común de las cuatro.</p>
+
+<h3>Empecemos por algo que tienes cerca</h3>
+
+<p>Busca en tu casa cualquier <strong>envase de cartón</strong>: la caja de los cereales, la de una pizza, la de un par de zapatos, la caja de una encomienda que te llegó esta semana. Tenla en la mano un momento. Ahora sigue esta cadena, sin apurarte:</p>
+
+<ul>
+  <li><strong>El objeto.</strong> Esa caja pesa algo, tiene un color, tiene un pliegue en un lugar exacto. Alguien decidió ese pliegue.</li>
+  <li><strong>La cadena de personas.</strong> Detrás de ella hubo alguien que cortó un árbol, alguien que hizo el papel, alguien que operó una corrugadora en un galpón caluroso de Durán, un supervisor que revisó que el troquel estuviera bien calibrado, un mecánico que arregló la máquina el martes, un transportista que la llevó, un vendedor que la ofreció. Ninguna de esas personas conoce a las otras. Todas cobraron.</li>
+  <li><strong>La necesidad de información confiable.</strong> ¿Cómo supo la empresa cuánto cobrar por esa caja? No lo adivinó. Lo supo porque alguien registró, con un criterio y no con otro, que el sueldo del operario era costo del producto y el de la contadora era gasto del mes. Si ese registro estaba mal, el precio estaba mal; si el precio estaba mal, la empresa vendía perdiendo o vendía tan caro que perdía el contrato. <strong>La contabilidad no describe el negocio: lo hace posible.</strong></li>
+  <li><strong>El negocio internacional.</strong> Y si esa caja es de las que llevan banano, entonces dentro de su precio viajaron a Hamburgo o a Shanghái, sin que nadie lo note, el sueldo de un obrero guayaquileño, un aporte al IESS, una provisión de décimo cuarto y una porción de la planilla de luz de una nave industrial en Durán. Cuando en un informe leas que "Ecuador es competitivo en empaque para exportación", lo que estás leyendo, traducido, es esto.</li>
+</ul>
+
+<p>Las preguntas que siguen <strong>no tienen respuesta correcta</strong>. Se evalúa la honestidad, la profundidad y la conexión con tu propia experiencia, no el acierto. Escribe entre 150 y 250 palabras por pregunta.</p>
+
+<div class="reflexion-q"><p><span class="num">1.</span> Toma la caja que buscaste al inicio. Estima —sin cálculos, a ojo— qué parte de su precio crees que es material, qué parte es trabajo humano y qué parte es todo lo demás. Después mira las cifras del caso: de los USD 24.158,19 acumulados en productos en proceso, USD 9.500,00 fueron papel y USD 4.732,40 fueron mano de obra directa con sus beneficios. ¿Tu intuición se parecía a la realidad? ¿En qué se equivocó y por qué crees que se equivocó?</p></div>
+
+<div class="reflexion-q"><p><span class="num">2.</span> En este caso, dos personas que ganan lo mismo reciben tratamientos contables distintos: el sueldo del operario es activo, el de la contadora es gasto. Contablemente la diferencia es técnica y neutral. Pero piensa por un momento en las dos personas reales detrás de esas cuentas. ¿Qué sientes al ver que el trabajo de alguien se registra como "inventario"? ¿Te parece una descripción justa de lo que esa persona hace, o te incomoda algo? Explica tu reacción sin buscar la respuesta "correcta".</p></div>
+
+<div class="reflexion-q"><p><span class="num">3.</span> Los folios del mayor mostraron que la empresa terminó julio con la mitad del dinero en el banco pese a haber vendido USD 26.000,00, porque vendió a crédito. Piensa en tu propia economía: ¿has vivido alguna vez la sensación de "tener" un dinero que todavía no está en tu bolsillo —un pago prometido, una devolución, una deuda que te van a saldar— y haber tomado decisiones contando con él? ¿Qué pasó? ¿Qué te enseña esa experiencia sobre por qué una empresa rentable puede quebrar?</p></div>
+
+<div class="reflexion-q"><p><span class="num">4.</span> Este caso te obligó a sostener la atención durante dieciocho asientos que solo cuadran si todos los anteriores estaban bien. Identifica el momento exacto en que sentiste más frustración o ganas de abandonar. ¿Qué hiciste? ¿Qué te hubiera ayudado? La pregunta importa porque el trabajo contable real es exactamente así: largo, encadenado y sin aplausos intermedios. Conocer tu propio punto de quiebre es una información profesional, no una debilidad.</p></div>
+
+<div class="reflexion-q"><p><span class="num">5.</span> <strong>Autoexploración vocacional.</strong> De las cuatro áreas de Negocios Internacionales —comercio exterior, finanzas internacionales, marketing y negociación internacional, marco legal y normativo—, ¿en cuál te viste a ti mismo mientras trabajabas este caso? Sé concreto: ¿fue al calcular las retenciones, al seguir el recorrido del producto por la planta, al pensar en cómo se fija el precio para un cliente exportador, o al leer las resoluciones del SRI? Nombra el área, describe el momento específico que te la hizo sentir cercana y di también cuál de las cuatro te resultó más ajena y por qué. No hay una respuesta mejor que otra: hay respuestas tuyas y respuestas prestadas.</p></div>
+
+<div class="reflexion-q"><p><span class="num">6.</span> Vuelve a la pregunta anterior dentro de un mes, cuando hayamos terminado la Unidad 4 y hayas visto a esta misma empresa convertida en estados financieros. Guarda hoy tu respuesta y no la releas hasta entonces. ¿Qué esperas que haya cambiado? Escríbelo ahora, en dos o tres líneas, como una carta breve a tu yo de septiembre.</p></div>
+
+<div class="carrera-box">
+  <h4>Cierre</h4>
+  <p>La caja que tienes en la mano no tiene nada de extraordinario. Pero contiene, si sabes leerla, un contrato de trabajo, una tasa de aportación al seguro social, dos resoluciones del SRI, una decisión de clasificación contable, un margen de negociación y la posibilidad de que una fruta ecuatoriana llegue entera al otro lado del mundo. <strong>Aprender contabilidad es aprender a ver eso.</strong> Y esa mirada —no la calculadora— es lo que un profesional de Negocios Internacionales aporta que nadie más aporta.</p>
+</div>
+
+</div><!-- fin panel reflexion -->
+
+<!-- ================= PANEL 8: BIBLIOGRAFÍA ================= -->
+<div class="panel" id="biblio">
+
+<h2>Bibliografía</h2>
+
+<p>Referencias en formato <strong>APA 7.ª edición</strong>. Las tres primeras corresponden a la bibliografía básica del sílabo de la asignatura; las demás son las fuentes normativas y complementarias empleadas en la construcción de este caso.</p>
+
+<div class="bib-card">
+  <span class="tipo">Básica — sílabo</span>
+  <p>Zapata Sánchez, P. (2011). <em>Contabilidad general: con base en Normas Internacionales de Información Financiera (NIIF)</em> (7.ª ed.). McGraw-Hill Interamericana.</p>
+</div>
+
+<div class="bib-card">
+  <span class="tipo">Básica — sílabo</span>
+  <p>Vite Rangel, V. T. (2017). <em>Contabilidad general</em>. Editorial Digital UNID. https://elibro.net/es/ereader/uguayaquil/41179</p>
+</div>
+
+<div class="bib-card">
+  <span class="tipo">Básica — sílabo</span>
+  <p>Moreno Fernández, J. A. (2014). <em>Contabilidad básica</em> (4.ª ed.). Grupo Editorial Patria. https://elibro.net/es/ereader/uguayaquil/39416</p>
+</div>
+
+<div class="bib-card">
+  <span class="tipo">Complementaria</span>
+  <p>Horngren, C. T., Datar, S. M., y Rajan, M. V. (2012). <em>Contabilidad de costos: un enfoque gerencial</em> (14.ª ed.). Pearson Educación.</p>
+</div>
+
+<div class="bib-card">
+  <span class="tipo">Normativa tributaria</span>
+  <p>Congreso Nacional del Ecuador. (2004). <em>Ley de Régimen Tributario Interno</em> (Registro Oficial Suplemento 463, 17 de noviembre de 2004, con reformas). https://www.sri.gob.ec</p>
+</div>
+
+<div class="bib-card">
+  <span class="tipo">Normativa tributaria</span>
+  <p>Servicio de Rentas Internas. (2020). <em>Resolución NAC-DGERCGC20-00000061: porcentajes de retención del impuesto al valor agregado</em>. Servicio de Rentas Internas del Ecuador. https://www.sri.gob.ec</p>
+</div>
+
+<div class="bib-card">
+  <span class="tipo">Normativa tributaria</span>
+  <p>Servicio de Rentas Internas. (2026). <em>Resolución NAC-DGERCGC26-00000009: porcentajes de retención en la fuente de impuesto a la renta</em>. Servicio de Rentas Internas del Ecuador. https://www.sri.gob.ec</p>
+</div>
+
+<div class="bib-card">
+  <span class="tipo">Normativa laboral</span>
+  <p>Congreso Nacional del Ecuador. (2005). <em>Código del Trabajo</em> (Registro Oficial Suplemento 167, 16 de diciembre de 2005, con reformas). https://www.trabajo.gob.ec</p>
+</div>
+
+<div class="bib-card">
+  <span class="tipo">Normativa de seguridad social</span>
+  <p>Instituto Ecuatoriano de Seguridad Social. (s. f.). <em>Tasas de aportación al Seguro General Obligatorio</em>. IESS. https://www.iess.gob.ec</p>
+</div>
+
+<div class="bib-card">
+  <span class="tipo">Normativa contable internacional</span>
+  <p>IFRS Foundation. (2024). <em>NIC 2 Inventarios</em>. IFRS Foundation. https://www.ifrs.org</p>
+</div>
+
+<div class="bib-card">
+  <span class="tipo">Normativa contable internacional</span>
+  <p>IFRS Foundation. (2024). <em>NIC 1 Presentación de estados financieros</em>. IFRS Foundation. https://www.ifrs.org</p>
+</div>
+
+<div class="bib-card">
+  <span class="tipo">Organismo de control</span>
+  <p>Superintendencia de Compañías, Valores y Seguros. (s. f.). <em>Normativa societaria y contable</em>. https://www.supercias.gob.ec</p>
+</div>
+
+<div class="footer-nota">
+  <p><strong>Nota para el estudiante:</strong> verifica siempre la vigencia y la edición de cada fuente antes de citarla en un trabajo académico. Puedes hacerlo en <strong>Google Scholar</strong> (scholar.google.com), en el <strong>repositorio institucional de la Universidad de Guayaquil</strong> o en la <strong>Biblioteca Virtual</strong> de la institución, que da acceso a eLibro. En el caso de la normativa tributaria y laboral, la única fuente válida es la publicación en el <strong>Registro Oficial</strong> y el portal oficial del organismo correspondiente: una resolución del SRI puede haber sido derogada después de la fecha de este material.</p>
+  <p style="margin-top:12px">Universidad de Guayaquil · Facultad de Ciencias Administrativas · Carrera de Negocios Internacionales · Contabilidad General (091601124) · Unidad 2 · Día 4 · Caso B: empresa manufacturera · Periodo Académico Extraordinario 2026.</p>
+</div>
+
+</div><!-- fin panel biblio -->
+<script>
+/* =========================================================
+   Dia 4 - Caso B: empresa manufacturera
+   JS de navegacion por pestanas, ejercicio y cuestionario
+   ========================================================= */
+
+/* ---------- Navegacion por pestanas ----------
+   El CSS oculta con la clase .panel (display:none) y muestra
+   con .panel.active. El JS usa exclusivamente classList: mismo
+   mecanismo de ida y de vuelta. */
+function showTab(id, btn){
+  var i, ps = document.querySelectorAll('.panel'), bs = document.querySelectorAll('.tab-btn');
+  for(i=0;i<ps.length;i++){ ps[i].classList.remove('active'); }
+  for(i=0;i<bs.length;i++){ bs[i].classList.remove('active'); }
+  document.getElementById(id).classList.add('active');
+  if(btn){ btn.classList.add('active'); }
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* ---------- Utilidades comunes ---------- */
+function marcada(nombre){
+  var r = document.getElementsByName(nombre);
+  for(var i=0;i<r.length;i++){ if(r[i].checked){ return r[i].value; } }
+  return null;
+}
+function emojiPara(p){
+  if(p===100) return '\uD83C\uDFC6';
+  if(p>=80)   return '\uD83C\uDFAF';
+  if(p>=60)   return '\uD83D\uDCD8';
+  if(p>=40)   return '\u26A0\uFE0F';
+  return '\uD83D\uDCD6';
+}
+function mensajePara(p){
+  if(p===100) return 'Dominio completo del tema. Puedes avanzar con seguridad al Dia 5.';
+  if(p>=80)   return 'Muy buen desempeno. Revisa la retroalimentacion de los items fallados y quedas listo.';
+  if(p>=60)   return 'Base solida, pero hay criterios que todavia no estan firmes. Vuelve al Libro Diario y repite el ejercicio.';
+  if(p>=40)   return 'Necesitas repasar. Relee las definiciones y el asiento 9 antes de volver a intentarlo.';
+  return 'Vuelve al inicio del widget y trabaja el caso completo con calma. No sigas hasta lograr al menos el 60 %.';
+}
+function animarBarra(idBarra, pct){
+  var b = document.getElementById(idBarra);
+  b.style.width = '0%';
+  setTimeout(function(){ b.style.width = pct + '%'; }, 60);
+}
+
+/* ---------- Ejercicio interactivo ---------- */
+var EJ_OK = {ei1:'a', ei2:'b', ei3:'d', ei4:'c', ei5:'a', ei6:'b', ei7:'c', ei8:'b', ei9:'b'};
+var EJ_TXT = {a:'a) Inventario de Productos en Proceso', b:'b) Costos Indirectos de Fabricacion', c:'c) Gasto del periodo (administracion o ventas)', d:'d) Inventario de Materia Prima'};
+var EJ_FB = {
+  ei1: 'Los operarios trabajan físicamente sobre el producto: cortan, troquelan y pegan la caja. Su sueldo es <b>mano de obra directa</b> y se debita a <b>Inventario de Productos en Proceso</b>, una cuenta de activo. En el asiento 9 son los USD 3.600,00. Ese dinero no afecta el resultado de julio: se queda dentro del producto y solo se convierte en costo de ventas cuando la caja se vende.',
+  ei2: 'El supervisor trabaja en la planta, pero no sobre una caja en particular: coordina, revisa y calibra. No es posible decir cuántos minutos de supervisor lleva una unidad concreta. Por eso es <b>mano de obra indirecta</b> y se acumula en <b>Costos Indirectos de Fabricación</b>. Ojo: también termina dentro del producto, pero dando un rodeo (asiento 12), no de forma directa. Confundirlo con mano de obra directa es el error más frecuente de este tema.',
+  ei3: 'Mientras el papel está en bodega y producción todavía no lo ha pedido, sigue siendo <b>Inventario de Materia Prima</b> (asiento 2). Solo cuando se emite la requisición, el valor se traslada a Inventario de Productos en Proceso (asiento 5). La compra por sí sola no pone material dentro del producto: hace falta que producción lo consuma.',
+  ei4: 'La contadora trabaja en la oficina administrativa, fuera del proceso productivo. Su sueldo es <b>gasto del período</b> y afecta el resultado de julio se venda o no se venda una sola caja. En el asiento 9 forma parte de los USD 2.760,00 debitados a Gasto sueldos administración y ventas.',
+  ei5: 'El aporte patronal sigue exactamente el mismo camino que el sueldo sobre el que se calcula. Como se calculó sobre la mano de obra directa, va a <b>Inventario de Productos en Proceso</b> (asiento 10, dentro de los USD 1.132,40). Regla general: la clasificación del trabajador arrastra consigo aportes, décimo tercero, décimo cuarto y vacaciones. Nada se separa del sueldo del que nació.',
+  ei6: 'El arriendo de la nave existe porque hay fábrica, pero no puede asignarse a una caja concreta: se paga igual si se producen mil cajas o diez mil. Es un <b>costo indirecto de fabricación</b> (asiento 8, USD 1.500,00). Distinto sería el arriendo de la oficina administrativa, que sí es gasto.',
+  ei7: 'El flete lleva las cajas <b>ya terminadas</b> hacia el cliente: ocurre después de que el producto existe, en la fase de comercialización. Es <b>gasto de venta</b> (asiento 16). Contraste importante: si el flete hubiera traído el papel kraft desde la papelera hasta la fábrica, formaría parte del <b>costo de la materia prima</b>, porque el costo de un inventario incluye todo lo necesario para ponerlo en condiciones de ser usado. El mismo servicio, distinto momento, distinto tratamiento.',
+  ei8: 'La energía del medidor industrial alimenta las máquinas de producción. Es un consumo de planta que no puede rastrearse por unidad: <b>costo indirecto de fabricación</b> (asiento 7, USD 850,00). Si la planilla fuera la del medidor de las oficinas, sería gasto administrativo. Muchas industrias tienen medidores separados justamente para poder hacer esta distinción.',
+  ei9: 'La goma, la tinta y la cinta se usan en la fabricación, pero nadie va a medir cuántos mililitros de goma lleva cada caja. Son <b>materiales indirectos</b> y se cargan a <b>Costos Indirectos de Fabricación</b> (asiento 6, USD 700,00). Fíjate en el contraste con el ítem 3: el papel kraft sí se identifica en el producto (es directo); la goma no (es indirecta), aunque los dos salgan de la misma bodega con el mismo tipo de documento.',
+};
+
+function verificarEjercicio(){
+  var claves = Object.keys(EJ_OK), i, faltan = 0;
+  for(i=0;i<claves.length;i++){ if(marcada(claves[i])===null){ faltan++; } }
+  var aviso = document.getElementById('avisoEj');
+  if(faltan > 0){
+    aviso.textContent = 'Todavia te faltan ' + faltan + ' item(s) por responder. Marca una opcion en cada uno antes de verificar.';
+    aviso.classList.add('visible');
+    document.getElementById('resEj').classList.remove('visible');
+    return;
+  }
+  aviso.classList.remove('visible');
+  var aciertos = 0;
+  for(i=0;i<claves.length;i++){
+    var k = claves[i], val = marcada(k), ok = (val === EJ_OK[k]);
+    if(ok){ aciertos++; }
+    var fb = document.getElementById('fb_' + k);
+    fb.className = 'feedback visible ' + (ok ? 'correcto' : 'incorrecto');
+    fb.innerHTML = '<span class="veredicto">' + (ok ? '\u2714 Correcto.' :
+      '\u2718 Incorrecto. La respuesta correcta es ' + EJ_TXT[EJ_OK[k]] + '.') + '</span>' + EJ_FB[k];
+  }
+  var total = claves.length, pct = Math.round(aciertos * 100 / total);
+  document.getElementById('emojiEj').textContent = emojiPara(pct);
+  document.getElementById('puntajeEj').textContent = aciertos + ' / ' + total + '  \u2014  ' + pct + ' %';
+  document.getElementById('detalleEj').textContent = mensajePara(pct);
+  document.getElementById('resEj').classList.add('visible');
+  animarBarra('barraEj', pct);
+  document.getElementById('resEj').scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+function reiniciarEjercicio(){
+  var claves = Object.keys(EJ_OK), i, j;
+  for(i=0;i<claves.length;i++){
+    var r = document.getElementsByName(claves[i]);
+    for(j=0;j<r.length;j++){ r[j].checked = false; }
+    var fb = document.getElementById('fb_' + claves[i]);
+    fb.className = 'feedback'; fb.innerHTML = '';
+  }
+  document.getElementById('avisoEj').classList.remove('visible');
+  document.getElementById('resEj').classList.remove('visible');
+  document.getElementById('barraEj').style.width = '0%';
+}
+
+/* ---------- Cuestionario ---------- */
+var QU_OK = {qi1:'b', qi2:'b', qi3:'b', qi4:'c', qi5:'b', qi6:'c', qi7:'b', qi8:'c', qi9:'b', qi10:'b'};
+var QU_TXT = {
+  qi1: 'b) La mano de obra directa puede identificarse con el producto fabricado; la indirecta no.',
+  qi2: 'b) Materia prima, productos en proceso y productos terminados.',
+  qi3: 'b) Se descuenta al trabajador y la empresa lo registra como pasivo hasta entregarlo al IESS.',
+  qi4: 'c) 12,15 %',
+  qi5: 'b) 70 %',
+  qi6: 'c) 2 %',
+  qi7: 'b) Queda saldada en cero, porque su valor se aplicó a Inventario de Productos en Proceso.',
+  qi8: 'c) USD 4.000,00',
+  qi9: 'b) USD 5.425,00',
+  qi10: 'b) IVA del 0 % y retención en la fuente de IR del 1 %.',
+};
+var QU_FB = {
+  qi1: 'El criterio es la <b>identificabilidad con el producto</b>, no el monto del sueldo, ni el tipo de contrato, ni la forma de pago. Un supervisor puede ganar más que un operario y aun así ser mano de obra indirecta; un operario puede cobrar por horas y ser mano de obra directa. La pregunta que decide es siempre la misma: ¿puedo saber cuánto de este trabajo hay dentro de esta unidad?',
+  qi2: 'Una manufacturera tiene <b>materia prima</b> (lo que espera en bodega), <b>productos en proceso</b> (lo que está en la máquina) y <b>productos terminados</b> (lo que espera al cliente). La cuenta Mercaderías es propia de la empresa <b>comercial</b>, que compra y vende sin transformar: por eso las opciones que la incluyen son incorrectas. Los suministros y repuestos existen, pero no son los tres inventarios característicos del ciclo productivo.',
+  qi3: 'El 9,45 % es <b>dinero del trabajador</b>: la empresa se lo descuenta del sueldo y queda obligada a entregarlo al IESS. Mientras no lo entregue, es un <b>pasivo</b> (IESS por pagar). No es costo ni gasto de la empresa, porque no representa un sacrificio patrimonial suyo: solo está en tránsito. Lo que sí es costo o gasto de la empresa es el aporte <b>patronal</b> del 12,15 %.',
+  qi4: '11,15 % de aporte patronal al IESS + 0,50 % IECE + 0,50 % SECAP = <b>12,15 %</b>. El 9,45 % es el aporte <b>personal</b>, que corre por cuenta del trabajador. El 21,60 % resulta de sumar ambos (9,45 + 12,15) y representa el costo total de seguridad social de la nómina, pero no lo que asume el empleador. Verifica siempre las tasas vigentes en iess.gob.ec.',
+  qi5: 'La Resolución NAC-DGERCGC20-00000061 fija <b>70 % para servicios</b>, derechos, comisiones y consultoría. El 30 % corresponde a bienes; el 100 % a servicios profesionales de personas naturales con título, arriendo de inmuebles de personas naturales no obligadas a llevar contabilidad, dietas y liquidaciones de compra; el 10 % y el 20 % aplican cuando el proveedor es contribuyente especial, y el enunciado precisa que no lo es.',
+  qi6: 'La Resolución NAC-DGERCGC26-00000009, vigente desde el 1 de marzo de 2026, fija <b>2 %</b> para la adquisición de bienes muebles de naturaleza corporal. El 1 % corresponde a transporte de carga y de pasajeros, a bienes agrícolas comprados al productor y a RIMPE Emprendedores; el 1,75 % a bienes agrícolas comprados a comercializadores; el 3 % es el porcentaje residual de servicios. Estos porcentajes se fijan por resolución y deben verificarse en sri.gob.ec.',
+  qi7: 'Los Costos Indirectos de Fabricación son una <b>cuenta puente</b>: acumulan durante el mes y se vacían al aplicarse a Inventario de Productos en Proceso (asiento 12, USD 6.425,79). Si al cierre quedara saldo, significaría que una parte de lo consumido por la planta no llegó al producto. No se cierra contra Ventas —eso lo hace el Costo de Ventas al final del ejercicio— ni es una cuenta de pasivo: su naturaleza es deudora.',
+  qi8: 'Solo los <b>USD 4.000,00</b> de los operarios de la línea de enlatado son mano de obra directa. El jefe de planta (USD 1.200,00) es mano de obra indirecta y va a Costos Indirectos de Fabricación; el asistente contable (USD 800,00) es gasto administrativo. USD 6.000,00 sería la nómina completa y USD 5.200,00 sumaría indebidamente al jefe de planta como si fuera directa: ese es precisamente el error clásico.',
+  qi9: 'Base 5.000,00 + IVA 15 % (750,00) = 5.750,00 de total facturado. Retención de IR 2 % sobre la base: 5.000,00 × 2 % = 100,00. Retención de IVA 30 % sobre el IVA: 750,00 × 30 % = 225,00. Neto = 5.750,00 − 100,00 − 225,00 = <b>5.425,00</b>. Los distractores nacen de errores típicos: 5.750,00 es olvidar las retenciones; 5.650,00 es calcular el 2 % sobre el total facturado en vez de sobre la base; 5.325,00 es aplicar el 70 % de retención de IVA como si fuera un servicio.',
+  qi10: 'El transporte terrestre de carga está gravado con <b>tarifa 0 % de IVA</b> por el artículo 56 de la LRTI, de modo que no hay IVA ni, en consecuencia, retención de IVA. Pero el transportista sí obtiene un ingreso gravado con impuesto a la renta, y por eso procede la retención en la fuente del <b>1 %</b>. La opción c) contiene el error más peligroso del tema: confundir «no hay IVA» con «no hay ningún impuesto». Son dos tributos distintos y se analizan por separado.',
+};
+
+function verificarCuestionario(){
+  var claves = Object.keys(QU_OK), i, faltan = 0;
+  for(i=0;i<claves.length;i++){ if(marcada(claves[i])===null){ faltan++; } }
+  var aviso = document.getElementById('avisoCu');
+  if(faltan > 0){
+    aviso.textContent = 'Todavia te faltan ' + faltan + ' pregunta(s) por responder. Marca una opcion en cada una antes de verificar.';
+    aviso.classList.add('visible');
+    document.getElementById('resCu').classList.remove('visible');
+    return;
+  }
+  aviso.classList.remove('visible');
+  var aciertos = 0;
+  for(i=0;i<claves.length;i++){
+    var k = claves[i], val = marcada(k), ok = (val === QU_OK[k]);
+    if(ok){ aciertos++; }
+    var fb = document.getElementById('fb_' + k);
+    fb.className = 'feedback visible ' + (ok ? 'correcto' : 'incorrecto');
+    fb.innerHTML = '<span class="veredicto">' + (ok ? '\u2714 Correcto.' :
+      '\u2718 Incorrecto. La respuesta correcta es ' + QU_TXT[k]) + '</span>' + QU_FB[k];
+  }
+  var total = claves.length, pct = Math.round(aciertos * 100 / total);
+  document.getElementById('emojiCu').textContent = emojiPara(pct);
+  document.getElementById('puntajeCu').textContent = aciertos + ' / ' + total + '  \u2014  ' + pct + ' %';
+  document.getElementById('detalleCu').textContent = mensajePara(pct);
+  document.getElementById('resCu').classList.add('visible');
+  animarBarra('barraCu', pct);
+  document.getElementById('resCu').scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+function reiniciarCuestionario(){
+  var claves = Object.keys(QU_OK), i, j;
+  for(i=0;i<claves.length;i++){
+    var r = document.getElementsByName(claves[i]);
+    for(j=0;j<r.length;j++){ r[j].checked = false; }
+    var fb = document.getElementById('fb_' + claves[i]);
+    fb.className = 'feedback'; fb.innerHTML = '';
+  }
+  document.getElementById('avisoCu').classList.remove('visible');
+  document.getElementById('resCu').classList.remove('visible');
+  document.getElementById('barraCu').style.width = '0%';
+}
+</script>
+
+</div><!-- fin container -->
+</body>
+</html>

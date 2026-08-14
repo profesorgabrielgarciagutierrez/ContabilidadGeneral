@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Día 4 · Caso A: Comercializadora minorista · Contabilidad General</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
+<!-- =====================================================================
+     PLAN DE FRAGMENTOS
+     parte1: head + CSS completo
+     parte2: encabezado + menú de pestañas + pestaña Repaso + pestaña Información del mes
+     parte3: pestaña Libro Diario General (generada por gen.py)
+     parte4: pestaña Mayorización, 3 formatos (generada por gen.py)
+     parte5: pestaña Ejercicio Interactivo + pestaña Cuestionario
+     parte6: Actividad con IA + Reflexión + Bibliografía + JS final
+     ===================================================================== -->
+<style>
+/* ============ BASE ============ */
+*{box-sizing:border-box;}
+body{margin:0;padding:0;background:#eef2f6;font-family:'Source Sans 3',Arial,sans-serif;color:#1c2430;font-size:16px;line-height:1.65;}
+.wrap{max-width:1180px;margin:0 auto;background:#ffffff;box-shadow:0 0 22px rgba(0,0,0,.10);}
+h1,h2,h3,h4{font-family:'Lora',Georgia,serif;color:#003366;line-height:1.3;}
+h2{font-size:1.5rem;border-bottom:3px solid #87CEEB;padding-bottom:8px;margin-top:36px;}
+h3{font-size:1.2rem;margin-top:28px;}
+h4{font-size:1.05rem;margin-top:20px;margin-bottom:6px;}
+p{margin:10px 0;text-align:justify;}
+ul,ol{margin:10px 0 10px 22px;padding:0;}
+li{margin:6px 0;text-align:justify;}
+a{color:#00509e;}
+/* ============ ENCABEZADO ============ */
+header.cab{background:#003366;color:#ffffff;padding:26px 22px 22px 22px;}
+header.cab h1{color:#ffffff;margin:0 0 6px 0;font-size:1.65rem;}
+header.cab .inst{color:#dbe9f7;font-size:.92rem;margin:2px 0;letter-spacing:.2px;}
+header.cab .badge{display:inline-block;background:#87CEEB;color:#003366;font-weight:700;padding:4px 12px;border-radius:14px;font-size:.82rem;margin-top:10px;margin-right:6px;}
+/* ============ PESTAÑAS ============ */
+nav.tabs{background:#87CEEB;display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;border-bottom:3px solid #003366;}
+nav.tabs button.tab-btn{flex:0 0 auto;background:#87CEEB;color:#000000;border:none;padding:13px 17px;font-family:'Source Sans 3',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;white-space:nowrap;border-right:1px solid rgba(0,51,102,.22);}
+nav.tabs button.tab-btn:hover{background:#a8dcf0;}
+nav.tabs button.tab-btn.active{background:#ffffff;color:#003366;font-weight:700;}
+.panel{display:none;padding:24px 26px 46px 26px;}
+.panel.visible{display:block;}
+/* ============ ACORDEÓN ============ */
+.acc-item{border:1px solid #c9d8e6;border-radius:7px;margin:12px 0;overflow:hidden;}
+.acc-head{background:#f1f6fb;padding:13px 16px;cursor:pointer;font-weight:700;color:#003366;font-family:'Lora',serif;display:flex;align-items:center;gap:10px;}
+.acc-head:hover{background:#e3eef8;}
+.acc-flecha{color:#00509e;font-size:.85rem;}
+.acc-body{display:none;padding:8px 18px 18px 18px;border-top:1px solid #dbe6f0;}
+.acc-body.abierto{display:block;}
+/* ============ RECUADROS ============ */
+.def-box{background:#f4f8fc;border-left:5px solid #003366;padding:12px 16px;margin:14px 0;border-radius:0 6px 6px 0;}
+.def-box .term{font-weight:700;color:#003366;}
+.clave-box{background:#eaf3fb;border:2px solid #87CEEB;border-radius:8px;padding:14px 18px;margin:20px 0;}
+.clave-box h4{margin-top:0;color:#003366;}
+.alerta-box{background:#fff6e5;border-left:5px solid #e8a33d;padding:12px 16px;margin:16px 0;border-radius:0 6px 6px 0;}
+.alerta-box strong{color:#9a6410;}
+.nota-box{background:#f6f6f8;border-left:5px solid #7a8699;padding:11px 15px;margin:14px 0;font-size:.95rem;border-radius:0 6px 6px 0;}
+.carrera-box{background:#eaf7ed;border:2px solid #2e8b57;border-radius:8px;padding:16px 18px;margin:24px 0;}
+.carrera-box h4{color:#1e6b41;margin-top:0;}
+.carrera-box .area{background:#ffffff;border-left:4px solid #2e8b57;padding:8px 12px;margin:8px 0;border-radius:0 5px 5px 0;}
+.carrera-box .area b{color:#1e6b41;}
+.continuidad{background:#f3eefb;border-left:5px solid #6b46a8;padding:12px 16px;margin:16px 0;border-radius:0 6px 6px 0;}
+.continuidad strong{color:#54307f;}
+/* ============ TABLAS GENERALES ============ */
+.tabla{width:100%;border-collapse:collapse;margin:14px 0;font-size:.93rem;}
+.tabla th{background:#003366;color:#ffffff;padding:9px 10px;text-align:left;font-weight:600;}
+.tabla td{border:1px solid #d3dde7;padding:8px 10px;vertical-align:top;}
+.tabla tbody tr:nth-child(even){background:#f6f9fc;}
+.tabla .num{font-family:'Courier New',Courier,monospace;text-align:right;white-space:nowrap;}
+.tabla .cod{font-family:'Courier New',Courier,monospace;white-space:nowrap;}
+.scroll-x{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;}
+/* ============ LIBRO DIARIO ============ */
+.asiento{border:1px solid #b9cbdd;border-radius:8px;margin:26px 0;overflow:hidden;background:#ffffff;}
+.asiento-head{background:#003366;color:#ffffff;padding:10px 15px;font-family:'Lora',serif;font-weight:600;font-size:1rem;}
+.asiento-head .fecha{float:right;font-family:'Source Sans 3',sans-serif;font-weight:400;font-size:.9rem;color:#cfe3f7;}
+.calc-box{background:#fbfcfe;border-bottom:1px solid #dfe8f1;padding:12px 15px;}
+.calc-box .titulo{font-weight:700;color:#003366;font-size:.93rem;margin-bottom:6px;}
+.calc-tabla{width:100%;border-collapse:collapse;font-size:.9rem;margin:6px 0;}
+.calc-tabla td{padding:4px 8px;border-bottom:1px dotted #d7e0ea;}
+.calc-tabla td.v{font-family:'Courier New',Courier,monospace;text-align:right;white-space:nowrap;width:135px;}
+.calc-tabla tr.total td{font-weight:700;border-top:1px solid #99b2c9;border-bottom:none;color:#003366;}
+.tabla-diario{width:100%;border-collapse:collapse;font-size:.92rem;}
+.tabla-diario th{background:#e8eff6;color:#003366;padding:7px 9px;border:1px solid #cbd8e4;font-size:.85rem;text-transform:uppercase;letter-spacing:.3px;}
+.tabla-diario td{border-left:1px solid #e2e9f0;border-right:1px solid #e2e9f0;padding:5px 9px;}
+.tabla-diario td.det{width:auto;}
+.tabla-diario td.cod{font-family:'Courier New',Courier,monospace;width:92px;white-space:nowrap;color:#44566b;}
+.tabla-diario td.fec{width:86px;white-space:nowrap;color:#44566b;font-size:.85rem;}
+.tabla-diario td.mon{font-family:'Courier New',Courier,monospace;text-align:right;width:112px;white-space:nowrap;}
+.tabla-diario td.acree{padding-left:34px;}
+.tabla-diario tr.suman td{border-top:3px double #003366;font-weight:700;background:#f2f6fa;color:#003366;}
+.glosa{font-style:italic;color:#3d4a5c;padding:9px 15px 12px 15px;background:#fbfcfe;border-top:1px dashed #cfdae6;font-size:.92rem;}
+/* ============ MAYORIZACIÓN ============ */
+.t-grid{display:flex;flex-wrap:wrap;gap:16px;margin:16px 0;}
+.cuenta-t{flex:1 1 320px;border:1px solid #b9cbdd;border-radius:7px;overflow:hidden;background:#fff;}
+.cuenta-t .t-nombre{background:#e8eff6;color:#003366;font-weight:700;padding:7px 10px;font-size:.9rem;border-bottom:2px solid #003366;}
+.cuenta-t .t-nombre span{display:block;font-family:'Courier New',monospace;font-weight:400;font-size:.78rem;color:#5a6b7d;}
+.t-tabla{width:100%;border-collapse:collapse;font-size:.85rem;}
+.t-tabla th{background:#f6f9fc;color:#003366;padding:4px 8px;font-size:.78rem;border-bottom:1px solid #cbd8e4;}
+.t-tabla th.izq{border-right:2px solid #003366;}
+.t-tabla td{padding:3px 8px;font-family:'Courier New',monospace;text-align:right;}
+.t-tabla td.izq{border-right:2px solid #003366;}
+.t-tabla tr.t-tot td{border-top:1px solid #7f97ad;font-weight:700;}
+.t-tabla tr.t-saldo td{border-top:3px double #003366;font-weight:700;background:#f2f6fa;color:#003366;}
+.folio{border:1px solid #b9cbdd;border-radius:7px;overflow:hidden;margin:18px 0;}
+.folio .f-nombre{background:#003366;color:#fff;padding:7px 12px;font-weight:600;font-size:.92rem;font-family:'Lora',serif;}
+.folio .f-nombre span{font-family:'Courier New',monospace;font-weight:400;font-size:.8rem;color:#cfe3f7;}
+.f-tabla{width:100%;border-collapse:collapse;font-size:.88rem;}
+.f-tabla th{background:#e8eff6;color:#003366;padding:6px 8px;border:1px solid #cbd8e4;font-size:.8rem;}
+.f-tabla td{border:1px solid #e2e9f0;padding:4px 8px;}
+.f-tabla td.n{font-family:'Courier New',monospace;text-align:right;white-space:nowrap;}
+.f-tabla tr.f-fin td{font-weight:700;background:#f2f6fa;border-top:3px double #003366;color:#003366;}
+.tabla-resumen{width:100%;border-collapse:collapse;font-size:.88rem;}
+.tabla-resumen th{background:#003366;color:#fff;padding:7px 8px;font-size:.82rem;}
+.tabla-resumen td{border:1px solid #d3dde7;padding:5px 8px;}
+.tabla-resumen td.n{font-family:'Courier New',monospace;text-align:right;white-space:nowrap;}
+.tabla-resumen td.c{font-family:'Courier New',monospace;white-space:nowrap;color:#44566b;}
+.tabla-resumen tbody tr:nth-child(even){background:#f6f9fc;}
+.tabla-resumen tr.grupo td{background:#dce8f3;font-weight:700;color:#003366;}
+.tabla-resumen tr.totales td{border-top:3px double #003366;font-weight:700;background:#eaf3fb;color:#003366;}
+/* ============ EJERCICIO Y CUESTIONARIO ============ */
+.item{border:1px solid #cfdae6;border-left:5px solid #87CEEB;border-radius:0 7px 7px 0;padding:14px 16px;margin:16px 0;background:#fff;}
+.item .enun{font-weight:600;color:#1c2430;margin-bottom:8px;}
+.item .enun .n{color:#003366;font-family:'Lora',serif;}
+.opciones label{display:block;padding:6px 9px;margin:4px 0;border-radius:5px;cursor:pointer;border:1px solid transparent;}
+.opciones label:hover{background:#f1f6fb;border-color:#cfdae6;}
+.opciones input{margin-right:8px;}
+.badge-t{display:inline-block;font-size:.72rem;font-weight:700;padding:2px 9px;border-radius:11px;margin-left:8px;vertical-align:middle;}
+.badge-teo{background:#dce8f3;color:#003366;}
+.badge-caso{background:#f6e5cf;color:#8a5a12;}
+.fb{display:none;margin-top:10px;padding:10px 13px;border-radius:6px;font-size:.93rem;}
+.fb.mostrar{display:block;}
+.fb.ok{background:#e7f6ec;border-left:5px solid #2e8b57;}
+.fb.mal{background:#fdecec;border-left:5px solid #c0392b;}
+.fb .veredicto{font-weight:700;display:block;margin-bottom:4px;}
+.fb.ok .veredicto{color:#1e6b41;}
+.fb.mal .veredicto{color:#a03024;}
+.btn{background:#003366;color:#fff;border:none;padding:12px 26px;border-radius:6px;font-family:'Source Sans 3',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;margin:8px 8px 8px 0;}
+.btn:hover{background:#00509e;}
+.btn.sec{background:#7a8699;}
+.btn.sec:hover{background:#5c6779;}
+.resultado{display:none;margin:20px 0;padding:18px;border:2px solid #87CEEB;border-radius:8px;background:#f4f9fd;}
+.resultado.mostrar{display:block;}
+.resultado .puntaje{font-family:'Lora',serif;font-size:1.35rem;color:#003366;font-weight:700;}
+.resultado .emoji{font-size:2rem;display:block;margin-bottom:4px;}
+.barra-ext{width:100%;height:24px;background:#dde5ec;border-radius:12px;overflow:hidden;margin:12px 0;}
+.barra-int{height:100%;width:0;background:linear-gradient(90deg,#003366,#87CEEB);border-radius:12px;transition:width 1.1s ease;}
+.aviso{display:none;background:#fdecec;border-left:5px solid #c0392b;padding:10px 14px;margin:12px 0;border-radius:0 6px 6px 0;color:#a03024;font-weight:600;}
+.aviso.mostrar{display:block;}
+/* ============ IA, REFLEXIÓN, BIBLIOGRAFÍA ============ */
+.prompt-box{background:#12202f;color:#e8f1fa;padding:16px 18px;border-radius:8px;font-family:'Courier New',monospace;font-size:.9rem;white-space:pre-wrap;line-height:1.55;margin:14px 0;overflow-x:auto;}
+.refl-q{background:#fff;border:1px solid #cfdae6;border-left:5px solid #6b46a8;border-radius:0 7px 7px 0;padding:13px 16px;margin:14px 0;}
+.refl-q .num{font-family:'Lora',serif;font-weight:700;color:#54307f;}
+.biblio-card{background:#fff;border:1px solid #cfdae6;border-left:5px solid #003366;border-radius:0 7px 7px 0;padding:13px 16px;margin:13px 0;font-size:.94rem;}
+.biblio-card .tipo{display:inline-block;background:#dce8f3;color:#003366;font-size:.72rem;font-weight:700;padding:2px 9px;border-radius:11px;margin-bottom:6px;}
+footer.pie{background:#003366;color:#cfe3f7;padding:18px 24px;font-size:.86rem;text-align:center;}
+/* ============ RESPONSIVO ============ */
+@media (max-width:760px){
+  body{font-size:15px;}
+  .panel{padding:18px 14px 40px 14px;}
+  header.cab{padding:20px 14px;}
+  header.cab h1{font-size:1.3rem;}
+  h2{font-size:1.28rem;}
+  .tabla-diario{font-size:.82rem;}
+  .tabla-diario td.cod{width:74px;font-size:.76rem;}
+  .tabla-diario td.fec{width:70px;font-size:.76rem;}
+  .tabla-diario td.mon{width:92px;}
+  .cuenta-t{flex:1 1 100%;}
+  .btn{width:100%;margin:6px 0;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<!-- ================= ENCABEZADO ================= -->
+<header class="cab">
+  <p class="inst">UNIVERSIDAD DE GUAYAQUIL · Facultad de Ciencias Administrativas</p>
+  <p class="inst">Carrera de Negocios Internacionales · Primer semestre</p>
+  <h1>Día 4 — Caso A: Comercializadora minorista</h1>
+  <p class="inst">Contabilidad General (091601124) · Unidad 2: Normas tributarias y pasos para el proceso contable (I parte)</p>
+  <span class="badge">Viernes 14 de agosto de 2026</span>
+  <span class="badge">5 horas</span>
+  <span class="badge">Trabajo autónomo de fin de semana</span>
+  <span class="badge">Mes contable: julio 2026</span>
+</header>
+
+<!-- ================= MENÚ DE PESTAÑAS ================= -->
+<nav class="tabs">
+  <button class="tab-btn active" onclick="showTab('repaso',this)">Repaso</button>
+  <button class="tab-btn" onclick="showTab('info',this)">Información del mes</button>
+  <button class="tab-btn" onclick="showTab('diario',this)">Libro Diario General</button>
+  <button class="tab-btn" onclick="showTab('mayor',this)">Mayorización</button>
+  <button class="tab-btn" onclick="showTab('ejercicio',this)">Ejercicio interactivo</button>
+  <button class="tab-btn" onclick="showTab('cuestionario',this)">Cuestionario</button>
+  <button class="tab-btn" onclick="showTab('ia',this)">Actividad con IA</button>
+  <button class="tab-btn" onclick="showTab('reflexion',this)">Reflexión</button>
+  <button class="tab-btn" onclick="showTab('biblio',this)">Bibliografía</button>
+</nav>
+
+<!-- ================= PESTAÑA: REPASO ================= -->
+<div id="repaso" class="panel visible">
+  <h2>Repaso de los días anteriores</h2>
+  <p>Antes de entrar al caso, recupera lo que ya construiste. Cada entrada se abre haciendo clic sobre el título. Lee estas tres entradas completas: el caso de hoy usa <em>todo</em> lo que aprendiste en la Unidad 1 y no vuelve a explicarlo desde cero.</p>
+
+  <div class="acc-item">
+    <div class="acc-head" onclick="toggleAcc('acc1',this)"><span class="acc-flecha" id="acc1-f">&#9654;</span> Día 1 (martes 11 de agosto) — La contabilidad como sistema de información</div>
+    <div class="acc-body" id="acc1">
+      <p>La contabilidad es un <strong>sistema de información</strong>: recibe hechos económicos como entrada, los procesa con reglas conocidas y entrega informes útiles para decidir. No es una lista de números sueltos; es un circuito con entrada, proceso y salida.</p>
+      <p>Definiciones que ya manejas y que hoy se usan sin volver a explicarse:</p>
+      <ul>
+        <li><strong>Hecho económico o transacción:</strong> suceso que puede medirse en dinero y que modifica el patrimonio de la entidad. Comprar mercadería, pagar el arriendo o cobrarle a un cliente son transacciones; cotizar un producto sin comprarlo, no.</li>
+        <li><strong>Entidad contable:</strong> la empresa se separa de sus dueños. La contabilidad registra lo de la empresa, no lo del socio.</li>
+        <li><strong>NIIF:</strong> Normas Internacionales de Información Financiera, el conjunto de reglas que define cómo se reconoce, mide y presenta la información financiera. En Ecuador su aplicación es obligatoria para las compañías vigiladas por la Superintendencia de Compañías, Valores y Seguros.</li>
+        <li><strong>Clasificación de empresas:</strong> por actividad (servicios, comerciales, industriales), por origen del capital (públicas, privadas, mixtas) y por forma jurídica (persona natural, sociedad).</li>
+        <li><strong>Usuarios de la información:</strong> internos (gerencia, socios, empleados) y externos (SRI, bancos, proveedores, clientes, inversionistas extranjeros).</li>
+      </ul>
+      <p><strong>Enlace con hoy:</strong> el caso A es una <em>empresa comercial</em> con forma jurídica de <em>sociedad</em>. Esa doble condición determina qué impuestos declara y qué retenciones debe practicar.</p>
+    </div>
+  </div>
+
+  <div class="acc-item">
+    <div class="acc-head" onclick="toggleAcc('acc2',this)"><span class="acc-flecha" id="acc2-f">&#9654;</span> Día 2 (miércoles 12 de agosto) — Ética, organismos de control, Marco Conceptual y NIC 1</div>
+    <div class="acc-body" id="acc2">
+      <p>Los <strong>organismos de control</strong> que enmarcan el trabajo contable en Ecuador y que reaparecen hoy:</p>
+      <ul>
+        <li><strong>SRI (Servicio de Rentas Internas):</strong> administra los tributos internos. Define quién es agente de retención, qué porcentajes se aplican y en qué fechas se declara. Hoy trabajarás casi todo el tiempo bajo reglas del SRI.</li>
+        <li><strong>Superintendencia de Compañías, Valores y Seguros:</strong> controla a las sociedades y exige estados financieros bajo NIIF.</li>
+        <li><strong>IESS (Instituto Ecuatoriano de Seguridad Social):</strong> recauda los aportes sobre las remuneraciones. Aparece hoy en el rol de pagos.</li>
+        <li><strong>Ministerio del Trabajo:</strong> regula la relación laboral y los mínimos salariales.</li>
+      </ul>
+      <p>Del <strong>Marco Conceptual de las NIIF</strong> recuerda las características cualitativas fundamentales: la información debe ser <em>relevante</em> (capaz de cambiar una decisión) y ofrecer una <em>representación fiel</em> (completa, neutral y libre de error). Las características de mejora son comparabilidad, verificabilidad, oportunidad y comprensibilidad.</p>
+      <p>De la <strong>NIC 1 Presentación de estados financieros</strong>: la empresa presenta como mínimo un estado de situación financiera, un estado del resultado integral, un estado de cambios en el patrimonio, un estado de flujos de efectivo y las notas. La información se prepara sobre la base de <em>devengo</em>: los hechos se reconocen cuando ocurren, no cuando se cobra o se paga.</p>
+      <p><strong>Enlace con hoy:</strong> el principio de devengo explica por qué la venta a crédito del 9 de julio se registra como ingreso ese día, aunque el dinero llegue el día 20.</p>
+    </div>
+  </div>
+
+  <div class="acc-item">
+    <div class="acc-head" onclick="toggleAcc('acc3',this)"><span class="acc-flecha" id="acc3-f">&#9654;</span> Día 3 (jueves 13 de agosto) — Cuenta contable, partida doble, ecuación contable y asientos</div>
+    <div class="acc-body" id="acc3">
+      <p>Esta es la base técnica que hoy se aplica en cada una de las 16 transacciones del mes.</p>
+      <ul>
+        <li><strong>Cuenta contable:</strong> nombre bajo el cual se agrupan hechos de la misma naturaleza. Tiene dos lados: <em>Debe</em> (izquierda) y <em>Haber</em> (derecha).</li>
+        <li><strong>Naturaleza de las cuentas:</strong> Activo, Costo y Gasto son de naturaleza <em>deudora</em> (aumentan en el Debe). Pasivo, Patrimonio e Ingreso son de naturaleza <em>acreedora</em> (aumentan en el Haber).</li>
+        <li><strong>Plan de cuentas:</strong> listado ordenado y codificado de todas las cuentas que la empresa usará. Hoy recibirás el plan de cuentas del Caso A y lo conservarás durante todo el curso.</li>
+        <li><strong>Partida doble:</strong> en todo registro, la suma de los valores en el Debe es igual a la suma de los valores en el Haber. No hay excepción.</li>
+        <li><strong>Ecuación contable:</strong> Activo = Pasivo + Patrimonio. Toda transacción la mantiene en equilibrio.</li>
+        <li><strong>Asiento contable:</strong> forma en que se escribe una transacción en el Libro Diario. Puede ser <em>simple</em> (una cuenta deudora y una acreedora) o <em>compuesto</em> (más de dos cuentas). Casi todos los asientos de hoy son compuestos, porque el impuesto y las retenciones agregan cuentas.</li>
+      </ul>
+      <div class="clave-box">
+        <h4>Lo mínimo que debes tener firme antes de continuar</h4>
+        <p>Si al leer «cargar a IVA en compras» no puedes decir de inmediato que se trata de un <em>activo</em> que <em>aumenta</em> y por eso va al <em>Debe</em>, vuelve al widget del Día 3 antes de seguir. El caso de hoy no se puede resolver de memoria; se resuelve razonando la naturaleza de cada cuenta.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ================= PESTAÑA: INFORMACIÓN DEL MES ================= -->
+<div id="info" class="panel">
+  <h2>Información del mes — Caso A</h2>
+  <p>Durante el resto del curso trabajarás con tres empresas que serán personajes permanentes: <strong>Caso A</strong>, una comercializadora minorista (la de hoy); <strong>Caso B</strong>, una empresa manufacturera; y <strong>Caso C</strong>, una persona natural que presta servicios profesionales. Las tres viven el mismo mes contable —del 1 al 31 de julio de 2026— y las tres volverán en la Unidad 3 y en la Unidad 4. Por eso el plan de cuentas y la codificación que recibes hoy no son desechables: los seguirás usando.</p>
+
+  <h3>1. Perfil de la empresa</h3>
+  <table class="tabla">
+    <tbody>
+      <tr><td style="width:32%"><strong>Razón social</strong></td><td>Comercial El Astillero S.A.</td></tr>
+      <tr><td><strong>RUC</strong></td><td class="cod">0993456758001</td></tr>
+      <tr><td><strong>Domicilio</strong></td><td>Guayaquil, provincia del Guayas, Ecuador</td></tr>
+      <tr><td><strong>Forma jurídica</strong></td><td>Sociedad anónima, obligada a llevar contabilidad y a aplicar NIIF</td></tr>
+      <tr><td><strong>Actividad</strong></td><td>Comercio al por menor. Dos secciones en un mismo local: <em>abarrotes en estado natural</em> (arroz, fréjol seco, lenteja) y <em>bazar y menaje del hogar</em> (ollas, vajilla, artículos plásticos, útiles).</td></tr>
+      <tr><td><strong>Condición tributaria</strong></td><td>Calificada por el SRI como <strong>agente de retención</strong>. <strong>No</strong> es contribuyente especial.</td></tr>
+      <tr><td><strong>Personal</strong></td><td>Tres empleados administrativos afiliados al IESS.</td></tr>
+      <tr><td><strong>Noveno dígito del RUC</strong></td><td class="cod">5</td></tr>
+    </tbody>
+  </table>
+
+  <div class="def-box">
+    <p><span class="term">Agente de retención:</span> contribuyente al que el Estado le encarga <em>descontar</em> una parte del impuesto al momento de pagar a su proveedor, y entregarla después al SRI. La empresa no paga ese dinero de su bolsillo: lo retiene de lo que le debe al proveedor y lo mantiene como una deuda con el fisco hasta declararlo. Piensa en un cajero que cobra por cuenta de otro.</p>
+    <p><span class="term">Contribuyente especial:</span> contribuyente designado por el SRI por su volumen o importancia económica, sujeto a porcentajes de retención distintos. Comercial El Astillero <strong>no</strong> lo es, y ninguno de sus proveedores en este mes lo es tampoco. Esto simplifica los porcentajes que aplicarás.</p>
+  </div>
+
+  <h3>2. Marco tributario que se aplica en este caso</h3>
+
+  <h4>2.1 El IVA: qué es y por qué el negocio maneja dos tarifas a la vez</h4>
+  <div class="def-box">
+    <p><span class="term">IVA (Impuesto al Valor Agregado):</span> impuesto indirecto que grava la transferencia de bienes y la prestación de servicios. Lo paga el consumidor final, pero lo recauda y entrega al Estado el vendedor. Se llama «al valor agregado» porque en cada eslabón de la cadena solo se ingresa al fisco la diferencia entre el IVA cobrado en las ventas y el IVA pagado en las compras.</p>
+    <p><span class="term">Tarifa general:</span> <strong>15%</strong>, aplicable a todos los bienes y servicios que no estén expresamente exceptuados.</p>
+    <p><span class="term">Tarifa 0%:</span> tarifa reducida a cero que la ley concede a bienes y servicios de consumo esencial o de interés social. Los <strong>bienes</strong> con tarifa 0% están enumerados en el <strong>artículo 55 de la Ley de Régimen Tributario Interno (LRTI)</strong>; los <strong>servicios</strong> con tarifa 0%, en el <strong>artículo 56</strong>. No es lo mismo que «no gravado»: la operación sí está dentro del sistema del IVA, solo que a una tasa de cero.</p>
+  </div>
+  <p>En el Caso A esto no es un detalle: es el eje del aprendizaje. La sección de abarrotes vende arroz, fréjol y lenteja <em>en estado natural</em>, que el artículo 55 grava con tarifa <strong>0%</strong>. La sección de bazar vende ollas, vajilla y plásticos, que van a la tarifa general del <strong>15%</strong>. Una misma factura puede contener ambas cosas, y el sistema contable debe poder separarlas: por eso el plan de cuentas tiene <em>dos</em> cuentas de ventas y <em>dos</em> cuentas de compras.</p>
+  <p>También aparece hoy un servicio con tarifa 0%: el <strong>transporte terrestre de carga</strong>, previsto en el artículo 56 de la LRTI. Cuando el flete se contrata a un transportista terrestre, la factura no lleva IVA.</p>
+
+  <div class="def-box">
+    <p><span class="term">IVA en compras (crédito tributario):</span> el IVA que la empresa <em>paga</em> a sus proveedores. No es un gasto: es un derecho a descontar del IVA que la empresa cobró en sus ventas. Por eso se registra en el <strong>Activo</strong>.</p>
+    <p><span class="term">IVA en ventas:</span> el IVA que la empresa <em>cobra</em> a sus clientes. No es un ingreso: es dinero ajeno que se recauda para el Estado. Por eso se registra en el <strong>Pasivo</strong>.</p>
+  </div>
+
+  <div class="alerta-box">
+    <p><strong>Advertencia técnica sobre la proporcionalidad del crédito tributario.</strong> Cuando una empresa vende bienes con tarifa 15% y con tarifa 0% al mismo tiempo, el artículo 66 de la LRTI no le permite descontar automáticamente el 100% del IVA pagado en sus compras: debe identificar de forma diferenciada las adquisiciones destinadas a cada tipo de venta y, cuando no es posible identificarlas, aplicar un <em>factor de proporcionalidad</em>. En este caso didáctico ese refinamiento <strong>no se aplica</strong>, para que puedas ver con claridad la mecánica básica de la liquidación. Debes saber que existe, que es obligatorio en la práctica profesional y que se estudia con detalle en Legislación Tributaria y en Contabilidad Financiera. No lo omitas cuando trabajes con casos reales.</p>
+  </div>
+
+  <h4>2.2 Retención de IVA</h4>
+  <div class="def-box">
+    <p><span class="term">Retención de IVA:</span> porcentaje del <em>IVA facturado</em> —no del valor del bien— que el agente de retención descuenta al proveedor y entrega al SRI. Se calcula siempre sobre el monto del impuesto, nunca sobre la base imponible. Si no hay IVA en la factura (tarifa 0%), no hay retención de IVA que practicar.</p>
+    <p><span class="term">Base imponible:</span> valor sobre el cual se calcula un impuesto. En el IVA es el precio de venta sin impuestos; en la retención en la fuente de Impuesto a la Renta es el valor del bien o servicio, también sin IVA.</p>
+  </div>
+  <p>Porcentajes vigentes según la Resolución NAC-DGERCGC20-00000061 del SRI:</p>
+  <div class="scroll-x">
+  <table class="tabla">
+    <thead><tr><th style="width:14%">Porcentaje</th><th>Se aplica sobre el IVA facturado cuando…</th></tr></thead>
+    <tbody>
+      <tr><td class="num">30%</td><td>se adquieren <strong>bienes</strong>.</td></tr>
+      <tr><td class="num">70%</td><td>se adquieren <strong>servicios</strong>, derechos, comisiones y consultoría.</td></tr>
+      <tr><td class="num">100%</td><td>servicios profesionales prestados por <strong>personas naturales con título profesional</strong>; <strong>arrendamiento de inmuebles</strong> de personas naturales no obligadas a llevar contabilidad; dietas; y liquidaciones de compra.</td></tr>
+      <tr><td class="num">10% y 20%</td><td>el proveedor es <strong>contribuyente especial</strong> (10% en bienes, 20% en servicios). <em>No se aplica en este caso: ningún proveedor del mes es contribuyente especial.</em></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h4>2.3 Retención en la fuente del Impuesto a la Renta</h4>
+  <div class="def-box">
+    <p><span class="term">Impuesto a la Renta (IR):</span> impuesto que grava la utilidad o la ganancia obtenida en el ejercicio económico. Se liquida una vez al año.</p>
+    <p><span class="term">Retención en la fuente del IR:</span> anticipo de ese impuesto anual, descontado al proveedor <em>en el momento del pago o del crédito en cuenta</em>. Para quien retiene es un <strong>pasivo</strong> (debe entregarlo al SRI). Para quien sufre la retención es un <strong>activo</strong>, porque es un anticipo que descontará de su impuesto anual.</p>
+  </div>
+  <p>Porcentajes vigentes según la <strong>Resolución NAC-DGERCGC26-00000009, vigente desde el 1 de marzo de 2026</strong>, que derogó la tabla anterior. Se calculan sobre la base imponible, es decir, sobre el valor <em>sin IVA</em>:</p>
+  <div class="scroll-x">
+  <table class="tabla">
+    <thead><tr><th style="width:12%">Porcentaje</th><th>Concepto</th></tr></thead>
+    <tbody>
+      <tr><td class="num">0%</td><td>Intereses pagados a entidades del sistema financiero y a RIMPE Negocios Populares.</td></tr>
+      <tr><td class="num">1%</td><td>Transporte privado de pasajeros y transporte de carga; bienes agrícolas comprados <strong>al productor</strong>; RIMPE Emprendedores.</td></tr>
+      <tr><td class="num">1,75%</td><td>Bienes agrícolas comprados a <strong>comercializadores</strong>.</td></tr>
+      <tr><td class="num">2%</td><td>Adquisición de <strong>bienes muebles de naturaleza corporal</strong>; energía eléctrica; seguros; arrendamiento mercantil; construcción.</td></tr>
+      <tr><td class="num">3%</td><td>Servicios de <strong>personas naturales</strong> en los que prevalece la <strong>mano de obra</strong>; publicidad y comunicación; rendimientos financieros; liquidaciones de compra; y el porcentaje residual.</td></tr>
+      <tr><td class="num">5%</td><td><strong>Servicios profesionales prestados por sociedades</strong> y comisiones a sociedades.</td></tr>
+      <tr><td class="num">10%</td><td><strong>Honorarios a personas naturales</strong> en los que prevalece el <strong>intelecto</strong>; docencia; regalías; y <strong>arrendamiento de bienes inmuebles</strong>.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="alerta-box">
+    <p><strong>Regla profesional que debes interiorizar hoy:</strong> los porcentajes de retención <em>no están en la ley</em>, se fijan por <strong>resolución</strong> del SRI y cambian con relativa frecuencia —la tabla que usas hoy reemplazó a otra en marzo de 2026—. Antes de aplicar un porcentaje en un trabajo real, verifica siempre la resolución vigente en <strong>sri.gob.ec</strong>. Un contador que aplica un porcentaje derogado expone a su empresa a glosas y multas.</p>
+  </div>
+
+  <div class="clave-box">
+    <h4>Los cuatro pasos que resuelven cualquier transacción de este mes</h4>
+    <ol>
+      <li><strong>¿Cuál es la base imponible?</strong> El valor del bien o servicio, sin impuestos.</li>
+      <li><strong>¿Lleva IVA y a qué tarifa?</strong> 15% general, 0% si está en los artículos 55 o 56 de la LRTI.</li>
+      <li><strong>¿Qué retenciones corresponden?</strong> IR sobre la base imponible según el concepto; IVA sobre el impuesto facturado, solo si hay IVA.</li>
+      <li><strong>¿Cuál es el valor neto que se paga o se cobra?</strong> Total de la factura menos las retenciones practicadas.</li>
+    </ol>
+  </div>
+
+  <h3>3. Plan de cuentas del Caso A</h3>
+  <p>Este plan de cuentas se conserva para toda la serie. La codificación es jerárquica: el primer dígito identifica el elemento del estado financiero, y los siguientes van abriendo subgrupos y cuentas de detalle.</p>
+  <div class="scroll-x">
+  <table class="tabla">
+    <thead><tr><th style="width:16%">Código</th><th style="width:38%">Cuenta</th><th style="width:12%">Naturaleza</th><th>Qué registra</th></tr></thead>
+    <tbody>
+      <tr><td class="cod">1.</td><td colspan="3"><strong>ACTIVO</strong></td></tr>
+      <tr><td class="cod">1.1.01.01</td><td>Caja</td><td>Deudora</td><td>Efectivo recibido en el local por ventas de mostrador.</td></tr>
+      <tr><td class="cod">1.1.01.02</td><td>Bancos</td><td>Deudora</td><td>Dinero en la cuenta corriente de la empresa.</td></tr>
+      <tr><td class="cod">1.1.02.01</td><td>Cuentas por cobrar clientes</td><td>Deudora</td><td>Derecho de cobro por ventas a crédito.</td></tr>
+      <tr><td class="cod">1.1.03.01</td><td>IVA en compras (crédito tributario)</td><td>Deudora</td><td>IVA pagado a proveedores, descontable del IVA cobrado.</td></tr>
+      <tr><td class="cod">1.1.03.02</td><td>Anticipo de IR retenido</td><td>Deudora</td><td>Retenciones de Impuesto a la Renta que <em>nos</em> practicaron los clientes.</td></tr>
+      <tr><td class="cod">1.1.03.03</td><td>IVA retenido en ventas</td><td>Deudora</td><td>Retenciones de IVA que <em>nos</em> practicaron los clientes agentes de retención.</td></tr>
+      <tr><td class="cod">1.1.04.01</td><td>Inventario de mercaderías</td><td>Deudora</td><td>Existencias de mercadería para la venta.</td></tr>
+      <tr><td class="cod">1.2.01</td><td>Muebles y enseres</td><td>Deudora</td><td>Mostradores, perchas, vitrinas.</td></tr>
+      <tr><td class="cod">1.2.02</td><td>Equipo de computación</td><td>Deudora</td><td>Computadoras y equipos de facturación.</td></tr>
+      <tr><td class="cod">2.</td><td colspan="3"><strong>PASIVO</strong></td></tr>
+      <tr><td class="cod">2.1.01</td><td>Cuentas por pagar proveedores</td><td>Acreedora</td><td>Obligación por compras a crédito.</td></tr>
+      <tr><td class="cod">2.1.02.01</td><td>IVA en ventas</td><td>Acreedora</td><td>IVA cobrado a los clientes durante el mes.</td></tr>
+      <tr><td class="cod">2.1.02.02</td><td>IVA por pagar</td><td>Acreedora</td><td>Saldo del IVA a favor del fisco después de la liquidación mensual.</td></tr>
+      <tr><td class="cod">2.1.02.03</td><td>Retención en la fuente de IR por pagar</td><td>Acreedora</td><td>Retenciones de IR practicadas a proveedores, pendientes de entregar al SRI.</td></tr>
+      <tr><td class="cod">2.1.02.04</td><td>Retención de IVA por pagar</td><td>Acreedora</td><td>Retenciones de IVA practicadas a proveedores, pendientes de entregar al SRI.</td></tr>
+      <tr><td class="cod">2.1.03.01</td><td>Sueldos por pagar</td><td>Acreedora</td><td>Remuneración líquida pendiente de pago al personal.</td></tr>
+      <tr><td class="cod">2.1.03.02</td><td>IESS por pagar</td><td>Acreedora</td><td>Aporte personal e patronal pendiente de pago al IESS.</td></tr>
+      <tr><td class="cod">3.</td><td colspan="3"><strong>PATRIMONIO</strong></td></tr>
+      <tr><td class="cod">3.1.01</td><td>Capital social</td><td>Acreedora</td><td>Aporte de los accionistas.</td></tr>
+      <tr><td class="cod">3.2.01</td><td>Resultados acumulados</td><td>Acreedora</td><td>Utilidades de ejercicios anteriores no distribuidas.</td></tr>
+      <tr><td class="cod">4.</td><td colspan="3"><strong>INGRESOS</strong></td></tr>
+      <tr><td class="cod">4.1.01</td><td>Ventas tarifa 15%</td><td>Acreedora</td><td>Ventas de la sección bazar y menaje.</td></tr>
+      <tr><td class="cod">4.1.02</td><td>Ventas tarifa 0%</td><td>Acreedora</td><td>Ventas de abarrotes en estado natural.</td></tr>
+      <tr><td class="cod">5.</td><td colspan="3"><strong>COSTOS Y GASTOS</strong></td></tr>
+      <tr><td class="cod">5.1.01</td><td>Compras de mercaderías tarifa 0%</td><td>Deudora</td><td>Adquisición de abarrotes en estado natural.</td></tr>
+      <tr><td class="cod">5.1.02</td><td>Compras de mercaderías tarifa 15%</td><td>Deudora</td><td>Adquisición de bazar y menaje.</td></tr>
+      <tr><td class="cod">5.2.01</td><td>Gasto sueldos</td><td>Deudora</td><td>Remuneraciones del personal administrativo.</td></tr>
+      <tr><td class="cod">5.2.02</td><td>Gasto aporte patronal IESS</td><td>Deudora</td><td>Aporte que asume el empleador.</td></tr>
+      <tr><td class="cod">5.2.03</td><td>Gasto arriendo</td><td>Deudora</td><td>Canon mensual del local comercial.</td></tr>
+      <tr><td class="cod">5.2.04</td><td>Gasto servicios profesionales (sociedades)</td><td>Deudora</td><td>Servicios contratados a firmas y compañías.</td></tr>
+      <tr><td class="cod">5.2.05</td><td>Gasto honorarios profesionales (personas naturales)</td><td>Deudora</td><td>Honorarios pagados a profesionales con título.</td></tr>
+      <tr><td class="cod">5.2.06</td><td>Gasto transporte y fletes</td><td>Deudora</td><td>Movilización terrestre de mercadería.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="continuidad">
+    <p><strong>Señal de continuidad — inventarios.</strong> Fíjate en que las compras del mes se registran en cuentas de <em>Compras</em> (grupo 5.1) y que la cuenta <em>Inventario de mercaderías</em> (1.1.04.01) queda con su saldo inicial sin moverse durante todo julio. Esto no es un descuido: determinar cuánto costó la mercadería vendida exige elegir un método de valoración (FIFO, costo promedio) y llevar un Kardex, y eso pertenece a la <strong>Unidad 3, con la NIC 2 Inventarios</strong>. Volveremos sobre este mismo mes de Comercial El Astillero para calcular el costo de ventas y ajustar el inventario.</p>
+  </div>
+
+  <h3>4. Saldos iniciales al 1 de julio de 2026</h3>
+  <p>Estos son los saldos con los que la empresa abre el mes. Provienen del cierre de junio y se incorporan al Libro Diario mediante un <em>asiento de apertura</em>. Observa que ya existen obligaciones tributarias de junio pendientes de pago: se cancelarán dentro de julio.</p>
+  <div class="scroll-x">
+  <table class="tabla">
+    <thead><tr><th style="width:16%">Código</th><th>Cuenta</th><th style="width:16%">Debe</th><th style="width:16%">Haber</th></tr></thead>
+    <tbody>
+      <tr><td class="cod">1.1.01.01</td><td>Caja</td><td class="num">2.000,00</td><td class="num">&mdash;</td></tr>
+      <tr><td class="cod">1.1.01.02</td><td>Bancos</td><td class="num">18.940,00</td><td class="num">&mdash;</td></tr>
+      <tr><td class="cod">1.1.02.01</td><td>Cuentas por cobrar clientes</td><td class="num">4.500,00</td><td class="num">&mdash;</td></tr>
+      <tr><td class="cod">1.1.04.01</td><td>Inventario de mercaderías</td><td class="num">12.000,00</td><td class="num">&mdash;</td></tr>
+      <tr><td class="cod">1.2.01</td><td>Muebles y enseres</td><td class="num">6.000,00</td><td class="num">&mdash;</td></tr>
+      <tr><td class="cod">1.2.02</td><td>Equipo de computación</td><td class="num">2.500,00</td><td class="num">&mdash;</td></tr>
+      <tr><td class="cod">2.1.01</td><td>Cuentas por pagar proveedores</td><td class="num">&mdash;</td><td class="num">7.000,00</td></tr>
+      <tr><td class="cod">2.1.02.02</td><td>IVA por pagar (junio 2026)</td><td class="num">&mdash;</td><td class="num">620,00</td></tr>
+      <tr><td class="cod">2.1.02.03</td><td>Retención en la fuente de IR por pagar (junio 2026)</td><td class="num">&mdash;</td><td class="num">180,00</td></tr>
+      <tr><td class="cod">2.1.02.04</td><td>Retención de IVA por pagar (junio 2026)</td><td class="num">&mdash;</td><td class="num">140,00</td></tr>
+      <tr><td class="cod">3.1.01</td><td>Capital social</td><td class="num">&mdash;</td><td class="num">35.000,00</td></tr>
+      <tr><td class="cod">3.2.01</td><td>Resultados acumulados</td><td class="num">&mdash;</td><td class="num">3.000,00</td></tr>
+      <tr style="font-weight:700;background:#eaf3fb"><td colspan="2">TOTALES</td><td class="num">45.940,00</td><td class="num">45.940,00</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Comprueba la ecuación contable: Activo 45.940,00 = Pasivo 7.940,00 + Patrimonio 38.000,00. En equilibrio.</p>
+
+  <h3>5. Transacciones del mes, día por día</h3>
+  <p>Lee la lista completa antes de abrir el Libro Diario. Intenta resolver mentalmente, con los cuatro pasos, al menos las tres primeras antes de ver la solución.</p>
+  <div class="scroll-x">
+  <table class="tabla">
+    <thead><tr><th style="width:8%">N.º</th><th style="width:12%">Fecha</th><th>Descripción</th></tr></thead>
+    <tbody>
+      <tr><td class="num">1</td><td>01/07/2026</td><td>Se registran los saldos iniciales del mes (asiento de apertura).</td></tr>
+      <tr><td class="num">2</td><td>02/07/2026</td><td>Compra <strong>a crédito</strong> de mercadería para la sección bazar y menaje a <em>Distribuidora Menaje del Pacífico S.A.</em> (sociedad, no contribuyente especial), por USD 8.000,00 más IVA. Factura 001-002-000004521.</td></tr>
+      <tr><td class="num">3</td><td>03/07/2026</td><td>Compra <strong>de contado</strong>, con transferencia bancaria, de arroz, fréjol y lenteja en estado natural a <em>Comercializadora Granos del Litoral S.A.</em> por USD 5.000,00. Bienes agrícolas adquiridos a un comercializador, no al productor.</td></tr>
+      <tr><td class="num">4</td><td>06/07/2026</td><td>Ventas de contado del día en mostrador, a consumidores finales, en una sola factura con las dos secciones: bazar y menaje USD 6.400,00 más IVA, y abarrotes en estado natural USD 2.500,00. Se recibe en efectivo.</td></tr>
+      <tr><td class="num">5</td><td>09/07/2026</td><td>Venta <strong>a crédito</strong> de menaje al <em>Hotel Bahía Norte S.A.</em> por USD 7.000,00 más IVA. El cliente <strong>es agente de retención</strong> y practica las retenciones que le corresponden.</td></tr>
+      <tr><td class="num">6</td><td>10/07/2026</td><td>Pago del arriendo del local correspondiente a julio, USD 1.200,00 más IVA, a la señora Marlene Cedeño, <strong>persona natural no obligada a llevar contabilidad</strong>. Se paga por transferencia.</td></tr>
+      <tr><td class="num">7</td><td>13/07/2026</td><td>Pago de servicios de asesoría contable y tributaria a <em>Consultores Fiscales del Litoral Cía. Ltda.</em> (sociedad), USD 900,00 más IVA, por transferencia.</td></tr>
+      <tr><td class="num">8</td><td>15/07/2026</td><td>Pago de honorarios a la abogada Andrea Suárez, <strong>persona natural con título profesional</strong>, por la revisión de contratos de proveedores: USD 700,00 más IVA, por transferencia.</td></tr>
+      <tr><td class="num">9</td><td>17/07/2026</td><td>Pago de un <strong>flete terrestre de carga</strong> a <em>Transportes Vía Costa S.A.</em> por el traslado de mercadería desde Durán al local, USD 450,00. Servicio con tarifa <strong>0%</strong> de IVA.</td></tr>
+      <tr><td class="num">10</td><td>18/07/2026</td><td>Pago al SRI de las obligaciones tributarias de <strong>junio</strong>: IVA por pagar USD 620,00, retenciones de IR USD 180,00 y retenciones de IVA USD 140,00. Corresponde al noveno dígito 5 del RUC.</td></tr>
+      <tr><td class="num">11</td><td>20/07/2026</td><td><strong>Cobro parcial</strong> al Hotel Bahía Norte S.A.: USD 4.000,00 acreditados en la cuenta bancaria.</td></tr>
+      <tr><td class="num">12</td><td>22/07/2026</td><td><strong>Pago parcial</strong> a Distribuidora Menaje del Pacífico S.A.: USD 5.000,00 por transferencia.</td></tr>
+      <tr><td class="num">13</td><td>24/07/2026</td><td>Venta de contado de abarrotes en estado natural a <em>Panadería Su Pan</em> (RIMPE Emprendedor, no es agente de retención) por USD 3.400,00, cobrada por transferencia bancaria.</td></tr>
+      <tr><td class="num">14</td><td>30/07/2026</td><td>Rol de pagos del personal administrativo: sueldos USD 2.400,00; aporte personal al IESS 9,45%; aporte patronal al IESS 11,15%.</td></tr>
+      <tr><td class="num">15</td><td>31/07/2026</td><td>Pago de los sueldos líquidos del mes por transferencia bancaria.</td></tr>
+      <tr><td class="num">16</td><td>31/07/2026</td><td><strong>Liquidación del IVA del mes</strong>: se compensa el IVA en ventas contra el IVA en compras y contra las retenciones de IVA que los clientes practicaron a la empresa.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="alerta-box">
+    <p><strong>El mes cierra el 31 de julio, pero la obligación se paga en agosto.</strong> El asiento 16 determina cuánto debe la empresa al SRI por el IVA de julio; no lo paga ese día. La declaración del IVA (formulario 104) y la de retenciones (formulario 103) correspondientes a julio se presentan y pagan en <strong>agosto</strong>, en la fecha que fija el <strong>noveno dígito del RUC</strong>. Comercial El Astillero tiene noveno dígito <strong>5</strong>, de modo que su fecha máxima es el <strong>18 de agosto de 2026</strong>. Por eso los saldos de «IVA por pagar», «Retención en la fuente de IR por pagar» y «Retención de IVA por pagar» quedan abiertos al 31 de julio: son deudas reales pendientes, exactamente igual que los saldos de junio que la empresa canceló el 18 de julio en el asiento 10. El aporte al IESS retenido y patronal se paga dentro de los primeros quince días del mes siguiente.</p>
+  </div>
+
+  <div class="carrera-box">
+    <h4>Por qué esto le importa a un profesional de Negocios Internacionales</h4>
+    <p>Negocios Internacionales no es «aprender a negociar». Es una profesión que se sostiene sobre cuatro áreas que trabajan juntas, y las cuatro tocan lo que estás haciendo hoy.</p>
+    <div class="area"><b>Comercio exterior.</b> El día en que Comercial El Astillero importe menaje desde China, el IVA de la importación se pagará en aduana y entrará al mismo crédito tributario que hoy manejas, y el flete internacional tendrá un tratamiento tributario distinto al flete terrestre local. Sin dominar el circuito interno del IVA, la liquidación de una importación es indescifrable.</p></div>
+    <div class="area"><b>Finanzas internacionales.</b> Las retenciones no cambian la utilidad, pero cambian el <em>flujo de caja</em>: la empresa entrega hoy dinero que recuperará meses después. Quien evalúa la liquidez de una operación de comercio exterior debe saber leer esa diferencia entre utilidad contable y efectivo disponible.</p></div>
+    <div class="area"><b>Marketing y negociación internacional.</b> Cuando negocies un precio, la pregunta «¿es con IVA o sin IVA?, ¿me van a retener?» decide cuánto dinero recibirás realmente. En este caso, el Hotel Bahía Norte factura 8.050,00 y paga 7.595,00. Negociar sin conocer el neto es negociar a ciegas.</p></div>
+    <div class="area"><b>Marco legal y normativo.</b> Hoy aplicaste dos resoluciones del SRI y dos artículos de la LRTI, y una de esas resoluciones tiene menos de seis meses de vigencia. La capacidad de rastrear la norma vigente, y no repetir lo que «siempre se ha hecho», es lo que separa a un profesional de un ejecutante.</p></div>
+  </div>
+
+  <div class="continuidad">
+    <p><strong>Lo que deliberadamente no aparece hoy.</strong> No verás <em>métodos de valoración de inventarios ni Kardex</em> —eso es NIC 2, <strong>Unidad 3</strong>—; no verás <em>asientos de ajuste ni depreciación</em> de los muebles y del equipo de computación —también <strong>Unidad 3</strong>—; y no verás <em>Estado de Resultado Integral ni Estado de Situación Financiera</em> —esos son la <strong>Unidad 4</strong>—. Comercial El Astillero volverá con este mismo mes de julio en cada una de esas unidades.</p>
+  </div>
+</div>
+<!-- ================= PESTANA: LIBRO DIARIO GENERAL ================= -->
+<div id="diario" class="panel">
+<h2>Libro Diario General &mdash; julio 2026</h2>
+<div class="def-box"><p><span class="term">Libro Diario General:</span> registro cronol&oacute;gico y obligatorio en el que se anotan todas las transacciones de la empresa, una tras otra, en el orden en que ocurren. Cada anotaci&oacute;n es un <em>asiento</em> y debe cumplir la partida doble. Se llama &laquo;general&raquo; porque recoge todas las operaciones sin distinci&oacute;n de tipo.</p><p><span class="term">Jornalizaci&oacute;n:</span> acci&oacute;n de trasladar una transacci&oacute;n al Libro Diario. Es el segundo paso del proceso contable, despu&eacute;s del an&aacute;lisis y reconocimiento de la transacci&oacute;n.</p><p><span class="term">Glosa:</span> explicaci&oacute;n breve que se escribe al pie de cada asiento y describe qu&eacute; se registr&oacute; y con qu&eacute; respaldo. Por convenci&oacute;n inicia con <strong>P/R</strong>, abreviatura de &laquo;Para registrar&raquo;. Un asiento sin glosa es un asiento incompleto: dentro de seis meses nadie sabr&aacute; qu&eacute; ocurri&oacute;.</p></div>
+<p>Lee cada asiento en tres tiempos: primero la explicaci&oacute;n, luego el <strong>c&aacute;lculo desglosado</strong> (base, IVA, retenciones y valor neto) y solo entonces el asiento. El c&aacute;lculo es la parte que debes aprender a hacer sola; el asiento es la consecuencia mec&aacute;nica de ese c&aacute;lculo.</p>
+<div class="nota-box">Las cuentas <strong>deudoras</strong> se escriben pegadas al margen; las cuentas <strong>acreedoras</strong>, sangradas hacia la derecha. Es una convenci&oacute;n universal que permite leer un asiento de un vistazo.</div>
+<div class="asiento">
+<div class="asiento-head">Asiento N.&ordm; 1 &mdash; Asiento de apertura — saldos iniciales<span class="fecha">01/07/2026</span></div>
+<div class="calc-box"><p>El primer registro de cualquier periodo traslada al Libro Diario los saldos con que la empresa terminó el periodo anterior. Se llama <strong>asiento de apertura</strong>. No es una transacción nueva: es el punto de partida. Los activos entran por el Debe porque son de naturaleza deudora; los pasivos y el patrimonio, por el Haber.</p><p>Observa que entre los pasivos ya vienen tres obligaciones tributarias de junio: son deudas reales con el SRI que se pagarán el 18 de julio, en el asiento 10.</p><div class="titulo">C&aacute;lculo desglosado</div><table class="calc-tabla"><tbody><tr><td>Total activos</td><td class="v">45.940,00</td></tr><tr><td>Total pasivos</td><td class="v">7.940,00</td></tr><tr><td>Total patrimonio</td><td class="v">38.000,00</td></tr><tr class="total"><td>Comprobación: Activo = Pasivo + Patrimonio</td><td class="v">45.940,00</td></tr></tbody></table></div>
+<div class="scroll-x"><table class="tabla-diario"><thead><tr><th>Fecha</th><th>C&oacute;digo</th><th>Detalle</th><th>Debe</th><th>Haber</th></tr></thead><tbody>
+<tr><td class="fec">01/07/2026</td><td class="cod">1.1.01.01</td><td class="det">Caja</td><td class="mon">2.000,00</td><td class="mon"></td></tr>
+<tr><td class="fec"></td><td class="cod">1.1.01.02</td><td class="det">Bancos</td><td class="mon">18.940,00</td><td class="mon"></td></tr>
+<tr><td class="fec"></td><td class="cod">1.1.02.01</td><td class="det">Cuentas por cobrar clientes</td><td class="mon">4.500,00</td><td class="mon"></td></tr>
+<tr><td class="fec"></td><td class="cod">1.1.04.01</td><td class="det">Inventario de mercaderías</td><td class="mon">12.000,00</td><td class="mon"></td></tr>
+<tr><td class="fec"></td><td class="cod">1.2.01</td><td class="det">Muebles y enseres</td><td class="mon">6.000,00</td><td class="mon"></td></tr>
+<tr><td class="fec"></td><td class="cod">1.2.02</td><td class="det">Equipo de computación</td><td class="mon">2.500,00</td><td class="mon"></td></tr>
+<tr><td class="fec"></td><td class="cod">2.1.01</td><td class="det acree">a) Cuentas por pagar proveedores</td><td class="mon"></td><td class="mon">7.000,00</td></tr>
+<tr><td class="fec"></td><td class="cod">2.1.02.02</td><td class="det acree">a) IVA por pagar</td><td class="mon"></td><td class="mon">620,00</td></tr>
+<tr><td class="fec"></td><td class="cod">2.1.02.03</td><td class="det acree">a) Retención en la fuente de IR por pagar</td><td class="mon"></td><td class="mon">180,00</td></tr>
+<tr><td class="fec"></td><td class="cod">2.1.02.04</td><td class="det acree">a) Retención de IVA por pagar</td><td class="mon"></td><td class="mon">140,00</td></tr>
+<tr><td class="fec"></td><td class="cod">3.1.01</td><td class="det acree">a) Capital social</td><td class="mon"></td><td class="mon">35.000,00</td></tr>
+<tr><td class="fec"></td><td class="cod">3.2.01</td><td class="det acree">a) Resultados acumulados</td><td class="mon"></td><td class="mon">3.000,00</td></tr>
+<tr class="suman"><td class="fec"></td><td class="cod"></td><td class="det">SUMAN</td><td class="mon">45.940,00</td><td class="mon">45.940,00</td></tr>
+</tbody></table></div>
+<div class="glosa">P/R Apertura del mes de julio de 2026 con los saldos provenientes del cierre de junio de 2026.</div>
+</div>
+<div class="asiento">
+<div class="asiento-head">Asiento N.&ordm; 2 &mdash; Compra a crédito de mercadería tarifa 15% (bazar y menaje)<span class="fecha">02/07/2026</span></div>
+<div class="calc-box"><p>Aplica los cuatro pasos. <strong>Base imponible:</strong> 8.000,00. <strong>IVA:</strong> son ollas, vajilla y plásticos, no están en el artículo 55 de la LRTI, por lo tanto tarifa general 15%. <strong>Retenciones:</strong> la empresa es agente de retención y compra <em>bienes muebles de naturaleza corporal</em> a una sociedad que no es contribuyente especial; corresponde 2% de retención en la fuente de IR sobre la base y 30% de retención de IVA sobre el impuesto facturado. <strong>Neto:</strong> lo que realmente queda debiendo al proveedor.</p><p>Como la compra es a crédito, el neto no sale de Bancos: se reconoce como <em>Cuentas por pagar proveedores</em>. Las dos retenciones son pasivos frente al SRI, no frente al proveedor.</p><div class="titulo">C&aacute;lculo desglosado</div><table class="calc-tabla"><tbody><tr><td>Base imponible</td><td class="v">8.000,00</td></tr><tr><td>IVA 15%</td><td class="v">1.200,00</td></tr><tr class="total"><td>Total factura</td><td class="v">9.200,00</td></tr><tr><td>(&minus;) Retención en la fuente de IR 2% sobre 8.000,00</td><td class="v">160,00</td></tr><tr><td>(&minus;) Retención de IVA 30% sobre 1.200,00</td><td class="v">360,00</td></tr><tr class="total"><td>Valor neto a favor del proveedor</td><td class="v">8.680,00</td></tr></tbody></table></div>
+<div class="scroll-x"><table class="tabla-diario"><thead><tr><th>Fecha</th><th>C&oacute;digo</th><th>Detalle</th><th>Debe</th><th>Haber</th></tr></thead><tbody>
+<tr><td class="fec">02/07/2026</td><td class="cod">5.1.02</td><td class="det">Compras de mercaderías tarifa 15%</td><td class="mon">8.000,00</td><td class="mon"></td></tr>
+<tr><td class="fec"></td><td class="cod">1.1.03.01</td><td class="det">IVA en compras (crédito tributario)</td><td class="mon">1.200,00</td><td class="mon"></td></tr>
+<tr><td class="fec"></td><td class="cod">2.1.02.03</td><td class="det acree">a) Retención en la fuente de IR por pagar</td><td class="mon"></td><td class="mon">160,00</td></tr>
+<tr><td class="fec"></td><td class="cod">2.1.02.04</td><td class="det acree">a) Retención de IVA por pagar</td><td class="mon"></td><td class="mon">360,00</td></tr>
+<tr><td class="fec"></td><td class="cod">2.1.01</td><td class="det acree">a) Cuentas por pagar proveedores</td><td class="mon"></td><td class="mon">8.680,00</td></tr>
+<tr class="suman"><td class="fec"></td><td class="cod"></td><td class="det">SUMAN</td><td class="mon">9.200,00</td><td class="mon">9.200,00</td></tr>
+</tbody></table></div>
+<div class="glosa">P/R Compra de mercadería a crédito a Distribuidora Menaje del Pacífico S.A., factura 001-002-000004521, con retenciones de IR 2% y de IVA 30%.</div>
+</div>
+<div class="asiento">
+<div class="asiento-head">Asiento N.&ordm; 3 &mdash; Compra de contado de mercadería tarifa 0% (abarrotes en estado natural)<span class="fecha">03/07/2026</span></div>
+<div class="calc-box"><p>El arroz, el fréjol y la lenteja <em>en estado natural</em> están enumerados en el artículo 55 de la LRTI y por eso llevan tarifa <strong>0%</strong>. Al no existir IVA facturado, <strong>no hay retención de IVA que practicar</strong>: sería un porcentaje sobre cero. Este es uno de los errores más frecuentes del principiante, retener IVA donde no hay IVA.</p><p>La retención en la fuente de IR sí procede. Son <em>bienes agrícolas</em> y el proveedor es un <strong>comercializador</strong>, no el productor: corresponde <strong>1,75%</strong>. Si se los hubiéramos comprado directamente al agricultor, el porcentaje habría sido 1%.</p><div class="titulo">C&aacute;lculo desglosado</div><table class="calc-tabla"><tbody><tr><td>Base imponible</td><td class="v">5.000,00</td></tr><tr><td>IVA (tarifa 0%, art. 55 LRTI)</td><td class="v">0,00</td></tr><tr class="total"><td>Total factura</td><td class="v">5.000,00</td></tr><tr><td>(&minus;) Retención en la fuente de IR 1,75% sobre 5.000,00</td><td class="v">87,50</td></tr><tr><td>(&minus;) Retención de IVA: no aplica, no hay IVA facturado</td><td class="v">0,00</td></tr><tr class="total"><td>Valor neto pagado por transferencia</td><td class="v">4.912,50</td></tr></tbody></table></div>
+<div class="scroll-x"><table class="tabla-diario"><thead><tr><th>Fecha</th><th>C&oacute;digo</th><th>Detalle</th><th>Debe</th><th>Haber</th></tr></thead><tbody>
+<tr><td class="fec">03/07/2026</td><td class="cod">5.1.01</td><td class="det">Compras de mercaderías tarifa 0%</td><td class="mon">5.000,00</td><td class="mon"></td></tr>
+<tr><td class="fec"></td><td class="cod">2.1.02.03</td><td class="det acree">a) Retención en la fuente de IR por pagar</td><td class="mon"></td><td class="mon">87,50</td></tr>
+<tr><td class="fec"></td><td class="cod">1.1.01.02</td><td class="det acree">a) Bancos</td><td class="mon"></td><td class="mon">4.912,50</td></tr>
+<tr class="suman"><td class="fec"></td><td class="cod"></td><td class="det">SUMAN</td><td class="mon">5.000,00</td><td class="mon">5.000,00</td></tr>
+</tbody></table></div>
+<div class="glosa">P/R Compra de contado de abarrotes en estado natural a Comercializadora Granos del Litoral S.A., con retención de IR 1,75% por bienes agrícolas adquiridos a comercializador.</div>
+</div>
+<div class="asiento">
+<div class="asiento-head">Asiento N.&ordm; 4 &mdash; Ventas de contado del día, con las dos tarifas en una misma factura<span class="fecha">06/07/2026</span></div>
+<div class="calc-box"><p>Aquí está el corazón del caso. Una sola factura contiene mercadería gravada con 15% y mercadería gravada con 0%. El IVA se calcula <strong>únicamente</strong> sobre la porción del 15%: 6.400,00 × 15% = 960,00. Sobre los 2.500,00 de abarrotes no se calcula nada.</p><p>Los clientes son consumidores finales y no son agentes de retención, de modo que no practican ninguna retención. La empresa cobra el total en efectivo, que ingresa a Caja.</p><p>El ingreso se separa en dos cuentas —<em>Ventas tarifa 15%</em> y <em>Ventas tarifa 0%</em>— no por capricho, sino porque el formulario 104 del SRI exige informar las ventas de cada tarifa por separado. Si un plan de cuentas no permite esa separación, la declaración se vuelve un trabajo manual de reconstrucción.</p><div class="titulo">C&aacute;lculo desglosado</div><table class="calc-tabla"><tbody><tr><td>Ventas de bazar y menaje (base 15%)</td><td class="v">6.400,00</td></tr><tr><td>IVA 15% sobre 6.400,00</td><td class="v">960,00</td></tr><tr><td>Ventas de abarrotes (base 0%)</td><td class="v">2.500,00</td></tr><tr><td>IVA sobre abarrotes</td><td class="v">0,00</td></tr><tr class="total"><td>Total cobrado en efectivo</td><td class="v">9.860,00</td></tr></tbody></table></div>
+<div class="scroll-x"><table class="tabla-diario"><thead><tr><th>Fecha</th><th>C&oacute;digo</th><th>Detalle</th><th>Debe</th><th>Haber</th></tr></thead><tbody>
+<tr><td class="fec">06/07/2026</td><td class="cod">1.1.01.01</td><td class="det">Caja</td><td class="mon">9.860,00</td><td class="mon"></td></tr>
+<tr><td class="fec"></td><td class="cod">4.1.01</td><td class="det acree">a) Ventas tarifa 15%</td><td class="mon"></td><td class="mon">6.400,00</td></tr>
+<tr><td class="fec"></td><td class="cod">4.1.02</td><td class="det acree">a) Ventas tarifa 0%</td><td class="mon"></td><td class="mon">2.500,00</td></tr>
+<tr><td class="fec"></td><td class="cod">2.1.02.01</td><td class="det acree">a) IVA en ventas</td><td class="mon"></td><td class="mon">960,00</td></tr>
+<tr class="suman"><td class="fec"></td><td class="cod"></td><td class="det">SUMAN</td><td class="mon">9.860,00</td><td class="mon">9.860,00</td></tr>
+</tbody></table></div>
+<div class="glosa">P/R Venta de contado en mostrador a consumidores finales, secciones bazar y abarrotes, según facturas del día.</div>
+</div>
+<div class="asiento">
+<div class="asiento-head">Asiento N.&ordm; 5 &mdash; Venta a crédito a un cliente que es agente de retención<span class="fecha">09/07/2026</span></div>
+<div class="calc-box"><p>Cambia el papel: aquí Comercial El Astillero <em>no</em> retiene, <strong>le retienen</strong>. El Hotel Bahía Norte S.A. está calificado como agente de retención y, al recibir la factura, practica 2% de retención en la fuente de IR sobre la base (por adquisición de bienes muebles corporales) y 30% de retención de IVA sobre el impuesto.</p><p>Para la empresa que vende, esas retenciones <strong>no son un gasto ni una pérdida</strong>: son <strong>activos</strong>. El <em>Anticipo de IR retenido</em> se descontará del Impuesto a la Renta anual; el <em>IVA retenido en ventas</em> se descontará del IVA por pagar en la liquidación de fin de mes (asiento 16). Lo único que disminuye es el efectivo que se cobrará.</p><p>El ingreso se reconoce por el valor completo de la venta, 7.000,00, aunque el cobro sea posterior y menor: eso es el <strong>principio de devengo</strong> que estudiaste con la NIC 1.</p><div class="titulo">C&aacute;lculo desglosado</div><table class="calc-tabla"><tbody><tr><td>Base imponible</td><td class="v">7.000,00</td></tr><tr><td>IVA 15%</td><td class="v">1.050,00</td></tr><tr class="total"><td>Total facturado</td><td class="v">8.050,00</td></tr><tr><td>(&minus;) Retención de IR 2% que practica el cliente</td><td class="v">140,00</td></tr><tr><td>(&minus;) Retención de IVA 30% que practica el cliente</td><td class="v">315,00</td></tr><tr class="total"><td>Valor neto por cobrar</td><td class="v">7.595,00</td></tr></tbody></table></div>
+<div class="scroll-x"><table class="tabla-diario"><thead><tr><th>Fecha</th><th>C&oacute;digo</th><th>Detalle</th><th>Debe</th><th>Haber</th></tr></thead><tbody>
+<tr><td class="fec">09/07/2026</td><td class="cod">1.1.02.01</td><td class="det">Cuentas por cobrar clientes</td><td class="mon">7.595,00</td><td class="mon"></td></tr>
+<tr><td class="fec"></td><td class="cod">1.1.03.02</td><td class="det">Anticipo de IR retenido</td><td class="mon">140,00</td><td class="mon"></td></tr>
+<tr><td class="fec"></td><td class="cod">1.1.03.03</td><td class="det">IVA retenido en ventas</td><td class="mon">315,00</td><td class="mon"></td></tr>
+<tr><td class="fec"></td><td class="cod">4.1.01</td><td class="det acree">a) Ventas tarifa 15%</td><td class="mon"></td><td class="mon">7.000,00</td></tr>
+<tr><td class="fec"></td><td class="cod">2.1.02.01</td><td class="det acree">a) IVA en ventas</td><td class="mon"></td><td class="mon">1.050,00</td></tr>
+<tr class="suman"><td class="fec"></td><td class="cod"></td><td class="det">SUMAN</td><td class="mon">8.050,00</td><td class="mon">8.050,00</td></tr>
+</tbody></table></div>
+<div class="glosa">P/R Venta a crédito de menaje al Hotel Bahía Norte S.A., quien practica retenciones de IR 2% y de IVA 30% en calidad de agente de retención.</div>
+</div>
+<div class="asiento">
+<div class="asiento-head">Asiento N.&ordm; 6 &mdash; Pago del arriendo del local a persona natural no obligada a llevar contabilidad<span class="fecha">10/07/2026</span></div>
+<div class="calc-box"><p>El arrendamiento de un inmueble está gravado con IVA 15%. Las retenciones tienen aquí sus porcentajes más altos y conviene memorizar el par: <strong>10% de IR</strong>, porque el arrendamiento de bienes inmuebles está expresamente en ese tramo de la resolución; y <strong>100% de IVA</strong>, porque el arrendador es una <em>persona natural no obligada a llevar contabilidad</em>.</p><p>Retener el 100% del IVA significa que el arrendador no recibe ni un centavo del impuesto: la empresa se lo entrega directamente al SRI en su nombre. El arrendador declarará ese IVA y se descontará la retención sufrida.</p><div class="titulo">C&aacute;lculo desglosado</div><table class="calc-tabla"><tbody><tr><td>Base imponible (canon de julio)</td><td class="v">1.200,00</td></tr><tr><td>IVA 15%</td><td class="v">180,00</td></tr><tr class="total"><td>Total factura</td><td class="v">1.380,00</td></tr><tr><td>(&minus;) Retención de IR 10% (arrendamiento de inmuebles)</td><td class="v">120,00</td></tr><tr><td>(&minus;) Retención de IVA 100% (PN no obligada a llevar contabilidad)</td><td class="v">180,00</td></tr><tr class="total"><td>Valor neto pagado por transferencia</td><td class="v">1.080,00</td></tr></tbody></table></div>
+<div class="scroll-x"><table class="tabla-diario"><thead><tr><th>Fecha</th><th>C&oacute;digo</th><th>Detalle</th><th>Debe</th><th>Haber</th></tr></thead><tbody>
+<tr><td class="fec">10/07/2026</td><td class="cod">5.2.03</td><td class="det">Gasto arriendo</td><td class="mon">1.200,00</td><td class="mon"></td></tr>
+<tr><td class="fec"></td><td class="cod">1.1.03.01</td><td class="det">IVA en compras (crédito tributario)</td><td class="mon">180,00</td><td class="mon"></td></tr>
+<tr><td class="fec"></td><td class="cod">2.1.02.03</td><td class="det acree">a) Retención en la fuente de IR por pagar</td><td class="mon"></td><td class="mon">120,00</td></tr>
+<tr><td class="fec"></td><td class="cod">2.1.02.04</td><td class="det acree">a) Retención de IVA por pagar</td><td class="mon"></td><td class="mon">180,00</td></tr>
+<tr><td class="fec"></td><td class="cod">1.1.01.02</td><td class="det acree">a) Bancos</td><td class="mon"></td><td class="mon">1.080,00</td></tr>
+<tr class="suman"><td class="fec"></td><td class="cod"></td><td class="det">SUMAN</td><td class="mon">1.380,00</td><td class="mon">1.380,00</td></tr>
+</tbody></table></div>
+<div class="glosa">P/R Pago del arriendo del local comercial correspondiente a julio de 2026 a la Sra. Marlene Cedeño, con retenciones de IR 10% y de IVA 100%.</div>
+</div>
+<div class="asiento">
+<div class="asiento-head">Asiento N.&ordm; 7 &mdash; Servicio de asesoría contable y tributaria prestado por una sociedad<span class="fecha">13/07/2026</span></div>
+<div class="calc-box"><p>Es un <strong>servicio profesional</strong>, pero quien lo presta es una <strong>sociedad</strong>, no una persona natural. Esa distinción decide los dos porcentajes: <strong>5% de IR</strong> (servicios profesionales prestados por sociedades) y <strong>70% de IVA</strong> (servicios en general). Si el mismo trabajo lo hubiera hecho un contador con título actuando como persona natural, los porcentajes habrían sido 10% y 100%. Mismo servicio, distinto proveedor, distinta retención.</p><p>El desembolso se registra como gasto del periodo porque el servicio se consume en el mes; no genera un activo.</p><div class="titulo">C&aacute;lculo desglosado</div><table class="calc-tabla"><tbody><tr><td>Base imponible</td><td class="v">900,00</td></tr><tr><td>IVA 15%</td><td class="v">135,00</td></tr><tr class="total"><td>Total factura</td><td class="v">1.035,00</td></tr><tr><td>(&minus;) Retención de IR 5% (servicios profesionales de sociedades)</td><td class="v">45,00</td></tr><tr><td>(&minus;) Retención de IVA 70% sobre 135,00</td><td class="v">94,50</td></tr><tr class="total"><td>Valor neto pagado por transferencia</td><td class="v">895,50</td></tr></tbody></table></div>
+<div class="scroll-x"><table class="tabla-diario"><thead><tr><th>Fecha</th><th>C&oacute;digo</th><th>Detalle</th><th>Debe</th><th>Haber</th></tr></thead><tbody>
+<tr><td class="fec">13/07/2026</td><td class="cod">5.2.04</td><td class="det">Gasto servicios profesionales (sociedades)</td><td class="mon">900,00</td><td class="mon"></td></tr>
+<tr><td class="fec"></td><td class="cod">1.1.03.01</td><td class="det">IVA en compras (crédito tributario)</td><td class="mon">135,00</td><td class="mon"></td></tr>
+<tr><td class="fec"></td><td class="cod">2.1.02.03</td><td class="det acree">a) Retención en la fuente de IR por pagar</td><td class="mon"></td><td class="mon">45,00</td></tr>
+<tr><td class="fec"></td><td class="cod">2.1.02.04</td><td class="det acree">a) Retención de IVA por pagar</td><td class="mon"></td><td class="mon">94,50</td></tr>
+<tr><td class="fec"></td><td class="cod">1.1.01.02</td><td class="det acree">a) Bancos</td><td class="mon"></td><td class="mon">895,50</td></tr>
+<tr class="suman"><td class="fec"></td><td class="cod"></td><td class="det">SUMAN</td><td class="mon">1.035,00</td><td class="mon">1.035,00</td></tr>
+</tbody></table></div>
+<div class="glosa">P/R Pago de servicios de asesoría contable y tributaria a Consultores Fiscales del Litoral Cía. Ltda., con retenciones de IR 5% y de IVA 70%.</div>
+</div>
+<div class="asiento">
+<div class="asiento-head">Asiento N.&ordm; 8 &mdash; Honorarios a persona natural con título profesional<span class="fecha">15/07/2026</span></div>
+<div class="calc-box"><p>La abogada Andrea Suárez es una <strong>persona natural con título profesional</strong> y en su trabajo <em>prevalece el intelecto</em>. Por eso la retención de IR es del <strong>10%</strong>, y no del 3% que corresponde a los servicios de personas naturales donde prevalece la mano de obra. La retención de IVA es del <strong>100%</strong>, el porcentaje reservado a los servicios profesionales de personas naturales con título.</p><p>Compara este asiento con el anterior y con el del arriendo. Los tres son «servicios», y cada uno tiene una combinación distinta. La pregunta que resuelve el caso nunca es «¿es servicio?», sino <strong>«¿quién presta el servicio y de qué naturaleza es?»</strong>.</p><div class="titulo">C&aacute;lculo desglosado</div><table class="calc-tabla"><tbody><tr><td>Base imponible (honorarios)</td><td class="v">700,00</td></tr><tr><td>IVA 15%</td><td class="v">105,00</td></tr><tr class="total"><td>Total factura</td><td class="v">805,00</td></tr><tr><td>(&minus;) Retención de IR 10% (prevalece el intelecto)</td><td class="v">70,00</td></tr><tr><td>(&minus;) Retención de IVA 100% (PN con título profesional)</td><td class="v">105,00</td></tr><tr class="total"><td>Valor neto pagado por transferencia</td><td class="v">630,00</td></tr></tbody></table></div>
+<div class="scroll-x"><table class="tabla-diario"><thead><tr><th>Fecha</th><th>C&oacute;digo</th><th>Detalle</th><th>Debe</th><th>Haber</th></tr></thead><tbody>
+<tr><td class="fec">15/07/2026</td><td class="cod">5.2.05</td><td class="det">Gasto honorarios profesionales (personas naturales)</td><td class="mon">700,00</td><td class="mon"></td></tr>
+<tr><td class="fec"></td><td class="cod">1.1.03.01</td><td class="det">IVA en compras (crédito tributario)</td><td class="mon">105,00</td><td class="mon"></td></tr>
+<tr><td class="fec"></td><td class="cod">2.1.02.03</td><td class="det acree">a) Retención en la fuente de IR por pagar</td><td class="mon"></td><td class="mon">70,00</td></tr>
+<tr><td class="fec"></td><td class="cod">2.1.02.04</td><td class="det acree">a) Retención de IVA por pagar</td><td class="mon"></td><td class="mon">105,00</td></tr>
+<tr><td class="fec"></td><td class="cod">1.1.01.02</td><td class="det acree">a) Bancos</td><td class="mon"></td><td class="mon">630,00</td></tr>
+<tr class="suman"><td class="fec"></td><td class="cod"></td><td class="det">SUMAN</td><td class="mon">805,00</td><td class="mon">805,00</td></tr>
+</tbody></table></div>
+<div class="glosa">P/R Pago de honorarios profesionales a la Ab. Andrea Suárez por revisión de contratos de proveedores, con retenciones de IR 10% y de IVA 100%.</div>
+</div>
+<div class="asiento">
+<div class="asiento-head">Asiento N.&ordm; 9 &mdash; Flete terrestre de carga con tarifa 0% de IVA<span class="fecha">17/07/2026</span></div>
+<div class="calc-box"><p>El <strong>transporte terrestre de carga</strong> es uno de los servicios que el artículo 56 de la LRTI grava con tarifa <strong>0%</strong>. Por lo tanto la factura no lleva IVA y, otra vez, <strong>no hay retención de IVA que practicar</strong>.</p><p>La retención en la fuente de IR sí procede, al <strong>1%</strong>, porcentaje previsto para el transporte de carga. Fíjate en el contraste con el asiento 3: allí la tarifa 0% venía por el <em>bien</em> (art. 55) y aquí viene por el <em>servicio</em> (art. 56), pero la consecuencia contable es la misma: sin IVA facturado no existe retención de IVA.</p><div class="titulo">C&aacute;lculo desglosado</div><table class="calc-tabla"><tbody><tr><td>Base imponible (flete Durán — Guayaquil)</td><td class="v">450,00</td></tr><tr><td>IVA (tarifa 0%, art. 56 LRTI)</td><td class="v">0,00</td></tr><tr class="total"><td>Total factura</td><td class="v">450,00</td></tr><tr><td>(&minus;) Retención de IR 1% (transporte de carga)</td><td class="v">4,50</td></tr><tr><td>(&minus;) Retención de IVA: no aplica</td><td class="v">0,00</td></tr><tr class="total"><td>Valor neto pagado por transferencia</td><td class="v">445,50</td></tr></tbody></table></div>
+<div class="scroll-x"><table class="tabla-diario"><thead><tr><th>Fecha</th><th>C&oacute;digo</th><th>Detalle</th><th>Debe</th><th>Haber</th></tr></thead><tbody>
+<tr><td class="fec">17/07/2026</td><td class="cod">5.2.06</td><td class="det">Gasto transporte y fletes</td><td class="mon">450,00</td><td class="mon"></td></tr>
+<tr><td class="fec"></td><td class="cod">2.1.02.03</td><td class="det acree">a) Retención en la fuente de IR por pagar</td><td class="mon"></td><td class="mon">4,50</td></tr>
+<tr><td class="fec"></td><td class="cod">1.1.01.02</td><td class="det acree">a) Bancos</td><td class="mon"></td><td class="mon">445,50</td></tr>
+<tr class="suman"><td class="fec"></td><td class="cod"></td><td class="det">SUMAN</td><td class="mon">450,00</td><td class="mon">450,00</td></tr>
+</tbody></table></div>
+<div class="glosa">P/R Pago de flete terrestre de carga a Transportes Vía Costa S.A. por traslado de mercadería, con retención de IR 1%.</div>
+</div>
+<div class="asiento">
+<div class="asiento-head">Asiento N.&ordm; 10 &mdash; Pago al SRI de las obligaciones tributarias de junio de 2026<span class="fecha">18/07/2026</span></div>
+<div class="calc-box"><p>Este asiento demuestra que las cuentas tributarias no son adornos: son deudas que se pagan. Los tres saldos que venían del asiento de apertura se cancelan y quedan en cero.</p><p>La fecha no es arbitraria. El SRI asigna a cada contribuyente una fecha máxima de declaración según el <strong>noveno dígito de su RUC</strong>. Comercial El Astillero tiene noveno dígito <strong>5</strong>, al que corresponde el día <strong>18</strong> del mes siguiente al periodo declarado. Por eso el IVA y las retenciones de junio se declaran y pagan el 18 de julio, y —anticipando el cierre— los de julio se declararán y pagarán el <strong>18 de agosto de 2026</strong>.</p><div class="titulo">C&aacute;lculo desglosado</div><table class="calc-tabla"><tbody><tr><td>IVA por pagar de junio</td><td class="v">620,00</td></tr><tr><td>Retención en la fuente de IR por pagar de junio</td><td class="v">180,00</td></tr><tr><td>Retención de IVA por pagar de junio</td><td class="v">140,00</td></tr><tr class="total"><td>Total pagado al SRI</td><td class="v">940,00</td></tr></tbody></table></div>
+<div class="scroll-x"><table class="tabla-diario"><thead><tr><th>Fecha</th><th>C&oacute;digo</th><th>Detalle</th><th>Debe</th><th>Haber</th></tr></thead><tbody>
+<tr><td class="fec">18/07/2026</td><td class="cod">2.1.02.02</td><td class="det">IVA por pagar</td><td class="mon">620,00</td><td class="mon"></td></tr>
+<tr><td class="fec"></td><td class="cod">2.1.02.03</td><td class="det">Retención en la fuente de IR por pagar</td><td class="mon">180,00</td><td class="mon"></td></tr>
+<tr><td class="fec"></td><td class="cod">2.1.02.04</td><td class="det">Retención de IVA por pagar</td><td class="mon">140,00</td><td class="mon"></td></tr>
+<tr><td class="fec"></td><td class="cod">1.1.01.02</td><td class="det acree">a) Bancos</td><td class="mon"></td><td class="mon">940,00</td></tr>
+<tr class="suman"><td class="fec"></td><td class="cod"></td><td class="det">SUMAN</td><td class="mon">940,00</td><td class="mon">940,00</td></tr>
+</tbody></table></div>
+<div class="glosa">P/R Pago de las obligaciones tributarias del mes de junio de 2026 (formularios 104 y 103), noveno dígito del RUC 5.</div>
+</div>
+<div class="asiento">
+<div class="asiento-head">Asiento N.&ordm; 11 &mdash; Cobro parcial al cliente Hotel Bahía Norte S.A.<span class="fecha">20/07/2026</span></div>
+<div class="calc-box"><p>Un <strong>cobro parcial</strong> es la recepción de una parte de lo adeudado. No modifica el ingreso —ese ya se reconoció el 9 de julio— ni genera IVA nuevo: solo cambia un activo por otro. Disminuye el derecho de cobro y aumenta el dinero en el banco.</p><p>De los 7.595,00 netos por cobrar, el cliente abona 4.000,00 y queda debiendo 3.595,00. Ese saldo, sumado a los 4.500,00 que venían de junio, forma el saldo final de Cuentas por cobrar clientes.</p><div class="titulo">C&aacute;lculo desglosado</div><table class="calc-tabla"><tbody><tr><td>Saldo neto por cobrar de la factura del 09/07</td><td class="v">7.595,00</td></tr><tr><td>(&minus;) Abono recibido por transferencia</td><td class="v">4.000,00</td></tr><tr class="total"><td>Saldo pendiente de esa factura</td><td class="v">3.595,00</td></tr></tbody></table></div>
+<div class="scroll-x"><table class="tabla-diario"><thead><tr><th>Fecha</th><th>C&oacute;digo</th><th>Detalle</th><th>Debe</th><th>Haber</th></tr></thead><tbody>
+<tr><td class="fec">20/07/2026</td><td class="cod">1.1.01.02</td><td class="det">Bancos</td><td class="mon">4.000,00</td><td class="mon"></td></tr>
+<tr><td class="fec"></td><td class="cod">1.1.02.01</td><td class="det acree">a) Cuentas por cobrar clientes</td><td class="mon"></td><td class="mon">4.000,00</td></tr>
+<tr class="suman"><td class="fec"></td><td class="cod"></td><td class="det">SUMAN</td><td class="mon">4.000,00</td><td class="mon">4.000,00</td></tr>
+</tbody></table></div>
+<div class="glosa">P/R Cobro parcial al Hotel Bahía Norte S.A. mediante acreditación en cuenta corriente.</div>
+</div>
+<div class="asiento">
+<div class="asiento-head">Asiento N.&ordm; 12 &mdash; Pago parcial al proveedor Distribuidora Menaje del Pacífico S.A.<span class="fecha">22/07/2026</span></div>
+<div class="calc-box"><p>Es la operación espejo de la anterior. Un <strong>pago parcial</strong> disminuye un pasivo y disminuye un activo. No hay IVA ni retenciones en este momento: ambos se causaron el 2 de julio, cuando se recibió la factura, no cuando se paga. Retener dos veces sobre la misma factura sería un error grave.</p><p>De los 8.680,00 que se debían, se abonan 5.000,00 y quedan 3.680,00 pendientes. Sumado a los 7.000,00 de junio, da el saldo final de proveedores.</p><div class="titulo">C&aacute;lculo desglosado</div><table class="calc-tabla"><tbody><tr><td>Saldo adeudado de la factura del 02/07</td><td class="v">8.680,00</td></tr><tr><td>(&minus;) Abono efectuado por transferencia</td><td class="v">5.000,00</td></tr><tr class="total"><td>Saldo pendiente de esa factura</td><td class="v">3.680,00</td></tr></tbody></table></div>
+<div class="scroll-x"><table class="tabla-diario"><thead><tr><th>Fecha</th><th>C&oacute;digo</th><th>Detalle</th><th>Debe</th><th>Haber</th></tr></thead><tbody>
+<tr><td class="fec">22/07/2026</td><td class="cod">2.1.01</td><td class="det">Cuentas por pagar proveedores</td><td class="mon">5.000,00</td><td class="mon"></td></tr>
+<tr><td class="fec"></td><td class="cod">1.1.01.02</td><td class="det acree">a) Bancos</td><td class="mon"></td><td class="mon">5.000,00</td></tr>
+<tr class="suman"><td class="fec"></td><td class="cod"></td><td class="det">SUMAN</td><td class="mon">5.000,00</td><td class="mon">5.000,00</td></tr>
+</tbody></table></div>
+<div class="glosa">P/R Pago parcial a Distribuidora Menaje del Pacífico S.A. mediante transferencia bancaria.</div>
+</div>
+<div class="asiento">
+<div class="asiento-head">Asiento N.&ordm; 13 &mdash; Venta de contado de abarrotes tarifa 0%, cobrada por transferencia<span class="fecha">24/07/2026</span></div>
+<div class="calc-box"><p>Venta de arroz y granos a otro negocio. Tres razones para que este asiento sea tan corto: la mercadería tiene tarifa <strong>0%</strong>, de modo que no hay IVA en ventas; el cliente es un <em>RIMPE Emprendedor</em> y <strong>no está calificado como agente de retención</strong>, por lo que no practica ninguna retención; y el cobro es inmediato, así que no nace una cuenta por cobrar.</p><p>Que el comprador sea una empresa y no un consumidor final no cambia nada por sí solo. Lo que decide si hay retención es que el cliente <em>esté calificado</em> como agente de retención, no su tamaño ni su forma jurídica.</p><div class="titulo">C&aacute;lculo desglosado</div><table class="calc-tabla"><tbody><tr><td>Base imponible (abarrotes en estado natural)</td><td class="v">3.400,00</td></tr><tr><td>IVA (tarifa 0%)</td><td class="v">0,00</td></tr><tr><td>Retenciones practicadas por el cliente</td><td class="v">0,00</td></tr><tr class="total"><td>Total cobrado por transferencia</td><td class="v">3.400,00</td></tr></tbody></table></div>
+<div class="scroll-x"><table class="tabla-diario"><thead><tr><th>Fecha</th><th>C&oacute;digo</th><th>Detalle</th><th>Debe</th><th>Haber</th></tr></thead><tbody>
+<tr><td class="fec">24/07/2026</td><td class="cod">1.1.01.02</td><td class="det">Bancos</td><td class="mon">3.400,00</td><td class="mon"></td></tr>
+<tr><td class="fec"></td><td class="cod">4.1.02</td><td class="det acree">a) Ventas tarifa 0%</td><td class="mon"></td><td class="mon">3.400,00</td></tr>
+<tr class="suman"><td class="fec"></td><td class="cod"></td><td class="det">SUMAN</td><td class="mon">3.400,00</td><td class="mon">3.400,00</td></tr>
+</tbody></table></div>
+<div class="glosa">P/R Venta de contado de abarrotes en estado natural a Panadería Su Pan, cobrada mediante transferencia bancaria.</div>
+</div>
+<div class="asiento">
+<div class="asiento-head">Asiento N.&ordm; 14 &mdash; Rol de pagos del personal administrativo<span class="fecha">30/07/2026</span></div>
+<div class="calc-box"><p>La remuneración genera tres efectos simultáneos y conviene separarlos con cuidado.</p><ol><li>El <strong>gasto sueldos</strong> es el valor total ganado por los trabajadores: 2.400,00. Ese es el costo real para la empresa por el trabajo recibido.</li><li>El <strong>aporte personal al IESS</strong>, 9,45%, <em>no es un gasto de la empresa</em>: lo paga el trabajador y la empresa solo lo descuenta de su sueldo para entregarlo al IESS. Por eso disminuye lo que se le paga al empleado y se convierte en un pasivo.</li><li>El <strong>aporte patronal al IESS</strong>, 11,15%, sí es un gasto adicional de la empresa. No se descuenta al trabajador: se suma al costo laboral.</li></ol><p>Este asiento reconoce la obligación (devengo); el pago del líquido ocurre en el asiento 15 y el pago al IESS, dentro de los primeros quince días de agosto.</p><p>Los sueldos no llevan IVA porque la relación laboral no es una prestación de servicios gravada, y tampoco se les practica retención en la fuente en este caso, ya que las remuneraciones individuales están por debajo de la fracción básica desgravada del Impuesto a la Renta.</p><div class="titulo">C&aacute;lculo desglosado</div><table class="calc-tabla"><tbody><tr><td>Sueldos ganados del personal administrativo</td><td class="v">2.400,00</td></tr><tr><td>(&minus;) Aporte personal al IESS 9,45% sobre 2.400,00</td><td class="v">226,80</td></tr><tr class="total"><td>Líquido a recibir por los trabajadores</td><td class="v">2.173,20</td></tr><tr><td>Aporte patronal al IESS 11,15% sobre 2.400,00 (gasto de la empresa)</td><td class="v">267,60</td></tr><tr class="total"><td>Total a entregar al IESS (personal 226,80 + patronal 267,60)</td><td class="v">494,40</td></tr></tbody></table></div>
+<div class="scroll-x"><table class="tabla-diario"><thead><tr><th>Fecha</th><th>C&oacute;digo</th><th>Detalle</th><th>Debe</th><th>Haber</th></tr></thead><tbody>
+<tr><td class="fec">30/07/2026</td><td class="cod">5.2.01</td><td class="det">Gasto sueldos</td><td class="mon">2.400,00</td><td class="mon"></td></tr>
+<tr><td class="fec"></td><td class="cod">5.2.02</td><td class="det">Gasto aporte patronal IESS</td><td class="mon">267,60</td><td class="mon"></td></tr>
+<tr><td class="fec"></td><td class="cod">2.1.03.02</td><td class="det acree">a) IESS por pagar</td><td class="mon"></td><td class="mon">494,40</td></tr>
+<tr><td class="fec"></td><td class="cod">2.1.03.01</td><td class="det acree">a) Sueldos por pagar</td><td class="mon"></td><td class="mon">2.173,20</td></tr>
+<tr class="suman"><td class="fec"></td><td class="cod"></td><td class="det">SUMAN</td><td class="mon">2.667,60</td><td class="mon">2.667,60</td></tr>
+</tbody></table></div>
+<div class="glosa">P/R Rol de pagos del personal administrativo correspondiente a julio de 2026, con aportes personal y patronal al IESS.</div>
+</div>
+<div class="asiento">
+<div class="asiento-head">Asiento N.&ordm; 15 &mdash; Pago de los sueldos líquidos del mes<span class="fecha">31/07/2026</span></div>
+<div class="calc-box"><p>Se cancela únicamente el <strong>líquido a recibir</strong>: lo que efectivamente llega a la cuenta de cada trabajador. El aporte al IESS —tanto el personal descontado como el patronal— permanece como pasivo hasta que se pague a la institución en agosto.</p><div class="titulo">C&aacute;lculo desglosado</div><table class="calc-tabla"><tbody><tr><td>Sueldos por pagar reconocidos en el rol</td><td class="v">2.173,20</td></tr><tr class="total"><td>Total transferido a los trabajadores</td><td class="v">2.173,20</td></tr></tbody></table></div>
+<div class="scroll-x"><table class="tabla-diario"><thead><tr><th>Fecha</th><th>C&oacute;digo</th><th>Detalle</th><th>Debe</th><th>Haber</th></tr></thead><tbody>
+<tr><td class="fec">31/07/2026</td><td class="cod">2.1.03.01</td><td class="det">Sueldos por pagar</td><td class="mon">2.173,20</td><td class="mon"></td></tr>
+<tr><td class="fec"></td><td class="cod">1.1.01.02</td><td class="det acree">a) Bancos</td><td class="mon"></td><td class="mon">2.173,20</td></tr>
+<tr class="suman"><td class="fec"></td><td class="cod"></td><td class="det">SUMAN</td><td class="mon">2.173,20</td><td class="mon">2.173,20</td></tr>
+</tbody></table></div>
+<div class="glosa">P/R Pago de los sueldos líquidos de julio de 2026 mediante transferencia bancaria.</div>
+</div>
+<div class="asiento">
+<div class="asiento-head">Asiento N.&ordm; 16 &mdash; Liquidación del IVA del mes de julio<span class="fecha">31/07/2026</span></div>
+<div class="calc-box"><p>Al cierre del mes, las cuentas transitorias del IVA se enfrentan entre sí para determinar cuánto se debe al Estado. La lógica es siempre la misma:</p><p style="text-align:center"><strong>IVA en ventas &minus; IVA en compras &minus; IVA retenido en ventas = IVA por pagar</strong></p><p>El <em>IVA en ventas</em> es un pasivo acumulado con saldo acreedor: para cancelarlo se debita. El <em>IVA en compras</em> es un activo con saldo deudor: para cancelarlo se acredita. El <em>IVA retenido en ventas</em> también es un activo y también se acredita, porque ese dinero ya fue entregado al SRI por nuestros clientes en nombre de la empresa: sería injusto pagarlo dos veces.</p><p>El resultado es un saldo acreedor de 75,00: la deuda neta con el fisco por el IVA de julio. Si el resultado hubiera sido deudor, no habría nada que pagar y ese valor se habría arrastrado como crédito tributario al mes siguiente.</p><p>Repara en cuánto redujo la retención sufrida la obligación final: sin ella, la empresa habría pagado 390,00. Las retenciones no reducen el impuesto, lo <strong>anticipan</strong>; lo que cambian es el momento en que sale el dinero.</p><div class="titulo">C&aacute;lculo desglosado</div><table class="calc-tabla"><tbody><tr><td>IVA en ventas del mes (960,00 + 1.050,00)</td><td class="v">2.010,00</td></tr><tr><td>(&minus;) IVA en compras del mes (1.200,00 + 180,00 + 135,00 + 105,00)</td><td class="v">1.620,00</td></tr><tr><td>(&minus;) IVA retenido en ventas por el cliente agente de retención</td><td class="v">315,00</td></tr><tr class="total"><td>IVA por pagar de julio de 2026</td><td class="v">75,00</td></tr></tbody></table></div>
+<div class="scroll-x"><table class="tabla-diario"><thead><tr><th>Fecha</th><th>C&oacute;digo</th><th>Detalle</th><th>Debe</th><th>Haber</th></tr></thead><tbody>
+<tr><td class="fec">31/07/2026</td><td class="cod">2.1.02.01</td><td class="det">IVA en ventas</td><td class="mon">2.010,00</td><td class="mon"></td></tr>
+<tr><td class="fec"></td><td class="cod">1.1.03.01</td><td class="det acree">a) IVA en compras (crédito tributario)</td><td class="mon"></td><td class="mon">1.620,00</td></tr>
+<tr><td class="fec"></td><td class="cod">1.1.03.03</td><td class="det acree">a) IVA retenido en ventas</td><td class="mon"></td><td class="mon">315,00</td></tr>
+<tr><td class="fec"></td><td class="cod">2.1.02.02</td><td class="det acree">a) IVA por pagar</td><td class="mon"></td><td class="mon">75,00</td></tr>
+<tr class="suman"><td class="fec"></td><td class="cod"></td><td class="det">SUMAN</td><td class="mon">2.010,00</td><td class="mon">2.010,00</td></tr>
+</tbody></table></div>
+<div class="glosa">P/R Liquidación del IVA correspondiente a julio de 2026, a declararse en el formulario 104 hasta el 18 de agosto de 2026.</div>
+</div>
+<h3>Sumas totales del Libro Diario</h3>
+<p>La suma de todos los valores anotados en el Debe durante el mes debe ser exactamente igual a la suma de todos los valores anotados en el Haber. Si no coinciden, hay al menos un asiento mal registrado y no tiene sentido continuar con la mayorizaci&oacute;n.</p>
+<table class="tabla"><tbody><tr><td><strong>Total movimientos del Debe</strong></td><td class="num">101.910,80</td></tr><tr><td><strong>Total movimientos del Haber</strong></td><td class="num">101.910,80</td></tr><tr style="background:#eaf3fb;font-weight:700"><td>Diferencia</td><td class="num">0,00</td></tr></tbody></table>
+<div class="continuidad"><p><strong>Se&ntilde;al de continuidad.</strong> Ninguno de estos 16 asientos registra el <em>costo de la mercader&iacute;a vendida</em>, ni la <em>depreciaci&oacute;n</em> de los muebles y del equipo de computaci&oacute;n, ni el <em>gasto por el arriendo devengado y no facturado</em>. No es un olvido: esos son <strong>asientos de ajuste</strong> y se estudian en la <strong>Unidad 3</strong>, junto con la NIC 2 Inventarios. Volveremos a este mismo Libro Diario para completarlo.</p></div>
+</div>
+<!-- ================= PESTANA: MAYORIZACION ================= -->
+<div id="mayor" class="panel">
+<h2>Mayorizaci&oacute;n &mdash; julio 2026</h2>
+<div class="def-box"><p><span class="term">Mayorizaci&oacute;n:</span> tercer paso del proceso contable. Consiste en tomar cada valor anotado en el Libro Diario y trasladarlo a la cuenta que le corresponde, de manera que todos los movimientos de una misma cuenta queden reunidos en un solo lugar. El Diario est&aacute; ordenado por <em>fecha</em>; el Mayor est&aacute; ordenado por <em>cuenta</em>. Son los mismos datos vistos desde dos &aacute;ngulos distintos.</p><p><span class="term">Libro Mayor:</span> conjunto de todas las cuentas mayorizadas. Es obligatorio y responde la pregunta que el Diario no puede responder de un vistazo: <em>&iquest;cu&aacute;nto tengo en el banco hoy?, &iquest;cu&aacute;nto le debo al SRI?</em></p><p><span class="term">Saldo:</span> diferencia entre el total del Debe y el total del Haber de una cuenta. Si el Debe es mayor, el saldo es <strong>deudor</strong>; si el Haber es mayor, es <strong>acreedor</strong>. Una cuenta cuyos dos lados coinciden queda <strong>saldada</strong> (en cero).</p></div>
+<p>A continuaci&oacute;n encontrar&aacute;s la mayorizaci&oacute;n del mes presentada en <strong>tres formatos distintos</strong>. No son tres ejercicios: son tres maneras de mostrar exactamente la misma informaci&oacute;n, y cada una sirve para algo diferente. Recorre los tres en orden.</p>
+<h3>Formato (a) &mdash; Cuentas T cl&aacute;sicas</h3>
+<p><strong>&iquest;Para qu&eacute; sirve?</strong> La cuenta T es la herramienta de <em>aprendizaje y de borrador</em>. Su forma imita la letra T: a la izquierda el Debe, a la derecha el Haber, y el nombre de la cuenta sobre la l&iacute;nea horizontal. No lleva fechas ni detalles, solo cifras, y por eso permite ver de un golpe la naturaleza de la cuenta y calcular el saldo mentalmente. Es el formato que us&aacute;s en el pizarr&oacute;n, en el examen y cuando quer&eacute;s comprobar r&aacute;pido si un asiento tiene sentido. No es el formato que se presenta oficialmente.</p>
+<div class="nota-box">Lee cada cuenta T preguntando lo mismo: &iquest;el saldo qued&oacute; del lado que corresponde a su naturaleza? Un activo con saldo acreedor o un pasivo con saldo deudor son se&ntilde;ales de error &mdash; salvo casos justificados, como una cuenta bancaria en sobregiro.</div>
+<div class="t-grid">
+<div class="cuenta-t"><div class="t-nombre">Caja<span>1.1.01.01 &middot; naturaleza deudora</span></div><table class="t-tabla"><thead><tr><th class="izq">Debe</th><th>Haber</th></tr></thead><tbody><tr><td class="izq">2.000,00</td><td></td></tr><tr><td class="izq">9.860,00</td><td></td></tr><tr class="t-tot"><td class="izq">11.860,00</td><td>0,00</td></tr><tr class="t-saldo"><td class="izq">11.860,00</td><td>Saldo deudor</td></tr></tbody></table></div>
+<div class="cuenta-t"><div class="t-nombre">Bancos<span>1.1.01.02 &middot; naturaleza deudora</span></div><table class="t-tabla"><thead><tr><th class="izq">Debe</th><th>Haber</th></tr></thead><tbody><tr><td class="izq">18.940,00</td><td>4.912,50</td></tr><tr><td class="izq">4.000,00</td><td>1.080,00</td></tr><tr><td class="izq">3.400,00</td><td>895,50</td></tr><tr><td class="izq"></td><td>630,00</td></tr><tr><td class="izq"></td><td>445,50</td></tr><tr><td class="izq"></td><td>940,00</td></tr><tr><td class="izq"></td><td>5.000,00</td></tr><tr><td class="izq"></td><td>2.173,20</td></tr><tr class="t-tot"><td class="izq">26.340,00</td><td>16.076,70</td></tr><tr class="t-saldo"><td class="izq">10.263,30</td><td>Saldo deudor</td></tr></tbody></table></div>
+<div class="cuenta-t"><div class="t-nombre">Cuentas por cobrar clientes<span>1.1.02.01 &middot; naturaleza deudora</span></div><table class="t-tabla"><thead><tr><th class="izq">Debe</th><th>Haber</th></tr></thead><tbody><tr><td class="izq">4.500,00</td><td>4.000,00</td></tr><tr><td class="izq">7.595,00</td><td></td></tr><tr class="t-tot"><td class="izq">12.095,00</td><td>4.000,00</td></tr><tr class="t-saldo"><td class="izq">8.095,00</td><td>Saldo deudor</td></tr></tbody></table></div>
+<div class="cuenta-t"><div class="t-nombre">IVA en compras (crédito tributario)<span>1.1.03.01 &middot; naturaleza deudora</span></div><table class="t-tabla"><thead><tr><th class="izq">Debe</th><th>Haber</th></tr></thead><tbody><tr><td class="izq">1.200,00</td><td>1.620,00</td></tr><tr><td class="izq">180,00</td><td></td></tr><tr><td class="izq">135,00</td><td></td></tr><tr><td class="izq">105,00</td><td></td></tr><tr class="t-tot"><td class="izq">1.620,00</td><td>1.620,00</td></tr><tr class="t-saldo"><td class="izq">&mdash;</td><td>Cuenta saldada</td></tr></tbody></table></div>
+<div class="cuenta-t"><div class="t-nombre">Anticipo de IR retenido<span>1.1.03.02 &middot; naturaleza deudora</span></div><table class="t-tabla"><thead><tr><th class="izq">Debe</th><th>Haber</th></tr></thead><tbody><tr><td class="izq">140,00</td><td></td></tr><tr class="t-tot"><td class="izq">140,00</td><td>0,00</td></tr><tr class="t-saldo"><td class="izq">140,00</td><td>Saldo deudor</td></tr></tbody></table></div>
+<div class="cuenta-t"><div class="t-nombre">IVA retenido en ventas<span>1.1.03.03 &middot; naturaleza deudora</span></div><table class="t-tabla"><thead><tr><th class="izq">Debe</th><th>Haber</th></tr></thead><tbody><tr><td class="izq">315,00</td><td>315,00</td></tr><tr class="t-tot"><td class="izq">315,00</td><td>315,00</td></tr><tr class="t-saldo"><td class="izq">&mdash;</td><td>Cuenta saldada</td></tr></tbody></table></div>
+<div class="cuenta-t"><div class="t-nombre">Inventario de mercaderías<span>1.1.04.01 &middot; naturaleza deudora</span></div><table class="t-tabla"><thead><tr><th class="izq">Debe</th><th>Haber</th></tr></thead><tbody><tr><td class="izq">12.000,00</td><td></td></tr><tr class="t-tot"><td class="izq">12.000,00</td><td>0,00</td></tr><tr class="t-saldo"><td class="izq">12.000,00</td><td>Saldo deudor</td></tr></tbody></table></div>
+<div class="cuenta-t"><div class="t-nombre">Muebles y enseres<span>1.2.01 &middot; naturaleza deudora</span></div><table class="t-tabla"><thead><tr><th class="izq">Debe</th><th>Haber</th></tr></thead><tbody><tr><td class="izq">6.000,00</td><td></td></tr><tr class="t-tot"><td class="izq">6.000,00</td><td>0,00</td></tr><tr class="t-saldo"><td class="izq">6.000,00</td><td>Saldo deudor</td></tr></tbody></table></div>
+<div class="cuenta-t"><div class="t-nombre">Equipo de computación<span>1.2.02 &middot; naturaleza deudora</span></div><table class="t-tabla"><thead><tr><th class="izq">Debe</th><th>Haber</th></tr></thead><tbody><tr><td class="izq">2.500,00</td><td></td></tr><tr class="t-tot"><td class="izq">2.500,00</td><td>0,00</td></tr><tr class="t-saldo"><td class="izq">2.500,00</td><td>Saldo deudor</td></tr></tbody></table></div>
+<div class="cuenta-t"><div class="t-nombre">Cuentas por pagar proveedores<span>2.1.01 &middot; naturaleza acreedora</span></div><table class="t-tabla"><thead><tr><th class="izq">Debe</th><th>Haber</th></tr></thead><tbody><tr><td class="izq">5.000,00</td><td>7.000,00</td></tr><tr><td class="izq"></td><td>8.680,00</td></tr><tr class="t-tot"><td class="izq">5.000,00</td><td>15.680,00</td></tr><tr class="t-saldo"><td class="izq">Saldo acreedor</td><td>10.680,00</td></tr></tbody></table></div>
+<div class="cuenta-t"><div class="t-nombre">IVA en ventas<span>2.1.02.01 &middot; naturaleza acreedora</span></div><table class="t-tabla"><thead><tr><th class="izq">Debe</th><th>Haber</th></tr></thead><tbody><tr><td class="izq">2.010,00</td><td>960,00</td></tr><tr><td class="izq"></td><td>1.050,00</td></tr><tr class="t-tot"><td class="izq">2.010,00</td><td>2.010,00</td></tr><tr class="t-saldo"><td class="izq">&mdash;</td><td>Cuenta saldada</td></tr></tbody></table></div>
+<div class="cuenta-t"><div class="t-nombre">IVA por pagar<span>2.1.02.02 &middot; naturaleza acreedora</span></div><table class="t-tabla"><thead><tr><th class="izq">Debe</th><th>Haber</th></tr></thead><tbody><tr><td class="izq">620,00</td><td>620,00</td></tr><tr><td class="izq"></td><td>75,00</td></tr><tr class="t-tot"><td class="izq">620,00</td><td>695,00</td></tr><tr class="t-saldo"><td class="izq">Saldo acreedor</td><td>75,00</td></tr></tbody></table></div>
+<div class="cuenta-t"><div class="t-nombre">Retención en la fuente de IR por pagar<span>2.1.02.03 &middot; naturaleza acreedora</span></div><table class="t-tabla"><thead><tr><th class="izq">Debe</th><th>Haber</th></tr></thead><tbody><tr><td class="izq">180,00</td><td>180,00</td></tr><tr><td class="izq"></td><td>160,00</td></tr><tr><td class="izq"></td><td>87,50</td></tr><tr><td class="izq"></td><td>120,00</td></tr><tr><td class="izq"></td><td>45,00</td></tr><tr><td class="izq"></td><td>70,00</td></tr><tr><td class="izq"></td><td>4,50</td></tr><tr class="t-tot"><td class="izq">180,00</td><td>667,00</td></tr><tr class="t-saldo"><td class="izq">Saldo acreedor</td><td>487,00</td></tr></tbody></table></div>
+<div class="cuenta-t"><div class="t-nombre">Retención de IVA por pagar<span>2.1.02.04 &middot; naturaleza acreedora</span></div><table class="t-tabla"><thead><tr><th class="izq">Debe</th><th>Haber</th></tr></thead><tbody><tr><td class="izq">140,00</td><td>140,00</td></tr><tr><td class="izq"></td><td>360,00</td></tr><tr><td class="izq"></td><td>180,00</td></tr><tr><td class="izq"></td><td>94,50</td></tr><tr><td class="izq"></td><td>105,00</td></tr><tr class="t-tot"><td class="izq">140,00</td><td>879,50</td></tr><tr class="t-saldo"><td class="izq">Saldo acreedor</td><td>739,50</td></tr></tbody></table></div>
+<div class="cuenta-t"><div class="t-nombre">Sueldos por pagar<span>2.1.03.01 &middot; naturaleza acreedora</span></div><table class="t-tabla"><thead><tr><th class="izq">Debe</th><th>Haber</th></tr></thead><tbody><tr><td class="izq">2.173,20</td><td>2.173,20</td></tr><tr class="t-tot"><td class="izq">2.173,20</td><td>2.173,20</td></tr><tr class="t-saldo"><td class="izq">&mdash;</td><td>Cuenta saldada</td></tr></tbody></table></div>
+<div class="cuenta-t"><div class="t-nombre">IESS por pagar<span>2.1.03.02 &middot; naturaleza acreedora</span></div><table class="t-tabla"><thead><tr><th class="izq">Debe</th><th>Haber</th></tr></thead><tbody><tr><td class="izq"></td><td>494,40</td></tr><tr class="t-tot"><td class="izq">0,00</td><td>494,40</td></tr><tr class="t-saldo"><td class="izq">Saldo acreedor</td><td>494,40</td></tr></tbody></table></div>
+<div class="cuenta-t"><div class="t-nombre">Capital social<span>3.1.01 &middot; naturaleza acreedora</span></div><table class="t-tabla"><thead><tr><th class="izq">Debe</th><th>Haber</th></tr></thead><tbody><tr><td class="izq"></td><td>35.000,00</td></tr><tr class="t-tot"><td class="izq">0,00</td><td>35.000,00</td></tr><tr class="t-saldo"><td class="izq">Saldo acreedor</td><td>35.000,00</td></tr></tbody></table></div>
+<div class="cuenta-t"><div class="t-nombre">Resultados acumulados<span>3.2.01 &middot; naturaleza acreedora</span></div><table class="t-tabla"><thead><tr><th class="izq">Debe</th><th>Haber</th></tr></thead><tbody><tr><td class="izq"></td><td>3.000,00</td></tr><tr class="t-tot"><td class="izq">0,00</td><td>3.000,00</td></tr><tr class="t-saldo"><td class="izq">Saldo acreedor</td><td>3.000,00</td></tr></tbody></table></div>
+<div class="cuenta-t"><div class="t-nombre">Ventas tarifa 15%<span>4.1.01 &middot; naturaleza acreedora</span></div><table class="t-tabla"><thead><tr><th class="izq">Debe</th><th>Haber</th></tr></thead><tbody><tr><td class="izq"></td><td>6.400,00</td></tr><tr><td class="izq"></td><td>7.000,00</td></tr><tr class="t-tot"><td class="izq">0,00</td><td>13.400,00</td></tr><tr class="t-saldo"><td class="izq">Saldo acreedor</td><td>13.400,00</td></tr></tbody></table></div>
+<div class="cuenta-t"><div class="t-nombre">Ventas tarifa 0%<span>4.1.02 &middot; naturaleza acreedora</span></div><table class="t-tabla"><thead><tr><th class="izq">Debe</th><th>Haber</th></tr></thead><tbody><tr><td class="izq"></td><td>2.500,00</td></tr><tr><td class="izq"></td><td>3.400,00</td></tr><tr class="t-tot"><td class="izq">0,00</td><td>5.900,00</td></tr><tr class="t-saldo"><td class="izq">Saldo acreedor</td><td>5.900,00</td></tr></tbody></table></div>
+<div class="cuenta-t"><div class="t-nombre">Compras de mercaderías tarifa 0%<span>5.1.01 &middot; naturaleza deudora</span></div><table class="t-tabla"><thead><tr><th class="izq">Debe</th><th>Haber</th></tr></thead><tbody><tr><td class="izq">5.000,00</td><td></td></tr><tr class="t-tot"><td class="izq">5.000,00</td><td>0,00</td></tr><tr class="t-saldo"><td class="izq">5.000,00</td><td>Saldo deudor</td></tr></tbody></table></div>
+<div class="cuenta-t"><div class="t-nombre">Compras de mercaderías tarifa 15%<span>5.1.02 &middot; naturaleza deudora</span></div><table class="t-tabla"><thead><tr><th class="izq">Debe</th><th>Haber</th></tr></thead><tbody><tr><td class="izq">8.000,00</td><td></td></tr><tr class="t-tot"><td class="izq">8.000,00</td><td>0,00</td></tr><tr class="t-saldo"><td class="izq">8.000,00</td><td>Saldo deudor</td></tr></tbody></table></div>
+<div class="cuenta-t"><div class="t-nombre">Gasto sueldos<span>5.2.01 &middot; naturaleza deudora</span></div><table class="t-tabla"><thead><tr><th class="izq">Debe</th><th>Haber</th></tr></thead><tbody><tr><td class="izq">2.400,00</td><td></td></tr><tr class="t-tot"><td class="izq">2.400,00</td><td>0,00</td></tr><tr class="t-saldo"><td class="izq">2.400,00</td><td>Saldo deudor</td></tr></tbody></table></div>
+<div class="cuenta-t"><div class="t-nombre">Gasto aporte patronal IESS<span>5.2.02 &middot; naturaleza deudora</span></div><table class="t-tabla"><thead><tr><th class="izq">Debe</th><th>Haber</th></tr></thead><tbody><tr><td class="izq">267,60</td><td></td></tr><tr class="t-tot"><td class="izq">267,60</td><td>0,00</td></tr><tr class="t-saldo"><td class="izq">267,60</td><td>Saldo deudor</td></tr></tbody></table></div>
+<div class="cuenta-t"><div class="t-nombre">Gasto arriendo<span>5.2.03 &middot; naturaleza deudora</span></div><table class="t-tabla"><thead><tr><th class="izq">Debe</th><th>Haber</th></tr></thead><tbody><tr><td class="izq">1.200,00</td><td></td></tr><tr class="t-tot"><td class="izq">1.200,00</td><td>0,00</td></tr><tr class="t-saldo"><td class="izq">1.200,00</td><td>Saldo deudor</td></tr></tbody></table></div>
+<div class="cuenta-t"><div class="t-nombre">Gasto servicios profesionales (sociedades)<span>5.2.04 &middot; naturaleza deudora</span></div><table class="t-tabla"><thead><tr><th class="izq">Debe</th><th>Haber</th></tr></thead><tbody><tr><td class="izq">900,00</td><td></td></tr><tr class="t-tot"><td class="izq">900,00</td><td>0,00</td></tr><tr class="t-saldo"><td class="izq">900,00</td><td>Saldo deudor</td></tr></tbody></table></div>
+<div class="cuenta-t"><div class="t-nombre">Gasto honorarios profesionales (personas naturales)<span>5.2.05 &middot; naturaleza deudora</span></div><table class="t-tabla"><thead><tr><th class="izq">Debe</th><th>Haber</th></tr></thead><tbody><tr><td class="izq">700,00</td><td></td></tr><tr class="t-tot"><td class="izq">700,00</td><td>0,00</td></tr><tr class="t-saldo"><td class="izq">700,00</td><td>Saldo deudor</td></tr></tbody></table></div>
+<div class="cuenta-t"><div class="t-nombre">Gasto transporte y fletes<span>5.2.06 &middot; naturaleza deudora</span></div><table class="t-tabla"><thead><tr><th class="izq">Debe</th><th>Haber</th></tr></thead><tbody><tr><td class="izq">450,00</td><td></td></tr><tr class="t-tot"><td class="izq">450,00</td><td>0,00</td></tr><tr class="t-saldo"><td class="izq">450,00</td><td>Saldo deudor</td></tr></tbody></table></div>
+</div>
+<div class="clave-box"><h4>Tres cuentas que debes mirar dos veces</h4><ul><li><strong>IVA en compras</strong> e <strong>IVA retenido en ventas</strong> quedaron <em>saldadas</em>. Es correcto: son cuentas transitorias que se cancelan cada mes contra el IVA en ventas en la liquidaci&oacute;n. Empiezan en cero y terminan en cero.</li><li><strong>Inventario de mercader&iacute;as</strong> conserva sus 12.000,00 iniciales sin un solo movimiento. Ah&iacute; est&aacute; esperando la Unidad 3.</li><li><strong>Anticipo de IR retenido</strong> tiene saldo deudor de 140,00 y no se cancela en julio: es un activo que se usar&aacute; contra el Impuesto a la Renta anual, no contra un impuesto mensual.</li></ul></div>
+<h3>Formato (b) &mdash; Mayor en formato folio</h3>
+<p><strong>&iquest;Para qu&eacute; sirve?</strong> Este es el formato <em>oficial y auditable</em>. A diferencia de la cuenta T, incorpora <strong>fecha</strong>, <strong>detalle</strong> y, sobre todo, una columna de <strong>saldo que se recalcula despu&eacute;s de cada movimiento</strong>. Eso permite responder no solo &laquo;&iquest;cu&aacute;nto tengo?&raquo;, sino &laquo;&iquest;cu&aacute;nto ten&iacute;a el 17 de julio?&raquo;. Es el formato que reproduce cualquier sistema contable, el que revisa un auditor y el que se imprime como libro obligatorio. Cuando en la Unidad 3 debas explicar de d&oacute;nde sali&oacute; una cifra, este es el respaldo.</p>
+<div class="nota-box">Se presentan en formato folio las cuentas con <strong>dos o m&aacute;s movimientos</strong> en el mes, que son aquellas donde el seguimiento del saldo aporta informaci&oacute;n. Las cuentas con un solo movimiento aparecen completas en el formato (a) y en el resumen (c).</div>
+<div class="folio"><div class="f-nombre">Caja <span>&middot; 1.1.01.01</span></div><div class="scroll-x"><table class="f-tabla"><thead><tr><th style="width:11%">Fecha</th><th>Detalle</th><th style="width:14%">Debe</th><th style="width:14%">Haber</th><th style="width:15%">Saldo</th></tr></thead><tbody><tr><td>01/07/2026</td><td>As. 1 &mdash; Asiento de apertura — saldos iniciales</td><td class="n">2.000,00</td><td class="n"></td><td class="n">2.000,00 deudor</td></tr><tr><td>06/07/2026</td><td>As. 4 &mdash; Ventas de contado del día, con las dos tarifas en una misma factura</td><td class="n">9.860,00</td><td class="n"></td><td class="n">11.860,00 deudor</td></tr><tr class="f-fin"><td>31/07/2026</td><td>Sumas y saldo al cierre del mes</td><td class="n">11.860,00</td><td class="n">0,00</td><td class="n">11.860,00 deudor</td></tr></tbody></table></div></div>
+<div class="folio"><div class="f-nombre">Bancos <span>&middot; 1.1.01.02</span></div><div class="scroll-x"><table class="f-tabla"><thead><tr><th style="width:11%">Fecha</th><th>Detalle</th><th style="width:14%">Debe</th><th style="width:14%">Haber</th><th style="width:15%">Saldo</th></tr></thead><tbody><tr><td>01/07/2026</td><td>As. 1 &mdash; Asiento de apertura — saldos iniciales</td><td class="n">18.940,00</td><td class="n"></td><td class="n">18.940,00 deudor</td></tr><tr><td>03/07/2026</td><td>As. 3 &mdash; Compra de contado de mercadería tarifa 0% (abarrotes en estado natural)</td><td class="n"></td><td class="n">4.912,50</td><td class="n">14.027,50 deudor</td></tr><tr><td>10/07/2026</td><td>As. 6 &mdash; Pago del arriendo del local a persona natural no obligada a llevar contabilidad</td><td class="n"></td><td class="n">1.080,00</td><td class="n">12.947,50 deudor</td></tr><tr><td>13/07/2026</td><td>As. 7 &mdash; Servicio de asesoría contable y tributaria prestado por una sociedad</td><td class="n"></td><td class="n">895,50</td><td class="n">12.052,00 deudor</td></tr><tr><td>15/07/2026</td><td>As. 8 &mdash; Honorarios a persona natural con título profesional</td><td class="n"></td><td class="n">630,00</td><td class="n">11.422,00 deudor</td></tr><tr><td>17/07/2026</td><td>As. 9 &mdash; Flete terrestre de carga con tarifa 0% de IVA</td><td class="n"></td><td class="n">445,50</td><td class="n">10.976,50 deudor</td></tr><tr><td>18/07/2026</td><td>As. 10 &mdash; Pago al SRI de las obligaciones tributarias de junio de 2026</td><td class="n"></td><td class="n">940,00</td><td class="n">10.036,50 deudor</td></tr><tr><td>20/07/2026</td><td>As. 11 &mdash; Cobro parcial al cliente Hotel Bahía Norte S.A.</td><td class="n">4.000,00</td><td class="n"></td><td class="n">14.036,50 deudor</td></tr><tr><td>22/07/2026</td><td>As. 12 &mdash; Pago parcial al proveedor Distribuidora Menaje del Pacífico S.A.</td><td class="n"></td><td class="n">5.000,00</td><td class="n">9.036,50 deudor</td></tr><tr><td>24/07/2026</td><td>As. 13 &mdash; Venta de contado de abarrotes tarifa 0%, cobrada por transferencia</td><td class="n">3.400,00</td><td class="n"></td><td class="n">12.436,50 deudor</td></tr><tr><td>31/07/2026</td><td>As. 15 &mdash; Pago de los sueldos líquidos del mes</td><td class="n"></td><td class="n">2.173,20</td><td class="n">10.263,30 deudor</td></tr><tr class="f-fin"><td>31/07/2026</td><td>Sumas y saldo al cierre del mes</td><td class="n">26.340,00</td><td class="n">16.076,70</td><td class="n">10.263,30 deudor</td></tr></tbody></table></div></div>
+<div class="folio"><div class="f-nombre">Cuentas por cobrar clientes <span>&middot; 1.1.02.01</span></div><div class="scroll-x"><table class="f-tabla"><thead><tr><th style="width:11%">Fecha</th><th>Detalle</th><th style="width:14%">Debe</th><th style="width:14%">Haber</th><th style="width:15%">Saldo</th></tr></thead><tbody><tr><td>01/07/2026</td><td>As. 1 &mdash; Asiento de apertura — saldos iniciales</td><td class="n">4.500,00</td><td class="n"></td><td class="n">4.500,00 deudor</td></tr><tr><td>09/07/2026</td><td>As. 5 &mdash; Venta a crédito a un cliente que es agente de retención</td><td class="n">7.595,00</td><td class="n"></td><td class="n">12.095,00 deudor</td></tr><tr><td>20/07/2026</td><td>As. 11 &mdash; Cobro parcial al cliente Hotel Bahía Norte S.A.</td><td class="n"></td><td class="n">4.000,00</td><td class="n">8.095,00 deudor</td></tr><tr class="f-fin"><td>31/07/2026</td><td>Sumas y saldo al cierre del mes</td><td class="n">12.095,00</td><td class="n">4.000,00</td><td class="n">8.095,00 deudor</td></tr></tbody></table></div></div>
+<div class="folio"><div class="f-nombre">IVA en compras (crédito tributario) <span>&middot; 1.1.03.01</span></div><div class="scroll-x"><table class="f-tabla"><thead><tr><th style="width:11%">Fecha</th><th>Detalle</th><th style="width:14%">Debe</th><th style="width:14%">Haber</th><th style="width:15%">Saldo</th></tr></thead><tbody><tr><td>02/07/2026</td><td>As. 2 &mdash; Compra a crédito de mercadería tarifa 15% (bazar y menaje)</td><td class="n">1.200,00</td><td class="n"></td><td class="n">1.200,00 deudor</td></tr><tr><td>10/07/2026</td><td>As. 6 &mdash; Pago del arriendo del local a persona natural no obligada a llevar contabilidad</td><td class="n">180,00</td><td class="n"></td><td class="n">1.380,00 deudor</td></tr><tr><td>13/07/2026</td><td>As. 7 &mdash; Servicio de asesoría contable y tributaria prestado por una sociedad</td><td class="n">135,00</td><td class="n"></td><td class="n">1.515,00 deudor</td></tr><tr><td>15/07/2026</td><td>As. 8 &mdash; Honorarios a persona natural con título profesional</td><td class="n">105,00</td><td class="n"></td><td class="n">1.620,00 deudor</td></tr><tr><td>31/07/2026</td><td>As. 16 &mdash; Liquidación del IVA del mes de julio</td><td class="n"></td><td class="n">1.620,00</td><td class="n">0,00 cero</td></tr><tr class="f-fin"><td>31/07/2026</td><td>Sumas y saldo al cierre del mes</td><td class="n">1.620,00</td><td class="n">1.620,00</td><td class="n">0,00 cero</td></tr></tbody></table></div></div>
+<div class="folio"><div class="f-nombre">IVA retenido en ventas <span>&middot; 1.1.03.03</span></div><div class="scroll-x"><table class="f-tabla"><thead><tr><th style="width:11%">Fecha</th><th>Detalle</th><th style="width:14%">Debe</th><th style="width:14%">Haber</th><th style="width:15%">Saldo</th></tr></thead><tbody><tr><td>09/07/2026</td><td>As. 5 &mdash; Venta a crédito a un cliente que es agente de retención</td><td class="n">315,00</td><td class="n"></td><td class="n">315,00 deudor</td></tr><tr><td>31/07/2026</td><td>As. 16 &mdash; Liquidación del IVA del mes de julio</td><td class="n"></td><td class="n">315,00</td><td class="n">0,00 cero</td></tr><tr class="f-fin"><td>31/07/2026</td><td>Sumas y saldo al cierre del mes</td><td class="n">315,00</td><td class="n">315,00</td><td class="n">0,00 cero</td></tr></tbody></table></div></div>
+<div class="folio"><div class="f-nombre">Cuentas por pagar proveedores <span>&middot; 2.1.01</span></div><div class="scroll-x"><table class="f-tabla"><thead><tr><th style="width:11%">Fecha</th><th>Detalle</th><th style="width:14%">Debe</th><th style="width:14%">Haber</th><th style="width:15%">Saldo</th></tr></thead><tbody><tr><td>01/07/2026</td><td>As. 1 &mdash; Asiento de apertura — saldos iniciales</td><td class="n"></td><td class="n">7.000,00</td><td class="n">7.000,00 acreedor</td></tr><tr><td>02/07/2026</td><td>As. 2 &mdash; Compra a crédito de mercadería tarifa 15% (bazar y menaje)</td><td class="n"></td><td class="n">8.680,00</td><td class="n">15.680,00 acreedor</td></tr><tr><td>22/07/2026</td><td>As. 12 &mdash; Pago parcial al proveedor Distribuidora Menaje del Pacífico S.A.</td><td class="n">5.000,00</td><td class="n"></td><td class="n">10.680,00 acreedor</td></tr><tr class="f-fin"><td>31/07/2026</td><td>Sumas y saldo al cierre del mes</td><td class="n">5.000,00</td><td class="n">15.680,00</td><td class="n">10.680,00 acreedor</td></tr></tbody></table></div></div>
+<div class="folio"><div class="f-nombre">IVA en ventas <span>&middot; 2.1.02.01</span></div><div class="scroll-x"><table class="f-tabla"><thead><tr><th style="width:11%">Fecha</th><th>Detalle</th><th style="width:14%">Debe</th><th style="width:14%">Haber</th><th style="width:15%">Saldo</th></tr></thead><tbody><tr><td>06/07/2026</td><td>As. 4 &mdash; Ventas de contado del día, con las dos tarifas en una misma factura</td><td class="n"></td><td class="n">960,00</td><td class="n">960,00 acreedor</td></tr><tr><td>09/07/2026</td><td>As. 5 &mdash; Venta a crédito a un cliente que es agente de retención</td><td class="n"></td><td class="n">1.050,00</td><td class="n">2.010,00 acreedor</td></tr><tr><td>31/07/2026</td><td>As. 16 &mdash; Liquidación del IVA del mes de julio</td><td class="n">2.010,00</td><td class="n"></td><td class="n">0,00 cero</td></tr><tr class="f-fin"><td>31/07/2026</td><td>Sumas y saldo al cierre del mes</td><td class="n">2.010,00</td><td class="n">2.010,00</td><td class="n">0,00 cero</td></tr></tbody></table></div></div>
+<div class="folio"><div class="f-nombre">IVA por pagar <span>&middot; 2.1.02.02</span></div><div class="scroll-x"><table class="f-tabla"><thead><tr><th style="width:11%">Fecha</th><th>Detalle</th><th style="width:14%">Debe</th><th style="width:14%">Haber</th><th style="width:15%">Saldo</th></tr></thead><tbody><tr><td>01/07/2026</td><td>As. 1 &mdash; Asiento de apertura — saldos iniciales</td><td class="n"></td><td class="n">620,00</td><td class="n">620,00 acreedor</td></tr><tr><td>18/07/2026</td><td>As. 10 &mdash; Pago al SRI de las obligaciones tributarias de junio de 2026</td><td class="n">620,00</td><td class="n"></td><td class="n">0,00 cero</td></tr><tr><td>31/07/2026</td><td>As. 16 &mdash; Liquidación del IVA del mes de julio</td><td class="n"></td><td class="n">75,00</td><td class="n">75,00 acreedor</td></tr><tr class="f-fin"><td>31/07/2026</td><td>Sumas y saldo al cierre del mes</td><td class="n">620,00</td><td class="n">695,00</td><td class="n">75,00 acreedor</td></tr></tbody></table></div></div>
+<div class="folio"><div class="f-nombre">Retención en la fuente de IR por pagar <span>&middot; 2.1.02.03</span></div><div class="scroll-x"><table class="f-tabla"><thead><tr><th style="width:11%">Fecha</th><th>Detalle</th><th style="width:14%">Debe</th><th style="width:14%">Haber</th><th style="width:15%">Saldo</th></tr></thead><tbody><tr><td>01/07/2026</td><td>As. 1 &mdash; Asiento de apertura — saldos iniciales</td><td class="n"></td><td class="n">180,00</td><td class="n">180,00 acreedor</td></tr><tr><td>02/07/2026</td><td>As. 2 &mdash; Compra a crédito de mercadería tarifa 15% (bazar y menaje)</td><td class="n"></td><td class="n">160,00</td><td class="n">340,00 acreedor</td></tr><tr><td>03/07/2026</td><td>As. 3 &mdash; Compra de contado de mercadería tarifa 0% (abarrotes en estado natural)</td><td class="n"></td><td class="n">87,50</td><td class="n">427,50 acreedor</td></tr><tr><td>10/07/2026</td><td>As. 6 &mdash; Pago del arriendo del local a persona natural no obligada a llevar contabilidad</td><td class="n"></td><td class="n">120,00</td><td class="n">547,50 acreedor</td></tr><tr><td>13/07/2026</td><td>As. 7 &mdash; Servicio de asesoría contable y tributaria prestado por una sociedad</td><td class="n"></td><td class="n">45,00</td><td class="n">592,50 acreedor</td></tr><tr><td>15/07/2026</td><td>As. 8 &mdash; Honorarios a persona natural con título profesional</td><td class="n"></td><td class="n">70,00</td><td class="n">662,50 acreedor</td></tr><tr><td>17/07/2026</td><td>As. 9 &mdash; Flete terrestre de carga con tarifa 0% de IVA</td><td class="n"></td><td class="n">4,50</td><td class="n">667,00 acreedor</td></tr><tr><td>18/07/2026</td><td>As. 10 &mdash; Pago al SRI de las obligaciones tributarias de junio de 2026</td><td class="n">180,00</td><td class="n"></td><td class="n">487,00 acreedor</td></tr><tr class="f-fin"><td>31/07/2026</td><td>Sumas y saldo al cierre del mes</td><td class="n">180,00</td><td class="n">667,00</td><td class="n">487,00 acreedor</td></tr></tbody></table></div></div>
+<div class="folio"><div class="f-nombre">Retención de IVA por pagar <span>&middot; 2.1.02.04</span></div><div class="scroll-x"><table class="f-tabla"><thead><tr><th style="width:11%">Fecha</th><th>Detalle</th><th style="width:14%">Debe</th><th style="width:14%">Haber</th><th style="width:15%">Saldo</th></tr></thead><tbody><tr><td>01/07/2026</td><td>As. 1 &mdash; Asiento de apertura — saldos iniciales</td><td class="n"></td><td class="n">140,00</td><td class="n">140,00 acreedor</td></tr><tr><td>02/07/2026</td><td>As. 2 &mdash; Compra a crédito de mercadería tarifa 15% (bazar y menaje)</td><td class="n"></td><td class="n">360,00</td><td class="n">500,00 acreedor</td></tr><tr><td>10/07/2026</td><td>As. 6 &mdash; Pago del arriendo del local a persona natural no obligada a llevar contabilidad</td><td class="n"></td><td class="n">180,00</td><td class="n">680,00 acreedor</td></tr><tr><td>13/07/2026</td><td>As. 7 &mdash; Servicio de asesoría contable y tributaria prestado por una sociedad</td><td class="n"></td><td class="n">94,50</td><td class="n">774,50 acreedor</td></tr><tr><td>15/07/2026</td><td>As. 8 &mdash; Honorarios a persona natural con título profesional</td><td class="n"></td><td class="n">105,00</td><td class="n">879,50 acreedor</td></tr><tr><td>18/07/2026</td><td>As. 10 &mdash; Pago al SRI de las obligaciones tributarias de junio de 2026</td><td class="n">140,00</td><td class="n"></td><td class="n">739,50 acreedor</td></tr><tr class="f-fin"><td>31/07/2026</td><td>Sumas y saldo al cierre del mes</td><td class="n">140,00</td><td class="n">879,50</td><td class="n">739,50 acreedor</td></tr></tbody></table></div></div>
+<div class="folio"><div class="f-nombre">Sueldos por pagar <span>&middot; 2.1.03.01</span></div><div class="scroll-x"><table class="f-tabla"><thead><tr><th style="width:11%">Fecha</th><th>Detalle</th><th style="width:14%">Debe</th><th style="width:14%">Haber</th><th style="width:15%">Saldo</th></tr></thead><tbody><tr><td>30/07/2026</td><td>As. 14 &mdash; Rol de pagos del personal administrativo</td><td class="n"></td><td class="n">2.173,20</td><td class="n">2.173,20 acreedor</td></tr><tr><td>31/07/2026</td><td>As. 15 &mdash; Pago de los sueldos líquidos del mes</td><td class="n">2.173,20</td><td class="n"></td><td class="n">0,00 cero</td></tr><tr class="f-fin"><td>31/07/2026</td><td>Sumas y saldo al cierre del mes</td><td class="n">2.173,20</td><td class="n">2.173,20</td><td class="n">0,00 cero</td></tr></tbody></table></div></div>
+<div class="folio"><div class="f-nombre">Ventas tarifa 15% <span>&middot; 4.1.01</span></div><div class="scroll-x"><table class="f-tabla"><thead><tr><th style="width:11%">Fecha</th><th>Detalle</th><th style="width:14%">Debe</th><th style="width:14%">Haber</th><th style="width:15%">Saldo</th></tr></thead><tbody><tr><td>06/07/2026</td><td>As. 4 &mdash; Ventas de contado del día, con las dos tarifas en una misma factura</td><td class="n"></td><td class="n">6.400,00</td><td class="n">6.400,00 acreedor</td></tr><tr><td>09/07/2026</td><td>As. 5 &mdash; Venta a crédito a un cliente que es agente de retención</td><td class="n"></td><td class="n">7.000,00</td><td class="n">13.400,00 acreedor</td></tr><tr class="f-fin"><td>31/07/2026</td><td>Sumas y saldo al cierre del mes</td><td class="n">0,00</td><td class="n">13.400,00</td><td class="n">13.400,00 acreedor</td></tr></tbody></table></div></div>
+<div class="folio"><div class="f-nombre">Ventas tarifa 0% <span>&middot; 4.1.02</span></div><div class="scroll-x"><table class="f-tabla"><thead><tr><th style="width:11%">Fecha</th><th>Detalle</th><th style="width:14%">Debe</th><th style="width:14%">Haber</th><th style="width:15%">Saldo</th></tr></thead><tbody><tr><td>06/07/2026</td><td>As. 4 &mdash; Ventas de contado del día, con las dos tarifas en una misma factura</td><td class="n"></td><td class="n">2.500,00</td><td class="n">2.500,00 acreedor</td></tr><tr><td>24/07/2026</td><td>As. 13 &mdash; Venta de contado de abarrotes tarifa 0%, cobrada por transferencia</td><td class="n"></td><td class="n">3.400,00</td><td class="n">5.900,00 acreedor</td></tr><tr class="f-fin"><td>31/07/2026</td><td>Sumas y saldo al cierre del mes</td><td class="n">0,00</td><td class="n">5.900,00</td><td class="n">5.900,00 acreedor</td></tr></tbody></table></div></div>
+<h3>Formato (c) &mdash; Resumen de saldos de todas las cuentas</h3>
+<p><strong>&iquest;Para qu&eacute; sirve?</strong> Es la <em>antesala del balance de comprobaci&oacute;n</em>. Re&uacute;ne en una sola p&aacute;gina el movimiento acumulado y el saldo final de todas las cuentas, ordenadas por c&oacute;digo. Su funci&oacute;n es de control: si la columna de saldos deudores no es exactamente igual a la de saldos acreedores, existe un error en alg&uacute;n punto del Diario o de la mayorizaci&oacute;n, y hay que encontrarlo antes de avanzar.</p>
+<div class="def-box"><p><span class="term">Balance de comprobaci&oacute;n:</span> reporte que lista todas las cuentas con sus sumas y sus saldos para verificar que la partida doble se cumpli&oacute; en el conjunto del periodo. Que cuadre no garantiza que no haya errores &mdash;una cuenta equivocada por otra del mismo lado cuadra igual&mdash;, pero que no cuadre garantiza que s&iacute; los hay.</p></div>
+<div class="scroll-x"><table class="tabla-resumen"><thead><tr><th>C&oacute;digo</th><th>Cuenta</th><th>Sumas Debe</th><th>Sumas Haber</th><th>Saldo deudor</th><th>Saldo acreedor</th></tr></thead><tbody>
+<tr class="grupo"><td colspan="6">1. ACTIVO</td></tr>
+<tr><td class="c">1.1.01.01</td><td>Caja</td><td class="n">11.860,00</td><td class="n">0,00</td><td class="n">11.860,00</td><td class="n">&mdash;</td></tr>
+<tr><td class="c">1.1.01.02</td><td>Bancos</td><td class="n">26.340,00</td><td class="n">16.076,70</td><td class="n">10.263,30</td><td class="n">&mdash;</td></tr>
+<tr><td class="c">1.1.02.01</td><td>Cuentas por cobrar clientes</td><td class="n">12.095,00</td><td class="n">4.000,00</td><td class="n">8.095,00</td><td class="n">&mdash;</td></tr>
+<tr><td class="c">1.1.03.01</td><td>IVA en compras (crédito tributario)</td><td class="n">1.620,00</td><td class="n">1.620,00</td><td class="n">&mdash;</td><td class="n">&mdash;</td></tr>
+<tr><td class="c">1.1.03.02</td><td>Anticipo de IR retenido</td><td class="n">140,00</td><td class="n">0,00</td><td class="n">140,00</td><td class="n">&mdash;</td></tr>
+<tr><td class="c">1.1.03.03</td><td>IVA retenido en ventas</td><td class="n">315,00</td><td class="n">315,00</td><td class="n">&mdash;</td><td class="n">&mdash;</td></tr>
+<tr><td class="c">1.1.04.01</td><td>Inventario de mercaderías</td><td class="n">12.000,00</td><td class="n">0,00</td><td class="n">12.000,00</td><td class="n">&mdash;</td></tr>
+<tr><td class="c">1.2.01</td><td>Muebles y enseres</td><td class="n">6.000,00</td><td class="n">0,00</td><td class="n">6.000,00</td><td class="n">&mdash;</td></tr>
+<tr><td class="c">1.2.02</td><td>Equipo de computación</td><td class="n">2.500,00</td><td class="n">0,00</td><td class="n">2.500,00</td><td class="n">&mdash;</td></tr>
+<tr class="grupo"><td colspan="6">2. PASIVO</td></tr>
+<tr><td class="c">2.1.01</td><td>Cuentas por pagar proveedores</td><td class="n">5.000,00</td><td class="n">15.680,00</td><td class="n">&mdash;</td><td class="n">10.680,00</td></tr>
+<tr><td class="c">2.1.02.01</td><td>IVA en ventas</td><td class="n">2.010,00</td><td class="n">2.010,00</td><td class="n">&mdash;</td><td class="n">&mdash;</td></tr>
+<tr><td class="c">2.1.02.02</td><td>IVA por pagar</td><td class="n">620,00</td><td class="n">695,00</td><td class="n">&mdash;</td><td class="n">75,00</td></tr>
+<tr><td class="c">2.1.02.03</td><td>Retención en la fuente de IR por pagar</td><td class="n">180,00</td><td class="n">667,00</td><td class="n">&mdash;</td><td class="n">487,00</td></tr>
+<tr><td class="c">2.1.02.04</td><td>Retención de IVA por pagar</td><td class="n">140,00</td><td class="n">879,50</td><td class="n">&mdash;</td><td class="n">739,50</td></tr>
+<tr><td class="c">2.1.03.01</td><td>Sueldos por pagar</td><td class="n">2.173,20</td><td class="n">2.173,20</td><td class="n">&mdash;</td><td class="n">&mdash;</td></tr>
+<tr><td class="c">2.1.03.02</td><td>IESS por pagar</td><td class="n">0,00</td><td class="n">494,40</td><td class="n">&mdash;</td><td class="n">494,40</td></tr>
+<tr class="grupo"><td colspan="6">3. PATRIMONIO</td></tr>
+<tr><td class="c">3.1.01</td><td>Capital social</td><td class="n">0,00</td><td class="n">35.000,00</td><td class="n">&mdash;</td><td class="n">35.000,00</td></tr>
+<tr><td class="c">3.2.01</td><td>Resultados acumulados</td><td class="n">0,00</td><td class="n">3.000,00</td><td class="n">&mdash;</td><td class="n">3.000,00</td></tr>
+<tr class="grupo"><td colspan="6">4. INGRESOS</td></tr>
+<tr><td class="c">4.1.01</td><td>Ventas tarifa 15%</td><td class="n">0,00</td><td class="n">13.400,00</td><td class="n">&mdash;</td><td class="n">13.400,00</td></tr>
+<tr><td class="c">4.1.02</td><td>Ventas tarifa 0%</td><td class="n">0,00</td><td class="n">5.900,00</td><td class="n">&mdash;</td><td class="n">5.900,00</td></tr>
+<tr class="grupo"><td colspan="6">5. COSTOS Y GASTOS</td></tr>
+<tr><td class="c">5.1.01</td><td>Compras de mercaderías tarifa 0%</td><td class="n">5.000,00</td><td class="n">0,00</td><td class="n">5.000,00</td><td class="n">&mdash;</td></tr>
+<tr><td class="c">5.1.02</td><td>Compras de mercaderías tarifa 15%</td><td class="n">8.000,00</td><td class="n">0,00</td><td class="n">8.000,00</td><td class="n">&mdash;</td></tr>
+<tr><td class="c">5.2.01</td><td>Gasto sueldos</td><td class="n">2.400,00</td><td class="n">0,00</td><td class="n">2.400,00</td><td class="n">&mdash;</td></tr>
+<tr><td class="c">5.2.02</td><td>Gasto aporte patronal IESS</td><td class="n">267,60</td><td class="n">0,00</td><td class="n">267,60</td><td class="n">&mdash;</td></tr>
+<tr><td class="c">5.2.03</td><td>Gasto arriendo</td><td class="n">1.200,00</td><td class="n">0,00</td><td class="n">1.200,00</td><td class="n">&mdash;</td></tr>
+<tr><td class="c">5.2.04</td><td>Gasto servicios profesionales (sociedades)</td><td class="n">900,00</td><td class="n">0,00</td><td class="n">900,00</td><td class="n">&mdash;</td></tr>
+<tr><td class="c">5.2.05</td><td>Gasto honorarios profesionales (personas naturales)</td><td class="n">700,00</td><td class="n">0,00</td><td class="n">700,00</td><td class="n">&mdash;</td></tr>
+<tr><td class="c">5.2.06</td><td>Gasto transporte y fletes</td><td class="n">450,00</td><td class="n">0,00</td><td class="n">450,00</td><td class="n">&mdash;</td></tr>
+<tr class="totales"><td colspan="2">TOTALES</td><td class="n">101.910,80</td><td class="n">101.910,80</td><td class="n">69.775,90</td><td class="n">69.775,90</td></tr>
+</tbody></table></div>
+<div class="clave-box"><h4>Las dos igualdades que acaban de comprobarse</h4><ol><li><strong>Sumas iguales:</strong> Debe 101.910,80 = Haber 101.910,80. Confirma que cada asiento del Diario cumpli&oacute; la partida doble y que todo se traslad&oacute; al Mayor sin perder ni duplicar valores.</li><li><strong>Saldos iguales:</strong> saldos deudores 69.775,90 = saldos acreedores 69.775,90. Confirma que la ecuaci&oacute;n contable sigue en equilibrio al 31 de julio.</li></ol></div>
+<div class="alerta-box"><p><strong>Lo que este resumen te est&aacute; diciendo sobre la empresa.</strong> Al 31 de julio, Comercial El Astillero debe al SRI 75,00 de IVA, 487,00 de retenciones de IR y 739,50 de retenciones de IVA: en total <strong>1.301,50</strong>, que se declarar&aacute;n y pagar&aacute;n el <strong>18 de agosto de 2026</strong> seg&uacute;n el noveno d&iacute;gito 5 de su RUC. Adem&aacute;s debe 494,40 al IESS, pagaderos dentro de los primeros quince d&iacute;as de agosto. De ese total, m&aacute;s de la mitad es dinero que <em>nunca fue suyo</em>: lo retuvo a terceros. Un negocio que gasta ese dinero como si fuera propio se queda sin liquidez el d&iacute;a de la declaraci&oacute;n. Esta es una de las causas m&aacute;s frecuentes de mora tributaria en las peque&ntilde;as empresas ecuatorianas.</p></div>
+<div class="continuidad"><p><strong>Se&ntilde;al de continuidad.</strong> Este resumen todav&iacute;a <em>no</em> es un balance de comprobaci&oacute;n ajustado ni permite armar estados financieros: faltan los asientos de ajuste (<strong>Unidad 3</strong>), entre ellos el costo de ventas seg&uacute;n la NIC 2 y la depreciaci&oacute;n de muebles y equipo de computaci&oacute;n. Con esos ajustes incorporados, en la <strong>Unidad 4</strong> construiremos el Estado de Resultado Integral y el Estado de Situaci&oacute;n Financiera de Comercial El Astillero.</p></div>
+</div>
+<!-- ================= PESTAÑA: EJERCICIO INTERACTIVO ================= -->
+<div id="ejercicio" class="panel">
+  <h2>Ejercicio interactivo — Elige la combinación correcta de retenciones</h2>
+  <p>Comercial El Astillero recibe ocho situaciones. En cada una, la empresa actúa como agente de retención (salvo donde se indique lo contrario) y ningún proveedor es contribuyente especial. Elige, para cada caso, la versión correcta.</p>
+  <p><strong>Responde los ocho ítems antes de verificar.</strong> El botón «Verificar respuestas» te avisará si dejaste alguno en blanco. Solo después de verificar verás la corrección y la explicación de cada uno.</p>
+
+  <div class="item">
+    <div class="enun"><span class="n">1.</span> Compra de ollas y vajilla por USD 8.000,00 más IVA a una sociedad. ¿Qué retenciones corresponden?</div>
+    <div class="opciones">
+      <label><input type="radio" name="ei1" value="a"> 1% de IR y 30% de IVA</label>
+      <label><input type="radio" name="ei1" value="b"> 2% de IR y 30% de IVA</label>
+      <label><input type="radio" name="ei1" value="c"> 2% de IR y 70% de IVA</label>
+      <label><input type="radio" name="ei1" value="d"> 5% de IR y 100% de IVA</label>
+    </div>
+    <div class="fb" id="fb-ei1"></div>
+  </div>
+
+  <div class="item">
+    <div class="enun"><span class="n">2.</span> Honorarios de USD 700,00 más IVA pagados a una abogada, persona natural con título profesional.</div>
+    <div class="opciones">
+      <label><input type="radio" name="ei2" value="a"> 8% de IR y 70% de IVA</label>
+      <label><input type="radio" name="ei2" value="b"> 10% de IR y 70% de IVA</label>
+      <label><input type="radio" name="ei2" value="c"> 10% de IR y 100% de IVA</label>
+      <label><input type="radio" name="ei2" value="d"> 3% de IR y 100% de IVA</label>
+    </div>
+    <div class="fb" id="fb-ei2"></div>
+  </div>
+
+  <div class="item">
+    <div class="enun"><span class="n">3.</span> Asesoría contable y tributaria de USD 900,00 más IVA prestada por una compañía limitada.</div>
+    <div class="opciones">
+      <label><input type="radio" name="ei3" value="a"> 3% de IR y 70% de IVA</label>
+      <label><input type="radio" name="ei3" value="b"> 5% de IR y 70% de IVA</label>
+      <label><input type="radio" name="ei3" value="c"> 5% de IR y 100% de IVA</label>
+      <label><input type="radio" name="ei3" value="d"> 10% de IR y 70% de IVA</label>
+    </div>
+    <div class="fb" id="fb-ei3"></div>
+  </div>
+
+  <div class="item">
+    <div class="enun"><span class="n">4.</span> Arriendo del local por USD 1.200,00 más IVA a una persona natural no obligada a llevar contabilidad.</div>
+    <div class="opciones">
+      <label><input type="radio" name="ei4" value="a"> 8% de IR y 100% de IVA</label>
+      <label><input type="radio" name="ei4" value="b"> 10% de IR y 100% de IVA</label>
+      <label><input type="radio" name="ei4" value="c"> 2% de IR y 70% de IVA</label>
+      <label><input type="radio" name="ei4" value="d"> 10% de IR y 30% de IVA</label>
+    </div>
+    <div class="fb" id="fb-ei4"></div>
+  </div>
+
+  <div class="item">
+    <div class="enun"><span class="n">5.</span> Flete terrestre de carga por USD 450,00 contratado a una sociedad transportista.</div>
+    <div class="opciones">
+      <label><input type="radio" name="ei5" value="a"> 1% de IR y 70% de IVA</label>
+      <label><input type="radio" name="ei5" value="b"> 2% de IR y 30% de IVA</label>
+      <label><input type="radio" name="ei5" value="c"> 1% de IR y no procede retención de IVA</label>
+      <label><input type="radio" name="ei5" value="d"> 3% de IR y 70% de IVA</label>
+    </div>
+    <div class="fb" id="fb-ei5"></div>
+  </div>
+
+  <div class="item">
+    <div class="enun"><span class="n">6.</span> Compra de arroz, fréjol y lenteja en estado natural por USD 5.000,00 a una comercializadora que no es la productora.</div>
+    <div class="opciones">
+      <label><input type="radio" name="ei6" value="a"> 1% de IR y no procede retención de IVA</label>
+      <label><input type="radio" name="ei6" value="b"> 1,75% de IR y no procede retención de IVA</label>
+      <label><input type="radio" name="ei6" value="c"> 2% de IR y 30% de IVA</label>
+      <label><input type="radio" name="ei6" value="d"> 1,75% de IR y 30% de IVA</label>
+    </div>
+    <div class="fb" id="fb-ei6"></div>
+  </div>
+
+  <div class="item">
+    <div class="enun"><span class="n">7.</span> Comercial El Astillero vende menaje por USD 7.000,00 más IVA a un cliente que <em>sí</em> está calificado como agente de retención y le practica las retenciones. ¿Cómo registra la <strong>vendedora</strong> esas retenciones sufridas?</div>
+    <div class="opciones">
+      <label><input type="radio" name="ei7" value="a"> Como un gasto del periodo por USD 455,00</label>
+      <label><input type="radio" name="ei7" value="b"> Como dos activos: USD 140,00 de anticipo de IR retenido y USD 315,00 de IVA retenido en ventas</label>
+      <label><input type="radio" name="ei7" value="c"> Como un pasivo por USD 455,00 frente al SRI</label>
+      <label><input type="radio" name="ei7" value="d"> Como una disminución del ingreso, registrando la venta por USD 6.545,00</label>
+    </div>
+    <div class="fb" id="fb-ei7"></div>
+  </div>
+
+  <div class="item">
+    <div class="enun"><span class="n">8.</span> Al 31 de julio, la empresa tiene IVA en ventas por USD 2.010,00, IVA en compras por USD 1.620,00 y IVA retenido en ventas por USD 315,00. ¿Cuál es el resultado de la liquidación?</div>
+    <div class="opciones">
+      <label><input type="radio" name="ei8" value="a"> IVA por pagar de USD 390,00</label>
+      <label><input type="radio" name="ei8" value="b"> IVA por pagar de USD 75,00</label>
+      <label><input type="radio" name="ei8" value="c"> IVA por pagar de USD 705,00</label>
+      <label><input type="radio" name="ei8" value="d"> Crédito tributario a favor de USD 75,00</label>
+    </div>
+    <div class="fb" id="fb-ei8"></div>
+  </div>
+
+  <div class="aviso" id="aviso-ej">Faltan ítems por responder. Revisa el ejercicio: debes contestar los ocho antes de verificar.</div>
+  <button class="btn" onclick="verificarEjercicio()">Verificar respuestas</button>
+  <button class="btn sec" onclick="reiniciarEjercicio()">Reiniciar</button>
+
+  <div class="resultado" id="res-ej">
+    <span class="emoji" id="emoji-ej"></span>
+    <span class="puntaje" id="punt-ej"></span>
+    <div class="barra-ext"><div class="barra-int" id="barra-ej"></div></div>
+    <p id="msg-ej"></p>
+  </div>
+</div>
+
+<!-- ================= PESTAÑA: CUESTIONARIO ================= -->
+<div id="cuestionario" class="panel">
+  <h2>Cuestionario de evaluación</h2>
+  <p>Diez preguntas de opción múltiple. Las siete primeras son <strong>teóricas</strong> y se responden con el contenido de este widget. Las tres últimas son de <strong>análisis de caso</strong>: exigen que apliques el razonamiento a situaciones nuevas que no aparecen resueltas en el material.</p>
+  <p>Responde las diez y luego presiona «Verificar cuestionario». La calificación es sobre 10 puntos.</p>
+
+  <div class="item">
+    <div class="enun"><span class="n">1.</span> ¿Cuál es la tarifa general del IVA vigente en Ecuador?<span class="badge-t badge-teo">Teórica</span></div>
+    <div class="opciones">
+      <label><input type="radio" name="qi1" value="a"> 12%</label>
+      <label><input type="radio" name="qi1" value="b"> 14%</label>
+      <label><input type="radio" name="qi1" value="c"> 15%</label>
+      <label><input type="radio" name="qi1" value="d"> Depende del cantón donde se realice la venta</label>
+    </div>
+    <div class="fb" id="fb-qi1"></div>
+  </div>
+
+  <div class="item">
+    <div class="enun"><span class="n">2.</span> ¿Qué artículo de la Ley de Régimen Tributario Interno enumera los <em>bienes</em> gravados con tarifa 0% de IVA?<span class="badge-t badge-teo">Teórica</span></div>
+    <div class="opciones">
+      <label><input type="radio" name="qi2" value="a"> El artículo 55</label>
+      <label><input type="radio" name="qi2" value="b"> El artículo 56</label>
+      <label><input type="radio" name="qi2" value="c"> El artículo 66</label>
+      <label><input type="radio" name="qi2" value="d"> Ninguno: los bienes con tarifa 0% se fijan por resolución del SRI</label>
+    </div>
+    <div class="fb" id="fb-qi2"></div>
+  </div>
+
+  <div class="item">
+    <div class="enun"><span class="n">3.</span> ¿Qué es un agente de retención?<span class="badge-t badge-teo">Teórica</span></div>
+    <div class="opciones">
+      <label><input type="radio" name="qi3" value="a"> El contribuyente que paga un impuesto adicional por su volumen de ventas</label>
+      <label><input type="radio" name="qi3" value="b"> El contribuyente al que el Estado encarga descontar parte del impuesto al pagar a su proveedor y entregarlo al SRI</label>
+      <label><input type="radio" name="qi3" value="c"> El funcionario del SRI que fiscaliza a las empresas</label>
+      <label><input type="radio" name="qi3" value="d"> El proveedor que sufre la retención en la fuente</label>
+    </div>
+    <div class="fb" id="fb-qi3"></div>
+  </div>
+
+  <div class="item">
+    <div class="enun"><span class="n">4.</span> El IVA que la empresa paga a sus proveedores se registra contablemente como…<span class="badge-t badge-teo">Teórica</span></div>
+    <div class="opciones">
+      <label><input type="radio" name="qi4" value="a"> Un gasto del periodo</label>
+      <label><input type="radio" name="qi4" value="b"> Un activo, porque es un crédito tributario descontable del IVA cobrado en ventas</label>
+      <label><input type="radio" name="qi4" value="c"> Un pasivo, porque es dinero que se debe al Estado</label>
+      <label><input type="radio" name="qi4" value="d"> Un mayor valor del costo de la mercadería, siempre</label>
+    </div>
+    <div class="fb" id="fb-qi4"></div>
+  </div>
+
+  <div class="item">
+    <div class="enun"><span class="n">5.</span> La retención en la fuente de Impuesto a la Renta que la empresa practica a un proveedor representa para ella…<span class="badge-t badge-teo">Teórica</span></div>
+    <div class="opciones">
+      <label><input type="radio" name="qi5" value="a"> Un ingreso, porque paga menos al proveedor</label>
+      <label><input type="radio" name="qi5" value="b"> Un activo, porque lo descontará de su impuesto anual</label>
+      <label><input type="radio" name="qi5" value="c"> Un pasivo, porque debe entregar ese valor al SRI</label>
+      <label><input type="radio" name="qi5" value="d"> Un gasto tributario del mes</label>
+    </div>
+    <div class="fb" id="fb-qi5"></div>
+  </div>
+
+  <div class="item">
+    <div class="enun"><span class="n">6.</span> ¿Qué porcentaje de retención de IVA corresponde a los servicios profesionales prestados por una persona natural con título profesional?<span class="badge-t badge-teo">Teórica</span></div>
+    <div class="opciones">
+      <label><input type="radio" name="qi6" value="a"> 30%</label>
+      <label><input type="radio" name="qi6" value="b"> 70%</label>
+      <label><input type="radio" name="qi6" value="c"> 100%</label>
+      <label><input type="radio" name="qi6" value="d"> 10%</label>
+    </div>
+    <div class="fb" id="fb-qi6"></div>
+  </div>
+
+  <div class="item">
+    <div class="enun"><span class="n">7.</span> En un asiento del Libro Diario, ¿qué significa la abreviatura «P/R» con la que inicia la glosa?<span class="badge-t badge-teo">Teórica</span></div>
+    <div class="opciones">
+      <label><input type="radio" name="qi7" value="a"> «Por Registrar», e indica que el asiento aún no está aprobado</label>
+      <label><input type="radio" name="qi7" value="b"> «Para Registrar», y encabeza la explicación de lo que se registró</label>
+      <label><input type="radio" name="qi7" value="c"> «Partida Recibida», e identifica el documento fuente</label>
+      <label><input type="radio" name="qi7" value="d"> «Pago Realizado», y solo se usa en asientos de egreso</label>
+    </div>
+    <div class="fb" id="fb-qi7"></div>
+  </div>
+
+  <div class="item">
+    <div class="enun"><span class="n">8.</span> Una empresa agente de retención compra bienes muebles por USD 2.000,00 más IVA a una sociedad que no es contribuyente especial. ¿Cuánto entrega efectivamente al proveedor?<span class="badge-t badge-caso">Análisis de caso</span></div>
+    <div class="opciones">
+      <label><input type="radio" name="qi8" value="a"> USD 2.300,00</label>
+      <label><input type="radio" name="qi8" value="b"> USD 2.260,00</label>
+      <label><input type="radio" name="qi8" value="c"> USD 2.170,00</label>
+      <label><input type="radio" name="qi8" value="d"> USD 2.000,00</label>
+    </div>
+    <div class="fb" id="fb-qi8"></div>
+  </div>
+
+  <div class="item">
+    <div class="enun"><span class="n">9.</span> La misma empresa contrata a un ingeniero, persona natural con título profesional, por USD 1.500,00 más IVA. ¿Cuánto recibe el ingeniero?<span class="badge-t badge-caso">Análisis de caso</span></div>
+    <div class="opciones">
+      <label><input type="radio" name="qi9" value="a"> USD 1.725,00</label>
+      <label><input type="radio" name="qi9" value="b"> USD 1.575,00</label>
+      <label><input type="radio" name="qi9" value="c"> USD 1.350,00</label>
+      <label><input type="radio" name="qi9" value="d"> USD 1.275,00</label>
+    </div>
+    <div class="fb" id="fb-qi9"></div>
+  </div>
+
+  <div class="item">
+    <div class="enun"><span class="n">10.</span> Una tienda vende <em>únicamente</em> productos con tarifa 0% y no realiza exportaciones. ¿Qué ocurre con el IVA que paga en sus compras de suministros y servicios?<span class="badge-t badge-caso">Análisis de caso</span></div>
+    <div class="opciones">
+      <label><input type="radio" name="qi10" value="a"> El SRI se lo devuelve automáticamente cada mes</label>
+      <label><input type="radio" name="qi10" value="b"> No le genera crédito tributario y se convierte en parte de su costo o gasto</label>
+      <label><input type="radio" name="qi10" value="c"> Se acumula indefinidamente como crédito tributario en el activo</label>
+      <label><input type="radio" name="qi10" value="d"> No paga IVA en sus compras, porque vende con tarifa 0%</label>
+    </div>
+    <div class="fb" id="fb-qi10"></div>
+  </div>
+
+  <div class="aviso" id="aviso-qi">Faltan preguntas por responder. Debes contestar las diez antes de verificar.</div>
+  <button class="btn" onclick="verificarCuestionario()">Verificar cuestionario</button>
+  <button class="btn sec" onclick="reiniciarCuestionario()">Reiniciar</button>
+
+  <div class="resultado" id="res-qi">
+    <span class="emoji" id="emoji-qi"></span>
+    <span class="puntaje" id="punt-qi"></span>
+    <div class="barra-ext"><div class="barra-int" id="barra-qi"></div></div>
+    <p id="msg-qi"></p>
+  </div>
+</div>
+<!-- ================= PESTAÑA: ACTIVIDAD CON IA ================= -->
+<div id="ia" class="panel">
+  <h2>Actividad con inteligencia artificial</h2>
+  <p>Esta actividad se realiza con <strong>Claude</strong>, disponible de forma gratuita en <strong>claude.ai</strong>. Crea una cuenta si aún no la tienes; el plan gratuito es suficiente. El objetivo no es que la IA haga el trabajo: es que tú <em>audites</em> a la IA. Vas a asumir el papel de revisor tributario.</p>
+
+  <div class="clave-box">
+    <h4>Por qué esta actividad se plantea así</h4>
+    <p>Los modelos de lenguaje responden con seguridad incluso cuando se equivocan, y son especialmente propensos a error en normativa tributaria local, porque los porcentajes cambian por resolución y el modelo puede haber aprendido una tabla derogada. Un profesional que copia sin verificar traslada ese error a su empresa. Lo que se evalúa hoy es exactamente lo contrario: tu capacidad de detectar el error.</p>
+  </div>
+
+  <h3>Paso 1 — Copia este prompt exactamente y envíalo</h3>
+  <div class="prompt-box">Actúa como asistente contable de una comercializadora minorista domiciliada en Guayaquil, Ecuador. La empresa es una sociedad calificada como agente de retención y NO es contribuyente especial. Ninguno de sus proveedores es contribuyente especial.
+
+Registra en formato de Libro Diario, con columnas Fecha, Código, Detalle, Debe y Haber, las siguientes cinco transacciones de julio de 2026. Antes de cada asiento muestra el cálculo desglosado de base imponible, IVA, retención en la fuente de Impuesto a la Renta, retención de IVA y valor neto.
+
+1. 04/07/2026 — Compra a crédito de artículos de menaje a una sociedad por USD 6.000,00 más IVA.
+2. 08/07/2026 — Pago del arriendo del local, USD 1.500,00 más IVA, a una persona natural NO obligada a llevar contabilidad.
+3. 12/07/2026 — Pago de honorarios a un contador, persona natural con título profesional, por USD 800,00 más IVA.
+4. 16/07/2026 — Compra de contado de arroz y fréjol en estado natural por USD 4.000,00 a una comercializadora que no es la productora.
+5. 21/07/2026 — Pago de un flete terrestre de carga por USD 600,00 a una sociedad transportista.
+
+Al final indica el total de retenciones de Impuesto a la Renta y el total de retenciones de IVA del periodo. Señala expresamente qué porcentaje aplicaste en cada caso y por qué.</div>
+
+  <h3>Paso 2 — Audita la respuesta con esta lista de verificación</h3>
+  <p>No corrijas todavía. Primero recorre la respuesta con estos ocho controles y anota qué encontraste en cada uno:</p>
+  <ol>
+    <li>¿La tarifa de IVA aplicada es 15% o el modelo usó 12%, que estuvo vigente hasta 2024?</li>
+    <li>En la transacción 1, ¿aplicó 2% de IR y 30% de IVA?</li>
+    <li>En la transacción 2, ¿aplicó 10% de IR y 100% de IVA, o confundió el arriendo con un servicio común?</li>
+    <li>En la transacción 3, ¿aplicó 10% de IR y 100% de IVA, o usó los porcentajes de una sociedad (5% y 70%)?</li>
+    <li>En la transacción 4, ¿aplicó 1,75% por tratarse de bienes agrícolas comprados a un comercializador, o usó 1% (productor) o 2% (bienes muebles en general)? ¿Reconoció que no hay retención de IVA porque la tarifa es 0%?</li>
+    <li>En la transacción 5, ¿reconoció que el transporte terrestre de carga está gravado con 0% y que por tanto no hay retención de IVA? ¿Aplicó 1% de IR?</li>
+    <li>¿Todos los asientos cuadran? Suma columna por columna: no confíes en que el modelo sumó bien.</li>
+    <li>¿Citó alguna norma? Si mencionó una resolución, ¿es la NAC-DGERCGC26-00000009, vigente desde marzo de 2026, o una anterior ya derogada?</li>
+  </ol>
+
+  <div class="alerta-box">
+    <p><strong>Aviso deliberado.</strong> El prompt está construido para provocar tropiezos: mezcla proveedores de distinta naturaleza jurídica, incluye dos operaciones con tarifa 0% y coloca un arriendo junto a un honorario profesional. Es muy probable que la respuesta contenga <em>al menos un error</em>. Si crees que no hay ninguno, vuelve a revisar con la tabla de la pestaña «Información del mes» abierta al lado. Y si efectivamente la respuesta es correcta en todo, dilo y demuéstralo punto por punto: eso también es una auditoría válida.</p>
+  </div>
+
+  <h3>Paso 3 — Confronta a la IA</h3>
+  <p>Si encontraste errores, escríbele un segundo mensaje señalando cuál es el error, cuál debería ser el porcentaje correcto y en qué norma te basas. Observa cómo responde: ¿corrige?, ¿se disculpa y comete otro error?, ¿insiste en su versión? Guarda esa segunda respuesta.</p>
+
+  <h3>Paso 4 — Verifica en la fuente oficial</h3>
+  <p>Ingresa a <strong>sri.gob.ec</strong> y localiza la resolución vigente sobre porcentajes de retención en la fuente de Impuesto a la Renta. Confirma al menos dos de los porcentajes que discutiste. Anota la fecha de consulta.</p>
+
+  <h3>Paso 5 — Entrega</h3>
+  <p>Elabora un informe breve (máximo dos páginas) con esta estructura:</p>
+  <ul>
+    <li><strong>Captura o transcripción</strong> de la respuesta original de la IA.</li>
+    <li><strong>Tabla de auditoría</strong> con tres columnas: qué dijo la IA · qué es lo correcto · en qué norma me baso.</li>
+    <li><strong>Corrección propia</strong> de los asientos que estaban mal, escritos por ti en formato de Libro Diario, con glosa que inicie con P/R.</li>
+    <li><strong>Cierre reflexivo</strong> de un párrafo: ¿en qué momento estuviste a punto de aceptar una respuesta equivocada, y qué te hizo dudar?</li>
+  </ul>
+
+  <div class="clave-box">
+    <h4>Criterio de calificación: qué distingue el pensamiento crítico de la copia</h4>
+    <table class="tabla">
+      <thead><tr><th style="width:34%">Nivel</th><th>Evidencia observable en el informe</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Copia simple</strong></td><td>Pega la respuesta de la IA sin tabla de auditoría, o afirma que «está todo correcto» sin verificar ningún porcentaje contra la norma. No hay corrección propia.</td></tr>
+        <tr><td><strong>Verificación superficial</strong></td><td>Detecta uno o dos errores evidentes (por ejemplo, el IVA al 12%) pero no revisa los porcentajes de retención uno por uno ni comprueba las sumas de los asientos.</td></tr>
+        <tr><td><strong>Auditoría completa</strong></td><td>Revisa los ocho controles, identifica cada error con su porcentaje correcto, cita el artículo o la resolución que lo sustenta y rehace los asientos afectados verificando que cuadren.</td></tr>
+        <tr><td><strong>Criterio profesional</strong></td><td>Todo lo anterior y además distingue entre lo que la norma exige y lo que es criterio del contador, señala qué habría cambiado si el proveedor fuera contribuyente especial, y reconoce con honestidad en qué punto su propio razonamiento inicial fue erróneo.</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Regla de honestidad académica:</strong> declara al final del informe qué herramienta usaste, con qué prompt y qué parte del texto es tuya. Usar IA y declararlo es una práctica profesional legítima; usarla y ocultarlo, no.</p>
+  </div>
+</div>
+
+<!-- ================= PESTAÑA: REFLEXIÓN ================= -->
+<div id="reflexion" class="panel">
+  <h2>Reflexión</h2>
+  <p>Antes de responder, sitúa lo que hiciste hoy dentro de tu carrera. <strong>Negocios Internacionales no es únicamente aprender a negociar.</strong> Es una profesión que se sostiene sobre cuatro áreas que trabajan juntas: el <strong>comercio exterior</strong>, que mueve bienes y servicios entre países; las <strong>finanzas internacionales</strong>, que deciden con qué dinero, en qué moneda y a qué costo se mueven; el <strong>marketing y la negociación internacional</strong>, que definen a quién se le vende, con qué propuesta de valor y bajo qué condiciones; y el <strong>marco legal y normativo</strong>, que establece qué está permitido, qué se declara y ante quién se responde. Quien domina solo una de las cuatro no es un profesional de Negocios Internacionales: es un especialista parcial. Estas preguntas no tienen respuesta correcta; tienen respuesta <em>tuya</em>. Escríbelas con honestidad.</p>
+
+  <h3>Una analogía para empezar</h3>
+  <p><strong>Mira algo concreto que tengas cerca ahora mismo.</strong> Puede ser el celular con el que lees esto, la funda de arroz en la cocina, la olla en la que cocinaste ayer, el cuaderno donde tomas apuntes. Elige uno y no lo sueltes durante toda esta reflexión.</p>
+  <p><strong>Ahora piensa en la cadena de personas que hizo posible que ese objeto llegara a tus manos.</strong> Alguien lo fabricó o lo cosechó. Alguien lo empacó. Alguien lo transportó —quizá en un flete terrestre exactamente como el del asiento 9, con tarifa 0%—. Alguien lo importó y pagó el IVA en aduana. Alguien lo vendió al por mayor y retuvo un porcentaje a su proveedor. Alguien lo puso en una percha en Guayaquil y te lo facturó. Cada uno de esos actores emitió un documento, registró un asiento y declaró un impuesto. Ninguno de ellos te conoce, y sin embargo todos dependieron de que el eslabón anterior le entregara información confiable.</p>
+  <p><strong>Esa confianza no se sostiene sola.</strong> Se sostiene porque existe un lenguaje común —la contabilidad— y una autoridad que verifica —el SRI, la Superintendencia, sus equivalentes en cada país—. Cuando un exportador ecuatoriano negocia con un comprador en Rotterdam, el comprador no viaja a ver la bodega: lee los estados financieros. Cuando un banco decide si financia una importación, no confía en la palabra del gerente: revisa las declaraciones. <strong>La información contable es lo que permite que dos personas que no se conocen hagan negocios a diez mil kilómetros de distancia.</strong> Hoy escribiste un mes entero de esa información.</p>
+
+  <div class="refl-q"><span class="num">1.</span> Toma el objeto que elegiste. Reconstruye, con la mayor precisión que puedas, al menos cuatro actores de su cadena. ¿Cuál de ellos crees que tuvo que llevar contabilidad más rigurosa, y por qué? ¿Qué pasaría si uno solo de esos eslabones registrara mal sus impuestos?</div>
+
+  <div class="refl-q"><span class="num">2.</span> Hoy viste que Comercial El Astillero retuvo 1.226,50 entre IR e IVA durante julio, y que ese dinero <em>nunca fue suyo</em>. ¿Has estado alguna vez en una situación —con dinero, con un préstamo, con algo que te prestaron— en la que tuviste bajo tu control algo que no te pertenecía? ¿Qué sentiste? ¿Qué hiciste? ¿Qué te dice esa experiencia sobre el tipo de responsabilidad que asume un contador o un gerente financiero?</div>
+
+  <div class="refl-q"><span class="num">3.</span> Al trabajar el caso, ¿en qué momento exacto sentiste que te perdiste? Nómbralo con precisión: ¿fue al distinguir 15% de 0%?, ¿al decidir qué porcentaje de retención aplicar?, ¿al entender por qué el IVA en compras es un activo? Ahora responde algo más difícil: ¿qué hiciste cuando te perdiste? ¿Volviste atrás, seguiste de largo esperando que se aclarara solo, o cerraste el widget? Sé honesto contigo: esa reacción, y no la nota, es lo que va a determinar cómo te vaya en Contabilidad Financiera y en Contabilidad de Costos.</div>
+
+  <div class="refl-q"><span class="num">4.</span> Este caso te obligó a leer con lupa la diferencia entre «persona natural con título» y «sociedad», entre «productor» y «comercializador». En tu vida diaria, ¿eres una persona que lee los detalles o una que capta la idea general y avanza? Ninguna de las dos es mejor en abstracto. ¿En qué situaciones tu forma habitual te ha ayudado y en cuáles te ha costado caro?</div>
+
+  <div class="refl-q"><span class="num">5.</span> <strong>Autoexploración vocacional.</strong> De las cuatro áreas de Negocios Internacionales —comercio exterior, finanzas internacionales, marketing y negociación internacional, marco legal y normativo—, ¿en cuál te viste a ti mismo mientras trabajabas este caso? No respondas cuál te suena más atractiva: responde en cuál te sorprendiste concentrado, perdiendo la noción del tiempo o queriendo entender más. Explica por qué crees que fue esa. Y luego responde lo contrario: ¿cuál de las cuatro te resultó más ajena o más aburrida, y qué crees que necesitarías para que dejara de serlo? Guarda esta respuesta; volverás a leerla al terminar la Unidad 4 y compararás si algo cambió.</div>
+
+  <div class="refl-q"><span class="num">6.</span> Comercial El Astillero, la manufacturera del Caso B y la persona natural del Caso C te acompañarán todo el curso. Si tuvieras que trabajar en una de las tres, ¿en cuál preferirías estar y en qué puesto? ¿Qué dice esa elección sobre el tipo de entorno laboral en el que te sientes cómodo?</div>
+
+  <div class="nota-box">Escribe tus respuestas en tu portafolio digital, con fecha. No busques que suenen bien: busca que sean verdaderas. Un portafolio con respuestas complacientes no le sirve a nadie, y menos a ti dentro de tres semestres.</div>
+</div>
+
+<!-- ================= PESTAÑA: BIBLIOGRAFÍA ================= -->
+<div id="biblio" class="panel">
+  <h2>Bibliografía</h2>
+  <p>Referencias en formato APA 7.ª edición. Las tres primeras corresponden a la bibliografía básica declarada en el sílabo de la asignatura; las siguientes son las fuentes normativas y técnicas aplicadas directamente en este caso.</p>
+
+  <div class="biblio-card"><span class="tipo">Bibliografía básica del sílabo</span><br>
+  Zapata Sánchez, P. (2011). <em>Laboratorio de contabilidad general</em> (7.ª ed.). McGraw-Hill.</div>
+
+  <div class="biblio-card"><span class="tipo">Bibliografía básica del sílabo</span><br>
+  Vite Rangel, V. T. (2017). <em>Contabilidad general</em>. Editorial Digital UNID. https://elibro.net/es/ereader/uguayaquil/41179</div>
+
+  <div class="biblio-card"><span class="tipo">Bibliografía básica del sílabo</span><br>
+  Moreno Fernández, J. A. (2014). <em>Contabilidad básica</em> (4.ª ed.). Grupo Editorial Patria. https://elibro.net/es/ereader/uguayaquil/39416</div>
+
+  <div class="biblio-card"><span class="tipo">Norma legal</span><br>
+  Congreso Nacional del Ecuador. (2004). <em>Ley de Régimen Tributario Interno</em> (Registro Oficial Suplemento 463, 17 de noviembre de 2004, y sus reformas). Servicio de Rentas Internas. https://www.sri.gob.ec</div>
+
+  <div class="biblio-card"><span class="tipo">Norma reglamentaria</span><br>
+  Servicio de Rentas Internas. (2020). <em>Resolución NAC-DGERCGC20-00000061: porcentajes de retención del Impuesto al Valor Agregado</em>. https://www.sri.gob.ec</div>
+
+  <div class="biblio-card"><span class="tipo">Norma reglamentaria</span><br>
+  Servicio de Rentas Internas. (2026). <em>Resolución NAC-DGERCGC26-00000009: porcentajes de retención en la fuente del Impuesto a la Renta</em> (vigente desde el 1 de marzo de 2026). https://www.sri.gob.ec</div>
+
+  <div class="biblio-card"><span class="tipo">Norma técnica contable</span><br>
+  IFRS Foundation. (2018). <em>Marco Conceptual para la Información Financiera</em>. https://www.ifrs.org</div>
+
+  <div class="biblio-card"><span class="tipo">Norma técnica contable</span><br>
+  IFRS Foundation. (2023). <em>NIC 1 Presentación de estados financieros</em>. https://www.ifrs.org</div>
+
+  <div class="biblio-card"><span class="tipo">Organismo de control</span><br>
+  Superintendencia de Compañías, Valores y Seguros. (s. f.). <em>Normativa contable y societaria para compañías sujetas a control</em>. https://www.supercias.gob.ec</div>
+
+  <div class="biblio-card"><span class="tipo">Organismo de control</span><br>
+  Instituto Ecuatoriano de Seguridad Social. (s. f.). <em>Aportación al Seguro General Obligatorio</em>. https://www.iess.gob.ec</div>
+
+  <div class="nota-box"><strong>Nota sobre el uso de estas referencias.</strong> Verifica siempre la vigencia de las normas antes de citarlas en un trabajo o de aplicarlas profesionalmente: las resoluciones del SRI se sustituyen con frecuencia y una cita de norma derogada invalida el argumento. Para ampliar con literatura académica revisada por pares, consulta <strong>Google Scholar</strong> y el <strong>repositorio institucional de la Universidad de Guayaquil</strong>; para el texto oficial y actualizado de las normas, acude siempre a sri.gob.ec, ifrs.org y supercias.gob.ec, nunca a copias alojadas en sitios de terceros.</div>
+</div>
+
+<footer class="pie">
+  Universidad de Guayaquil &middot; Facultad de Ciencias Administrativas &middot; Carrera de Negocios Internacionales<br>
+  Contabilidad General (091601124) &middot; Periodo Académico Extraordinario 2026 &middot; Día 4 &mdash; Caso A: comercializadora minorista
+</footer>
+</div><!-- /wrap -->
+<script>
+/* =====================================================================
+   1. NAVEGACIÓN POR PESTAÑAS
+   El CSS oculta con .panel{display:none} y muestra con .panel.visible.
+   El JS revierte usando exactamente el mismo mecanismo: classList.
+   ===================================================================== */
+function showTab(id, btn){
+  var paneles = document.querySelectorAll('.panel');
+  for(var i=0;i<paneles.length;i++){ paneles[i].classList.remove('visible'); }
+  document.getElementById(id).classList.add('visible');
+  var botones = document.querySelectorAll('nav.tabs button');
+  for(var j=0;j<botones.length;j++){ botones[j].classList.remove('active'); }
+  if(btn){ btn.classList.add('active'); }
+  window.scrollTo(0,0);
+}
+
+/* =====================================================================
+   2. ACORDEÓN DEL REPASO
+   El CSS oculta con .acc-body{display:none} y abre con .acc-body.abierto.
+   ===================================================================== */
+function toggleAcc(id, cab){
+  var cuerpo = document.getElementById(id);
+  var flecha = document.getElementById(id + '-f');
+  if(cuerpo.classList.contains('abierto')){
+    cuerpo.classList.remove('abierto');
+    flecha.innerHTML = '&#9654;';
+  } else {
+    cuerpo.classList.add('abierto');
+    flecha.innerHTML = '&#9660;';
+  }
+}
+
+/* =====================================================================
+   3. EJERCICIO INTERACTIVO
+   ===================================================================== */
+var EJ_CORRECTAS = { ei1:"b", ei2:"c", ei3:"b", ei4:"b", ei5:"c", ei6:"b", ei7:"b", ei8:"b" };
+
+var EJ_FEEDBACK = {
+ ei1:"La respuesta correcta es la (b): 2% de IR y 30% de IVA. Se trata de la adquisición de bienes muebles de naturaleza corporal, tramo al que la resolución vigente asigna el 2% sobre la base imponible de 8.000,00, es decir 160,00. La retención de IVA se calcula sobre el impuesto facturado, no sobre la base: 30% de 1.200,00 = 360,00, porcentaje que corresponde a la compra de bienes. La opción (a) usa el 1%, reservado a transporte, bienes agrícolas comprados al productor y RIMPE Emprendedores. La (c) confunde el 70%, que se aplica a servicios, con el 30% de bienes. La (d) traslada los porcentajes de un servicio profesional a una compra de mercadería.",
+ ei2:"La respuesta correcta es la (c): 10% de IR y 100% de IVA. Es una persona natural con título profesional y en su trabajo prevalece el intelecto, tramo del 10%. La retención de IVA del 100% está expresamente prevista para los servicios profesionales de personas naturales con título: el profesional no recibe nada del impuesto, la empresa lo entrega íntegro al SRI. La opción (b) acierta el IR pero aplica el 70% de servicios generales. La (d) usa el 3%, que corresponde a servicios de personas naturales donde prevalece la mano de obra, no el intelecto. La (a) usa un porcentaje que no existe en la tabla vigente.",
+ ei3:"La respuesta correcta es la (b): 5% de IR y 70% de IVA. El servicio es profesional, pero quien lo presta es una sociedad, y a los servicios profesionales prestados por sociedades les corresponde el 5%. La retención de IVA es del 70%, porcentaje general de los servicios. El 100% está reservado a personas naturales con título, no a sociedades: por eso la (c) es incorrecta. La (d) aplica el 10% propio de honorarios a personas naturales. La (a) usa el 3% residual, que solo se aplica cuando el concepto no encaja en ningún tramo específico, y aquí sí encaja.",
+ ei4:"La respuesta correcta es la (b): 10% de IR y 100% de IVA. El arrendamiento de bienes inmuebles está expresamente en el tramo del 10%, junto con los honorarios donde prevalece el intelecto, la docencia y las regalías. El 100% de retención de IVA se aplica porque el arrendador es una persona natural NO obligada a llevar contabilidad; si el arrendador fuera una sociedad o una persona natural obligada a llevar contabilidad, la retención de IVA sería del 70%. La opción (d) acierta el IR y falla en el IVA con el 30%, que es de bienes. La (c) trata el arriendo como una compra de bienes.",
+ ei5:"La respuesta correcta es la (c): 1% de IR y no procede retención de IVA. El transporte terrestre de carga está gravado con tarifa 0% según el artículo 56 de la LRTI, de modo que la factura no contiene IVA. Como la retención de IVA se calcula sobre el impuesto facturado, retener sobre cero no tiene sentido: no se practica. La retención en la fuente de IR sí procede, al 1%, tramo expresamente previsto para el transporte de carga. Las opciones (a), (b) y (d) fallan todas en lo mismo: pretenden retener un IVA que nunca se facturó. Es el error más frecuente en este tema.",
+ ei6:"La respuesta correcta es la (b): 1,75% de IR y no procede retención de IVA. Dos decisiones separadas. Primera: el arroz, el fréjol y la lenteja en estado natural están en el artículo 55 de la LRTI con tarifa 0%, por lo tanto no hay IVA y no hay retención de IVA; eso descarta (c) y (d). Segunda: son bienes agrícolas y el proveedor es un comercializador, no el productor, tramo del 1,75%. Si se los hubiéramos comprado directamente al agricultor habría sido 1%, que es lo que propone la opción (a). La diferencia entre productor y comercializador es exactamente lo que aquí se evalúa.",
+ ei7:"La respuesta correcta es la (b): dos activos, 140,00 de anticipo de IR retenido y 315,00 de IVA retenido en ventas. Cuando a la empresa le retienen, no pierde dinero: recibe menos efectivo hoy a cambio de un derecho. El anticipo de IR se descontará del Impuesto a la Renta anual; el IVA retenido se descuenta del IVA por pagar en la liquidación mensual. La opción (a) las trata como gasto, lo que reduciría indebidamente la utilidad. La (c) invierte los papeles: sería pasivo si la empresa hubiese retenido a otro, no si le retuvieron a ella. La (d) reduce el ingreso, cuando el ingreso devengado es el valor completo de la venta: 7.000,00.",
+ ei8:"La respuesta correcta es la (b): IVA por pagar de 75,00. La fórmula es IVA en ventas menos IVA en compras menos IVA retenido en ventas: 2.010,00 − 1.620,00 − 315,00 = 75,00, saldo acreedor, es decir deuda con el fisco. La opción (a) olvida restar la retención sufrida y da 390,00. La (c) suma en lugar de restar el crédito. La (d) confunde el signo: habría crédito tributario a favor solo si el resultado fuera negativo, y aquí es positivo. Recuerda además que ese valor no se paga el 31 de julio: se declara y paga en agosto según el noveno dígito del RUC."
+};
+
+function verificarEjercicio(){
+  var claves = Object.keys(EJ_CORRECTAS);
+  var faltan = 0;
+  for(var i=0;i<claves.length;i++){
+    if(!document.querySelector('input[name="'+claves[i]+'"]:checked')){ faltan++; }
+  }
+  var aviso = document.getElementById('aviso-ej');
+  if(faltan > 0){
+    aviso.classList.add('mostrar');
+    aviso.scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
+  aviso.classList.remove('mostrar');
+  var aciertos = 0;
+  for(var k=0;k<claves.length;k++){
+    var nombre = claves[k];
+    var sel = document.querySelector('input[name="'+nombre+'"]:checked').value;
+    var ok = (sel === EJ_CORRECTAS[nombre]);
+    if(ok){ aciertos++; }
+    var caja = document.getElementById('fb-'+nombre);
+    caja.className = 'fb mostrar ' + (ok ? 'ok' : 'mal');
+    caja.innerHTML = '<span class="veredicto">' + (ok ? 'Correcto' : 'Incorrecto') + '</span>' + EJ_FEEDBACK[nombre];
+  }
+  mostrarResultado('ej', aciertos, claves.length);
+}
+
+function reiniciarEjercicio(){
+  var claves = Object.keys(EJ_CORRECTAS);
+  for(var i=0;i<claves.length;i++){
+    var op = document.getElementsByName(claves[i]);
+    for(var j=0;j<op.length;j++){ op[j].checked = false; }
+    var caja = document.getElementById('fb-'+claves[i]);
+    caja.className = 'fb'; caja.innerHTML = '';
+  }
+  document.getElementById('aviso-ej').classList.remove('mostrar');
+  document.getElementById('res-ej').classList.remove('mostrar');
+  document.getElementById('barra-ej').style.width = '0%';
+  window.scrollTo(0,0);
+}
+
+/* =====================================================================
+   4. CUESTIONARIO
+   ===================================================================== */
+var QI_CORRECTAS = { qi1:"c", qi2:"a", qi3:"b", qi4:"b", qi5:"c", qi6:"c", qi7:"b", qi8:"c", qi9:"c", qi10:"b" };
+
+var QI_FEEDBACK = {
+ qi1:"La respuesta correcta es la (c): 15%. Es la tarifa general vigente, aplicable a todo bien o servicio que no esté expresamente exceptuado. El 12% de la opción (a) estuvo vigente durante años y sigue apareciendo en materiales desactualizados y en respuestas de inteligencia artificial: es el error más común en este tema. La opción (d) es falsa: el IVA es un impuesto nacional y no varía por cantón ni por provincia.",
+ qi2:"La respuesta correcta es la (a): el artículo 55 de la Ley de Régimen Tributario Interno enumera los bienes gravados con tarifa 0%. El artículo 56, opción (b), enumera los servicios con tarifa 0%, entre ellos el transporte terrestre de carga que aparece en el asiento 9 del caso. El artículo 66, opción (c), regula el crédito tributario y la proporcionalidad. La opción (d) es falsa e importante de descartar: la tarifa la fija la ley, no una resolución; lo que sí se fija por resolución son los porcentajes de retención.",
+ qi3:"La respuesta correcta es la (b). El agente de retención es un contribuyente al que el Estado encarga descontar parte del impuesto al momento de pagar a su proveedor y entregarlo después al SRI. No paga un impuesto adicional, como sugiere (a); esa descripción se acerca más a la de contribuyente especial, que tampoco paga más sino que soporta porcentajes distintos. No es un funcionario público, como dice (c). Y la (d) invierte los papeles: quien sufre la retención es el proveedor, no el agente.",
+ qi4:"La respuesta correcta es la (b): es un activo, un crédito tributario. La empresa pagó ese IVA a su proveedor y tiene derecho a descontarlo del IVA que cobró en sus ventas, por eso figura en el activo hasta la liquidación mensual. No es gasto, como dice (a), porque no se consume: se recupera. No es pasivo, como dice (c): pasivo es el IVA en ventas, que sí se debe al Estado. La (d) es parcialmente cierta pero solo en un caso que aquí no aplica: cuando la empresa vende exclusivamente bienes con tarifa 0%, ese IVA no genera crédito y se carga al costo. La palabra que hace falsa a la (d) es «siempre».",
+ qi5:"La respuesta correcta es la (c): un pasivo. La empresa descontó ese valor al proveedor y lo tiene en su poder, pero no le pertenece: debe entregarlo al SRI en la fecha que fija el noveno dígito de su RUC. La opción (b) describe lo que ocurre en el otro lado de la operación: para el proveedor que sufrió la retención sí es un activo, un anticipo de su impuesto anual. La (a) es falsa porque no hay ingreso alguno: el gasto o la compra se reconocen por su valor completo. La (d) confundiría un dinero de terceros con un costo propio.",
+ qi6:"La respuesta correcta es la (c): 100%. Es el porcentaje reservado a los servicios profesionales prestados por personas naturales con título, junto con el arrendamiento de inmuebles de personas naturales no obligadas a llevar contabilidad, las dietas y las liquidaciones de compra. El 30% de la opción (a) corresponde a la adquisición de bienes; el 70% de la (b), a los servicios en general, incluidos los prestados por sociedades. La opción (d) confunde un porcentaje de retención de IVA con uno de retención de Impuesto a la Renta.",
+ qi7:"La respuesta correcta es la (b): «Para Registrar». La glosa explica brevemente qué se registró y con qué respaldo documental, y por convención se encabeza con P/R. No indica un estado de aprobación, como sugiere (a). No identifica el documento fuente por sí sola, como propone (c), aunque una buena glosa sí lo mencione. Y no se limita a los egresos, como dice (d): todo asiento lleva glosa, incluidos los de apertura, los de venta y los de liquidación.",
+ qi8:"La respuesta correcta es la (c): USD 2.170,00. Desglose: base 2.000,00 más IVA 15% de 300,00 da un total facturado de 2.300,00. Sobre la base se retiene 2% de Impuesto a la Renta, esto es 40,00, porque se trata de bienes muebles de naturaleza corporal. Sobre el IVA facturado se retiene 30%, esto es 90,00. El neto entregado al proveedor es 2.300,00 − 40,00 − 90,00 = 2.170,00. La opción (a) ignora ambas retenciones. La (b) aplica solo la retención de IVA. La (d) confunde el valor neto con la base imponible.",
+ qi9:"La respuesta correcta es la (c): USD 1.350,00. Desglose: base 1.500,00 más IVA 15% de 225,00 da 1.725,00 facturados. Al ser persona natural con título profesional donde prevalece el intelecto, se retiene 10% de IR sobre la base, esto es 150,00, y 100% del IVA, esto es 225,00. Neto: 1.725,00 − 150,00 − 225,00 = 1.350,00. La opción (a) es el total facturado sin retenciones. La (b) aplica solo la retención de IVA. La (d) resultaría de retener 15% de IR, porcentaje que no existe en la tabla vigente.",
+ qi10:"La respuesta correcta es la (b): no le genera crédito tributario y se convierte en parte de su costo o gasto. El crédito tributario existe para que el IVA no se acumule en cadena, pero solo opera cuando la empresa genera IVA en sus ventas o realiza operaciones que la ley habilita, como las exportaciones. Si todas sus ventas son con tarifa 0% locales, no hay IVA en ventas contra el cual descontar, y el impuesto pagado se incorpora al costo. La opción (a) es falsa: la devolución automática no procede en este supuesto. La (c) describiría un activo que nunca se realiza, lo que contradice la definición misma de activo. La (d) confunde vender con tarifa 0% con no pagar IVA en las compras: la tienda sí paga IVA por su arriendo, sus servicios y sus suministros gravados. Este es, además, el fundamento de la regla de proporcionalidad del artículo 66 que se advirtió en la pestaña Información del mes."
+};
+
+function verificarCuestionario(){
+  var claves = Object.keys(QI_CORRECTAS);
+  var faltan = 0;
+  for(var i=0;i<claves.length;i++){
+    if(!document.querySelector('input[name="'+claves[i]+'"]:checked')){ faltan++; }
+  }
+  var aviso = document.getElementById('aviso-qi');
+  if(faltan > 0){
+    aviso.classList.add('mostrar');
+    aviso.scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
+  aviso.classList.remove('mostrar');
+  var aciertos = 0;
+  for(var k=0;k<claves.length;k++){
+    var nombre = claves[k];
+    var sel = document.querySelector('input[name="'+nombre+'"]:checked').value;
+    var ok = (sel === QI_CORRECTAS[nombre]);
+    if(ok){ aciertos++; }
+    var caja = document.getElementById('fb-'+nombre);
+    caja.className = 'fb mostrar ' + (ok ? 'ok' : 'mal');
+    caja.innerHTML = '<span class="veredicto">' + (ok ? 'Correcto' : 'Incorrecto') + '</span>' + QI_FEEDBACK[nombre];
+  }
+  mostrarResultado('qi', aciertos, claves.length);
+}
+
+function reiniciarCuestionario(){
+  var claves = Object.keys(QI_CORRECTAS);
+  for(var i=0;i<claves.length;i++){
+    var op = document.getElementsByName(claves[i]);
+    for(var j=0;j<op.length;j++){ op[j].checked = false; }
+    var caja = document.getElementById('fb-'+claves[i]);
+    caja.className = 'fb'; caja.innerHTML = '';
+  }
+  document.getElementById('aviso-qi').classList.remove('mostrar');
+  document.getElementById('res-qi').classList.remove('mostrar');
+  document.getElementById('barra-qi').style.width = '0%';
+  window.scrollTo(0,0);
+}
+
+/* =====================================================================
+   5. RESULTADO CON BARRA ANIMADA Y EMOJI
+   ===================================================================== */
+function mostrarResultado(pref, aciertos, total){
+  var pct = Math.round((aciertos / total) * 1000) / 10;
+  var emoji, msg;
+  if(pct === 100){
+    emoji = '\uD83C\uDFC6';
+    msg = 'Dominio completo. Distingues sin error el bien del servicio, la persona natural de la sociedad y el productor del comercializador. Ya puedes resolver el Caso B y el Caso C sin apoyo.';
+  } else if(pct >= 80){
+    emoji = '\uD83C\uDFAF';
+    msg = 'Muy buen desempeño. Relee con calma la explicación de los ítems que fallaste: casi siempre el error está en identificar QUIÉN es el proveedor, no en el porcentaje en sí.';
+  } else if(pct >= 60){
+    emoji = '\uD83D\uDCD8';
+    msg = 'Vas por buen camino, pero todavía se te mezclan los tramos. Vuelve a la pestaña Información del mes, copia a mano las dos tablas de retención y resuelve de nuevo. Escribirlas a mano fija la diferencia mejor que releerlas.';
+  } else if(pct >= 40){
+    emoji = '\u26A0\uFE0F';
+    msg = 'Hay confusión de base. Antes de reintentar, rehaz por escrito los cuatro pasos (base, IVA, retenciones, neto) sobre los asientos 2, 6, 8 y 9 del Libro Diario, comparando tu resultado con el del widget línea por línea.';
+  } else {
+    emoji = '\uD83D\uDCD6';
+    msg = 'Detente y regresa al inicio. Lee completa la pestaña Información del mes y luego los asientos 2 a 9 del Libro Diario, uno por uno, sin saltarte el cálculo desglosado. No avances al Caso B hasta reintentar y superar el 60%.';
+  }
+  document.getElementById('emoji-'+pref).innerHTML = emoji;
+  document.getElementById('punt-'+pref).innerHTML = aciertos + ' de ' + total + ' &middot; ' + pct + '%';
+  document.getElementById('msg-'+pref).innerHTML = msg;
+  var caja = document.getElementById('res-'+pref);
+  caja.classList.add('mostrar');
+  var barra = document.getElementById('barra-'+pref);
+  barra.style.width = '0%';
+  setTimeout(function(){ barra.style.width = pct + '%'; }, 120);
+  caja.scrollIntoView({behavior:'smooth', block:'center'});
+}
+</script>
+</body>
+</html>

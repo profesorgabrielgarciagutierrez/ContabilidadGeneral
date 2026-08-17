@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Día 5 · Proceso contable (I): Jornalización, Mayorización y Balance de Comprobación</title>
+<!--
+  PLAN DEL ARCHIVO (fragmentos)
+  Fragmento 1: head + CSS completo + encabezado + menú de pestañas + panel Repaso
+  Fragmento 2: Tema 1 (análisis y reconocimiento de transacciones) + Tema 2 (jornalización)
+  Fragmento 3: Tema 3 (mayorización) + Tema 4 (balance de comprobación preliminar)
+  Fragmento 4: Ejercicio interactivo + Cuestionario
+  Fragmento 5: Actividad con IA + Reflexión + Bibliografía + JS
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============ BASE ============ */
+*{box-sizing:border-box;}
+body{margin:0;padding:0;background:#eef2f6;font-family:'Source Sans 3',Arial,sans-serif;color:#20262e;line-height:1.65;font-size:17px;}
+h2,h3,h4{font-family:'Lora',Georgia,serif;color:#003366;line-height:1.3;}
+h2{font-size:1.55rem;margin:0 0 14px;border-bottom:3px solid #87CEEB;padding-bottom:8px;}
+h3{font-size:1.22rem;margin:26px 0 8px;}
+h4{font-size:1.05rem;margin:18px 0 6px;color:#14507f;}
+p{margin:0 0 12px;text-align:justify;}
+ul,ol{margin:0 0 14px;padding-left:24px;}
+li{margin-bottom:7px;text-align:justify;}
+strong{color:#002a52;}
+a{color:#14507f;}
+
+/* ============ ENCABEZADO ============ */
+.header{background:#003366;color:#ffffff;padding:26px 18px 22px;text-align:center;}
+.header h1{font-family:'Lora',Georgia,serif;font-size:1.5rem;margin:0 0 6px;color:#ffffff;line-height:1.3;}
+.header .sub{font-size:1rem;color:#d7e7f7;margin:0 0 10px;}
+.header .meta{font-size:.88rem;color:#ffffff;background:rgba(255,255,255,.14);display:inline-block;padding:6px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.35);}
+
+/* ============ PESTAÑAS ============ */
+.tabs{background:#87CEEB;display:flex;overflow-x:auto;white-space:nowrap;border-bottom:3px solid #003366;-webkit-overflow-scrolling:touch;}
+.tab-btn{background:transparent;color:#000000;border:none;padding:13px 17px;font-family:'Source Sans 3',Arial,sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;flex:0 0 auto;border-right:1px solid rgba(0,51,102,.25);}
+.tab-btn:hover{background:rgba(255,255,255,.45);}
+.tab-btn.active{background:#ffffff;color:#003366;font-weight:700;}
+
+/* ============ CONTENEDOR ============ */
+.container{max-width:1080px;margin:0 auto;padding:0 14px 60px;}
+.panel{display:none;background:#ffffff;padding:26px 24px 34px;border-radius:0 0 10px 10px;box-shadow:0 3px 14px rgba(0,42,82,.12);}
+.panel.active{display:block;}
+.lead{font-size:1.05rem;color:#14507f;font-weight:600;margin-bottom:18px;}
+.center{text-align:center;}
+
+/* ============ RECUADROS ============ */
+.def-box{background:#f2f8fd;border-left:6px solid #003366;padding:14px 18px;margin:14px 0 18px;border-radius:0 8px 8px 0;}
+.def-box .term{display:block;font-family:'Lora',Georgia,serif;font-weight:700;color:#003366;font-size:1.08rem;margin-bottom:5px;}
+.ejemplo-box{background:#fffaf0;border:1px solid #e8c98a;border-left:6px solid #d69a1e;padding:14px 18px;margin:16px 0;border-radius:0 8px 8px 0;}
+.clave-box{background:#003366;color:#ffffff;padding:16px 20px;margin:22px 0 8px;border-radius:8px;}
+.clave-box h4{color:#87CEEB;margin-top:0;}
+.clave-box p,.clave-box li{color:#ffffff;}
+.clave-box strong{color:#bfe3f8;}
+.alerta-box{background:#fdf2f2;border:1px solid #e3a1a1;border-left:6px solid #b32d2d;padding:13px 18px;margin:16px 0;border-radius:0 8px 8px 0;}
+.alerta-box strong{color:#8c1f1f;}
+.carrera-box{background:#eaf7ee;border:1px solid #8dc79c;border-left:6px solid #1e7a3c;padding:15px 19px;margin:22px 0;border-radius:0 8px 8px 0;}
+.carrera-box h4{color:#14612f;margin-top:0;}
+.carrera-box strong{color:#14612f;}
+.nota{font-size:.9rem;color:#4d5763;font-style:italic;}
+
+/* ============ TABLAS GENERALES ============ */
+.tabla{width:100%;border-collapse:collapse;margin:14px 0 18px;font-size:.93rem;}
+.tabla th{background:#003366;color:#ffffff;padding:9px 10px;text-align:left;border:1px solid #003366;font-weight:600;}
+.tabla td{border:1px solid #c3ced9;padding:8px 10px;vertical-align:top;background:#ffffff;}
+.tabla tr:nth-child(even) td{background:#f6f9fc;}
+.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;}
+.scroll-x{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:18px;}
+
+/* ============ ACORDEÓN (REPASO) ============ */
+.acc-item{border:1px solid #b9cbdd;border-radius:8px;margin-bottom:12px;overflow:hidden;}
+.acc-head{background:#e8f1f9;color:#003366;padding:13px 16px;cursor:pointer;font-weight:700;font-family:'Lora',Georgia,serif;display:flex;align-items:center;gap:10px;}
+.acc-head:hover{background:#dceaf6;}
+.acc-head .arrow{color:#14507f;font-size:.85rem;}
+.acc-body{display:none;padding:16px 18px 6px;background:#ffffff;border-top:1px solid #b9cbdd;}
+.acc-body.open{display:block;}
+
+/* ============ LIBRO DIARIO (ASIENTOS TRADICIONALES) ============ */
+.libro-diario{width:100%;border-collapse:collapse;font-size:.9rem;margin:10px 0 6px;min-width:640px;}
+.libro-diario th{background:#003366;color:#ffffff;padding:7px 8px;border:1px solid #003366;text-align:center;font-weight:600;font-size:.85rem;}
+.libro-diario td{border-left:1px solid #c3ced9;border-right:1px solid #c3ced9;padding:4px 9px;vertical-align:top;background:#ffffff;}
+.libro-diario .ld-num td{text-align:center;font-weight:700;color:#003366;background:#f0f5fa;border-top:1px solid #9db4ca;border-bottom:1px solid #9db4ca;letter-spacing:1px;}
+.ld-cuenta{padding-left:9px;}
+.ld-sub{padding-left:38px;font-style:normal;}
+.ld-glosa{font-style:italic;color:#48525e;padding-left:20px;font-size:.87rem;}
+.libro-diario .ld-total td{font-weight:700;border-top:2px solid #003366;border-bottom:2px solid #003366;background:#f0f5fa;}
+.cod{font-variant-numeric:tabular-nums;white-space:nowrap;color:#14507f;font-size:.85rem;}
+.fecha-col{white-space:nowrap;font-size:.85rem;color:#14507f;}
+
+/* ============ LIBRO MAYOR ============ */
+.mayor-t{width:100%;border-collapse:collapse;margin:10px 0 18px;font-size:.9rem;min-width:520px;}
+.mayor-t caption{caption-side:top;text-align:left;font-family:'Lora',Georgia,serif;font-weight:700;color:#003366;padding-bottom:5px;}
+.mayor-t th{background:#14507f;color:#ffffff;padding:7px 9px;border:1px solid #14507f;text-align:center;font-size:.85rem;}
+.mayor-t td{border:1px solid #c3ced9;padding:6px 9px;background:#ffffff;}
+.mayor-t .ld-total td{font-weight:700;background:#f0f5fa;border-top:2px solid #14507f;}
+.cuenta-t{width:100%;max-width:430px;border-collapse:collapse;margin:12px auto 20px;font-size:.9rem;}
+.cuenta-t caption{caption-side:top;background:#003366;color:#ffffff;font-family:'Lora',Georgia,serif;font-weight:700;padding:7px;border-radius:6px 6px 0 0;}
+.cuenta-t th{border:1px solid #003366;background:#e8f1f9;color:#003366;padding:5px;width:50%;text-align:center;font-size:.85rem;}
+.cuenta-t td{border:1px solid #c3ced9;padding:5px 10px;background:#ffffff;}
+.cuenta-t .ld-total td{font-weight:700;background:#f0f5fa;border-top:2px solid #003366;}
+
+/* ============ EJERCICIO Y CUESTIONARIO ============ */
+.item{border:1px solid #c9d6e2;border-radius:9px;padding:15px 17px;margin-bottom:16px;background:#fbfdff;}
+.item-num{display:inline-block;background:#003366;color:#ffffff;font-weight:700;border-radius:50%;width:28px;height:28px;line-height:28px;text-align:center;margin-right:9px;font-size:.9rem;}
+.pregunta{font-weight:600;margin-bottom:10px;display:block;}
+.badge{display:inline-block;font-size:.72rem;font-weight:700;padding:3px 9px;border-radius:12px;margin-left:6px;vertical-align:middle;letter-spacing:.4px;}
+.badge-teorica{background:#d9ecfa;color:#0f4a78;border:1px solid #8cc3e8;}
+.badge-caso{background:#fdeedd;color:#8a4b06;border:1px solid #e6b877;}
+.opciones{margin:0;padding:0;list-style:none;}
+.opcion{display:block;padding:8px 11px;margin-bottom:6px;border:1px solid #d3dde7;border-radius:7px;cursor:pointer;background:#ffffff;}
+.opcion:hover{background:#eef6fd;}
+.opcion input{margin-right:9px;}
+.resultado{display:none;margin-top:11px;padding:11px 14px;border-radius:7px;font-size:.94rem;}
+.resultado.correcto{display:block;background:#e9f7ee;border-left:5px solid #1e7a3c;color:#14612f;}
+.resultado.incorrecto{display:block;background:#fdeeee;border-left:5px solid #b32d2d;color:#8c1f1f;}
+.btn{background:#003366;color:#ffffff;border:none;padding:12px 26px;border-radius:26px;font-family:'Source Sans 3',Arial,sans-serif;font-size:1rem;font-weight:600;cursor:pointer;margin:8px 8px 8px 0;}
+.btn:hover{background:#14507f;}
+.btn-reiniciar{background:#6b7683;}
+.btn-reiniciar:hover{background:#525c67;}
+.alerta-faltan{display:none;background:#fff5e0;border:1px solid #e6b877;border-left:5px solid #d69a1e;padding:11px 15px;border-radius:7px;margin:10px 0;color:#8a4b06;font-weight:600;}
+.score-box{display:none;background:#f2f8fd;border:2px solid #003366;border-radius:10px;padding:18px 20px;margin:16px 0;text-align:center;}
+.score-box h3{margin-top:0;}
+.emoji{font-size:2.6rem;display:block;margin-bottom:6px;}
+.barra-cont{width:100%;height:24px;background:#dbe5ee;border-radius:14px;overflow:hidden;margin:12px 0 6px;}
+.barra{height:100%;width:0;background:linear-gradient(90deg,#14507f,#1e7a3c);border-radius:14px;transition:width 1.1s ease;}
+
+/* ============ ACTIVIDAD IA ============ */
+.prompt-box{background:#12212f;color:#e8f1f9;padding:16px 18px;border-radius:9px;font-family:'Courier New',monospace;font-size:.88rem;white-space:pre-wrap;line-height:1.55;margin:12px 0 16px;overflow-x:auto;}
+.paso{background:#f6f9fc;border:1px solid #c9d6e2;border-left:6px solid #14507f;padding:12px 16px;border-radius:0 8px 8px 0;margin-bottom:12px;}
+
+/* ============ REFLEXIÓN ============ */
+.refl-q{background:#ffffff;border:1px solid #c9d6e2;border-left:6px solid #87CEEB;padding:13px 17px;margin-bottom:13px;border-radius:0 8px 8px 0;}
+.refl-q strong{display:block;color:#003366;margin-bottom:4px;}
+
+/* ============ BIBLIOGRAFÍA ============ */
+.bib-card{background:#f6f9fc;border:1px solid #c9d6e2;border-radius:9px;padding:13px 17px;margin-bottom:12px;}
+.bib-card .autor{font-weight:700;color:#003366;}
+.bib-nota{background:#fffaf0;border:1px solid #e8c98a;padding:12px 16px;border-radius:8px;font-size:.9rem;color:#6b4c12;margin-top:16px;}
+
+@media(max-width:640px){
+  body{font-size:16px;}
+  .header h1{font-size:1.2rem;}
+  .panel{padding:20px 14px 28px;}
+  h2{font-size:1.3rem;}
+  .tab-btn{padding:11px 13px;font-size:.88rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= ENCABEZADO ================= -->
+<div class="header">
+  <h1>Contabilidad General · Día 5 — Unidad 2</h1>
+  <p class="sub">Pasos del proceso contable (I parte): análisis y reconocimiento de transacciones · Jornalización · Mayorización · Balance de comprobación preliminar</p>
+  <span class="meta">Universidad de Guayaquil · Facultad de Ciencias Administrativas · Negocios Internacionales · Lunes 17 de agosto de 2026 · 5 horas</span>
+</div>
+
+<!-- ================= MENÚ DE PESTAÑAS ================= -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('repaso',this)">Repaso</button>
+  <button class="tab-btn" onclick="showTab('tema1',this)">Tema 1</button>
+  <button class="tab-btn" onclick="showTab('tema2',this)">Tema 2</button>
+  <button class="tab-btn" onclick="showTab('tema3',this)">Tema 3</button>
+  <button class="tab-btn" onclick="showTab('tema4',this)">Tema 4</button>
+  <button class="tab-btn" onclick="showTab('ejercicio',this)">Ejercicio Interactivo</button>
+  <button class="tab-btn" onclick="showTab('cuestionario',this)">Cuestionario</button>
+  <button class="tab-btn" onclick="showTab('ia',this)">Actividad con IA</button>
+  <button class="tab-btn" onclick="showTab('reflexion',this)">Reflexión</button>
+  <button class="tab-btn" onclick="showTab('biblio',this)">Bibliografía</button>
+</div>
+
+<div class="container">
+
+<!-- ================= PANEL: REPASO ================= -->
+<div class="panel active" id="repaso">
+  <h2>Repaso de las clases anteriores</h2>
+  <p class="lead">Antes de registrar la primera transacción del día, recuperemos lo construido en los cuatro días previos. Haga clic en cada título para desplegar el contenido completo.</p>
+
+  <div class="acc-item">
+    <div class="acc-head" onclick="toggleAcc(this)"><span class="arrow">&#9654;</span> Días 1 y 2 (Unidad 1) — La contabilidad como sistema de información, NIIF y ética profesional</div>
+    <div class="acc-body">
+      <p>La contabilidad se definió como un <strong>sistema de información</strong> que identifica, mide, registra y comunica hechos económicos de una organización, para que distintos usuarios tomen decisiones. No es un archivo de papeles: es un proceso que transforma <em>hechos</em> en <em>información útil</em>.</p>
+      <p>Se distinguieron los <strong>usuarios internos</strong> (gerencia, socios, departamentos) de los <strong>usuarios externos</strong> (bancos, proveedores extranjeros, SRI, Superintendencia de Compañías, inversionistas). También se clasificaron las empresas según su actividad (servicios, comerciales, industriales), su tamaño y el origen de su capital, y se identificaron los tipos de contabilidad (financiera, de costos, gubernamental, tributaria).</p>
+      <p>Sobre normativa: las <strong>NIIF</strong> (Normas Internacionales de Información Financiera) son el conjunto de normas emitidas por el IASB que Ecuador adoptó como obligatorias. El <strong>Marco Conceptual</strong> establece el objetivo de la información financiera y sus características cualitativas: relevancia y representación fiel (fundamentales); comparabilidad, verificabilidad, oportunidad y comprensibilidad (de mejora). La <strong>NIC 1</strong> regula la presentación de estados financieros y exige el juego completo: Estado de Situación Financiera, Estado de Resultado Integral, Estado de Cambios en el Patrimonio, Estado de Flujos de Efectivo y Notas.</p>
+      <p>En ética se revisaron los principios de integridad, objetividad, competencia profesional, confidencialidad y comportamiento profesional, y los <strong>organismos de control</strong> ecuatorianos: SRI (materia tributaria), Superintendencia de Compañías, Valores y Seguros (sociedades), Ministerio del Trabajo, IESS y Superintendencia de Bancos.</p>
+    </div>
+  </div>
+
+  <div class="acc-item">
+    <div class="acc-head" onclick="toggleAcc(this)"><span class="arrow">&#9654;</span> Día 3 (cierre Unidad 1) — Cuenta contable, plan de cuentas, partida doble, ecuación contable y asientos</div>
+    <div class="acc-body">
+      <p>La <strong>cuenta contable</strong> es el nombre técnico que agrupa hechos de la misma naturaleza (Caja, Bancos, Clientes, Proveedores, Capital social, Ventas, Gasto arriendo). Cada cuenta tiene dos lados: el <strong>Debe</strong> (izquierda) y el <strong>Haber</strong> (derecha). Debitar es registrar en el Debe; acreditar, en el Haber.</p>
+      <p>La <strong>naturaleza</strong> de la cuenta define en qué lado aumenta:</p>
+      <ul>
+        <li><strong>Activo</strong> y <strong>Gasto</strong>: naturaleza deudora. Aumentan por el Debe y disminuyen por el Haber.</li>
+        <li><strong>Pasivo</strong>, <strong>Patrimonio</strong> e <strong>Ingreso</strong>: naturaleza acreedora. Aumentan por el Haber y disminuyen por el Debe.</li>
+      </ul>
+      <p>El <strong>plan de cuentas</strong> es el listado codificado y jerárquico de todas las cuentas que usa la empresa (1 Activo, 2 Pasivo, 3 Patrimonio, 4 Ingresos, 5 Gastos), alineado con el catálogo referencial de la Superintendencia de Compañías bajo NIIF.</p>
+      <p>La <strong>partida doble</strong> establece que en toda transacción interviene al menos una cuenta deudora y una acreedora, y que la suma del Debe siempre es igual a la suma del Haber. De allí la <strong>ecuación contable</strong>: <em>Activo = Pasivo + Patrimonio</em>, que ampliada incorpora los resultados: <em>Activo = Pasivo + Patrimonio + Ingresos &minus; Gastos</em>.</p>
+      <p>Se practicaron los <strong>tipos de asiento</strong>: simple (una cuenta deudora y una acreedora), compuesto (más de dos cuentas) y mixto (una deudora contra varias acreedoras o viceversa).</p>
+    </div>
+  </div>
+
+  <div class="acc-item">
+    <div class="acc-head" onclick="toggleAcc(this)"><span class="arrow">&#9654;</span> Día 4 (Unidad 2) — IVA 0% y 15%, retenciones de IVA y retención en la fuente de Impuesto a la Renta</div>
+    <div class="acc-body">
+      <p>El <strong>IVA</strong> (Impuesto al Valor Agregado) grava la transferencia de bienes y la prestación de servicios. Se revisaron las tarifas <strong>0%</strong> (por ejemplo, alimentos en estado natural, medicinas, exportaciones de bienes, servicios de educación y salud) y <strong>15%</strong> (tarifa general vigente). El IVA pagado en compras constituye <strong>crédito tributario</strong> (activo) y el IVA cobrado en ventas constituye una <strong>obligación con el Estado</strong> (pasivo).</p>
+      <p>La <strong>retención</strong> es el mecanismo por el cual el comprador (cuando es agente de retención) descuenta al vendedor una parte del impuesto y la entrega al SRI en su nombre. Se estudiaron dos retenciones distintas que conviven en una misma factura:</p>
+      <ul>
+        <li><strong>Retención de IVA</strong>: un porcentaje del IVA facturado. Referencias trabajadas: 30% en la adquisición de bienes, 70% en servicios y 100% en honorarios profesionales y en liquidaciones de compra.</li>
+        <li><strong>Retención en la fuente de Impuesto a la Renta</strong>: un porcentaje sobre la <strong>base imponible</strong> (el valor del bien o servicio <em>sin</em> IVA). Referencias trabajadas: 1,75% en bienes, 2,75% en servicios en general, 8% en arrendamiento de inmuebles a personas naturales y 10% en honorarios profesionales.</li>
+      </ul>
+      <p>Regla de oro heredada del Día 4: <strong>la retención de IVA se calcula sobre el IVA; la retención de renta se calcula sobre la base imponible</strong>. Ambas se restan del valor a pagar al proveedor y se respaldan con el <strong>comprobante de retención</strong>.</p>
+      <p class="nota">Nota: los porcentajes se usan aquí con fines didácticos, tal como se conciliaron en el Día 4. En la práctica profesional deben verificarse siempre en la resolución vigente del SRI.</p>
+    </div>
+  </div>
+
+  <div class="clave-box">
+    <h4>Puente hacia la clase de hoy</h4>
+    <p>Hasta ahora usted sabe <strong>qué cuentas existen</strong>, <strong>cómo se mueven</strong> y <strong>cuánto impuesto interviene</strong>. Lo que aún no sabe es <strong>el orden del trabajo</strong>: qué se hace primero, dónde se escribe, cómo se agrupa y cómo se comprueba. Ese orden se llama <strong>proceso contable</strong>, y hoy recorreremos sus tres primeros pasos hasta obtener el balance de comprobación preliminar.</p>
+  </div>
+</div>
+<!-- ================= PANEL: TEMA 1 ================= -->
+<div class="panel" id="tema1">
+  <h2>Tema 1. El proceso contable y el análisis de las transacciones mercantiles</h2>
+  <p class="lead">Todo lo que la contabilidad produce nace de un hecho real que alguien tuvo que reconocer, entender y traducir. Ese es el primer paso, y el más importante: si se analiza mal, todo lo que sigue estará mal aunque las sumas cuadren.</p>
+
+  <h3>1.1. ¿Qué es el proceso contable?</h3>
+  <div class="def-box">
+    <span class="term">Proceso contable (o ciclo contable)</span>
+    Secuencia ordenada y repetitiva de pasos que la contabilidad ejecuta durante un período determinado (generalmente un año, dividido en meses), desde que ocurre un hecho económico hasta que se presentan los estados financieros y se cierran las cuentas.
+  </div>
+  <p>La palabra <strong>ciclo</strong> no es decorativa: significa que el recorrido termina donde vuelve a empezar. Al final de un ejercicio económico se cierran las cuentas de resultado, se determina la utilidad o pérdida, y el siguiente ejercicio arranca de nuevo con los saldos del Estado de Situación Financiera. Igual que el año escolar: matrícula, clases, exámenes, promoción... y otra vez matrícula.</p>
+  <p>El proceso contable completo comprende los siguientes pasos:</p>
+  <div class="scroll-x">
+  <table class="tabla">
+    <tr><th>Paso</th><th>Nombre técnico</th><th>¿Qué se hace?</th><th>¿Cuándo lo vemos?</th></tr>
+    <tr><td class="num">1</td><td><strong>Reconocimiento y análisis</strong> de la transacción</td><td>Se recibe el documento fuente, se verifica que sea un hecho contabilizable y se determinan las cuentas afectadas.</td><td><strong>Hoy (Tema 1)</strong></td></tr>
+    <tr><td class="num">2</td><td><strong>Jornalización</strong></td><td>Se registra la transacción en el Libro Diario mediante un asiento contable, en orden cronológico.</td><td><strong>Hoy (Tema 2)</strong></td></tr>
+    <tr><td class="num">3</td><td><strong>Mayorización</strong></td><td>Se trasladan los valores del Diario al Libro Mayor, agrupándolos por cuenta.</td><td><strong>Hoy (Tema 3)</strong></td></tr>
+    <tr><td class="num">4</td><td><strong>Balance de comprobación preliminar</strong></td><td>Se resumen las sumas y saldos de todas las cuentas y se verifica la igualdad Debe = Haber.</td><td><strong>Hoy (Tema 4)</strong></td></tr>
+    <tr><td class="num">5</td><td>Asientos de ajuste y balance ajustado</td><td>Se corrigen y actualizan saldos que no reflejan la realidad al cierre.</td><td>Unidad 3 (Días 11 y 12)</td></tr>
+    <tr><td class="num">6</td><td>Elaboración de estados financieros</td><td>Estado de Resultado Integral y Estado de Situación Financiera.</td><td>Unidad 4 (Días 14 a 18)</td></tr>
+    <tr><td class="num">7</td><td>Asientos de cierre</td><td>Se liquidan las cuentas de ingresos y gastos y se determina el resultado del ejercicio.</td><td>Unidad 4 (Día 15)</td></tr>
+  </table>
+  </div>
+  <p>Los pasos 1 a 4 constituyen la <strong>I parte del proceso contable</strong>, que es exactamente el contenido de hoy. Note que los cuatro se ejecutan de forma continua durante todo el mes, mientras que los pasos 5 a 7 se ejecutan al final del período.</p>
+
+  <h3>1.2. La transacción mercantil: qué se registra y qué no</h3>
+  <div class="def-box">
+    <span class="term">Transacción mercantil</span>
+    Hecho económico realizado por la empresa con terceros o consigo misma, que es <strong>medible en unidades monetarias</strong> y que <strong>modifica su situación financiera</strong> (es decir, altera al menos dos elementos de la ecuación contable: activo, pasivo, patrimonio, ingreso o gasto).
+  </div>
+  <p>De esta definición se desprenden dos condiciones que deben cumplirse <em>al mismo tiempo</em>. Si falta una, el hecho no se registra:</p>
+  <ol>
+    <li><strong>Debe ser cuantificable en dinero con fiabilidad.</strong> El prestigio de una marca, la simpatía de un vendedor o la lealtad de un cliente son valiosos, pero no se pueden medir con fiabilidad y por eso no aparecen en la contabilidad.</li>
+    <li><strong>Debe afectar la estructura financiera de la empresa.</strong> Firmar un contrato de arrendamiento que empezará el próximo mes no cambia hoy ni el activo ni el pasivo; recibir la factura del arriendo de este mes, sí.</li>
+  </ol>
+  <p>Complementariamente, el <strong>Marco Conceptual de las NIIF</strong> (revisado en el Día 2) exige que la partida cumpla la definición de un elemento (activo, pasivo, patrimonio, ingreso o gasto) y que su reconocimiento produzca información <strong>relevante</strong> y con <strong>representación fiel</strong>. Este es el fundamento normativo de lo que en la práctica llamamos, simplemente, "reconocer la transacción".</p>
+
+  <div class="ejemplo-box">
+    <h4>Ejemplo comparativo: ¿se registra o no se registra?</h4>
+    <table class="tabla">
+      <tr><th>Hecho ocurrido en una empresa guayaquileña</th><th>¿Se registra?</th><th>¿Por qué?</th></tr>
+      <tr><td>La empresa recibe la factura del proveedor por USD 4.000 de muebles de oficina.</td><td><strong>Sí</strong></td><td>Es medible y aumenta el activo (muebles) y el pasivo o disminuye bancos.</td></tr>
+      <tr><td>El gerente y un cliente peruano acuerdan verbalmente negociar el próximo trimestre.</td><td><strong>No</strong></td><td>No hay valor determinado ni obligación presente; no modifica la situación financiera.</td></tr>
+      <tr><td>Un socio aporta un equipo de computación valorado en USD 5.000.</td><td><strong>Sí</strong></td><td>Aumenta el activo y el patrimonio, y el valor está sustentado en la escritura de constitución.</td></tr>
+      <tr><td>La empresa es reconocida como "mejor agente de aduana del año".</td><td><strong>No</strong></td><td>Aumenta el prestigio, pero no es cuantificable con fiabilidad.</td></tr>
+      <tr><td>Un cliente le retiene USD 220 de impuesto a la renta al pagar la factura.</td><td><strong>Sí</strong></td><td>Genera un crédito tributario (activo) frente al SRI.</td></tr>
+    </table>
+  </div>
+
+  <h3>1.3. El documento fuente: la prueba de que el hecho existió</h3>
+  <div class="def-box">
+    <span class="term">Documento fuente</span>
+    Comprobante escrito o electrónico que respalda la ocurrencia de una transacción, identifica a las partes, la fecha, el detalle, los valores y los impuestos. Es la evidencia que permite verificar el registro contable ante socios, auditores y organismos de control.
+  </div>
+  <p>Sin documento fuente no hay registro válido. En Ecuador, la emisión y validez de estos documentos está regulada por el <strong>Reglamento de Comprobantes de Venta, Retención y Documentos Complementarios</strong> del SRI, y hoy la mayoría son <strong>electrónicos</strong>, con firma digital, clave de acceso y autorización en línea.</p>
+  <div class="scroll-x">
+  <table class="tabla">
+    <tr><th>Documento</th><th>¿Qué respalda?</th><th>Cuenta típica que origina</th></tr>
+    <tr><td><strong>Factura</strong></td><td>Transferencia de bienes o prestación de servicios con derecho a crédito tributario.</td><td>Ventas / Compras / IVA</td></tr>
+    <tr><td><strong>Comprobante de retención</strong></td><td>Retención de IVA y/o de Impuesto a la Renta efectuada al proveedor.</td><td>Retenciones por pagar / Crédito tributario</td></tr>
+    <tr><td><strong>Nota de crédito</strong></td><td>Devoluciones, descuentos o anulación parcial de una factura ya emitida.</td><td>Devolución en ventas</td></tr>
+    <tr><td><strong>Nota de débito</strong></td><td>Cobro de valores adicionales sobre una factura ya emitida (intereses, gastos).</td><td>Cuentas por cobrar</td></tr>
+    <tr><td><strong>Guía de remisión</strong></td><td>Traslado físico de la mercadería (no genera registro contable por sí sola).</td><td>&mdash;</td></tr>
+    <tr><td><strong>Comprobante de ingreso / egreso</strong></td><td>Entrada o salida de dinero de caja o bancos.</td><td>Caja / Bancos</td></tr>
+    <tr><td><strong>Papeleta de depósito y estado de cuenta</strong></td><td>Movimientos bancarios.</td><td>Bancos</td></tr>
+    <tr><td><strong>Rol de pagos</strong></td><td>Remuneraciones, aportes y beneficios del personal.</td><td>Gasto sueldos / IESS por pagar</td></tr>
+  </table>
+  </div>
+  <p class="nota">Observe la guía de remisión: acredita que la mercadería se movió, pero el hecho contable nace con la factura. Un documento puede ser legalmente obligatorio y contablemente neutro.</p>
+
+  <h3>1.4. El método de análisis: cinco preguntas antes de escribir</h3>
+  <p>Analizar una transacción no es adivinar. Es responder, en este orden, cinco preguntas. Este método lo acompañará durante todo el semestre y también en Contabilidad Financiera y Contabilidad de Costos:</p>
+  <div class="paso"><strong>Pregunta 1 &mdash; ¿Qué recibe o qué obtiene la empresa?</strong> Un bien, un servicio, dinero, un derecho de cobro, un beneficio consumido. Eso normalmente <em>entra</em> y se registra en el <strong>Debe</strong>.</div>
+  <div class="paso"><strong>Pregunta 2 &mdash; ¿Qué entrega la empresa o qué obligación asume?</strong> Dinero, un bien, una deuda, o el reconocimiento de un ingreso ganado. Eso normalmente <em>sale</em> o <em>se compromete</em> y se registra en el <strong>Haber</strong>.</div>
+  <div class="paso"><strong>Pregunta 3 &mdash; ¿Qué nombre técnico tiene cada elemento en el plan de cuentas?</strong> "El dinero del banco" se llama <em>Bancos</em>; "lo que me deben los clientes" se llama <em>Cuentas por cobrar clientes</em>. Aquí se abandona el lenguaje cotidiano.</div>
+  <div class="paso"><strong>Pregunta 4 &mdash; ¿Cuál es la naturaleza de cada cuenta y qué le ocurre?</strong> Si es de naturaleza deudora (activo o gasto) y aumenta, va al Debe; si disminuye, al Haber. Si es de naturaleza acreedora (pasivo, patrimonio o ingreso) y aumenta, va al Haber; si disminuye, al Debe.</div>
+  <div class="paso"><strong>Pregunta 5 &mdash; ¿Cuadra?</strong> La suma de los valores del Debe debe ser exactamente igual a la del Haber. Si no cuadra, hay un elemento no identificado (con frecuencia, un impuesto o una retención).</div>
+
+  <div class="ejemplo-box">
+    <h4>Ejemplo desarrollado (Guayaquil, agosto de 2026)</h4>
+    <p>La empresa <strong>AduanaPro Cía. Ltda.</strong>, agente de aduana domiciliado en Guayaquil, presta un servicio de asesoría en comercio exterior a <strong>Exportadora Bananera del Guayas S.A.</strong> por USD 8.000,00 más IVA 15%, factura N.° 001-001-000015. El cliente es agente de retención: retiene el 2,75% de Impuesto a la Renta y el 70% del IVA, y cancela el saldo con cheque del Banco del Pacífico.</p>
+    <p><strong>P1. ¿Qué recibe la empresa?</strong> Recibe dinero en el banco, y además recibe dos "vales" a favor frente al SRI: el impuesto que le retuvieron. Calculamos: IVA = 8.000,00 &times; 15% = 1.200,00. Retención de renta = 8.000,00 &times; 2,75% = 220,00. Retención de IVA = 1.200,00 &times; 70% = 840,00. Cheque recibido = 8.000,00 + 1.200,00 &minus; 220,00 &minus; 840,00 = <strong>8.140,00</strong>.</p>
+    <p><strong>P2. ¿Qué entrega o reconoce?</strong> Entrega el servicio, es decir, gana un ingreso de 8.000,00; y asume frente al SRI la obligación por el IVA cobrado de 1.200,00.</p>
+    <p><strong>P3. Nombres técnicos:</strong> Bancos; Anticipo de impuesto a la renta; Crédito tributario retenciones de IVA; Ingresos por servicios de asesoría aduanera; IVA cobrado en ventas.</p>
+    <p><strong>P4. Naturaleza:</strong> las tres primeras son activos que aumentan &rarr; Debe. El ingreso aumenta &rarr; Haber. El IVA cobrado es pasivo que aumenta &rarr; Haber.</p>
+    <p><strong>P5. ¿Cuadra?</strong> Debe: 8.140,00 + 220,00 + 840,00 = 9.200,00. Haber: 8.000,00 + 1.200,00 = 9.200,00. <strong>Cuadra.</strong></p>
+    <p class="nota">Recién ahora la transacción está lista para escribirse. El asiento formal lo construiremos en el Tema 2.</p>
+  </div>
+
+  <div class="carrera-box">
+    <h4>Conexión con las cuatro áreas de Negocios Internacionales</h4>
+    <p>El documento fuente parece un trámite administrativo, pero es la pieza donde se cruzan las cuatro áreas de su carrera. Piénselo con un objeto concreto: una caja de camarón que sale del puerto de Guayaquil.</p>
+    <ul>
+      <li><strong>Comercio exterior:</strong> esa caja no se mueve sin factura de exportación, guía de remisión, DAE y certificado de origen. El documento fuente es, literalmente, el permiso de circulación de la mercancía.</li>
+      <li><strong>Finanzas internacionales:</strong> el banco que otorga el crédito para producir esa caja no evalúa la simpatía del exportador: evalúa saldos que provienen de estos registros. Un diario mal llevado encarece o impide el financiamiento.</li>
+      <li><strong>Marketing y negociación internacional:</strong> cuando usted negocia un precio FOB con un comprador de Rotterdam, necesita saber su costo real y su margen. Ese dato solo existe si las transacciones se reconocieron bien.</li>
+      <li><strong>Marco legal y normativo:</strong> la validez del comprobante, su autorización electrónica y el plazo de conservación no los decide la empresa: los fija el SRI y las NIIF. Registrar es también cumplir.</li>
+    </ul>
+    <p><strong>Conclusión:</strong> Negocios Internacionales no es "el que negocia". Es el profesional que sostiene la operación completa: mueve la carga, la financia, la vende y la mantiene dentro de la ley. Los cuatro pilares se apoyan en información contable confiable.</p>
+  </div>
+
+  <div class="clave-box">
+    <h4>Idea clave del Tema 1</h4>
+    <p>El proceso contable comienza <strong>antes</strong> del registro: comienza cuando alguien lee un documento fuente y decide qué cuentas se mueven y hacia qué lado. Un asiento puede cuadrar perfectamente y estar completamente equivocado si el análisis fue errado. <strong>La partida doble garantiza la aritmética, no la verdad.</strong> La verdad la garantiza el análisis.</p>
+  </div>
+</div>
+
+<!-- ================= PANEL: TEMA 2 ================= -->
+<div class="panel" id="tema2">
+  <h2>Tema 2. Jornalización: el registro en el Libro Diario</h2>
+  <p class="lead">Analizada la transacción, hay que escribirla. Y escribirla tiene una forma exacta: fecha, número, cuentas deudoras, cuentas acreedoras con sangría, valores y glosa. Esa forma no es estética: es la que permite que cualquier persona, años después, entienda lo que ocurrió.</p>
+
+  <h3>2.1. Definiciones</h3>
+  <div class="def-box">
+    <span class="term">Jornalización</span>
+    Segundo paso del proceso contable. Consiste en registrar cada transacción analizada en el <strong>Libro Diario</strong>, en estricto orden cronológico, mediante un asiento contable que respeta el principio de partida doble.
+  </div>
+  <div class="def-box">
+    <span class="term">Libro Diario</span>
+    Libro principal y obligatorio en el que se registran, día a día y en orden de ocurrencia, <strong>todas</strong> las transacciones de la empresa. Su nombre viene de <em>jornada</em> (día): es la crónica diaria de la vida económica de la organización.
+  </div>
+  <div class="def-box">
+    <span class="term">Asiento contable</span>
+    Unidad de registro del Libro Diario. Está compuesto por la fecha, el número correlativo, una o más cuentas deudoras, una o más cuentas acreedoras, sus valores y una explicación denominada glosa.
+  </div>
+  <p>El Libro Diario responde a la pregunta <strong>"¿qué pasó y cuándo?"</strong>. Es cronológico y completo, pero no permite ver cuánto dinero hay en el banco, porque los movimientos de Bancos están dispersos entre todas las páginas. Esa limitación es la que resolverá el Libro Mayor en el Tema 3.</p>
+
+  <h3>2.2. Estructura formal del asiento</h3>
+  <p>El formato tradicional del Libro Diario, aún vigente en la práctica ecuatoriana y en los sistemas contables actuales, contiene seis columnas:</p>
+  <ul>
+    <li><strong>Fecha:</strong> día en que ocurrió la transacción (no el día en que se registra).</li>
+    <li><strong>Código:</strong> el número de la cuenta según el plan de cuentas.</li>
+    <li><strong>Detalle:</strong> el nombre de las cuentas y, en la última línea, la glosa.</li>
+    <li><strong>Parcial:</strong> desglose de subcuentas que integran un valor mayor (por ejemplo, dos bancos distintos dentro de la cuenta Bancos).</li>
+    <li><strong>Debe:</strong> valores debitados.</li>
+    <li><strong>Haber:</strong> valores acreditados.</li>
+  </ul>
+  <p>Y estas son las <strong>reglas de forma</strong> que debe respetar siempre:</p>
+  <ol>
+    <li>Cada asiento se separa del anterior con su <strong>número correlativo centrado</strong>, escrito entre guiones: &minus;1&minus;, &minus;2&minus;, &minus;3&minus;. La numeración no se interrumpe ni se repite en todo el ejercicio.</li>
+    <li>Las <strong>cuentas deudoras se escriben primero</strong>, pegadas al margen izquierdo de la columna Detalle.</li>
+    <li>Las <strong>cuentas acreedoras se escriben después, con sangría</strong> y precedidas de la letra <strong>"a"</strong> (que significa "a favor de"). Esta sangría es la marca visual que permite reconocer un asiento de un vistazo.</li>
+    <li>La última línea es la <strong>glosa</strong>: explicación breve del hecho y del documento que lo respalda. Se acostumbra iniciarla con <strong>"P/R"</strong> (para registrar) o con <strong>"V/."</strong> (valor por).</li>
+    <li>Los <strong>totales del Debe y del Haber deben coincidir</strong> en cada asiento.</li>
+    <li>No se dejan líneas en blanco entre partidas del mismo asiento, no se usan borradores ni correctores; los errores se corrigen con un <strong>asiento de reversión</strong>.</li>
+  </ol>
+
+  <div class="alerta-box">
+    <strong>Error frecuente:</strong> escribir la cuenta acreedora sin sangría y sin la "a". El asiento sigue cuadrando, pero pierde su lectura visual y en un examen, en una auditoría o en un sistema contable se interpreta como un registro mal elaborado. La forma es parte del contenido.
+  </div>
+
+  <h3>2.3. El caso que trabajaremos hoy: AduanaPro Cía. Ltda.</h3>
+  <p>Para que los tres pasos de hoy se vean encadenados, usaremos <strong>una sola empresa de servicios</strong> a lo largo de los Temas 2, 3 y 4. Los mismos siete asientos que registremos ahora serán los que mayoricemos y los que comprobemos después.</p>
+  <p><strong>AduanaPro Cía. Ltda.</strong> es una compañía de servicios domiciliada en Guayaquil, dedicada a la asesoría en comercio exterior y gestión aduanera. Inicia operaciones el 1 de agosto de 2026 y es agente de retención designado por el SRI. Su plan de cuentas simplificado es el siguiente:</p>
+  <div class="scroll-x">
+  <table class="tabla">
+    <tr><th>Código</th><th>Cuenta</th><th>Grupo</th><th>Naturaleza</th></tr>
+    <tr><td class="cod">1.1.01.02</td><td>Bancos</td><td>Activo corriente</td><td>Deudora</td></tr>
+    <tr><td class="cod">1.1.02.01</td><td>Cuentas por cobrar clientes</td><td>Activo corriente</td><td>Deudora</td></tr>
+    <tr><td class="cod">1.1.03.01</td><td>Crédito tributario IVA (IVA en compras)</td><td>Activo corriente</td><td>Deudora</td></tr>
+    <tr><td class="cod">1.1.03.02</td><td>Crédito tributario retenciones de IVA</td><td>Activo corriente</td><td>Deudora</td></tr>
+    <tr><td class="cod">1.1.03.03</td><td>Anticipo de impuesto a la renta</td><td>Activo corriente</td><td>Deudora</td></tr>
+    <tr><td class="cod">1.2.01.05</td><td>Muebles y enseres</td><td>Activo no corriente</td><td>Deudora</td></tr>
+    <tr><td class="cod">1.2.01.06</td><td>Equipo de computación</td><td>Activo no corriente</td><td>Deudora</td></tr>
+    <tr><td class="cod">2.1.03.01</td><td>IVA cobrado en ventas</td><td>Pasivo corriente</td><td>Acreedora</td></tr>
+    <tr><td class="cod">2.1.03.02</td><td>Retención en la fuente de IR por pagar</td><td>Pasivo corriente</td><td>Acreedora</td></tr>
+    <tr><td class="cod">2.1.03.03</td><td>Retención de IVA por pagar</td><td>Pasivo corriente</td><td>Acreedora</td></tr>
+    <tr><td class="cod">3.1.01.01</td><td>Capital social</td><td>Patrimonio</td><td>Acreedora</td></tr>
+    <tr><td class="cod">4.1.01.01</td><td>Ingresos por servicios de asesoría aduanera</td><td>Ingreso</td><td>Acreedora</td></tr>
+    <tr><td class="cod">5.1.01.01</td><td>Gasto arriendo</td><td>Gasto</td><td>Deudora</td></tr>
+    <tr><td class="cod">5.1.01.02</td><td>Gasto honorarios profesionales</td><td>Gasto</td><td>Deudora</td></tr>
+  </table>
+  </div>
+
+  <h4>Transacciones del mes de agosto de 2026</h4>
+  <ol>
+    <li><strong>01/08</strong> &mdash; Los socios constituyen la compañía aportando USD 20.000,00 depositados en el Banco del Pacífico y un equipo de computación valorado en USD 5.000,00, según escritura de constitución.</li>
+    <li><strong>03/08</strong> &mdash; Compra muebles de oficina a Muebles del Litoral S.A. por USD 4.000,00 + IVA 15%, factura N.° 002-001-000890. Retiene el 1,75% de IR (bienes) y el 30% del IVA. Paga la diferencia con cheque.</li>
+    <li><strong>05/08</strong> &mdash; Presta servicio de asesoría a Exportadora Bananera del Guayas S.A. por USD 8.000,00 + IVA 15%, factura N.° 001-001-000015. El cliente retiene el 2,75% de IR y el 70% del IVA, y cancela con cheque.</li>
+    <li><strong>08/08</strong> &mdash; Paga el arriendo de la oficina a la Sra. Marcia Lozano (persona natural) por USD 1.000,00 + IVA 15%, factura N.° 003-001-000045. Retiene el 8% de IR (arriendo de inmueble) y el 70% del IVA.</li>
+    <li><strong>12/08</strong> &mdash; Cancela honorarios al abogado Luis Andrade por USD 2.000,00 + IVA 15%, factura N.° 001-002-000101. Retiene el 10% de IR (honorarios) y el 100% del IVA.</li>
+    <li><strong>15/08</strong> &mdash; Presta servicio de asesoría a crédito a Camaronera del Golfo S.A. por USD 6.000,00 + IVA 15%, factura N.° 001-001-000016. El cliente retiene el 2,75% de IR y el 70% del IVA.</li>
+    <li><strong>25/08</strong> &mdash; Camaronera del Golfo S.A. abona USD 3.000,00 mediante transferencia bancaria.</li>
+  </ol>
+
+  <h3>2.4. Libro Diario de AduanaPro Cía. Ltda.</h3>
+  <p class="nota">Deslice horizontalmente la tabla si está en celular.</p>
+  <div class="scroll-x">
+  <table class="libro-diario">
+    <tr><th style="width:80px;">Fecha</th><th style="width:90px;">Código</th><th>Detalle</th><th style="width:90px;">Parcial</th><th style="width:100px;">Debe</th><th style="width:100px;">Haber</th></tr>
+
+    <tr class="ld-num"><td colspan="6">&minus; 1 &minus;</td></tr>
+    <tr><td class="fecha-col">01/08/2026</td><td class="cod">1.1.01.02</td><td class="ld-cuenta">Bancos</td><td class="num"></td><td class="num">20.000,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">1.2.01.06</td><td class="ld-cuenta">Equipo de computación</td><td class="num"></td><td class="num">5.000,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">3.1.01.01</td><td class="ld-sub">a) Capital social</td><td class="num"></td><td class="num"></td><td class="num">25.000,00</td></tr>
+    <tr><td></td><td></td><td class="ld-glosa">P/R el aporte inicial de los socios, según escritura de constitución.</td><td></td><td></td><td></td></tr>
+
+    <tr class="ld-num"><td colspan="6">&minus; 2 &minus;</td></tr>
+    <tr><td class="fecha-col">03/08/2026</td><td class="cod">1.2.01.05</td><td class="ld-cuenta">Muebles y enseres</td><td class="num"></td><td class="num">4.000,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">1.1.03.01</td><td class="ld-cuenta">Crédito tributario IVA</td><td class="num"></td><td class="num">600,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">2.1.03.02</td><td class="ld-sub">a) Retención en la fuente de IR por pagar</td><td class="num"></td><td class="num"></td><td class="num">70,00</td></tr>
+    <tr><td></td><td class="cod">2.1.03.03</td><td class="ld-sub">a) Retención de IVA por pagar</td><td class="num"></td><td class="num"></td><td class="num">180,00</td></tr>
+    <tr><td></td><td class="cod">1.1.01.02</td><td class="ld-sub">a) Bancos</td><td class="num"></td><td class="num"></td><td class="num">4.350,00</td></tr>
+    <tr><td></td><td></td><td class="ld-glosa">P/R la compra de muebles de oficina a Muebles del Litoral S.A., factura N.&deg; 002-001-000890, con retenciones del 1,75% de IR y 30% de IVA, pago con cheque.</td><td></td><td></td><td></td></tr>
+
+    <tr class="ld-num"><td colspan="6">&minus; 3 &minus;</td></tr>
+    <tr><td class="fecha-col">05/08/2026</td><td class="cod">1.1.01.02</td><td class="ld-cuenta">Bancos</td><td class="num"></td><td class="num">8.140,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">1.1.03.03</td><td class="ld-cuenta">Anticipo de impuesto a la renta</td><td class="num"></td><td class="num">220,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">1.1.03.02</td><td class="ld-cuenta">Crédito tributario retenciones de IVA</td><td class="num"></td><td class="num">840,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">4.1.01.01</td><td class="ld-sub">a) Ingresos por servicios de asesoría aduanera</td><td class="num"></td><td class="num"></td><td class="num">8.000,00</td></tr>
+    <tr><td></td><td class="cod">2.1.03.01</td><td class="ld-sub">a) IVA cobrado en ventas</td><td class="num"></td><td class="num"></td><td class="num">1.200,00</td></tr>
+    <tr><td></td><td></td><td class="ld-glosa">P/R el servicio de asesoría prestado a Exportadora Bananera del Guayas S.A., factura N.&deg; 001-001-000015, con retenciones recibidas del 2,75% de IR y 70% de IVA.</td><td></td><td></td><td></td></tr>
+
+    <tr class="ld-num"><td colspan="6">&minus; 4 &minus;</td></tr>
+    <tr><td class="fecha-col">08/08/2026</td><td class="cod">5.1.01.01</td><td class="ld-cuenta">Gasto arriendo</td><td class="num"></td><td class="num">1.000,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">1.1.03.01</td><td class="ld-cuenta">Crédito tributario IVA</td><td class="num"></td><td class="num">150,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">2.1.03.02</td><td class="ld-sub">a) Retención en la fuente de IR por pagar</td><td class="num"></td><td class="num"></td><td class="num">80,00</td></tr>
+    <tr><td></td><td class="cod">2.1.03.03</td><td class="ld-sub">a) Retención de IVA por pagar</td><td class="num"></td><td class="num"></td><td class="num">105,00</td></tr>
+    <tr><td></td><td class="cod">1.1.01.02</td><td class="ld-sub">a) Bancos</td><td class="num"></td><td class="num"></td><td class="num">965,00</td></tr>
+    <tr><td></td><td></td><td class="ld-glosa">P/R el pago del arriendo de oficina a la Sra. Marcia Lozano, factura N.&deg; 003-001-000045, con retenciones del 8% de IR y 70% de IVA.</td><td></td><td></td><td></td></tr>
+
+    <tr class="ld-num"><td colspan="6">&minus; 5 &minus;</td></tr>
+    <tr><td class="fecha-col">12/08/2026</td><td class="cod">5.1.01.02</td><td class="ld-cuenta">Gasto honorarios profesionales</td><td class="num"></td><td class="num">2.000,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">1.1.03.01</td><td class="ld-cuenta">Crédito tributario IVA</td><td class="num"></td><td class="num">300,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">2.1.03.02</td><td class="ld-sub">a) Retención en la fuente de IR por pagar</td><td class="num"></td><td class="num"></td><td class="num">200,00</td></tr>
+    <tr><td></td><td class="cod">2.1.03.03</td><td class="ld-sub">a) Retención de IVA por pagar</td><td class="num"></td><td class="num"></td><td class="num">300,00</td></tr>
+    <tr><td></td><td class="cod">1.1.01.02</td><td class="ld-sub">a) Bancos</td><td class="num"></td><td class="num"></td><td class="num">1.800,00</td></tr>
+    <tr><td></td><td></td><td class="ld-glosa">P/R el pago de honorarios al Ab. Luis Andrade, factura N.&deg; 001-002-000101, con retenciones del 10% de IR y 100% de IVA.</td><td></td><td></td><td></td></tr>
+
+    <tr class="ld-num"><td colspan="6">&minus; 6 &minus;</td></tr>
+    <tr><td class="fecha-col">15/08/2026</td><td class="cod">1.1.02.01</td><td class="ld-cuenta">Cuentas por cobrar clientes</td><td class="num"></td><td class="num">6.105,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">1.1.03.03</td><td class="ld-cuenta">Anticipo de impuesto a la renta</td><td class="num"></td><td class="num">165,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">1.1.03.02</td><td class="ld-cuenta">Crédito tributario retenciones de IVA</td><td class="num"></td><td class="num">630,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">4.1.01.01</td><td class="ld-sub">a) Ingresos por servicios de asesoría aduanera</td><td class="num"></td><td class="num"></td><td class="num">6.000,00</td></tr>
+    <tr><td></td><td class="cod">2.1.03.01</td><td class="ld-sub">a) IVA cobrado en ventas</td><td class="num"></td><td class="num"></td><td class="num">900,00</td></tr>
+    <tr><td></td><td></td><td class="ld-glosa">P/R el servicio de asesoría a crédito a Camaronera del Golfo S.A., factura N.&deg; 001-001-000016, con retenciones recibidas del 2,75% de IR y 70% de IVA.</td><td></td><td></td><td></td></tr>
+
+    <tr class="ld-num"><td colspan="6">&minus; 7 &minus;</td></tr>
+    <tr><td class="fecha-col">25/08/2026</td><td class="cod">1.1.01.02</td><td class="ld-cuenta">Bancos</td><td class="num"></td><td class="num">3.000,00</td><td class="num"></td></tr>
+    <tr><td></td><td class="cod">1.1.02.01</td><td class="ld-sub">a) Cuentas por cobrar clientes</td><td class="num"></td><td class="num"></td><td class="num">3.000,00</td></tr>
+    <tr><td></td><td></td><td class="ld-glosa">P/R el abono recibido de Camaronera del Golfo S.A. mediante transferencia bancaria.</td><td></td><td></td><td></td></tr>
+
+    <tr class="ld-total"><td></td><td></td><td class="ld-cuenta">SUMAN</td><td></td><td class="num">52.150,00</td><td class="num">52.150,00</td></tr>
+  </table>
+  </div>
+
+  <h4>Lectura guiada de los asientos</h4>
+  <ul>
+    <li><strong>Asiento 1 (mixto):</strong> dos cuentas deudoras (Bancos y Equipo de computación) contra una sola acreedora (Capital social). El patrimonio no aumenta porque entró dinero, sino porque los socios entregaron recursos sin obligación de devolverlos. La columna <em>Parcial</em> queda vacía porque no hubo necesidad de desglosar subcuentas: se usaría, por ejemplo, si el aporte se hubiera depositado en dos bancos distintos y quisiéramos mostrar cuánto en cada uno antes de totalizar en la cuenta Bancos.</li>
+    <li><strong>Asiento 2 (compuesto):</strong> la empresa recibe muebles (activo) y crédito tributario, y a cambio asume dos obligaciones con el SRI y entrega dinero. Note que la retención <em>no</em> es un gasto para quien retiene: es una deuda, porque ese dinero pertenece al Estado y la empresa solo lo custodia hasta declararlo.</li>
+    <li><strong>Asientos 3 y 6 (misma lógica, distinto cobro):</strong> en el 3 el dinero entra a Bancos; en el 6 entra como derecho de cobro. La diferencia entre vender al contado y vender a crédito es solo la cuenta del Debe, nunca el ingreso, que se reconoce igual porque el servicio ya se prestó.</li>
+    <li><strong>Asientos 4 y 5 (gastos con retención):</strong> el gasto se registra por el valor <strong>sin</strong> IVA. Ese es el costo real del servicio recibido; el IVA no es gasto, es crédito tributario.</li>
+    <li><strong>Asiento 7 (simple):</strong> una cuenta deudora contra una acreedora. No hay ingreso porque el ingreso ya se reconoció el día 15; aquí solo cambia la forma del activo: deja de ser derecho de cobro y se convierte en dinero.</li>
+  </ul>
+
+  <div class="alerta-box">
+    <strong>Distinga las dos caras de la retención.</strong> Cuando <em>yo retengo</em> a mi proveedor (asientos 2, 4 y 5), nace un <strong>pasivo</strong>: debo entregar ese valor al SRI. Cuando <em>me retienen</em> a mí (asientos 3 y 6), nace un <strong>activo</strong>: tengo un crédito a mi favor que descontaré de mis impuestos. Es el mismo dinero visto desde lados opuestos del mostrador.
+  </div>
+
+  <div class="clave-box">
+    <h4>Idea clave del Tema 2</h4>
+    <p>El Libro Diario es la <strong>narración cronológica</strong> de la empresa. Cada asiento debe poder leerse solo: quién, cuándo, por qué, con qué documento y por cuánto. Si un asiento necesita que alguien lo explique de memoria, la glosa está mal escrita. <strong>La glosa es lo único del asiento que sobrevive cuando ya nadie recuerda la transacción.</strong></p>
+  </div>
+</div>
+<!-- ================= PANEL: TEMA 3 ================= -->
+<div class="panel" id="tema3">
+  <h2>Tema 3. Mayorización: el ciclo de la información contable y la sistematización</h2>
+  <p class="lead">El Diario cuenta la historia día por día, pero no responde "¿cuánto tengo en el banco?". Para responder eso hay que reagrupar la misma información con otro criterio. Ese reagrupamiento se llama mayorización, y es el paso que convierte el registro en información.</p>
+
+  <h3>3.1. El ciclo de la información contable</h3>
+  <p>Antes de la técnica, entienda el movimiento. La información contable recorre siempre el mismo circuito:</p>
+  <div class="scroll-x">
+  <table class="tabla">
+    <tr><th>Etapa</th><th>Pregunta que responde</th><th>Criterio de ordenamiento</th><th>Instrumento</th></tr>
+    <tr><td><strong>Entrada</strong> (datos)</td><td>¿Qué ocurrió y con qué respaldo?</td><td>Ninguno: llegan como ocurren</td><td>Documentos fuente</td></tr>
+    <tr><td><strong>Proceso I</strong> (registro)</td><td>¿Cuándo ocurrió y qué cuentas movió?</td><td><strong>Cronológico</strong> (por fecha)</td><td>Libro Diario</td></tr>
+    <tr><td><strong>Proceso II</strong> (sistematización)</td><td>¿Cuánto acumula cada cuenta?</td><td><strong>Sistemático</strong> (por cuenta)</td><td>Libro Mayor</td></tr>
+    <tr><td><strong>Proceso III</strong> (comprobación)</td><td>¿Está aritméticamente equilibrado?</td><td>Por código de cuenta</td><td>Balance de comprobación</td></tr>
+    <tr><td><strong>Salida</strong> (información)</td><td>¿Cómo está y cómo le fue a la empresa?</td><td>Por elementos y grupos</td><td>Estados financieros</td></tr>
+  </table>
+  </div>
+  <div class="def-box">
+    <span class="term">Sistematización</span>
+    Etapa del ciclo contable en la que los datos ya registrados cronológicamente se <strong>reorganizan por cuenta</strong>, de modo que cada una acumule todos sus movimientos y muestre un saldo. Es el tránsito del "orden del tiempo" al "orden de la lógica contable".
+  </div>
+  <p>Fíjese en algo importante: <strong>la mayorización no crea información nueva</strong>. No inventa un solo dólar. Toma exactamente los mismos valores del Diario y los mira desde otro ángulo. Por eso, si el Diario tiene un error, el Mayor lo reproducirá fielmente. Sistematizar no corrige: ordena.</p>
+
+  <h3>3.2. El Libro Mayor</h3>
+  <div class="def-box">
+    <span class="term">Mayorización</span>
+    Tercer paso del proceso contable. Consiste en trasladar al Libro Mayor los débitos y créditos registrados en el Libro Diario, abriendo una hoja o folio independiente para cada cuenta, y determinar el saldo de cada una.
+  </div>
+  <div class="def-box">
+    <span class="term">Libro Mayor</span>
+    Libro principal en el que cada cuenta contable dispone de un espacio propio donde se acumulan todos sus movimientos deudores y acreedores, permitiendo conocer en cualquier momento su saldo.
+  </div>
+  <div class="def-box">
+    <span class="term">Saldo</span>
+    Diferencia entre la suma del Debe y la suma del Haber de una cuenta. Si el Debe es mayor, el saldo es <strong>deudor</strong>; si el Haber es mayor, es <strong>acreedor</strong>; si son iguales, la cuenta está <strong>saldada</strong> (saldo cero).
+  </div>
+  <p>Existen dos formatos igualmente válidos, y usted debe dominar los dos porque los encontrará en distintos contextos:</p>
+  <ul>
+    <li><strong>Formato de folio (o mayor a tres columnas):</strong> fecha, detalle, Debe, Haber y saldo acumulado línea a línea. Es el formato de los sistemas contables y el que permite ver la evolución de una cuenta en el tiempo. Indispensable para Bancos.</li>
+    <li><strong>Formato de cuenta "T":</strong> representación esquemática con el Debe a la izquierda y el Haber a la derecha. Es la herramienta didáctica y de trabajo rápido, la que usará en el pizarrón y en el borrador de un examen.</li>
+  </ul>
+
+  <h4>Procedimiento de mayorización (paso a paso)</h4>
+  <div class="paso"><strong>Paso 1.</strong> Abra un folio o una "T" por cada cuenta que aparezca en el Diario, identificada con su código y su nombre exacto del plan de cuentas.</div>
+  <div class="paso"><strong>Paso 2.</strong> Recorra el Diario <strong>asiento por asiento y en orden</strong>, nunca cuenta por cuenta. Cada valor del Debe se traslada al Debe de su cuenta; cada valor del Haber, al Haber de su cuenta.</div>
+  <div class="paso"><strong>Paso 3.</strong> Anote siempre la referencia del asiento (As. 1, As. 2...). Sin referencia, un error se vuelve imposible de rastrear.</div>
+  <div class="paso"><strong>Paso 4.</strong> Sume el Debe y el Haber de cada cuenta y obtenga el saldo por diferencia.</div>
+  <div class="paso"><strong>Paso 5.</strong> Verifique el control global: la suma de todos los débitos del Mayor debe ser idéntica a la suma total del Debe del Diario. Si no coincide, hubo un traslado omitido o duplicado.</div>
+
+  <h3>3.3. Mayorización del caso AduanaPro Cía. Ltda.</h3>
+  <p>Retomamos exactamente los siete asientos del Tema 2. Empecemos por la cuenta más movida, en formato de folio con saldo acumulado:</p>
+  <div class="scroll-x">
+  <table class="mayor-t">
+    <caption>Cuenta: 1.1.01.02 Bancos &mdash; Naturaleza: deudora (activo corriente)</caption>
+    <tr><th>Fecha</th><th>Detalle</th><th>Ref.</th><th>Debe</th><th>Haber</th><th>Saldo</th></tr>
+    <tr><td>01/08</td><td>Aporte inicial de socios</td><td>As. 1</td><td class="num">20.000,00</td><td class="num">&mdash;</td><td class="num">20.000,00</td></tr>
+    <tr><td>03/08</td><td>Pago compra de muebles</td><td>As. 2</td><td class="num">&mdash;</td><td class="num">4.350,00</td><td class="num">15.650,00</td></tr>
+    <tr><td>05/08</td><td>Cobro servicio Bananera del Guayas</td><td>As. 3</td><td class="num">8.140,00</td><td class="num">&mdash;</td><td class="num">23.790,00</td></tr>
+    <tr><td>08/08</td><td>Pago de arriendo</td><td>As. 4</td><td class="num">&mdash;</td><td class="num">965,00</td><td class="num">22.825,00</td></tr>
+    <tr><td>12/08</td><td>Pago de honorarios</td><td>As. 5</td><td class="num">&mdash;</td><td class="num">1.800,00</td><td class="num">21.025,00</td></tr>
+    <tr><td>25/08</td><td>Abono de Camaronera del Golfo</td><td>As. 7</td><td class="num">3.000,00</td><td class="num">&mdash;</td><td class="num">24.025,00</td></tr>
+    <tr class="ld-total"><td colspan="3">SUMAS Y SALDO DEUDOR</td><td class="num">31.140,00</td><td class="num">7.115,00</td><td class="num">24.025,00</td></tr>
+  </table>
+  </div>
+  <p>Lea el saldo: al 31 de agosto AduanaPro dispone de <strong>USD 24.025,00</strong> en el banco. Este dato no estaba en ninguna línea del Diario; apareció al sistematizar. Ese es, exactamente, el valor de la mayorización.</p>
+
+  <div class="scroll-x">
+  <table class="mayor-t">
+    <caption>Cuenta: 1.1.02.01 Cuentas por cobrar clientes &mdash; Naturaleza: deudora (activo corriente)</caption>
+    <tr><th>Fecha</th><th>Detalle</th><th>Ref.</th><th>Debe</th><th>Haber</th><th>Saldo</th></tr>
+    <tr><td>15/08</td><td>Servicio a crédito a Camaronera del Golfo</td><td>As. 6</td><td class="num">6.105,00</td><td class="num">&mdash;</td><td class="num">6.105,00</td></tr>
+    <tr><td>25/08</td><td>Abono recibido</td><td>As. 7</td><td class="num">&mdash;</td><td class="num">3.000,00</td><td class="num">3.105,00</td></tr>
+    <tr class="ld-total"><td colspan="3">SUMAS Y SALDO DEUDOR</td><td class="num">6.105,00</td><td class="num">3.000,00</td><td class="num">3.105,00</td></tr>
+  </table>
+  </div>
+
+  <p>Ahora las mismas cuentas en formato de cuenta "T". Observe cómo el saldo se escribe siempre del lado que "pesa" más:</p>
+
+  <table class="cuenta-t">
+    <caption>1.1.03.01 Crédito tributario IVA</caption>
+    <tr><th>DEBE</th><th>HABER</th></tr>
+    <tr><td class="num">600,00 (As. 2)</td><td class="num">&mdash;</td></tr>
+    <tr><td class="num">150,00 (As. 4)</td><td class="num">&mdash;</td></tr>
+    <tr><td class="num">300,00 (As. 5)</td><td class="num">&mdash;</td></tr>
+    <tr class="ld-total"><td class="num">1.050,00</td><td class="num">0,00</td></tr>
+    <tr><td class="num">Saldo deudor: 1.050,00</td><td class="num"></td></tr>
+  </table>
+
+  <table class="cuenta-t">
+    <caption>2.1.03.01 IVA cobrado en ventas</caption>
+    <tr><th>DEBE</th><th>HABER</th></tr>
+    <tr><td class="num">&mdash;</td><td class="num">1.200,00 (As. 3)</td></tr>
+    <tr><td class="num">&mdash;</td><td class="num">900,00 (As. 6)</td></tr>
+    <tr class="ld-total"><td class="num">0,00</td><td class="num">2.100,00</td></tr>
+    <tr><td class="num"></td><td class="num">Saldo acreedor: 2.100,00</td></tr>
+  </table>
+
+  <table class="cuenta-t">
+    <caption>4.1.01.01 Ingresos por servicios de asesoría aduanera</caption>
+    <tr><th>DEBE</th><th>HABER</th></tr>
+    <tr><td class="num">&mdash;</td><td class="num">8.000,00 (As. 3)</td></tr>
+    <tr><td class="num">&mdash;</td><td class="num">6.000,00 (As. 6)</td></tr>
+    <tr class="ld-total"><td class="num">0,00</td><td class="num">14.000,00</td></tr>
+    <tr><td class="num"></td><td class="num">Saldo acreedor: 14.000,00</td></tr>
+  </table>
+
+  <h4>Resumen de la mayorización completa</h4>
+  <p>Mayorizadas las catorce cuentas del caso, el resultado es el siguiente. Verifique usted mismo, contra el Libro Diario del Tema 2, de dónde sale cada valor:</p>
+  <div class="scroll-x">
+  <table class="tabla">
+    <tr><th>Código</th><th>Cuenta</th><th>Suma Debe</th><th>Suma Haber</th><th>Saldo</th><th>Tipo de saldo</th></tr>
+    <tr><td class="cod">1.1.01.02</td><td>Bancos</td><td class="num">31.140,00</td><td class="num">7.115,00</td><td class="num">24.025,00</td><td>Deudor</td></tr>
+    <tr><td class="cod">1.1.02.01</td><td>Cuentas por cobrar clientes</td><td class="num">6.105,00</td><td class="num">3.000,00</td><td class="num">3.105,00</td><td>Deudor</td></tr>
+    <tr><td class="cod">1.1.03.01</td><td>Crédito tributario IVA</td><td class="num">1.050,00</td><td class="num">0,00</td><td class="num">1.050,00</td><td>Deudor</td></tr>
+    <tr><td class="cod">1.1.03.02</td><td>Crédito tributario retenciones de IVA</td><td class="num">1.470,00</td><td class="num">0,00</td><td class="num">1.470,00</td><td>Deudor</td></tr>
+    <tr><td class="cod">1.1.03.03</td><td>Anticipo de impuesto a la renta</td><td class="num">385,00</td><td class="num">0,00</td><td class="num">385,00</td><td>Deudor</td></tr>
+    <tr><td class="cod">1.2.01.05</td><td>Muebles y enseres</td><td class="num">4.000,00</td><td class="num">0,00</td><td class="num">4.000,00</td><td>Deudor</td></tr>
+    <tr><td class="cod">1.2.01.06</td><td>Equipo de computación</td><td class="num">5.000,00</td><td class="num">0,00</td><td class="num">5.000,00</td><td>Deudor</td></tr>
+    <tr><td class="cod">2.1.03.01</td><td>IVA cobrado en ventas</td><td class="num">0,00</td><td class="num">2.100,00</td><td class="num">2.100,00</td><td>Acreedor</td></tr>
+    <tr><td class="cod">2.1.03.02</td><td>Retención en la fuente de IR por pagar</td><td class="num">0,00</td><td class="num">350,00</td><td class="num">350,00</td><td>Acreedor</td></tr>
+    <tr><td class="cod">2.1.03.03</td><td>Retención de IVA por pagar</td><td class="num">0,00</td><td class="num">585,00</td><td class="num">585,00</td><td>Acreedor</td></tr>
+    <tr><td class="cod">3.1.01.01</td><td>Capital social</td><td class="num">0,00</td><td class="num">25.000,00</td><td class="num">25.000,00</td><td>Acreedor</td></tr>
+    <tr><td class="cod">4.1.01.01</td><td>Ingresos por servicios de asesoría aduanera</td><td class="num">0,00</td><td class="num">14.000,00</td><td class="num">14.000,00</td><td>Acreedor</td></tr>
+    <tr><td class="cod">5.1.01.01</td><td>Gasto arriendo</td><td class="num">1.000,00</td><td class="num">0,00</td><td class="num">1.000,00</td><td>Deudor</td></tr>
+    <tr><td class="cod">5.1.01.02</td><td>Gasto honorarios profesionales</td><td class="num">2.000,00</td><td class="num">0,00</td><td class="num">2.000,00</td><td>Deudor</td></tr>
+    <tr><td><strong>&mdash;</strong></td><td><strong>TOTALES</strong></td><td class="num"><strong>52.150,00</strong></td><td class="num"><strong>52.150,00</strong></td><td class="num"><strong>&mdash;</strong></td><td>&mdash;</td></tr>
+  </table>
+  </div>
+  <p>El control global se cumple: los débitos totales del Mayor (52.150,00) coinciden exactamente con el total del Debe del Libro Diario, y lo mismo ocurre con los créditos. Ninguna partida se perdió en el traslado.</p>
+
+  <div class="alerta-box">
+    <strong>Trampa habitual:</strong> mayorizar "por cuentas" en lugar de "por asientos". Si usted busca en todo el Diario los movimientos de Bancos, luego los de Clientes, y así, tarde o temprano saltará una línea y el descuadre aparecerá recién en el balance de comprobación, cuando ya no recordará dónde falló. Recorra el Diario una sola vez, de arriba abajo, distribuyendo cada valor.
+  </div>
+
+  <div class="clave-box">
+    <h4>Idea clave del Tema 3</h4>
+    <p>Diario y Mayor contienen <strong>la misma información</strong> ordenada con criterios distintos: el Diario responde <em>cuándo</em>, el Mayor responde <em>cuánto</em>. Por eso son complementarios y ninguno reemplaza al otro. Y por eso, también, el Mayor jamás corrige un error de análisis: solo lo hace más visible... o lo esconde mejor.</p>
+  </div>
+</div>
+
+<!-- ================= PANEL: TEMA 4 ================= -->
+<div class="panel" id="tema4">
+  <h2>Tema 4. El balance de comprobación preliminar</h2>
+  <p class="lead">Antes de afirmar nada sobre la empresa, el contador se detiene y verifica. El balance de comprobación es esa pausa: un control aritmético que resume todas las cuentas y confirma que la partida doble se cumplió en todo el período.</p>
+
+  <h3>4.1. Definición y propósito</h3>
+  <div class="def-box">
+    <span class="term">Balance de comprobación</span>
+    Documento contable que presenta, en un solo cuadro y ordenadas por código, todas las cuentas del Libro Mayor con sus <strong>sumas</strong> (total del Debe y total del Haber) y sus <strong>saldos</strong> (deudor o acreedor), a una fecha determinada, con el propósito de verificar la igualdad de la partida doble.
+  </div>
+  <p>Se lo denomina <strong>preliminar</strong> (o "de sumas y saldos no ajustado") porque se elabora <strong>antes</strong> de los asientos de ajuste. Los saldos que muestra son los que resultan de las transacciones registradas, pero todavía no reflejan hechos que ocurren por el simple paso del tiempo o por la realidad del cierre: depreciaciones, gastos consumidos por anticipado, provisiones, faltantes de inventario. Esos ajustes se estudiarán en la Unidad 3 (Días 11 y 12) y darán origen al <strong>balance de comprobación ajustado</strong>.</p>
+  <p>Sus propósitos concretos son cuatro:</p>
+  <ol>
+    <li><strong>Comprobar la igualdad aritmética:</strong> total de sumas deudoras = total de sumas acreedoras, y total de saldos deudores = total de saldos acreedores.</li>
+    <li><strong>Consolidar la información dispersa</strong> del Mayor en un solo cuadro manejable.</li>
+    <li><strong>Detectar saldos incoherentes con la naturaleza</strong> de la cuenta (por ejemplo, un Capital social con saldo deudor, o un Gasto arriendo con saldo acreedor, señales inequívocas de error).</li>
+    <li><strong>Servir de base</strong> para los asientos de ajuste y, después, para la elaboración de los estados financieros.</li>
+  </ol>
+
+  <h3>4.2. Estructura de cuatro columnas</h3>
+  <p>El formato más completo, y el que usaremos en este curso, es el de <strong>cuatro columnas</strong>:</p>
+  <ul>
+    <li><strong>Sumas Debe / Sumas Haber:</strong> el total acumulado a cada lado de cada cuenta, tal como quedó en el Mayor. Su total general debe coincidir con el total del Libro Diario.</li>
+    <li><strong>Saldo deudor / Saldo acreedor:</strong> la diferencia de cada cuenta, colocada en la columna que corresponda a su naturaleza resultante. Una cuenta ocupa una sola de estas dos columnas, nunca las dos.</li>
+  </ul>
+  <p class="nota">También existe el balance de dos columnas (solo saldos), utilizado como resumen ejecutivo. El de cuatro columnas es superior para el aprendizaje porque conserva la huella de todo el movimiento del período, no solo el resultado neto.</p>
+
+  <h3>4.3. Balance de comprobación de AduanaPro Cía. Ltda.</h3>
+  <div class="scroll-x">
+  <table class="tabla">
+    <tr><th colspan="6" class="center">ADUANAPRO CÍA. LTDA.<br>BALANCE DE COMPROBACIÓN PRELIMINAR<br>Al 31 de agosto de 2026 &mdash; (expresado en dólares de los Estados Unidos de América)</th></tr>
+    <tr><th>Código</th><th>Cuenta</th><th>Sumas Debe</th><th>Sumas Haber</th><th>Saldo Deudor</th><th>Saldo Acreedor</th></tr>
+    <tr><td class="cod">1.1.01.02</td><td>Bancos</td><td class="num">31.140,00</td><td class="num">7.115,00</td><td class="num">24.025,00</td><td class="num">&mdash;</td></tr>
+    <tr><td class="cod">1.1.02.01</td><td>Cuentas por cobrar clientes</td><td class="num">6.105,00</td><td class="num">3.000,00</td><td class="num">3.105,00</td><td class="num">&mdash;</td></tr>
+    <tr><td class="cod">1.1.03.01</td><td>Crédito tributario IVA</td><td class="num">1.050,00</td><td class="num">&mdash;</td><td class="num">1.050,00</td><td class="num">&mdash;</td></tr>
+    <tr><td class="cod">1.1.03.02</td><td>Crédito tributario retenciones de IVA</td><td class="num">1.470,00</td><td class="num">&mdash;</td><td class="num">1.470,00</td><td class="num">&mdash;</td></tr>
+    <tr><td class="cod">1.1.03.03</td><td>Anticipo de impuesto a la renta</td><td class="num">385,00</td><td class="num">&mdash;</td><td class="num">385,00</td><td class="num">&mdash;</td></tr>
+    <tr><td class="cod">1.2.01.05</td><td>Muebles y enseres</td><td class="num">4.000,00</td><td class="num">&mdash;</td><td class="num">4.000,00</td><td class="num">&mdash;</td></tr>
+    <tr><td class="cod">1.2.01.06</td><td>Equipo de computación</td><td class="num">5.000,00</td><td class="num">&mdash;</td><td class="num">5.000,00</td><td class="num">&mdash;</td></tr>
+    <tr><td class="cod">2.1.03.01</td><td>IVA cobrado en ventas</td><td class="num">&mdash;</td><td class="num">2.100,00</td><td class="num">&mdash;</td><td class="num">2.100,00</td></tr>
+    <tr><td class="cod">2.1.03.02</td><td>Retención en la fuente de IR por pagar</td><td class="num">&mdash;</td><td class="num">350,00</td><td class="num">&mdash;</td><td class="num">350,00</td></tr>
+    <tr><td class="cod">2.1.03.03</td><td>Retención de IVA por pagar</td><td class="num">&mdash;</td><td class="num">585,00</td><td class="num">&mdash;</td><td class="num">585,00</td></tr>
+    <tr><td class="cod">3.1.01.01</td><td>Capital social</td><td class="num">&mdash;</td><td class="num">25.000,00</td><td class="num">&mdash;</td><td class="num">25.000,00</td></tr>
+    <tr><td class="cod">4.1.01.01</td><td>Ingresos por servicios de asesoría aduanera</td><td class="num">&mdash;</td><td class="num">14.000,00</td><td class="num">&mdash;</td><td class="num">14.000,00</td></tr>
+    <tr><td class="cod">5.1.01.01</td><td>Gasto arriendo</td><td class="num">1.000,00</td><td class="num">&mdash;</td><td class="num">1.000,00</td><td class="num">&mdash;</td></tr>
+    <tr><td class="cod">5.1.01.02</td><td>Gasto honorarios profesionales</td><td class="num">2.000,00</td><td class="num">&mdash;</td><td class="num">2.000,00</td><td class="num">&mdash;</td></tr>
+    <tr><td><strong>&mdash;</strong></td><td><strong>TOTALES</strong></td><td class="num"><strong>52.150,00</strong></td><td class="num"><strong>52.150,00</strong></td><td class="num"><strong>42.035,00</strong></td><td class="num"><strong>42.035,00</strong></td></tr>
+  </table>
+  </div>
+  <p>Las dos igualdades se cumplen: <strong>52.150,00 = 52.150,00</strong> en sumas y <strong>42.035,00 = 42.035,00</strong> en saldos. El registro del mes está aritméticamente equilibrado.</p>
+
+  <h4>Lectura contable del balance (no solo aritmética)</h4>
+  <ul>
+    <li>Todos los <strong>activos</strong> (códigos 1) tienen saldo deudor y todos los <strong>pasivos y el patrimonio</strong> (códigos 2 y 3) tienen saldo acreedor: coherencia total con la naturaleza estudiada en el Día 3.</li>
+    <li>Los <strong>ingresos</strong> (14.000,00) superan a los <strong>gastos</strong> (1.000,00 + 2.000,00 = 3.000,00). Se anticipa una utilidad de 11.000,00, pero <strong>aún no puede afirmarse</strong>: faltan los ajustes, entre ellos la depreciación de muebles y equipo de computación.</li>
+    <li>La empresa tiene un <strong>crédito tributario acumulado</strong> de 1.050,00 + 1.470,00 = 2.520,00 y un <strong>anticipo de IR</strong> de 385,00 frente a obligaciones tributarias de 2.100,00 + 350,00 + 585,00 = 3.035,00. Esta comparación es la que alimentará la declaración mensual ante el SRI.</li>
+    <li>Compruebe la ecuación contable ampliada: Activo (39.035,00) = Pasivo (3.035,00) + Patrimonio (25.000,00) + Ingresos (14.000,00) &minus; Gastos (3.000,00) = 39.035,00. <strong>La ecuación del Día 3 sigue viva aquí.</strong></li>
+  </ul>
+
+  <h3>4.4. Lo que el balance de comprobación NO detecta</h3>
+  <p>Este es el punto que separa a quien memoriza de quien entiende. Que el balance cuadre <strong>no significa que la contabilidad esté bien</strong>. El balance solo verifica que los débitos igualen a los créditos, y hay errores que respetan esa igualdad perfectamente:</p>
+  <div class="scroll-x">
+  <table class="tabla">
+    <tr><th>Error</th><th>¿Cuadra igual?</th><th>Explicación</th></tr>
+    <tr><td><strong>Omisión total</strong> de una transacción</td><td>Sí</td><td>Nunca entró al Diario, así que no descuadra nada. Simplemente falta.</td></tr>
+    <tr><td><strong>Duplicación</strong> de un asiento completo</td><td>Sí</td><td>Se debitó y acreditó dos veces el mismo valor: la igualdad se conserva.</td></tr>
+    <tr><td><strong>Cuenta equivocada</strong> del mismo grupo</td><td>Sí</td><td>Registrar en Caja lo que iba en Bancos: el activo total no cambia, pero la información es falsa.</td></tr>
+    <tr><td><strong>Inversión</strong> de cuentas (debitar la que iba al Haber)</td><td>Sí</td><td>Los totales coinciden; los saldos individuales quedan al revés.</td></tr>
+    <tr><td><strong>Error compensado</strong></td><td>Sí</td><td>Dos errores de igual valor en lados opuestos se anulan entre sí.</td></tr>
+    <tr><td>Valor mal calculado en <strong>ambos</strong> lados</td><td>Sí</td><td>Si registro 500,00 en vez de 5.000,00 en el Debe y en el Haber, cuadra pero está mal.</td></tr>
+    <tr><td>Traslado al Mayor <strong>solo en un lado</strong></td><td><strong>No</strong></td><td>Este sí descuadra: el balance lo detecta.</td></tr>
+    <tr><td>Error de <strong>suma</strong> en el Mayor</td><td><strong>No</strong></td><td>También descuadra y es detectable.</td></tr>
+  </table>
+  </div>
+  <div class="alerta-box">
+    <strong>Regla profesional:</strong> el balance de comprobación es una prueba <em>necesaria pero no suficiente</em>. Cuadrar es el mínimo exigible, no la meta. La calidad de la información depende del análisis del Tema 1, y ninguna herramienta posterior la repara.
+  </div>
+
+  <h4>¿Qué hacer cuando el balance no cuadra? (protocolo de búsqueda)</h4>
+  <ol>
+    <li>Calcule la <strong>diferencia</strong>. Si es divisible para 9, sospeche de una <strong>transposición</strong> de dígitos (escribir 540 en vez de 450). Si es divisible para 2, busque un valor igual a la mitad de la diferencia registrado en el lado equivocado.</li>
+    <li>Verifique las <strong>sumas</strong> del balance y luego las de cada cuenta del Mayor.</li>
+    <li>Revise el <strong>traslado</strong> de cada asiento al Mayor, comparando referencias.</li>
+    <li>Al final, y solo al final, revise que cada <strong>asiento del Diario</strong> cuadre individualmente.</li>
+  </ol>
+  <p>Trabajar en ese orden ahorra horas: se va de lo general a lo particular, no al revés.</p>
+
+  <div class="clave-box">
+    <h4>Idea clave del Tema 4</h4>
+    <p>Documento fuente &rarr; análisis &rarr; Diario &rarr; Mayor &rarr; balance de comprobación. Cinco eslabones, un solo hilo. Hoy usted recorrió los cuatro primeros pasos del proceso contable con una empresa completa, y llegó a un cuadro que resume un mes entero de operaciones en catorce líneas. <strong>Eso es la contabilidad: convertir el desorden de la realidad en información verificable.</strong> El próximo día aplicará este recorrido completo, de principio a fin, en el ejercicio integrador de una empresa de servicios.</p>
+  </div>
+</div>
+<!-- ================= PANEL: EJERCICIO INTERACTIVO ================= -->
+<div class="panel" id="ejercicio">
+  <h2>Ejercicio interactivo: arme, mayorice y compruebe</h2>
+  <p class="lead">Ocho ítems de aplicación directa sobre el caso AduanaPro Cía. Ltda. y sobre las reglas de forma del proceso contable. Responda <strong>todos</strong> los ítems y luego presione "Verificar respuestas": recién entonces verá el resultado de cada uno con su explicación.</p>
+
+  <div class="item">
+    <span class="pregunta"><span class="item-num">1</span> AduanaPro presta un servicio y el cliente le retiene el 2,75% de Impuesto a la Renta. Desde el punto de vista de <strong>AduanaPro</strong>, ese valor retenido se registra como:</span>
+    <div class="opciones">
+      <label class="opcion"><input type="radio" name="ei1" value="a"> Un gasto por impuestos, en el Debe.</label>
+      <label class="opcion"><input type="radio" name="ei1" value="b"> Un anticipo de impuesto a la renta (activo), en el Debe.</label>
+      <label class="opcion"><input type="radio" name="ei1" value="c"> Una retención por pagar (pasivo), en el Haber.</label>
+      <label class="opcion"><input type="radio" name="ei1" value="d"> No se registra, porque el dinero lo entrega el cliente al SRI.</label>
+    </div>
+    <div class="resultado" id="rei1"></div>
+  </div>
+
+  <div class="item">
+    <span class="pregunta"><span class="item-num">2</span> En el asiento 2 (compra de muebles por 4.000,00 + IVA 600,00, con retenciones de 70,00 de IR y 180,00 de IVA), el valor que se <strong>acredita a Bancos</strong> es:</span>
+    <div class="opciones">
+      <label class="opcion"><input type="radio" name="ei2" value="a"> 4.600,00</label>
+      <label class="opcion"><input type="radio" name="ei2" value="b"> 4.530,00</label>
+      <label class="opcion"><input type="radio" name="ei2" value="c"> 4.350,00</label>
+      <label class="opcion"><input type="radio" name="ei2" value="d"> 4.000,00</label>
+    </div>
+    <div class="resultado" id="rei2"></div>
+  </div>
+
+  <div class="item">
+    <span class="pregunta"><span class="item-num">3</span> ¿Cómo se escribe correctamente una cuenta <strong>acreedora</strong> en el Libro Diario?</span>
+    <div class="opciones">
+      <label class="opcion"><input type="radio" name="ei3" value="a"> En la primera línea del asiento, pegada al margen izquierdo.</label>
+      <label class="opcion"><input type="radio" name="ei3" value="b"> Después de las deudoras, con sangría y precedida de la letra "a".</label>
+      <label class="opcion"><input type="radio" name="ei3" value="c"> Dentro de la glosa, al final del asiento.</label>
+      <label class="opcion"><input type="radio" name="ei3" value="d"> En la columna Parcial, para no ocupar la columna Detalle.</label>
+    </div>
+    <div class="resultado" id="rei3"></div>
+  </div>
+
+  <div class="item">
+    <span class="pregunta"><span class="item-num">4</span> La <strong>glosa</strong> de un asiento contable tiene como finalidad principal:</span>
+    <div class="opciones">
+      <label class="opcion"><input type="radio" name="ei4" value="a"> Lograr que el Debe y el Haber cuadren.</label>
+      <label class="opcion"><input type="radio" name="ei4" value="b"> Numerar el asiento de manera correlativa.</label>
+      <label class="opcion"><input type="radio" name="ei4" value="c"> Explicar el hecho registrado e identificar el documento que lo respalda.</label>
+      <label class="opcion"><input type="radio" name="ei4" value="d"> Calcular los impuestos y las retenciones de la transacción.</label>
+    </div>
+    <div class="resultado" id="rei4"></div>
+  </div>
+
+  <div class="item">
+    <span class="pregunta"><span class="item-num">5</span> Al mayorizar la cuenta Bancos de AduanaPro se acumularon 31.140,00 en el Debe y 7.115,00 en el Haber. El saldo de la cuenta es:</span>
+    <div class="opciones">
+      <label class="opcion"><input type="radio" name="ei5" value="a"> Deudor de 24.025,00</label>
+      <label class="opcion"><input type="radio" name="ei5" value="b"> Acreedor de 24.025,00</label>
+      <label class="opcion"><input type="radio" name="ei5" value="c"> Deudor de 38.255,00</label>
+      <label class="opcion"><input type="radio" name="ei5" value="d"> Acreedor de 7.115,00</label>
+    </div>
+    <div class="resultado" id="rei5"></div>
+  </div>
+
+  <div class="item">
+    <span class="pregunta"><span class="item-num">6</span> La cuenta <strong>IVA cobrado en ventas</strong> presenta al 31 de agosto un saldo de 2.100,00. Ese saldo es:</span>
+    <div class="opciones">
+      <label class="opcion"><input type="radio" name="ei6" value="a"> Deudor, y corresponde a un activo (crédito tributario).</label>
+      <label class="opcion"><input type="radio" name="ei6" value="b"> Acreedor, y corresponde a un pasivo (obligación con el SRI).</label>
+      <label class="opcion"><input type="radio" name="ei6" value="c"> Acreedor, y corresponde a un ingreso del período.</label>
+      <label class="opcion"><input type="radio" name="ei6" value="d"> Deudor, y corresponde a un gasto por impuestos.</label>
+    </div>
+    <div class="resultado" id="rei6"></div>
+  </div>
+
+  <div class="item">
+    <span class="pregunta"><span class="item-num">7</span> ¿Cuál de los siguientes errores <strong>NO</strong> es detectado por el balance de comprobación?</span>
+    <div class="opciones">
+      <label class="opcion"><input type="radio" name="ei7" value="a"> Trasladar un valor al Mayor solo en el Debe y olvidarlo en el Haber.</label>
+      <label class="opcion"><input type="radio" name="ei7" value="b"> Equivocarse al sumar la columna Haber de una cuenta del Mayor.</label>
+      <label class="opcion"><input type="radio" name="ei7" value="c"> No haber registrado en absoluto una transacción del mes.</label>
+      <label class="opcion"><input type="radio" name="ei7" value="d"> Anotar 900,00 en el Debe y 90,00 en el Haber del mismo asiento.</label>
+    </div>
+    <div class="resultado" id="rei7"></div>
+  </div>
+
+  <div class="item">
+    <span class="pregunta"><span class="item-num">8</span> En el balance de comprobación de AduanaPro, la cuenta <strong>Ingresos por servicios de asesoría aduanera</strong> (14.000,00) se presenta en la columna:</span>
+    <div class="opciones">
+      <label class="opcion"><input type="radio" name="ei8" value="a"> Saldo deudor, porque el dinero ingresó a la empresa.</label>
+      <label class="opcion"><input type="radio" name="ei8" value="b"> Saldo acreedor, por su naturaleza de cuenta de ingreso.</label>
+      <label class="opcion"><input type="radio" name="ei8" value="c"> Sumas Debe, porque allí se acumulan los valores ganados.</label>
+      <label class="opcion"><input type="radio" name="ei8" value="d"> No aparece: los ingresos solo van al Estado de Resultado Integral.</label>
+    </div>
+    <div class="resultado" id="rei8"></div>
+  </div>
+
+  <div class="alerta-faltan" id="alertaEj">Debe responder todos los ítems antes de verificar. Revise los que quedaron en blanco.</div>
+  <div class="score-box" id="scoreEj">
+    <span class="emoji" id="emojiEj"></span>
+    <h3 id="tituloEj"></h3>
+    <p id="detalleEj"></p>
+    <div class="barra-cont"><div class="barra" id="barraEj"></div></div>
+  </div>
+  <button class="btn" onclick="verificarEjercicio()">Verificar respuestas</button>
+  <button class="btn btn-reiniciar" onclick="reiniciarEjercicio()">Reiniciar ejercicio</button>
+</div>
+
+<!-- ================= PANEL: CUESTIONARIO ================= -->
+<div class="panel" id="cuestionario">
+  <h2>Cuestionario de evaluación</h2>
+  <p class="lead">Diez preguntas de opción múltiple: siete teóricas, que se responden con el contenido del widget, y tres de análisis de caso, que exigen aplicar el criterio a situaciones nuevas. Responda todas y presione "Verificar cuestionario".</p>
+
+  <div class="item">
+    <span class="pregunta"><span class="item-num">1</span> ¿Cuál de los siguientes hechos constituye una transacción mercantil registrable? <span class="badge badge-teorica">Teórica</span></span>
+    <div class="opciones">
+      <label class="opcion"><input type="radio" name="qi1" value="a"> La empresa firma hoy un contrato de arriendo que empieza el próximo mes.</label>
+      <label class="opcion"><input type="radio" name="qi1" value="b"> Un socio aporta un equipo de computación valorado en USD 5.000,00.</label>
+      <label class="opcion"><input type="radio" name="qi1" value="c"> La empresa recibe un premio al mejor agente de aduana del año.</label>
+      <label class="opcion"><input type="radio" name="qi1" value="d"> El gerente conversa con un posible cliente extranjero sobre precios.</label>
+    </div>
+    <div class="resultado" id="rqi1"></div>
+  </div>
+
+  <div class="item">
+    <span class="pregunta"><span class="item-num">2</span> ¿Cuál es el orden correcto de los cuatro primeros pasos del proceso contable? <span class="badge badge-teorica">Teórica</span></span>
+    <div class="opciones">
+      <label class="opcion"><input type="radio" name="qi2" value="a"> Jornalización &rarr; reconocimiento &rarr; balance de comprobación &rarr; mayorización.</label>
+      <label class="opcion"><input type="radio" name="qi2" value="b"> Reconocimiento y análisis &rarr; jornalización &rarr; mayorización &rarr; balance de comprobación.</label>
+      <label class="opcion"><input type="radio" name="qi2" value="c"> Mayorización &rarr; jornalización &rarr; reconocimiento &rarr; estados financieros.</label>
+      <label class="opcion"><input type="radio" name="qi2" value="d"> Reconocimiento y análisis &rarr; mayorización &rarr; jornalización &rarr; ajustes.</label>
+    </div>
+    <div class="resultado" id="rqi2"></div>
+  </div>
+
+  <div class="item">
+    <span class="pregunta"><span class="item-num">3</span> ¿Qué documento fuente respalda contablemente la prestación de un servicio gravado con IVA? <span class="badge badge-teorica">Teórica</span></span>
+    <div class="opciones">
+      <label class="opcion"><input type="radio" name="qi3" value="a"> La guía de remisión.</label>
+      <label class="opcion"><input type="radio" name="qi3" value="b"> La orden de compra emitida por el cliente.</label>
+      <label class="opcion"><input type="radio" name="qi3" value="c"> La factura.</label>
+      <label class="opcion"><input type="radio" name="qi3" value="d"> La nota de pedido interna.</label>
+    </div>
+    <div class="resultado" id="rqi3"></div>
+  </div>
+
+  <div class="item">
+    <span class="pregunta"><span class="item-num">4</span> El Libro Diario se caracteriza porque: <span class="badge badge-teorica">Teórica</span></span>
+    <div class="opciones">
+      <label class="opcion"><input type="radio" name="qi4" value="a"> Registra las transacciones en orden cronológico, aplicando la partida doble.</label>
+      <label class="opcion"><input type="radio" name="qi4" value="b"> Agrupa los movimientos por cuenta y muestra el saldo de cada una.</label>
+      <label class="opcion"><input type="radio" name="qi4" value="c"> Presenta solo las cuentas de activo y pasivo al cierre del período.</label>
+      <label class="opcion"><input type="radio" name="qi4" value="d"> Reemplaza a los documentos fuente una vez elaborado.</label>
+    </div>
+    <div class="resultado" id="rqi4"></div>
+  </div>
+
+  <div class="item">
+    <span class="pregunta"><span class="item-num">5</span> ¿Cuál es la función específica del Libro Mayor dentro del ciclo de la información contable? <span class="badge badge-teorica">Teórica</span></span>
+    <div class="opciones">
+      <label class="opcion"><input type="radio" name="qi5" value="a"> Corregir los errores de análisis cometidos en el Diario.</label>
+      <label class="opcion"><input type="radio" name="qi5" value="b"> Sistematizar la información agrupando por cuenta los movimientos ya registrados.</label>
+      <label class="opcion"><input type="radio" name="qi5" value="c"> Sustituir al Libro Diario en las empresas que usan sistemas informáticos.</label>
+      <label class="opcion"><input type="radio" name="qi5" value="d"> Calcular los impuestos que la empresa debe declarar cada mes.</label>
+    </div>
+    <div class="resultado" id="rqi5"></div>
+  </div>
+
+  <div class="item">
+    <span class="pregunta"><span class="item-num">6</span> El balance de comprobación se denomina <em>preliminar</em> porque: <span class="badge badge-teorica">Teórica</span></span>
+    <div class="opciones">
+      <label class="opcion"><input type="radio" name="qi6" value="a"> Se elabora antes de registrar los asientos de ajuste del período.</label>
+      <label class="opcion"><input type="radio" name="qi6" value="b"> Solo incluye las cuentas de activo, pasivo y patrimonio.</label>
+      <label class="opcion"><input type="radio" name="qi6" value="c"> Es un borrador que no requiere que el Debe iguale al Haber.</label>
+      <label class="opcion"><input type="radio" name="qi6" value="d"> Se presenta a los socios antes de entregarlo a la Superintendencia.</label>
+    </div>
+    <div class="resultado" id="rqi6"></div>
+  </div>
+
+  <div class="item">
+    <span class="pregunta"><span class="item-num">7</span> En la jornalización, el principio de partida doble exige que: <span class="badge badge-teorica">Teórica</span></span>
+    <div class="opciones">
+      <label class="opcion"><input type="radio" name="qi7" value="a"> Cada asiento tenga exactamente dos cuentas, una deudora y una acreedora.</label>
+      <label class="opcion"><input type="radio" name="qi7" value="b"> El total del Debe sea igual al total del Haber en cada asiento.</label>
+      <label class="opcion"><input type="radio" name="qi7" value="c"> Todo asiento incluya al menos una cuenta de activo.</label>
+      <label class="opcion"><input type="radio" name="qi7" value="d"> Los asientos se registren dos veces: en el Diario y en el Mayor, con distinto valor.</label>
+    </div>
+    <div class="resultado" id="rqi7"></div>
+  </div>
+
+  <div class="item">
+    <span class="pregunta"><span class="item-num">8</span> Una empresa quiteña compra mercadería por USD 1.000,00 más IVA 15%. Es agente de retención y retiene el 1,75% de IR y el 30% del IVA. ¿Qué valor entrega al proveedor? <span class="badge badge-caso">Análisis de caso</span></span>
+    <div class="opciones">
+      <label class="opcion"><input type="radio" name="qi8" value="a"> 1.150,00</label>
+      <label class="opcion"><input type="radio" name="qi8" value="b"> 1.132,50</label>
+      <label class="opcion"><input type="radio" name="qi8" value="c"> 1.087,50</label>
+      <label class="opcion"><input type="radio" name="qi8" value="d"> 1.105,00</label>
+    </div>
+    <div class="resultado" id="rqi8"></div>
+  </div>
+
+  <div class="item">
+    <span class="pregunta"><span class="item-num">9</span> Al revisar los libros de una exportadora, usted descubre que un pago de USD 500,00 se registró debitando "Gasto publicidad" cuando correspondía a "Gasto transporte". El balance de comprobación ya fue elaborado. ¿Qué ocurrió? <span class="badge badge-caso">Análisis de caso</span></span>
+    <div class="opciones">
+      <label class="opcion"><input type="radio" name="qi9" value="a"> El balance descuadró en 500,00 y el error se detectó automáticamente.</label>
+      <label class="opcion"><input type="radio" name="qi9" value="b"> El balance descuadró en 1.000,00, por el doble efecto del error.</label>
+      <label class="opcion"><input type="radio" name="qi9" value="c"> El balance cuadró: la igualdad se mantiene y el error pasó inadvertido.</label>
+      <label class="opcion"><input type="radio" name="qi9" value="d"> El balance no pudo elaborarse hasta corregir el asiento.</label>
+    </div>
+    <div class="resultado" id="rqi9"></div>
+  </div>
+
+  <div class="item">
+    <span class="pregunta"><span class="item-num">10</span> En una naviera de Guayaquil, la cuenta Cuentas por cobrar clientes acumuló 12.000,00 en el Debe y 4.500,00 en el Haber. ¿Cuál es su saldo y cómo se presenta? <span class="badge badge-caso">Análisis de caso</span></span>
+    <div class="opciones">
+      <label class="opcion"><input type="radio" name="qi10" value="a"> Saldo acreedor de 7.500,00, que se presenta como pasivo.</label>
+      <label class="opcion"><input type="radio" name="qi10" value="b"> Saldo deudor de 7.500,00, que se presenta como activo.</label>
+      <label class="opcion"><input type="radio" name="qi10" value="c"> Saldo deudor de 16.500,00, que se presenta como activo.</label>
+      <label class="opcion"><input type="radio" name="qi10" value="d"> Saldo cero, porque los cobros anulan las ventas a crédito.</label>
+    </div>
+    <div class="resultado" id="rqi10"></div>
+  </div>
+
+  <div class="alerta-faltan" id="alertaCu">Debe responder las 10 preguntas antes de verificar. Revise las que quedaron en blanco.</div>
+  <div class="score-box" id="scoreCu">
+    <span class="emoji" id="emojiCu"></span>
+    <h3 id="tituloCu"></h3>
+    <p id="detalleCu"></p>
+    <div class="barra-cont"><div class="barra" id="barraCu"></div></div>
+  </div>
+  <button class="btn" onclick="verificarCuestionario()">Verificar cuestionario</button>
+  <button class="btn btn-reiniciar" onclick="reiniciarCuestionario()">Reiniciar cuestionario</button>
+</div>
+<!-- ================= PANEL: ACTIVIDAD CON IA ================= -->
+<div class="panel" id="ia">
+  <h2>Actividad con Inteligencia Artificial: el auditor de asientos</h2>
+  <p class="lead">Hoy usted no le pedirá a la IA que le enseñe: le pedirá que trabaje, y usted la auditará. Esta actividad se realiza gratuitamente en <strong>Claude</strong> (<a href="https://claude.ai" target="_blank" rel="noopener">claude.ai</a>), creando una cuenta gratuita si aún no la tiene.</p>
+
+  <div class="paso"><strong>Paso 1.</strong> Ingrese a claude.ai, abra una conversación nueva y copie el prompt completo del recuadro. Está diseñado para que la IA produzca un trabajo <strong>con errores deliberados</strong>: su tarea es encontrarlos.</div>
+  <div class="paso"><strong>Paso 2.</strong> Lea la respuesta con el Tema 2 abierto al lado. Verifique uno por uno: cuentas, lado del registro, cálculo de IVA, cálculo de retenciones, sangría de las acreedoras, glosa y cuadre.</div>
+  <div class="paso"><strong>Paso 3.</strong> Elabore su informe (máximo 2 páginas) con la estructura indicada más abajo. Ese informe es el producto evaluable, no la respuesta de la IA.</div>
+
+  <h3>Prompt exacto (cópielo tal cual)</h3>
+  <div class="prompt-box">Actúa como un asistente contable con poca experiencia que está aprendiendo el proceso contable ecuatoriano.
+
+Registra en formato de Libro Diario tradicional (columnas: fecha, código, detalle, parcial, debe, haber, y glosa) las siguientes tres transacciones de una empresa de servicios domiciliada en Guayaquil, agente de retención, correspondientes a septiembre de 2026. Usa IVA 15%.
+
+1) 04/09/2026: presta un servicio de asesoría logística por USD 5.000,00 más IVA, factura 001-001-000022. El cliente le retiene el 2,75% de impuesto a la renta y el 70% del IVA, y paga el saldo por transferencia bancaria.
+2) 09/09/2026: paga honorarios a un contador independiente por USD 1.200,00 más IVA, factura 001-001-000078. Retiene el 10% de impuesto a la renta y el 100% del IVA.
+3) 16/09/2026: compra un computador para la oficina por USD 2.400,00 más IVA, factura 003-001-000456, a crédito a 30 dias. Retiene el 1,75% de impuesto a la renta y el 30% del IVA.
+
+Instrucciones adicionales:
+- No expliques la teoria, solo presenta los tres asientos.
+- Introduce deliberadamente TRES errores dentro de los asientos: uno de calculo de retencion, uno de cuenta equivocada o de lado equivocado (debe/haber), y uno de forma (glosa incompleta o cuenta acreedora sin sangria).
+- No senales cuales son los errores ni los marques de ninguna manera.
+- Al final, agrega unicamente una linea que diga: "Fin del ejercicio".</div>
+
+  <h3>Qué hacer con la respuesta</h3>
+  <ol>
+    <li><strong>Verifique la aritmética primero:</strong> IVA de cada operación, retención de renta sobre la base imponible y retención de IVA sobre el IVA. Anote sus propios cálculos antes de mirar los de la IA.</li>
+    <li><strong>Verifique la lógica después:</strong> ¿la retención que <em>la empresa efectúa</em> quedó como pasivo? ¿la retención que <em>le efectuaron</em> quedó como activo? ¿el gasto se registró sin IVA? ¿la compra a crédito generó Cuentas por pagar y no una salida de Bancos?</li>
+    <li><strong>Verifique la forma al final:</strong> numeración, sangría, "a", glosa con documento de respaldo, cuadre de cada asiento.</li>
+    <li><strong>Corrija:</strong> reescriba los asientos correctos con el formato del Tema 2.</li>
+  </ol>
+
+  <h3>Estructura del informe (producto evaluable)</h3>
+  <div class="scroll-x">
+  <table class="tabla">
+    <tr><th>Sección</th><th>Contenido esperado</th></tr>
+    <tr><td>1. Cálculos propios</td><td>Tabla con base imponible, IVA, retención de IR, retención de IVA y valor neto de cada transacción, elaborada por usted <em>antes</em> de leer la respuesta de la IA.</td></tr>
+    <tr><td>2. Errores detectados</td><td>Los tres errores identificados, cada uno con: (a) transcripción de la línea errónea, (b) tipo de error, (c) por qué es un error citando la regla o la norma aplicable.</td></tr>
+    <tr><td>3. Asientos corregidos</td><td>Los tres asientos reescritos correctamente en formato tradicional completo, con glosa.</td></tr>
+    <tr><td>4. Juicio crítico</td><td>Un párrafo respondiendo: ¿en qué se equivocó la IA con mayor facilidad, en el cálculo o en el criterio contable? ¿Qué le dice eso sobre cuándo puede confiar en una herramienta de IA en su futuro trabajo profesional?</td></tr>
+  </table>
+  </div>
+
+  <div class="alerta-box">
+    <strong>Criterio que distingue pensamiento crítico de copia simple.</strong> Un informe que solo transcribe la respuesta de la IA y dice "está mal" no aprueba. Se evalúa como trabajo crítico cuando: los cálculos propios existen y son anteriores; cada error se explica con la regla contable o tributaria que lo sustenta (no con "la IA se equivocó"); y el juicio final identifica un patrón, no una anécdota. Si la IA no cometió exactamente tres errores, repórtelo también: <strong>reportar que la herramienta no siguió la instrucción también es auditar</strong>.
+  </div>
+
+  <div class="clave-box">
+    <h4>Por qué esta actividad importa</h4>
+    <p>En su vida profesional, la IA le entregará borradores de asientos, liquidaciones aduaneras y conciliaciones en segundos. La pregunta no será si sabe usarla, sino <strong>si sabe detectar cuándo está equivocada</strong>. Esa capacidad se llama criterio profesional, y no se descarga: se construye verificando, como hoy.</p>
+  </div>
+</div>
+
+<!-- ================= PANEL: REFLEXIÓN ================= -->
+<div class="panel" id="reflexion">
+  <h2>Reflexión personal</h2>
+  <p><strong>Negocios Internacionales no es únicamente "negociar".</strong> Su carrera se sostiene sobre cuatro áreas que trabajan juntas: el <strong>comercio exterior</strong> (mover mercancías entre países cumpliendo procedimientos aduaneros y logísticos), las <strong>finanzas internacionales</strong> (financiar, pagar, cobrar y cubrir riesgos en distintas monedas y mercados), el <strong>marketing y la negociación internacional</strong> (encontrar, convencer y sostener contrapartes en otros países) y el <strong>marco legal y normativo</strong> (cumplir las reglas tributarias, contables y comerciales que hacen legítima la operación). Un profesional completo entiende las cuatro y decide en cuál profundiza.</p>
+
+  <p>Piense ahora en algo concreto que usted tenga a la mano: <strong>el celular con el que quizá está leyendo esto</strong>. Ese aparato llegó a sus manos después de un recorrido largo. Alguien lo fabricó y emitió una factura. Un exportador lo embarcó y generó documentos de transporte. Un importador ecuatoriano lo nacionalizó, pagó tributos aduaneros y recibió comprobantes. Un distribuidor lo vendió a la tienda, con IVA y retenciones. La tienda se lo vendió a usted y emitió una factura con su nombre. <strong>Cada uno de esos pasos generó, en algún país, un asiento contable con su glosa.</strong></p>
+
+  <p>Si esa cadena de registros no existiera, o si alguien la hubiera llevado mal, el fabricante no sabría cuánto ganó, el banco no habría financiado el contenedor, el importador no podría demostrar el origen de su mercadería ante el SRI y usted no tendría garantía. La información contable confiable es, literalmente, <strong>lo que permite que un objeto cruce el mundo y llegue a su mano</strong>. Y esa información nace de lo que usted hizo hoy: analizar, jornalizar, mayorizar y comprobar.</p>
+
+  <p class="lead">Responda por escrito, con honestidad. No hay respuestas correctas: hay respuestas suyas.</p>
+
+  <div class="refl-q"><strong>1. Del hecho al registro.</strong> Elija una compra real que usted haya hecho esta semana. Reconstruya, con las cinco preguntas del Tema 1, qué cuentas se movieron en la contabilidad del <em>vendedor</em>. ¿Qué le sorprendió al mirar su gasto cotidiano desde el otro lado del mostrador?</div>
+
+  <div class="refl-q"><strong>2. La glosa de su propia vida.</strong> La glosa explica un hecho para que alguien lo entienda años después, sin testigos. Si tuviera que escribir la glosa de la decisión que lo trajo a estudiar Negocios Internacionales, ¿qué diría exactamente? Escríbala en una sola oración, con el formato "P/R...".</div>
+
+  <div class="refl-q"><strong>3. Orden y emoción.</strong> Hoy trabajó con un proceso que exige rigor, secuencia y verificación. ¿Cómo se sintió cuando algo no cuadraba: se frustró, se detuvo, quiso saltarse el paso? Identifique su reacción típica ante el error y describa una estrategia concreta para sostener la calma la próxima vez. Esa capacidad se llama autorregulación y vale tanto como la técnica.</div>
+
+  <div class="refl-q"><strong>4. Lo que el balance no detecta.</strong> Aprendió que un balance puede cuadrar y estar equivocado. ¿En qué área de su vida personal o académica usted "cuadra" por fuera (cumple, entrega, aprueba) pero sabe que algo no está bien por dentro? ¿Qué haría falta para corregirlo de verdad, y no solo para que cuadre?</div>
+
+  <div class="refl-q"><strong>5. Exploración vocacional.</strong> De las cuatro áreas de la carrera &mdash; comercio exterior, finanzas internacionales, marketing y negociación internacional, marco legal y normativo &mdash;, ¿en cuál se imagina trabajando dentro de cinco años? Explique <strong>por qué</strong> esa y no las otras: ¿qué le atrae, qué habilidad suya cree que encaja allí, y qué le falta desarrollar? Si hoy no lo sabe, escriba también eso: reconocer la duda es parte del proceso.</div>
+
+  <div class="refl-q"><strong>6. Confianza y honestidad.</strong> Un contador puede hacer que las cifras digan lo que alguien quiere que digan. ¿Qué haría usted si, en su primer empleo, le pidieran registrar una transacción que sabe que no ocurrió como se la describen? Piense en las consecuencias reales, para la empresa y para usted, y en el principio ético del Día 2 que aplicaría.</div>
+
+  <div class="clave-box">
+    <h4>Para cerrar el día</h4>
+    <p>Hoy usted registró un mes completo de una empresa guayaquileña y llegó a un cuadro de catorce líneas que resume su realidad económica. Guarde esta idea: <strong>quien controla la información, entiende el negocio</strong>. En comercio exterior, en finanzas, en una negociación o frente a un organismo de control, la persona que puede sustentar sus cifras es la que decide.</p>
+  </div>
+</div>
+
+<!-- ================= PANEL: BIBLIOGRAFÍA ================= -->
+<div class="panel" id="biblio">
+  <h2>Bibliografía y fuentes de consulta</h2>
+  <p class="lead">Referencias en formato APA 7.ª edición. Las tres primeras corresponden a la bibliografía básica del sílabo de la asignatura.</p>
+
+  <div class="bib-card"><span class="autor">Zapata Sánchez, P.</span> (2011). <em>Laboratorio de contabilidad general</em> (7.ª ed.). McGraw-Hill Interamericana. <br><span class="nota">Bibliografía básica del sílabo. Capítulos sobre el proceso contable, jornalización y mayorización aplicados al contexto ecuatoriano.</span></div>
+
+  <div class="bib-card"><span class="autor">Vite Rangel, V. T.</span> (2017). <em>Contabilidad general</em>. Editorial Digital UNID. https://elibro.net/es/ereader/uguayaquil/41179 <br><span class="nota">Bibliografía básica del sílabo. Disponible en la biblioteca virtual de la Universidad de Guayaquil.</span></div>
+
+  <div class="bib-card"><span class="autor">Moreno Fernández, J. A.</span> (2014). <em>Contabilidad básica</em> (4.ª ed.). Grupo Editorial Patria. https://elibro.net/es/ereader/uguayaquil/39416 <br><span class="nota">Bibliografía básica del sílabo. Tratamiento didáctico del ciclo contable y de los libros principales.</span></div>
+
+  <div class="bib-card"><span class="autor">Fierro Martínez, Á. M., &amp; Fierro Celis, F. M.</span> (2015). <em>Contabilidad general con enfoque NIIF para las pymes</em> (5.ª ed.). Ecoe Ediciones. <br><span class="nota">Referencia complementaria latinoamericana sobre el proceso contable bajo NIIF.</span></div>
+
+  <div class="bib-card"><span class="autor">IFRS Foundation.</span> (2018). <em>Marco Conceptual para la Información Financiera</em>. IFRS Foundation. https://www.ifrs.org <br><span class="nota">Fundamento normativo del reconocimiento de transacciones y de las características cualitativas de la información financiera.</span></div>
+
+  <div class="bib-card"><span class="autor">Servicio de Rentas Internas.</span> (2024). <em>Reglamento de comprobantes de venta, retención y documentos complementarios</em>. SRI. https://www.sri.gob.ec <br><span class="nota">Sitio web oficial señalado en el sílabo. Regula los documentos fuente válidos en el Ecuador.</span></div>
+
+  <div class="bib-card"><span class="autor">Superintendencia de Compañías, Valores y Seguros.</span> (2023). <em>Catálogo de cuentas bajo Normas Internacionales de Información Financiera</em>. Superintendencia de Compañías, Valores y Seguros. https://www.supercias.gob.ec <br><span class="nota">Sitio web oficial señalado en el sílabo. Base del plan de cuentas y de su codificación.</span></div>
+
+  <div class="bib-card"><span class="autor">Congreso Nacional del Ecuador.</span> (2004). <em>Ley de Régimen Tributario Interno</em> (última codificación vigente). Registro Oficial Suplemento 463. <br><span class="nota">Sustento legal del IVA y de las retenciones en la fuente aplicadas en los asientos del caso.</span></div>
+
+  <div class="bib-nota"><strong>Nota metodológica:</strong> verifique siempre la edición, el año y la disponibilidad de cada obra en el repositorio institucional de la Universidad de Guayaquil, en la biblioteca virtual eLibro o en Google Scholar antes de citarla en un trabajo académico. La normativa tributaria ecuatoriana se actualiza con frecuencia: consulte la resolución vigente del SRI antes de aplicar cualquier porcentaje de retención en un caso real.</div>
+</div>
+
+</div><!-- fin container -->
+
+<script>
+/* ===================== NAVEGACIÓN POR PESTAÑAS ===================== */
+/* El CSS oculta los paneles con la clase .active (display:none / block).
+   El JS revierte usando exactamente el mismo mecanismo: classList. */
+function showTab(id, btn){
+  var paneles = document.querySelectorAll('.panel');
+  for (var i=0;i<paneles.length;i++){ paneles[i].classList.remove('active'); }
+  var botones = document.querySelectorAll('.tab-btn');
+  for (var j=0;j<botones.length;j++){ botones[j].classList.remove('active'); }
+  document.getElementById(id).classList.add('active');
+  if (btn) { btn.classList.add('active'); }
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* ===================== ACORDEÓN DEL REPASO ===================== */
+/* El CSS oculta .acc-body con display:none y lo muestra con la clase .open */
+function toggleAcc(cabecera){
+  var cuerpo = cabecera.nextElementSibling;
+  var flecha = cabecera.querySelector('.arrow');
+  if (cuerpo.classList.contains('open')){
+    cuerpo.classList.remove('open');
+    flecha.innerHTML = '&#9654;';
+  } else {
+    cuerpo.classList.add('open');
+    flecha.innerHTML = '&#9660;';
+  }
+}
+
+/* ===================== EJERCICIO INTERACTIVO ===================== */
+var respEjercicio = {
+  ei1:'b', ei2:'c', ei3:'b', ei4:'c', ei5:'a', ei6:'b', ei7:'c', ei8:'b'
+};
+
+var feedEjercicio = {
+  ei1:{ok:'Correcto. Cuando a la empresa le retienen, ese valor no se pierde: se convierte en un derecho frente al SRI. Por eso se registra en el Debe, como Anticipo de impuesto a la renta, que es un activo (crédito tributario) descontable de la declaración anual.',
+       no:'Incorrecto. La respuesta es la opción b. Cuando le retienen a la empresa nace un ACTIVO (Anticipo de impuesto a la renta), no un gasto ni un pasivo. El pasivo (retención por pagar) nace en el caso contrario: cuando es la empresa la que retiene a su proveedor. Y sí se registra, porque ese valor se recuperará al liquidar el impuesto.'},
+  ei2:{ok:'Correcto. Total facturado 4.000,00 + 600,00 = 4.600,00. Menos retención de IR (4.000,00 x 1,75% = 70,00) y retención de IVA (600,00 x 30% = 180,00). Se paga 4.600,00 - 250,00 = 4.350,00.',
+       no:'Incorrecto. La respuesta es 4.350,00. El error habitual es restar una sola retención: 4.600,00 - 70,00 = 4.530,00 (olvida la de IVA), o no restar ninguna (4.600,00). Recuerde: la retención de renta se calcula sobre la base imponible (4.000,00) y la de IVA sobre el IVA (600,00). Ambas se descuentan del pago.'},
+  ei3:{ok:'Correcto. Las cuentas acreedoras se escriben después de las deudoras, con sangría y precedidas de la letra "a". Esa sangría es la marca visual que permite reconocer la estructura del asiento de un solo vistazo.',
+       no:'Incorrecto. La respuesta es la opción b. Las deudoras van primero y pegadas al margen; las acreedoras van después, con sangría y con la "a". La glosa es la última línea y explica el hecho, no contiene cuentas. La columna Parcial sirve para desglosar subcuentas, no para ubicar cuentas acreedoras.'},
+  ei4:{ok:'Correcto. La glosa explica qué ocurrió e identifica el documento de respaldo (factura, comprobante, transferencia). Es lo único del asiento que sobrevive cuando ya nadie recuerda la transacción.',
+       no:'Incorrecto. La respuesta es la opción c. El cuadre lo garantiza la partida doble, no la glosa; la numeración es un elemento distinto del asiento; y los cálculos de impuestos se hacen antes, en el análisis. La glosa cumple una función de TRAZABILIDAD: conecta el registro con su evidencia.'},
+  ei5:{ok:'Correcto. 31.140,00 - 7.115,00 = 24.025,00, y como el Debe es mayor, el saldo es deudor, lo cual es coherente con la naturaleza de Bancos (activo).',
+       no:'Incorrecto. El saldo es deudor de 24.025,00. El saldo se obtiene por DIFERENCIA (no por suma, lo que daría 38.255,00) y se denomina deudor porque el Debe es mayor que el Haber. Si en una cuenta de Bancos apareciera saldo acreedor, sería una alerta: significaría haber girado más dinero del disponible.'},
+  ei6:{ok:'Correcto. El IVA que la empresa cobra en sus ventas no le pertenece: lo recauda para el Estado. Por eso es un pasivo, de naturaleza acreedora, que se liquidará en la declaración mensual.',
+       no:'Incorrecto. La respuesta es la opción b. El IVA cobrado en ventas NO es un ingreso de la empresa (el ingreso es el valor del servicio, 14.000,00) ni un activo. Es dinero de terceros que la empresa custodia: una obligación con el SRI. El activo es el otro IVA, el pagado en compras (crédito tributario).'},
+  ei7:{ok:'Correcto. Si la transacción nunca se registró, no hay ningún desequilibrio que delatar: el balance cuadra perfectamente y el error queda invisible. Por eso el balance es una prueba necesaria pero no suficiente.',
+       no:'Incorrecto. La respuesta es la opción c. Las opciones a, b y d producen una diferencia entre el total del Debe y el total del Haber, y por tanto SÍ son detectadas. La omisión total, en cambio, no rompe ninguna igualdad: lo que no existe no descuadra. Junto a ella son indetectables la duplicación de un asiento, la cuenta equivocada del mismo grupo, la inversión de cuentas y el error compensado.'},
+  ei8:{ok:'Correcto. Los ingresos son de naturaleza acreedora, de modo que su saldo se ubica en la columna Saldo acreedor del balance de comprobación, junto con pasivos y patrimonio.',
+       no:'Incorrecto. La respuesta es la opción b. Los ingresos aumentan por el Haber, por lo que su saldo es acreedor. Que haya entrado dinero no convierte al ingreso en cuenta deudora: lo deudor fue Bancos o Cuentas por cobrar. Y sí aparecen en el balance de comprobación: allí figuran TODAS las cuentas del Mayor, incluidas ingresos y gastos, que luego alimentarán el Estado de Resultado Integral.'}
+};
+
+function verificarEjercicio(){
+  var claves = Object.keys(respEjercicio);
+  var faltan = false;
+  for (var i=0;i<claves.length;i++){
+    if (!document.querySelector('input[name="'+claves[i]+'"]:checked')) { faltan = true; }
+  }
+  var alerta = document.getElementById('alertaEj');
+  if (faltan){ alerta.style.display='block'; alerta.scrollIntoView({behavior:'smooth', block:'center'}); return; }
+  alerta.style.display='none';
+
+  var aciertos = 0;
+  for (var k=0;k<claves.length;k++){
+    var nombre = claves[k];
+    var marcada = document.querySelector('input[name="'+nombre+'"]:checked').value;
+    var caja = document.getElementById('r'+nombre);
+    if (marcada === respEjercicio[nombre]){
+      aciertos++;
+      caja.className = 'resultado correcto';
+      caja.innerHTML = '<strong>&#10004; </strong>' + feedEjercicio[nombre].ok;
+    } else {
+      caja.className = 'resultado incorrecto';
+      caja.innerHTML = '<strong>&#10008; </strong>' + feedEjercicio[nombre].no;
+    }
+  }
+  mostrarPuntaje(aciertos, claves.length, 'Ej');
+}
+
+function reiniciarEjercicio(){
+  var claves = Object.keys(respEjercicio);
+  for (var i=0;i<claves.length;i++){
+    var opciones = document.getElementsByName(claves[i]);
+    for (var j=0;j<opciones.length;j++){ opciones[j].checked = false; }
+    var caja = document.getElementById('r'+claves[i]);
+    caja.className = 'resultado';
+    caja.innerHTML = '';
+  }
+  document.getElementById('scoreEj').style.display='none';
+  document.getElementById('alertaEj').style.display='none';
+  document.getElementById('barraEj').style.width='0';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* ===================== CUESTIONARIO ===================== */
+var respCuestionario = {
+  qi1:'b', qi2:'b', qi3:'c', qi4:'a', qi5:'b', qi6:'a', qi7:'b', qi8:'c', qi9:'c', qi10:'b'
+};
+
+var feedCuestionario = {
+  qi1:{ok:'Correcto. El aporte del socio es medible con fiabilidad y modifica la situación financiera: aumenta el activo (equipo de computación) y el patrimonio (capital social).',
+       no:'Incorrecto. La respuesta es la opción b. Firmar un contrato que empieza el próximo mes no genera hoy ni activo ni pasivo; un premio aumenta el prestigio pero no es cuantificable con fiabilidad; y una conversación comercial no compromete recursos. Solo el aporte del socio cumple las dos condiciones: ser medible en dinero y modificar la situación financiera.'},
+  qi2:{ok:'Correcto. Primero se reconoce y analiza la transacción con su documento fuente, luego se jornaliza en el Diario, después se mayoriza y finalmente se elabora el balance de comprobación.',
+       no:'Incorrecto. La respuesta es la opción b: reconocimiento y análisis, jornalización, mayorización y balance de comprobación. El orden no es arbitrario: no se puede registrar lo que no se ha analizado, no se puede agrupar lo que no se ha registrado, y no se puede comprobar lo que no se ha agrupado. Los ajustes y los estados financieros vienen después.'},
+  qi3:{ok:'Correcto. La factura es el comprobante de venta que respalda la transferencia de bienes o la prestación de servicios y da derecho a crédito tributario, según el Reglamento de Comprobantes de Venta del SRI.',
+       no:'Incorrecto. La respuesta es la factura. La guía de remisión respalda el traslado físico de mercadería, no el hecho económico; la orden de compra y la nota de pedido son documentos previos de gestión, sin efecto contable ni tributario por sí mismos. Solo la factura genera el registro y el crédito tributario.'},
+  qi4:{ok:'Correcto. El Libro Diario es el registro cronológico y completo de las transacciones, elaborado siempre con partida doble.',
+       no:'Incorrecto. La respuesta es la opción a. Agrupar por cuenta y mostrar saldos es función del Libro Mayor; presentar solo activos y pasivos al cierre corresponde al Estado de Situación Financiera; y los documentos fuente jamás se sustituyen: se conservan como evidencia del registro.'},
+  qi5:{ok:'Correcto. El Mayor sistematiza: toma los mismos datos del Diario y los reorganiza por cuenta para obtener saldos. No agrega información nueva, cambia el criterio de ordenamiento.',
+       no:'Incorrecto. La respuesta es la opción b. El Mayor NO corrige errores de análisis: los reproduce fielmente. Tampoco sustituye al Diario (son complementarios: uno responde "cuándo", el otro "cuánto") ni calcula impuestos, aunque sus saldos sirvan de insumo para la declaración.'},
+  qi6:{ok:'Correcto. Es preliminar porque se elabora antes de los asientos de ajuste. Después de registrarlos se obtiene el balance de comprobación ajustado, que se estudiará en la Unidad 3.',
+       no:'Incorrecto. La respuesta es la opción a. El balance de comprobación incluye TODAS las cuentas del Mayor, no solo las de situación financiera; siempre debe cuadrar (Debe = Haber), no es un borrador aritméticamente libre; y el término "preliminar" es técnico, referido a los ajustes, no al destinatario del documento.'},
+  qi7:{ok:'Correcto. La partida doble exige la igualdad entre el total del Debe y el total del Haber en cada asiento, cualquiera sea el número de cuentas que intervengan.',
+       no:'Incorrecto. La respuesta es la opción b. Un asiento puede tener dos cuentas (simple) o varias (compuesto o mixto): lo que nunca cambia es la igualdad de totales. Tampoco es obligatorio que intervenga una cuenta de activo (por ejemplo, un gasto pagado con una deuda). Y el traslado al Mayor conserva exactamente los mismos valores del Diario.'},
+  qi8:{ok:'Correcto. IVA: 1.000,00 x 15% = 150,00. Retención de IR: 1.000,00 x 1,75% = 17,50. Retención de IVA: 150,00 x 30% = 45,00. Pago = 1.150,00 - 17,50 - 45,00 = 1.087,50.',
+       no:'Incorrecto. La respuesta es 1.087,50. Verifique el procedimiento: el total facturado es 1.150,00; la retención de renta se calcula sobre la BASE (1.000,00 x 1,75% = 17,50) y la de IVA sobre el IVA (150,00 x 30% = 45,00). Si obtuvo 1.132,50 restó solo la de renta; si obtuvo 1.105,00 restó solo la de IVA; si obtuvo 1.150,00 no restó ninguna.'},
+  qi9:{ok:'Correcto. Se debitó una cuenta equivocada del mismo grupo, pero por el mismo valor y en el mismo lado: la igualdad Debe = Haber se conserva intacta y el balance no delata nada. El error solo se descubre revisando los documentos fuente.',
+       no:'Incorrecto. La respuesta es la opción c: el balance cuadró. El error no afecta la igualdad, porque el valor debitado sigue siendo 500,00 y el crédito no cambió; únicamente está en la cuenta equivocada. Este es exactamente el tipo de error que el balance de comprobación NO detecta, y por eso cuadrar es el mínimo exigible, no la garantía de que la información sea correcta.'},
+  qi10:{ok:'Correcto. 12.000,00 - 4.500,00 = 7.500,00 de saldo deudor, coherente con la naturaleza de Cuentas por cobrar clientes, que es un activo: representa lo que los clientes aún adeudan.',
+        no:'Incorrecto. La respuesta es la opción b: saldo deudor de 7.500,00, presentado como activo. El saldo se obtiene por diferencia, no por suma (16.500,00 sería sumar). No es acreedor porque el Debe es mayor, y un saldo acreedor en clientes indicaría cobros en exceso o anticipos recibidos. Tampoco es cero: los cobros (4.500,00) fueron menores que las ventas a crédito (12.000,00).'}
+};
+
+function verificarCuestionario(){
+  var claves = Object.keys(respCuestionario);
+  var faltan = false;
+  for (var i=0;i<claves.length;i++){
+    if (!document.querySelector('input[name="'+claves[i]+'"]:checked')) { faltan = true; }
+  }
+  var alerta = document.getElementById('alertaCu');
+  if (faltan){ alerta.style.display='block'; alerta.scrollIntoView({behavior:'smooth', block:'center'}); return; }
+  alerta.style.display='none';
+
+  var aciertos = 0;
+  for (var k=0;k<claves.length;k++){
+    var nombre = claves[k];
+    var marcada = document.querySelector('input[name="'+nombre+'"]:checked').value;
+    var caja = document.getElementById('r'+nombre);
+    if (marcada === respCuestionario[nombre]){
+      aciertos++;
+      caja.className = 'resultado correcto';
+      caja.innerHTML = '<strong>&#10004; </strong>' + feedCuestionario[nombre].ok;
+    } else {
+      caja.className = 'resultado incorrecto';
+      caja.innerHTML = '<strong>&#10008; </strong>' + feedCuestionario[nombre].no;
+    }
+  }
+  mostrarPuntaje(aciertos, claves.length, 'Cu');
+}
+
+function reiniciarCuestionario(){
+  var claves = Object.keys(respCuestionario);
+  for (var i=0;i<claves.length;i++){
+    var opciones = document.getElementsByName(claves[i]);
+    for (var j=0;j<opciones.length;j++){ opciones[j].checked = false; }
+    var caja = document.getElementById('r'+claves[i]);
+    caja.className = 'resultado';
+    caja.innerHTML = '';
+  }
+  document.getElementById('scoreCu').style.display='none';
+  document.getElementById('alertaCu').style.display='none';
+  document.getElementById('barraCu').style.width='0';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* ===================== PUNTAJE COMÚN (barra + emoji) ===================== */
+function mostrarPuntaje(aciertos, total, sufijo){
+  var porcentaje = Math.round((aciertos/total)*100);
+  var emoji, titulo, detalle;
+  if (porcentaje === 100){
+    emoji = '\uD83C\uDFC6'; titulo = 'Dominio completo';
+    detalle = 'Respondió todo correctamente. Domina el proceso contable de la I parte: análisis, jornalización, mayorización y comprobación. Está listo para el ejercicio integrador del Día 6.';
+  } else if (porcentaje >= 80){
+    emoji = '\uD83C\uDFAF'; titulo = 'Muy buen desempeño';
+    detalle = 'Comprende el proceso con solidez. Revise las explicaciones de los ítems fallados: suelen concentrarse en el tratamiento de las retenciones o en los errores que el balance no detecta.';
+  } else if (porcentaje >= 60){
+    emoji = '\uD83D\uDCD8'; titulo = 'Base construida, falta afianzar';
+    detalle = 'Tiene la idea general, pero algunos criterios aún no están firmes. Vuelva a los Temas 2 y 3, rehaga los siete asientos en papel sin mirar y compárelos con el widget.';
+  } else if (porcentaje >= 40){
+    emoji = '\u26A0\uFE0F'; titulo = 'Necesita repasar antes de continuar';
+    detalle = 'Varios conceptos centrales no están claros. Lea nuevamente el Tema 1 (las cinco preguntas del análisis) y el Tema 2, y practique el cálculo de IVA y retenciones del Día 4 antes de repetir esta evaluación.';
+  } else {
+    emoji = '\uD83D\uDCD6'; titulo = 'Retome el contenido desde el inicio';
+    detalle = 'Le recomendamos recorrer el widget completo desde la pestaña Repaso, sin saltar temas, y rehacer el caso AduanaPro paso a paso. No avance al Día 6 sin dominar este recorrido: todo lo que sigue se apoya en él.';
+  }
+  document.getElementById('emoji'+sufijo).innerHTML = emoji;
+  document.getElementById('titulo'+sufijo).innerHTML = titulo;
+  document.getElementById('detalle'+sufijo).innerHTML = 'Calificación: <strong>' + aciertos + ' / ' + total + '</strong> &nbsp;&middot;&nbsp; <strong>' + porcentaje + '%</strong><br>' + detalle;
+  var caja = document.getElementById('score'+sufijo);
+  caja.style.display = 'block';
+  var barra = document.getElementById('barra'+sufijo);
+  barra.style.width = '0';
+  setTimeout(function(){ barra.style.width = porcentaje + '%'; }, 120);
+  caja.scrollIntoView({behavior:'smooth', block:'center'});
+}
+</script>
+</body>
+</html>

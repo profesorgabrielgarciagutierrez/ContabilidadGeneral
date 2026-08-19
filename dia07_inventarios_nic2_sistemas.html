@@ -1,0 +1,1909 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Día 7 — Fundamentos de Inventarios y NIC 2 | Contabilidad General</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   PLAN DE CONSTRUCCION DEL ARCHIVO (fragmentos)
+   parte1: head + CSS completo + encabezado + menu + Repaso
+   parte2: Tema 1 (que es un inventario / alcance NIC 2) + Tema 2 (tipologia)
+   parte3: Tema 3 (costo de los inventarios) + Tema 4 (cadena de valor)
+   parte4: Tema 5 (sistemas de contabilizacion)
+   parte5: Ejercicio interactivo + Cuestionario
+   parte6: Actividad con IA + Reflexion + Bibliografia + JS
+   ============================================================ */
+
+/* ---------- BASE ---------- */
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family:'Source Sans 3', Arial, sans-serif;
+  font-size:17px; line-height:1.75; color:#222; background:#f4f6f8;
+}
+h1,h2,h3,h4 { font-family:'Lora', Georgia, serif; color:#003366; }
+
+/* ---------- ENCABEZADO ---------- */
+.encabezado { background:#003366; color:#ffffff; padding:26px 18px; text-align:center; }
+.encabezado h1 { color:#ffffff; font-size:1.65rem; line-height:1.3; margin-bottom:8px; }
+.encabezado .institucion { color:#ffffff; font-size:.95rem; font-weight:600; letter-spacing:.4px; }
+.encabezado .subinfo { color:#dbe9f7; font-size:.9rem; margin-top:10px; }
+.encabezado .pildoras { margin-top:14px; display:flex; flex-wrap:wrap; gap:8px; justify-content:center; }
+.pildora {
+  background:#ffffff; color:#003366; font-weight:700; font-size:.78rem;
+  padding:5px 12px; border-radius:14px; letter-spacing:.3px;
+}
+
+/* ---------- MENU DE PESTAÑAS ---------- */
+.menu {
+  background:#87CEEB; display:flex; overflow-x:auto; white-space:nowrap;
+  border-bottom:3px solid #003366; -webkit-overflow-scrolling:touch;
+}
+.menu button {
+  background:transparent; color:#000000; border:none; cursor:pointer;
+  font-family:'Source Sans 3', Arial, sans-serif; font-size:.94rem; font-weight:600;
+  padding:14px 18px; flex:0 0 auto; transition:background .15s;
+}
+.menu button:hover { background:#a8dcf0; }
+.menu button.active { background:#ffffff; color:#003366; font-weight:700; }
+
+/* ---------- CONTENEDOR Y PANELES ---------- */
+.contenedor { max-width:1080px; margin:0 auto; padding:26px 18px 60px; }
+.panel { display:none; background:#ffffff; padding:30px 26px; border-radius:8px; box-shadow:0 2px 10px rgba(0,0,0,.08); }
+.panel.active { display:block; }
+.panel h2 { font-size:1.5rem; margin-bottom:6px; border-bottom:3px solid #87CEEB; padding-bottom:8px; }
+.panel h3 { font-size:1.2rem; margin:26px 0 10px; color:#004a8f; }
+.panel h4 { font-size:1.05rem; margin:18px 0 8px; color:#00558c; }
+.panel p { margin-bottom:14px; text-align:justify; }
+.panel ul, .panel ol { margin:0 0 16px 26px; }
+.panel li { margin-bottom:9px; text-align:justify; }
+.rotulo-dia { display:inline-block; background:#003366; color:#ffffff; font-size:.75rem; font-weight:700; padding:4px 10px; border-radius:4px; letter-spacing:.5px; margin-bottom:12px; }
+.intro-panel { font-size:1.02rem; color:#33475b; font-style:italic; margin-bottom:18px; }
+
+/* ---------- CAJAS DIDACTICAS ---------- */
+.definicion { background:#eaf3fb; border-left:6px solid #003366; padding:16px 18px; border-radius:0 6px 6px 0; margin:18px 0; }
+.definicion .titulo-caja { font-family:'Lora', serif; font-weight:700; color:#003366; display:block; margin-bottom:6px; }
+.ejemplo { background:#fff8e6; border-left:6px solid #d59b00; padding:16px 18px; border-radius:0 6px 6px 0; margin:18px 0; }
+.ejemplo .titulo-caja { font-family:'Lora', serif; font-weight:700; color:#8a6200; display:block; margin-bottom:6px; }
+.conclusion { background:#e7f6ee; border:2px solid #2e8b57; padding:18px 20px; border-radius:8px; margin:24px 0 8px; }
+.conclusion .titulo-caja { font-family:'Lora', serif; font-weight:700; color:#1e6b41; display:block; margin-bottom:8px; font-size:1.05rem; }
+.norma { background:#f2eefb; border-left:6px solid #5b3fa8; padding:14px 18px; border-radius:0 6px 6px 0; margin:16px 0; font-size:.97rem; }
+.norma .titulo-caja { font-family:'Lora', serif; font-weight:700; color:#432e80; display:block; margin-bottom:6px; }
+.alerta { background:#fdeeee; border-left:6px solid #b3261e; padding:14px 18px; border-radius:0 6px 6px 0; margin:16px 0; }
+.alerta .titulo-caja { font-family:'Lora', serif; font-weight:700; color:#8c1d18; display:block; margin-bottom:6px; }
+.adelanto { background:#eef2f5; border:2px dashed #6b7f92; padding:14px 18px; border-radius:6px; margin:16px 0; font-size:.95rem; color:#3a4a58; }
+.adelanto strong { color:#00406b; }
+.vida-real { background:#fff0f6; border-left:6px solid #b5306e; padding:16px 18px; border-radius:0 6px 6px 0; margin:18px 0; }
+.vida-real .titulo-caja { font-family:'Lora', serif; font-weight:700; color:#8d2255; display:block; margin-bottom:6px; }
+
+/* ---------- CAJA DE CARRERA (verde, obligatoria) ---------- */
+.carrera-box { background:#e6f5ec; border:3px solid #2e8b57; border-radius:10px; padding:20px 22px; margin:28px 0; }
+.carrera-box h4 { color:#1e6b41; margin-top:0; font-size:1.12rem; }
+.carrera-box ul { list-style:none; margin-left:0; }
+.carrera-box li { padding-left:22px; position:relative; margin-bottom:12px; }
+.carrera-box li::before { content:"▸"; position:absolute; left:0; color:#2e8b57; font-weight:700; }
+.carrera-box .area { font-weight:700; color:#1e6b41; }
+
+/* ---------- TABLAS GENERALES ---------- */
+.tabla-wrap { overflow-x:auto; margin:18px 0; }
+table.datos { width:100%; border-collapse:collapse; font-size:.93rem; min-width:560px; }
+table.datos th { background:#003366; color:#ffffff; padding:11px 10px; text-align:left; font-weight:600; }
+table.datos td { border:1px solid #cfd8e0; padding:10px; vertical-align:top; }
+table.datos tr:nth-child(even) td { background:#f6f9fc; }
+table.datos td.num { text-align:right; font-variant-numeric:tabular-nums; }
+.pie-tabla { font-size:.86rem; color:#55636f; font-style:italic; margin-top:-8px; }
+
+/* ---------- LIBRO DIARIO (6 columnas) ---------- */
+.tabla-wrap-diario { overflow-x:auto; margin:20px 0; }
+table.diario { width:100%; border-collapse:collapse; font-size:.9rem; min-width:660px; background:#ffffff; }
+table.diario caption {
+  caption-side:top; text-align:left; font-family:'Lora',serif; font-weight:700;
+  color:#003366; padding:8px 0; font-size:1rem;
+}
+table.diario th { background:#003366; color:#ffffff; padding:9px 8px; font-weight:600; font-size:.85rem; text-align:center; }
+table.diario td { border:1px solid #ccd6df; padding:7px 9px; vertical-align:top; }
+table.diario td.fecha { width:9%; white-space:nowrap; font-size:.84rem; }
+table.diario td.codigo { width:11%; white-space:nowrap; font-size:.84rem; }
+table.diario td.detalle { width:44%; }
+table.diario td.parcial, table.diario td.debe, table.diario td.haber {
+  text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; width:12%;
+}
+table.diario tr.num-asiento td { text-align:center; font-weight:700; color:#003366; background:#eef4fa; letter-spacing:2px; }
+table.diario td.credito { padding-left:34px; }
+table.diario tr.glosa td { font-style:italic; color:#465866; font-size:.86rem; background:#fbfcfd; }
+table.diario tr.suman td { border-top:3px double #003366; font-weight:700; background:#eef4fa; }
+
+/* ---------- ACORDEON (REPASO) ---------- */
+.acordeon { margin:16px 0; }
+.acc-item { border:1px solid #c3d3e0; border-radius:6px; margin-bottom:12px; overflow:hidden; }
+.acc-cabecera {
+  background:#eaf3fb; color:#003366; font-family:'Lora',serif; font-weight:700;
+  padding:14px 16px; cursor:pointer; display:flex; align-items:center; gap:10px; font-size:1rem;
+}
+.acc-cabecera:hover { background:#dcebf8; }
+.acc-flecha { font-size:.8rem; color:#003366; }
+.acc-panel { display:none; padding:18px 20px; background:#ffffff; border-top:1px solid #c3d3e0; }
+.acc-panel.abierto { display:block; }
+
+/* ---------- EJERCICIO Y CUESTIONARIO ---------- */
+.item-eval { border:1px solid #d3dde5; border-radius:8px; padding:18px 20px; margin-bottom:18px; background:#fcfdfe; }
+.item-eval .enunciado { font-weight:600; margin-bottom:12px; display:block; }
+.item-eval .numero { color:#003366; font-weight:700; }
+.badge { display:inline-block; font-size:.7rem; font-weight:700; padding:3px 9px; border-radius:10px; margin-bottom:8px; letter-spacing:.4px; }
+.badge-teorica { background:#003366; color:#ffffff; }
+.badge-caso { background:#d59b00; color:#ffffff; }
+.opciones label {
+  display:block; padding:9px 12px; margin-bottom:7px; border:1px solid #d8e0e8;
+  border-radius:6px; cursor:pointer; background:#ffffff; transition:background .15s;
+}
+.opciones label:hover { background:#eef5fb; }
+.opciones input { margin-right:9px; }
+.item-eval.ok { border-color:#2e8b57; background:#f0faf4; }
+.item-eval.mal { border-color:#b3261e; background:#fdf3f2; }
+.opciones label.marcado-ok { background:#d9f2e3; border-color:#2e8b57; font-weight:600; }
+.opciones label.marcado-mal { background:#fadedc; border-color:#b3261e; font-weight:600; }
+.feedback { display:none; margin-top:12px; padding:12px 14px; border-radius:6px; font-size:.94rem; background:#eef4fa; border-left:5px solid #003366; }
+.feedback.visible { display:block; }
+.botonera { display:flex; flex-wrap:wrap; gap:12px; margin:22px 0; }
+.btn {
+  font-family:'Source Sans 3', Arial, sans-serif; font-size:1rem; font-weight:700;
+  padding:12px 26px; border:none; border-radius:6px; cursor:pointer; transition:opacity .15s;
+}
+.btn:hover { opacity:.88; }
+.btn-verificar { background:#003366; color:#ffffff; }
+.btn-reiniciar { background:#87CEEB; color:#003366; }
+.resultado { display:none; margin:22px 0; padding:20px; border:2px solid #003366; border-radius:8px; background:#f4f9fd; }
+.resultado.visible { display:block; }
+.resultado h4 { margin-top:0; }
+.barra-fondo { background:#dbe4ec; border-radius:12px; height:26px; overflow:hidden; margin:12px 0; }
+.barra-relleno { background:#2e8b57; height:100%; width:0%; transition:width 1.1s ease-out; color:#ffffff; font-weight:700; font-size:.85rem; text-align:right; padding-right:10px; line-height:26px; white-space:nowrap; }
+.aviso-falta { display:none; background:#fdeeee; border-left:6px solid #b3261e; color:#8c1d18; padding:12px 16px; border-radius:0 6px 6px 0; margin:14px 0; font-weight:600; }
+.aviso-falta.visible { display:block; }
+
+/* ---------- ACTIVIDAD IA ---------- */
+.prompt-box { background:#0f2233; color:#e8f1f8; padding:20px; border-radius:8px; font-family:'Source Sans 3', monospace; font-size:.93rem; line-height:1.65; white-space:pre-wrap; margin:16px 0; border-left:6px solid #87CEEB; }
+.criterio { background:#f4f9fd; border:1px solid #b9d3e8; border-radius:8px; padding:16px 18px; margin:16px 0; }
+
+/* ---------- REFLEXION ---------- */
+.marco-reflexion { background:#eaf3fb; border:2px solid #003366; border-radius:8px; padding:20px 22px; margin-bottom:24px; }
+.pregunta-reflexion { background:#ffffff; border-left:6px solid #87CEEB; padding:16px 18px; margin-bottom:14px; border-radius:0 6px 6px 0; box-shadow:0 1px 4px rgba(0,0,0,.06); }
+.pregunta-reflexion .etiqueta { display:block; font-size:.76rem; font-weight:700; color:#00558c; letter-spacing:.5px; margin-bottom:6px; }
+
+/* ---------- BIBLIOGRAFIA ---------- */
+.ref-card { background:#ffffff; border:1px solid #cfd8e0; border-left:6px solid #003366; border-radius:0 8px 8px 0; padding:16px 18px; margin-bottom:14px; box-shadow:0 1px 4px rgba(0,0,0,.06); }
+.ref-card .tipo { display:inline-block; font-size:.7rem; font-weight:700; background:#87CEEB; color:#003366; padding:3px 9px; border-radius:10px; margin-bottom:8px; }
+.ref-card p { margin-bottom:0; font-size:.95rem; text-align:left; }
+.nota-pie { background:#fff8e6; border-left:6px solid #d59b00; padding:14px 18px; border-radius:0 6px 6px 0; margin-top:20px; font-size:.93rem; }
+
+/* ---------- PIE ---------- */
+.pie { background:#003366; color:#dbe9f7; text-align:center; padding:22px 18px; font-size:.86rem; }
+.pie strong { color:#ffffff; }
+
+/* ---------- RESPONSIVO ---------- */
+@media (max-width:720px) {
+  body { font-size:16px; }
+  .encabezado h1 { font-size:1.3rem; }
+  .contenedor { padding:16px 10px 46px; }
+  .panel { padding:20px 14px; }
+  .menu button { padding:12px 14px; font-size:.88rem; }
+  .panel h2 { font-size:1.28rem; }
+  .prompt-box { font-size:.86rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===================== ENCABEZADO ===================== -->
+<header class="encabezado">
+  <div class="institucion">UNIVERSIDAD DE GUAYAQUIL · FACULTAD DE CIENCIAS ADMINISTRATIVAS</div>
+  <div class="institucion">CARRERA DE NEGOCIOS INTERNACIONALES</div>
+  <h1>Día 7 — Temas fundamentales en el tratamiento de los inventarios<br>NIC 2 Inventarios · Sistemas de contabilización</h1>
+  <div class="subinfo">Contabilidad General (091601124) · Unidad 3 · Miércoles 19 de agosto de 2026 · 5 horas</div>
+  <div class="pildoras">
+    <span class="pildora">Unidad 3 — Día 1 de 7</span>
+    <span class="pildora">NIC 2 · NIC 16 · NIC 41</span>
+    <span class="pildora">Aprendizaje autónomo</span>
+  </div>
+</header>
+
+<!-- ===================== MENU DE PESTAÑAS ===================== -->
+<nav class="menu">
+  <button class="active" onclick="showTab('repaso', this)">Repaso</button>
+  <button onclick="showTab('tema1', this)">Tema 1</button>
+  <button onclick="showTab('tema2', this)">Tema 2</button>
+  <button onclick="showTab('tema3', this)">Tema 3</button>
+  <button onclick="showTab('tema4', this)">Tema 4</button>
+  <button onclick="showTab('tema5', this)">Tema 5</button>
+  <button onclick="showTab('ejercicio', this)">Ejercicio Interactivo</button>
+  <button onclick="showTab('cuestionario', this)">Cuestionario</button>
+  <button onclick="showTab('actividadia', this)">Actividad con IA</button>
+  <button onclick="showTab('reflexion', this)">Reflexión</button>
+  <button onclick="showTab('bibliografia', this)">Bibliografía</button>
+</nav>
+
+<main class="contenedor">
+
+<!-- ===================== PESTAÑA: REPASO ===================== -->
+<section id="repaso" class="panel active">
+  <span class="rotulo-dia">REPASO ACUMULADO · DÍAS 1 A 6</span>
+  <h2>Antes de entrar a los inventarios, recuperemos lo construido</h2>
+  <p class="intro-panel">Hoy iniciamos la Unidad 3. Todo lo que haremos con los inventarios se apoya en las seis clases anteriores: sin cuenta contable, sin partida doble, sin IVA y sin jornalización, los inventarios serían solo cajas en una bodega. Abre cada entrada del acordeón y verifica que puedes explicar su contenido con tus propias palabras antes de continuar.</p>
+
+  <div class="acordeon">
+
+    <div class="acc-item">
+      <div class="acc-cabecera" onclick="toggleAcordeon(this)"><span class="acc-flecha">&#9654;</span> Día 1 (11 ago) — La contabilidad como sistema de información</div>
+      <div class="acc-panel">
+        <p>Aprendimos que la <strong>contabilidad</strong> es un sistema de información que identifica, mide, registra y comunica hechos económicos para que alguien tome decisiones. Definimos sus tres verbos operativos: <em>reconocer</em> (decidir si un hecho entra a los libros), <em>medir</em> (asignarle un importe en dólares) y <em>revelar</em> (contarlo en los estados financieros).</p>
+        <p>Clasificamos las empresas por su <strong>actividad</strong> (comerciales, industriales, de servicios, agropecuarias, extractivas), por su <strong>constitución jurídica</strong> (persona natural, sociedad anónima, compañía limitada), por su <strong>tamaño</strong> y por el <strong>origen de su capital</strong>. Esta clasificación reaparece hoy con fuerza: <strong>el tipo de empresa determina qué inventarios tiene</strong>. Una comercial tiene mercaderías; una industrial tiene materia prima, productos en proceso y productos terminados; una agropecuaria tiene productos agrícolas cosechados y activos biológicos.</p>
+        <p>También identificamos a los <strong>usuarios de la información</strong>: internos (gerencia, socios, empleados) y externos (SRI, bancos, proveedores, Superintendencia de Compañías, inversionistas extranjeros). Y distinguimos los <strong>tipos de contabilidad</strong>: general o financiera, de costos, gubernamental, bancaria y de servicios.</p>
+      </div>
+    </div>
+
+    <div class="acc-item">
+      <div class="acc-cabecera" onclick="toggleAcordeon(this)"><span class="acc-flecha">&#9654;</span> Día 2 (12 ago) — Ética profesional, organismos de control, Marco Conceptual NIIF y NIC 1</div>
+      <div class="acc-panel">
+        <p>Revisamos los <strong>principios éticos de la profesión contable</strong>: integridad, objetividad, competencia y diligencia profesional, confidencialidad y comportamiento profesional. Insistimos en que el contador no es un digitador: es el guardián de la confianza pública en los números.</p>
+        <p>Ubicamos los <strong>organismos de control</strong> en Ecuador: el <strong>Servicio de Rentas Internas (SRI)</strong> en materia tributaria, la <strong>Superintendencia de Compañías, Valores y Seguros</strong> en materia societaria y de información financiera, el <strong>Ministerio del Trabajo</strong> y el <strong>IESS</strong> en materia laboral, y el <strong>SENAE</strong> en materia aduanera —este último volverá hoy cuando importemos inventarios.</p>
+        <p>Estudiamos el <strong>Marco Conceptual para la Información Financiera</strong>: el objetivo de la información financiera, las características cualitativas fundamentales (relevancia y representación fiel) y de mejora (comparabilidad, verificabilidad, oportunidad, comprensibilidad), y las definiciones de <strong>activo, pasivo, patrimonio, ingreso y gasto</strong>. Un inventario será hoy, precisamente, la aplicación de la definición de activo: un <em>recurso económico presente controlado por la entidad como resultado de sucesos pasados</em>.</p>
+        <p>Con la <strong>NIC 1 Presentación de Estados Financieros</strong> conocimos el juego completo de estados financieros y el principio de <strong>empresa en marcha</strong>.</p>
+      </div>
+    </div>
+
+    <div class="acc-item">
+      <div class="acc-cabecera" onclick="toggleAcordeon(this)"><span class="acc-flecha">&#9654;</span> Día 3 (13 ago) — Cuenta contable, partida doble y ecuación contable (cierre Unidad 1)</div>
+      <div class="acc-panel">
+        <p>Definimos la <strong>cuenta contable</strong> como el nombre que la contabilidad da a cada grupo homogéneo de bienes, derechos, obligaciones, aportes, ingresos o gastos, y aprendimos su <strong>naturaleza</strong>: las cuentas de activo y gasto son de naturaleza <em>deudora</em> (aumentan al Debe); las de pasivo, patrimonio e ingreso son de naturaleza <em>acreedora</em> (aumentan al Haber).</p>
+        <p>Trabajamos el <strong>plan de cuentas</strong> con su codificación jerárquica (1 Activo, 1.1 Activo corriente, 1.1.03 Inventarios, y así sucesivamente). Hoy usaremos códigos de la familia <strong>1.1.03</strong> de manera intensiva.</p>
+        <p>Aplicamos la <strong>partida doble</strong>: no hay deudor sin acreedor, y la suma del Debe siempre iguala la suma del Haber. Y formulamos la <strong>ecuación contable</strong>: <strong>Activo = Pasivo + Patrimonio</strong>, en su forma ampliada <strong>Activo = Pasivo + Patrimonio + Ingresos − Gastos</strong>. Practicamos los tipos de asiento: simple, compuesto y mixto.</p>
+      </div>
+    </div>
+
+    <div class="acc-item">
+      <div class="acc-cabecera" onclick="toggleAcordeon(this)"><span class="acc-flecha">&#9654;</span> Día 4 (14 ago) — IVA 0% y 15%, retenciones de IVA y retención en la fuente del Impuesto a la Renta</div>
+      <div class="acc-panel">
+        <p>Aprendimos a clasificar bienes y servicios <strong>gravados con tarifa 15%</strong> y <strong>tarifa 0%</strong> conforme a los artículos 55 y 56 de la <strong>Ley de Régimen Tributario Interno (LRTI)</strong>. Recordamos que el transporte nacional terrestre y acuático de pasajeros y de carga está gravado con tarifa 0% (LRTI, art. 56, num. 1) y que los productos alimenticios en estado natural también lo están (LRTI, art. 55).</p>
+        <p>Estudiamos el <strong>IVA en compras</strong> como <em>crédito tributario</em> (activo, no gasto) y el <strong>IVA en ventas</strong> como <em>obligación con el Estado</em> (pasivo). Este punto es decisivo hoy: <strong>el IVA recuperable no forma parte del costo del inventario</strong>.</p>
+        <p>Trabajamos las <strong>retenciones de IVA</strong> conforme a la Resolución <strong>NAC-DGERCGC20-00000061</strong> (30% en la adquisición de bienes y 70% en la adquisición de servicios, entre otros porcentajes) y las <strong>retenciones en la fuente del Impuesto a la Renta</strong> conforme a la Resolución <strong>NAC-DGERCGC26-00000009</strong>, vigente desde el 1 de marzo de 2026: 2% en la compra de bienes muebles de naturaleza corporal, 3% como porcentaje residual para los demás servicios, 5% en servicios profesionales prestados por sociedades y 10% en arrendamiento de inmuebles.</p>
+        <p>Entendimos que <strong>quien retiene registra un pasivo</strong> (obligación de entregar ese dinero al SRI) y <strong>quien sufre la retención registra un activo</strong> (anticipo o crédito tributario). No es una pérdida: es un pago anticipado.</p>
+      </div>
+    </div>
+
+    <div class="acc-item">
+      <div class="acc-cabecera" onclick="toggleAcordeon(this)"><span class="acc-flecha">&#9654;</span> Día 5 (17 ago) — Proceso contable I: análisis de transacciones, jornalización y mayorización</div>
+      <div class="acc-panel">
+        <p>Recorrimos los primeros pasos del <strong>ciclo contable</strong>: (1) reconocimiento y análisis de la transacción a partir de un documento fuente, (2) <strong>jornalización</strong> o registro en el Libro Diario, (3) <strong>mayorización</strong> o traslado a los Libros Mayores, y (4) elaboración del <strong>balance de comprobación preliminar</strong>.</p>
+        <p>Fijamos el formato del <strong>Libro Diario</strong> que seguimos usando hoy: seis columnas (Fecha, Código, Detalle, Parcial, Debe, Haber), número de asiento centrado entre guiones (−1−, −2−), cuentas acreedoras indentadas y precedidas por «a)», glosa en cursiva citando el documento fuente, y fila SUMAN con doble línea superior.</p>
+        <p>Aplicamos todo al caso <strong>AduanaPro Cía. Ltda.</strong>, empresa de asesoría aduanera de Guayaquil, con siete transacciones de agosto de 2026, obteniendo un Libro Diario de 52.150,00 y saldos por 42.035,00, con la ecuación contable ampliada cerrando en 39.035,00.</p>
+      </div>
+    </div>
+
+    <div class="acc-item">
+      <div class="acc-cabecera" onclick="toggleAcordeon(this)"><span class="acc-flecha">&#9654;</span> Día 6 (18 ago) — Ejercicio integrador de empresa de servicios (cierre Unidad 2)</div>
+      <div class="acc-panel">
+        <p>Cerramos la Unidad 2 resolviendo de principio a fin el ejercicio integrador de una <strong>empresa de servicios</strong>: análisis y reconocimiento de cada transacción mercantil, aplicación correcta de la tarifa de IVA, cálculo de las retenciones de IVA y de Impuesto a la Renta, jornalización completa, mayorización cuenta por cuenta y balance de comprobación preliminar cuadrado.</p>
+        <p>El aprendizaje central fue que <strong>la empresa de servicios no vende un bien físico</strong>: su costo se forma con talento humano y gastos operativos, no con mercadería. Por eso, cuando hoy entremos a una empresa comercial e industrial, aparecerá algo que en la Unidad 2 no existía: <strong>un activo que se compra, se almacena, se transforma y se vende</strong>. Ese activo es el inventario, y su tratamiento requiere una norma propia: la NIC 2.</p>
+        <div class="adelanto"><strong>Puente hacia hoy:</strong> en la empresa de servicios el gasto se reconoce cuando se consume el recurso. En la empresa comercial e industrial, el desembolso <em>no</em> es gasto inmediato: se «guarda» en un activo (el inventario) y se convierte en gasto (costo de ventas) recién cuando el bien se vende. Comprender ese aplazamiento es el objetivo de la clase de hoy.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===================== PESTAÑA: TEMA 1 ===================== -->
+<section id="tema1" class="panel">
+  <span class="rotulo-dia">TEMA 1 · UNIDAD 3</span>
+  <h2>¿Qué es un inventario? Concepto, definición normativa y alcance de la NIC 2</h2>
+  <p class="intro-panel">Antes de cualquier asiento contable, hay una pregunta que un profesional de Negocios Internacionales debe saber responder frente a cualquier objeto del mundo: «esto que estoy viendo, ¿es un inventario o no lo es?». De esa respuesta depende toda la contabilización posterior.</p>
+
+  <h3>1.1 Partamos de lo que ya conoces</h3>
+  <p>Abre la despensa de tu casa. Ahí hay arroz, aceite, atún, fideos. Ninguno de esos productos fue comprado para venderlo: fueron comprados para consumirlos. Ahora camina tres cuadras y entra a la tienda del barrio. Ahí también hay arroz, aceite, atún y fideos —a veces del mismo lote, de la misma marca, del mismo proveedor—. Pero en la tienda esos productos existen para una finalidad distinta: <strong>ser vendidos</strong>.</p>
+  <p>Los productos son idénticos. Lo que cambia es <strong>el propósito con el que la entidad los mantiene</strong>. Y en contabilidad, ese propósito lo cambia todo. En tu casa el arroz es un consumo personal que no genera ningún registro contable. En la tienda del barrio, ese mismo arroz es un <strong>activo</strong> llamado <em>Inventario de mercaderías</em>, que se registra, se controla, se mide y se convierte en gasto solo cuando se vende.</p>
+  <p>Esta es la primera idea que debes fijar y que hoy repetiremos de muchas formas: <strong>el inventario no se define por lo que el bien «es», sino por el destino que la entidad le da dentro de su operación</strong>. Un mismo comedor de madera puede ser inventario para el almacén de muebles y un activo fijo para el estudio jurídico que lo compró para su sala de juntas. Un mismo saco de cemento puede ser inventario para la ferretería y consumo de obra para la constructora. La contabilidad no clasifica objetos: clasifica <em>intenciones económicas</em>.</p>
+
+  <div class="vida-real">
+    <span class="titulo-caja">Ejercicio mental permanente (empieza hoy, no termina nunca)</span>
+    <p>Desde esta clase en adelante, cada vez que veas un objeto —un mueble de sala, un comedor, una cocina, un racimo de bananas, una laptop, un televisor— hazte tres preguntas en este orden: <strong>(1)</strong> ¿quién lo tiene ahora mismo?, <strong>(2)</strong> ¿para qué lo tiene?, y <strong>(3)</strong> ¿qué asiento contable existe detrás de él en este momento? Ese hábito, sostenido durante las próximas semanas, es lo que convierte a un estudiante de primer semestre en alguien que «ve» contabilidad donde los demás solo ven cosas.</p>
+  </div>
+
+  <h3>1.2 La definición normativa: NIC 2, párrafo 6</h3>
+  <p>La norma que regula el tratamiento contable de los inventarios es la <strong>Norma Internacional de Contabilidad 2 (NIC 2) Inventarios</strong>, emitida por el Consejo de Normas Internacionales de Contabilidad (IASB) y de aplicación obligatoria en el Ecuador para las compañías sujetas al control de la Superintendencia de Compañías, Valores y Seguros.</p>
+
+  <div class="norma">
+    <span class="titulo-caja">NIC 2, párrafo 6 — Definición</span>
+    <p>Los <strong>inventarios</strong> son activos: <strong>(a)</strong> mantenidos para ser vendidos en el curso normal de la operación; <strong>(b)</strong> en proceso de producción con vistas a esa venta; o <strong>(c)</strong> en forma de materiales o suministros, para ser consumidos en el proceso de producción o en la prestación de servicios.</p>
+  </div>
+
+  <p>Analicemos la definición literal por partes, porque cada frase tiene consecuencias prácticas enormes:</p>
+  <ul>
+    <li><strong>«Son activos»:</strong> esto significa que cumplen la definición del Marco Conceptual que estudiamos el Día 2 —un recurso económico presente, controlado por la entidad, del que se espera obtener beneficios económicos futuros—. El inventario aparece en el <strong>Estado de Situación Financiera</strong>, dentro del activo corriente, no en el Estado de Resultados.</li>
+    <li><strong>«Mantenidos para ser vendidos»:</strong> aquí está el <em>propósito</em>. La palabra clave es <em>mantenidos</em>: la entidad los conserva a la espera de venderlos. Si la entidad los compró para usarlos, no son inventario.</li>
+    <li><strong>«En el curso normal de la operación»:</strong> debe tratarse de la actividad habitual del negocio, no de una venta ocasional. Si una fábrica de muebles vende su camioneta usada, esa camioneta nunca fue inventario, porque vender camionetas no es su operación normal.</li>
+    <li><strong>«En proceso de producción con vistas a esa venta»:</strong> incluye lo que está a medio fabricar. El comedor al que solo le falta el barniz ya es inventario, aunque todavía no se pueda vender.</li>
+    <li><strong>«Materiales o suministros para ser consumidos»:</strong> incluye lo que aún no es producto, pero se incorporará a él o se consumirá al prestar el servicio: la madera, los tornillos, el barniz, las resmas de papel de un estudio jurídico, los filtros de aceite de un taller.</li>
+  </ul>
+
+  <div class="ejemplo">
+    <span class="titulo-caja">Ejemplo aplicado — El mismo bien, tres clasificaciones distintas</span>
+    <p>Una cocina de inducción marca «Andina», modelo AI-600, valorada en USD 800,00:</p>
+    <ul>
+      <li>En la bodega de <strong>Almacenes Comercial El Astillero S.A.</strong> (Guayaquil), esperando ser vendida: <strong>Inventario de mercaderías</strong> (NIC 2).</li>
+      <li>Instalada en la cocina del <strong>Restaurante La Ría</strong>, donde se usa para preparar los platos que se venden: <strong>Propiedades, planta y equipo</strong> (NIC 16). Se depreciará a lo largo de su vida útil.</li>
+      <li>Instalada en el departamento de la señora Mercedes Vera: <strong>no genera ningún registro contable</strong>, porque las personas naturales no obligadas a llevar contabilidad no registran sus bienes de uso personal.</li>
+    </ul>
+    <p>Es exactamente la misma cocina, con el mismo número de serie. La clasificación contable cambió tres veces sin que el objeto cambiara nada.</p>
+  </div>
+
+  <h3>1.3 El alcance de la NIC 2: qué regula y qué no regula</h3>
+  <p>Una norma contable no se aplica a todo. La NIC 2 delimita su propio territorio, y conocer esos límites es tan importante como conocer su contenido, porque en la frontera se cometen los errores más graves y más costosos.</p>
+
+  <div class="norma">
+    <span class="titulo-caja">NIC 2, párrafo 2 — Partidas excluidas del alcance</span>
+    <p>La NIC 2 se aplica a todos los inventarios, <strong>excepto</strong> a: <strong>(a)</strong> los instrumentos financieros, que se regulan por la NIC 32 y la NIIF 9; y <strong>(b)</strong> los activos biológicos relacionados con la actividad agrícola y los productos agrícolas <em>en el punto de cosecha o recolección</em>, que se regulan por la <strong>NIC 41 Agricultura</strong>.</p>
+  </div>
+
+  <p>Detengámonos en el literal (b), porque el Ecuador es un país agroexportador y este límite es cotidiano en nuestra realidad. La NIC 41 define <strong>activo biológico</strong> como un animal vivo o una planta viva. Mientras la planta o el animal <em>están vivos y creciendo</em>, no son inventario: son activo biológico. En el instante de la <strong>cosecha</strong> (o del sacrificio, o de la recolección) el bien cambia de naturaleza y se convierte en <strong>producto agrícola</strong>, y desde ese momento pasa a regirse por la NIC 2.</p>
+
+  <div class="norma">
+    <span class="titulo-caja">La frontera exacta: NIC 41, párrafo 13 y NIC 2, párrafo 20</span>
+    <p>La <strong>NIC 41, párrafo 13</strong> establece que los productos agrícolas cosechados o recolectados procedentes de activos biológicos se medirán, en el momento de su reconocimiento inicial, a su <strong>valor razonable menos los costos de venta en el punto de cosecha</strong>.</p>
+    <p>La <strong>NIC 2, párrafo 20</strong> recoge esa medición y dispone que ese importe será considerado, a partir de ese momento, como <strong>el costo de los inventarios</strong> para efectos de la aplicación de la NIC 2.</p>
+  </div>
+
+  <div class="ejemplo">
+    <span class="titulo-caja">Ejemplo ecuatoriano — La mata de banano</span>
+    <p>En una hacienda bananera de Machala:</p>
+    <ul>
+      <li>La <strong>planta de banano sembrada y en crecimiento</strong> es un <strong>activo biológico</strong> (NIC 41). No es inventario.</li>
+      <li>El <strong>racimo cortado</strong>, en el momento del corte, es un <strong>producto agrícola</strong>. Se mide a valor razonable menos costos de venta en el punto de cosecha, y ese valor se convierte en su costo de inventario (NIC 41, párr. 13; NIC 2, párr. 20).</li>
+      <li>Ese mismo racimo, ya <strong>empacado en la caja de exportación</strong> lista para embarcarse en Puerto Bolívar, es plenamente <strong>inventario</strong> bajo NIC 2, y los costos de lavado, selección, empaque y etiquetado se suman a su costo.</li>
+    </ul>
+    <p>Lo mismo ocurre con el <strong>ganado</strong> (activo biológico) y la <strong>carne obtenida tras el faenamiento</strong> (inventario); con el <strong>árbol de teca en pie</strong> (activo biológico) y la <strong>madera en troza ya cortada</strong> (inventario); con el <strong>cacao en la mazorca</strong> (activo biológico) y el <strong>grano fermentado y secado</strong> (inventario).</p>
+  </div>
+
+  <div class="adelanto"><strong>Límite de este curso:</strong> el estudio completo de la NIC 41 Agricultura (medición del activo biológico, transformación biológica, ganancias y pérdidas por cambios en el valor razonable) <em>no</em> corresponde a Contabilidad General. Lo verás en asignaturas posteriores. Aquí solo necesitas dominar <strong>dónde está la frontera</strong> y <strong>qué sucede al cruzarla</strong>, porque eso es lo que determina si un bien entra o no a la cuenta de inventarios.</div>
+
+  <h3>1.4 Inventarios que están dentro del alcance pero se miden de otra forma</h3>
+  <p>Existe un segundo matiz que suele confundirse con el anterior. El <strong>párrafo 3 de la NIC 2</strong> señala ciertos inventarios que sí quedan dentro del alcance de la norma, pero cuya <strong>medición</strong> no sigue la regla general. Es decir: son inventarios, se llaman inventarios, se presentan como inventarios, pero se valoran con otro criterio.</p>
+
+  <div class="norma">
+    <span class="titulo-caja">NIC 2, párrafo 3 — Excepciones de medición</span>
+    <p>La NIC 2 no es aplicable a la <em>medición</em> de los inventarios mantenidos por:</p>
+    <p><strong>(a)</strong> productores de productos agrícolas y forestales, de productos agrícolas tras la cosecha, y de minerales y productos minerales, siempre que sean medidos por su <strong>valor neto realizable</strong> de acuerdo con prácticas bien consolidadas del sector;</p>
+    <p><strong>(b)</strong> intermediarios que comercian con materias primas cotizadas (<em>broker-traders</em>), siempre que midan sus inventarios al <strong>valor razonable menos los costos de venta</strong>.</p>
+    <p>En ambos casos, los cambios en el valor se reconocen en el resultado del periodo.</p>
+  </div>
+
+  <p>El literal (b) es especialmente relevante para tu carrera. Un <em>broker</em> internacional que compra y vende cacao, café, petróleo, cobre o soya en mercados cotizados no valora su inventario al costo: lo valora al precio de mercado del día, porque su negocio no es transformar el producto sino intermediarlo. En un mercado con cotización pública y alta liquidez, el costo histórico sería información irrelevante para el usuario.</p>
+
+  <h3>1.5 La regla general de medición: costo o valor neto realizable, el menor</h3>
+  <p>Cerramos este tema con el principio de medición que gobierna toda la Unidad 3 y que desarrollaremos en profundidad en los días siguientes.</p>
+
+  <div class="norma">
+    <span class="titulo-caja">NIC 2, párrafo 9 — Principio de medición</span>
+    <p>Los inventarios se medirán al <strong>menor</strong> entre el <strong>costo</strong> y el <strong>valor neto realizable</strong>.</p>
+  </div>
+
+  <p>La lógica detrás de esta regla es de una honestidad admirable: un activo <strong>no puede figurar en los libros por más de lo que realmente se podrá recuperar de él</strong>. Si compramos 100 celulares a USD 300,00 cada uno y sale al mercado un modelo nuevo que hunde el precio de los nuestros a USD 220,00, mantenerlos registrados a 300,00 sería mentirle al lector de los estados financieros. La norma obliga a reconocer esa pérdida cuando ocurre, no cuando conviene.</p>
+  <p>El <strong>valor neto realizable (VNR)</strong>, según el párrafo 6 de la NIC 2, es el precio estimado de venta en el curso normal de la operación menos los costos estimados para terminar su producción y los necesarios para llevar a cabo la venta.</p>
+
+  <div class="adelanto"><strong>Se estudia en los próximos días, no hoy:</strong> la diferencia detallada entre <strong>valor razonable (VR)</strong>, <strong>valor neto realizable (VNR)</strong> y <strong>costo</strong>, con sus cálculos y asientos de deterioro, corresponde al <strong>Día 8 (jueves 20 de agosto)</strong>. Las fórmulas de costo <strong>FIFO</strong> y <strong>costo promedio ponderado</strong> (NIC 2, párrafos 23 a 27) corresponden a los <strong>Días 8 y 9</strong>, y su registro en el <strong>Kardex</strong> al <strong>Día 10</strong>. Hoy solo necesitas saber que la regla existe y por qué existe.</div>
+
+  <div class="carrera-box">
+    <h4>¿Qué tiene que ver esto con Negocios Internacionales?</h4>
+    <ul>
+      <li><span class="area">Comercio exterior:</span> saber si un bien es inventario, activo biológico o activo fijo determina cómo se declara en la exportación, qué partida arancelaria le corresponde y qué certificaciones fitosanitarias exige. Un exportador que confunde «activo biológico» con «producto agrícola» declara mal el momento de la transacción y expone a su empresa a glosas de SENAE y del SRI.</li>
+      <li><span class="area">Finanzas internacionales:</span> el inventario es el activo corriente que más capital de trabajo inmoviliza. Un banco que evalúa una línea de crédito para importación mira, antes que nada, la rotación de inventarios. Sobrevalorar inventarios infla artificialmente el activo y distorsiona todos los indicadores de liquidez y solvencia con los que se negocia financiamiento internacional.</li>
+      <li><span class="area">Marketing y negociación internacional:</span> conocer que el costo del inventario se reduce con descuentos comerciales y rebajas (NIC 2, párr. 11) convierte cada negociación de compra en una decisión que se ve directamente en el margen. Negociar no es solo conversar: es entender qué línea del estado financiero se mueve con cada punto porcentual cedido.</li>
+      <li><span class="area">Marco legal y normativo:</span> la clasificación de un bien determina qué norma lo rige (NIC 2, NIC 16, NIC 41, NIC 40), qué tarifa de IVA se le aplica según los artículos 55 y 56 de la LRTI, y qué tratamiento tributario tiene su costo como deducible en el Impuesto a la Renta.</li>
+    </ul>
+  </div>
+
+  <div class="conclusion">
+    <span class="titulo-caja">Idea clave del Tema 1</span>
+    <p>Un inventario no es un tipo de objeto: es un <strong>propósito económico reconocido contablemente</strong>. La NIC 2, párrafo 6, lo define por su destino —venderse, estar en proceso de venderse, o consumirse produciendo—. Su alcance excluye los instrumentos financieros y los activos biológicos vivos, y establece una frontera precisa en el <strong>punto de cosecha</strong>, donde el bien deja de ser NIC 41 y pasa a ser NIC 2 (NIC 41, párr. 13; NIC 2, párr. 20). Sobre todos ellos rige el principio del párrafo 9: <strong>el menor entre el costo y el valor neto realizable</strong>.</p>
+  </div>
+</section>
+
+<!-- ===================== PESTAÑA: TEMA 2 ===================== -->
+<section id="tema2" class="panel">
+  <span class="rotulo-dia">TEMA 2 · UNIDAD 3</span>
+  <h2>Tipos de inventarios: una tipología para leer el mundo real</h2>
+  <p class="intro-panel">Existen muchísimos tipos de inventarios y ninguna empresa los tiene todos. El objetivo de este tema es que, al terminar, puedas entrar a cualquier negocio del Ecuador —una bananera, una ferretería, un taller mecánico, una importadora de electrónica, una constructora— y nombrar correctamente los inventarios que ves.</p>
+
+  <h3>2.1 Clasificación según la actividad de la empresa</h3>
+  <p>El punto de partida es la clasificación de empresas que estudiamos el <strong>Día 1</strong>. Cada tipo de empresa genera un tipo de inventario, y esa correspondencia no es casual: refleja la posición que la empresa ocupa dentro de la cadena productiva.</p>
+
+  <h4>a) Empresa comercial — Inventario de mercaderías</h4>
+  <p>La empresa comercial <strong>compra terminado y vende terminado</strong>, sin transformar. Su único inventario relevante es el de <strong>mercaderías</strong>: los bienes adquiridos para revenderlos en el mismo estado. Es el caso de un supermercado, una farmacia, una distribuidora de electrodomésticos, una importadora de repuestos. Su código habitual en el plan de cuentas es <strong>1.1.03.01 Inventario de mercaderías</strong>.</p>
+
+  <h4>b) Empresa industrial o manufacturera — Tres inventarios simultáneos</h4>
+  <p>La empresa industrial <strong>compra insumos y vende un producto distinto</strong>. Por eso mantiene tres inventarios al mismo tiempo, que representan tres etapas de un mismo flujo:</p>
+  <ul>
+    <li><strong>1.1.03.02 Inventario de materia prima:</strong> los materiales que se incorporarán físicamente al producto. En una mueblería: madera, tornillos, pegamento, barniz, tela de tapizado.</li>
+    <li><strong>1.1.03.03 Inventario de productos en proceso:</strong> las unidades que ya iniciaron su fabricación pero aún no están terminadas. El comedor armado al que le falta el lijado y el barnizado.</li>
+    <li><strong>1.1.03.04 Inventario de productos terminados:</strong> las unidades listas para la venta, esperando en bodega.</li>
+  </ul>
+  <p>Además, la empresa industrial mantiene <strong>1.1.03.05 Inventario de materiales y suministros</strong>: lijas, guantes, combustible, lubricantes, material de empaque. Estos no se incorporan necesariamente al producto, pero se consumen en el proceso productivo.</p>
+
+  <h4>c) Empresa de servicios — Materiales y suministros</h4>
+  <p>Aquí conviene ser preciso, porque es una fuente frecuente de error. Una empresa de servicios <strong>sí puede tener inventarios</strong>, y lo tiene bajo el literal (c) del párrafo 6 de la NIC 2: <em>materiales o suministros para ser consumidos en la prestación de servicios</em>. Las resmas de papel y los tóneres de un estudio jurídico, los reactivos de un laboratorio clínico, los insumos desechables de una clínica dental, los filtros y aceites de un taller mecánico: todos son inventarios.</p>
+
+  <div class="alerta">
+    <span class="titulo-caja">Precisión normativa importante</span>
+    <p>Lo que <strong>no</strong> constituye inventario en una empresa de servicios es el «trabajo en curso» del servicio mismo —las horas ya trabajadas de una auditoría que aún no se factura—. El antiguo párrafo 19 de la NIC 2, que trataba los inventarios del prestador de servicios, <strong>fue eliminado</strong> con la entrada en vigor de la <strong>NIIF 15 Ingresos de Actividades Ordinarias Procedentes de Contratos con Clientes</strong>, norma que hoy regula los costos de cumplimiento de un contrato. Ese tema pertenece a asignaturas posteriores de la trayectoria formativa; aquí basta con que sepas distinguir <strong>los suministros (sí son inventario)</strong> del <strong>servicio en ejecución (no lo es)</strong>.</p>
+  </div>
+
+  <h4>d) Empresa agropecuaria — Productos agrícolas y activos biológicos</h4>
+  <p>Como vimos en el Tema 1, aquí conviven dos normas. Los <strong>activos biológicos</strong> (plantas vivas, animales vivos) se rigen por la NIC 41 y <strong>no son inventario</strong>. Los <strong>productos agrícolas cosechados</strong> (el racimo cortado, el grano de cacao, la leche ordeñada, la madera en troza) ingresan a inventarios desde el punto de cosecha. Y los <strong>insumos agrícolas</strong> (fertilizantes, plaguicidas, semillas almacenadas, alimento balanceado) son inventarios de materiales y suministros desde el momento de su compra.</p>
+
+  <h4>e) Empresa extractiva — Minerales y productos minerales</h4>
+  <p>Las empresas mineras y petroleras mantienen inventarios de mineral extraído, concentrados y crudo almacenado. Recuerda el párrafo 3(a) de la NIC 2: cuando existan prácticas sectoriales consolidadas, estos inventarios pueden medirse a <strong>valor neto realizable</strong>, reconociendo los cambios en el resultado del periodo.</p>
+
+  <h4>f) Empresa constructora e inmobiliaria — Inmuebles para la venta</h4>
+  <p>Un departamento construido para venderlo es <strong>inventario</strong> bajo NIC 2. Ese mismo departamento, si la empresa decide conservarlo para arrendarlo o para obtener plusvalía, se convierte en <strong>propiedad de inversión</strong> bajo la <strong>NIC 40</strong>. Y si la empresa lo destina a sus propias oficinas, es <strong>propiedades, planta y equipo</strong> bajo la <strong>NIC 16</strong>. Un mismo departamento, tres normas posibles, según el propósito.</p>
+
+  <h3>2.2 Inventarios tecnológicos y electrónicos: un caso que exige criterio</h3>
+  <p>Los equipos eléctricos y electrónicos —celulares, laptops, televisores, refrigeradoras, equipos de audio— generan una confusión clásica porque son bienes de alto valor unitario y larga duración física. Pero recuerda: la duración física del bien es irrelevante. Lo que decide es el propósito.</p>
+  <div class="tabla-wrap">
+    <table class="datos">
+      <tr><th>Situación</th><th>Clasificación</th><th>Norma</th><th>Efecto en resultados</th></tr>
+      <tr><td>50 laptops en la bodega de una importadora, para vender</td><td>Inventario de mercaderías</td><td>NIC 2</td><td>Costo de ventas al momento de la venta</td></tr>
+      <tr><td>3 laptops entregadas al personal administrativo de esa misma importadora</td><td>Propiedades, planta y equipo (equipo de cómputo)</td><td>NIC 16</td><td>Depreciación durante la vida útil</td></tr>
+      <tr><td>Cables, conectores y tarjetas que la importadora usa para armar los equipos que vende</td><td>Inventario de materia prima</td><td>NIC 2</td><td>Se incorporan al costo del producto</td></tr>
+      <tr><td>Un servidor que la empresa compró para revenderlo pero que lleva 3 años sin salida</td><td>Sigue siendo inventario, pero con posible deterioro</td><td>NIC 2, párr. 9 y 28</td><td>Ajuste a valor neto realizable</td></tr>
+    </table>
+  </div>
+  <p class="pie-tabla">Nota: la obsolescencia tecnológica es la causa más frecuente de que el valor neto realizable caiga por debajo del costo. Este cálculo se desarrolla el Día 8.</p>
+
+  <h3>2.3 El taller: repuestos, piezas y equipo auxiliar</h3>
+  <p>Entra mentalmente a un taller automotriz de la Av. Juan Tanca Marengo. Hay un vehículo desarmado sobre la fosa, y a su alrededor: filtros de aceite, pastillas de freno, bujías, un motor de repuesto en el rincón, una prensa hidráulica, un compresor, llaves y herramientas. Todo eso parece «lo mismo» a simple vista, pero contablemente hay tres clasificaciones distintas conviviendo en cinco metros cuadrados.</p>
+
+  <div class="norma">
+    <span class="titulo-caja">NIC 16, párrafo 8 — La regla de los repuestos</span>
+    <p>Las piezas de repuesto, el equipo auxiliar y el equipo de mantenimiento permanente <strong>se contabilizan como inventarios</strong> (y se reconocen en el resultado del periodo cuando se consumen), <strong>salvo</strong> que la entidad espere utilizarlos durante <strong>más de un periodo</strong>, o que <strong>solo puedan ser utilizados en conexión con un elemento específico</strong> de propiedades, planta y equipo, en cuyo caso se clasifican como propiedades, planta y equipo.</p>
+  </div>
+
+  <div class="tabla-wrap">
+    <table class="datos">
+      <tr><th>Elemento en el taller</th><th>Clasificación</th><th>Fundamento</th></tr>
+      <tr><td>60 filtros de aceite que se consumirán en tres meses al prestar servicios</td><td>Inventario (materiales y suministros)</td><td>NIC 2, párr. 6(c); NIC 16, párr. 8</td></tr>
+      <tr><td>Pastillas de freno compradas para instalarlas en vehículos de clientes</td><td>Inventario de mercaderías / materiales</td><td>NIC 2, párr. 6(a) y 6(c)</td></tr>
+      <tr><td>Motor de repuesto adquirido exclusivamente para la prensa hidráulica del taller, con vida útil de 5 años</td><td>Propiedades, planta y equipo</td><td>NIC 16, párr. 8 (uso &gt; 1 periodo y conexión con un activo específico)</td></tr>
+      <tr><td>La prensa hidráulica y el compresor</td><td>Propiedades, planta y equipo</td><td>NIC 16</td></tr>
+      <tr><td>Aceite y grasa consumidos en el mantenimiento de las máquinas del propio taller</td><td>Inventario hasta su consumo; luego gasto</td><td>NIC 2, párr. 6(c) y párr. 34</td></tr>
+    </table>
+  </div>
+
+  <div class="vida-real">
+    <span class="titulo-caja">Del objeto al asiento: entrena la mirada</span>
+    <p>Cuando veas ese motor desarmado en el taller, no veas piezas: <strong>ve historias contables en curso</strong>. Ese pistón fue mineral de hierro en una mina (inventario de una extractiva), luego acero en una fundición (materia prima de una industrial), luego pistón terminado (producto terminado), luego repuesto en una distribuidora (mercadería), luego repuesto en el taller (inventario de materiales), y en el instante en que el mecánico lo instala en el vehículo del cliente deja de ser activo y se convierte en <strong>costo del servicio prestado</strong>. Cada una de esas seis transiciones tuvo un asiento contable con su fecha, su glosa y su documento fuente.</p>
+  </div>
+
+  <h3>2.4 Clasificaciones complementarias que debes conocer</h3>
+  <ul>
+    <li><strong>Mercadería en tránsito:</strong> bienes ya adquiridos que están viajando y aún no llegan a bodega. Se reconocen como inventario de la entidad <strong>desde el momento en que esta obtiene el control</strong> sobre ellos, lo cual depende de las condiciones pactadas —los <strong>Incoterms</strong> en el comercio internacional—. Bajo <strong>FOB puerto de embarque</strong>, el comprador reconoce el inventario cuando la mercadería cruza la borda del buque en el puerto de origen, aunque físicamente esté en altamar. Bajo <strong>DDP</strong>, lo reconoce cuando la recibe en su bodega.</li>
+    <li><strong>Mercadería en consignación:</strong> bienes entregados a un tercero para que los venda por cuenta del propietario. <strong>Siguen siendo inventario del consignante</strong>, no del consignatario, porque el consignante conserva el control y los riesgos. Es un error frecuente y grave registrarlos como propios.</li>
+    <li><strong>Material de empaque y embalaje:</strong> cajas, etiquetas, film plástico, pallets. Son inventario y, cuando resultan necesarios para dejar el producto en su condición y ubicación actuales, integran su costo.</li>
+    <li><strong>Inventario de combustibles y lubricantes:</strong> inventario mientras está almacenado; gasto o costo cuando se consume, según el destino (planta o administración).</li>
+    <li><strong>Inventario obsoleto, dañado o de lento movimiento:</strong> sigue siendo inventario, pero es el candidato natural a un ajuste por deterioro conforme al párrafo 9 de la NIC 2.</li>
+  </ul>
+
+  <div class="carrera-box">
+    <h4>¿Qué tiene que ver esto con Negocios Internacionales?</h4>
+    <ul>
+      <li><span class="area">Comercio exterior:</span> el Incoterm pactado no es solo un acuerdo logístico, es <strong>la regla que fija la fecha del asiento contable</strong>. Quien negocia un FOB y quien negocia un DDP están decidiendo, sin saberlo, en qué mes aparecerá el inventario en el balance y quién asume la pérdida si el contenedor se hunde.</li>
+      <li><span class="area">Finanzas internacionales:</span> la mercadería en tránsito es capital inmovilizado que aún no genera ingresos. Los días de tránsito entre Shanghái y Guayaquil son días de financiamiento que alguien paga. Clasificar mal ese inventario distorsiona el ciclo de conversión de efectivo.</li>
+      <li><span class="area">Marketing y negociación internacional:</span> la consignación es una estrategia comercial de penetración de mercados —se coloca producto sin exigir pago inmediato—. Entender que ese inventario <em>no salió</em> del balance del consignante es indispensable para no reportar ventas que todavía no existen.</li>
+      <li><span class="area">Marco legal y normativo:</span> la frontera NIC 2 / NIC 16 / NIC 41 / NIC 40 tiene consecuencias tributarias directas: el costo del inventario es deducible al venderse, mientras que el activo fijo se deduce vía depreciación conforme al artículo 28 del Reglamento para la Aplicación de la LRTI. Clasificar mal cambia el impuesto a pagar.</li>
+    </ul>
+  </div>
+
+  <div class="conclusion">
+    <span class="titulo-caja">Idea clave del Tema 2</span>
+    <p>No existe «el inventario» en singular: existe una <strong>familia de inventarios</strong> cuyo nombre depende de la actividad de la empresa y de la etapa del bien dentro de la cadena productiva. Comercial: mercaderías. Industrial: materia prima, productos en proceso, productos terminados, materiales y suministros. Servicios: materiales y suministros. Agropecuaria: productos agrícolas cosechados e insumos, con la frontera de la NIC 41. Y en los casos límite —repuestos, tecnología, inmuebles— la pregunta decisiva siempre es la misma: <strong>¿para qué lo tiene la entidad y por cuánto tiempo espera usarlo?</strong></p>
+  </div>
+</section>
+
+<!-- ===================== PESTAÑA: TEMA 3 ===================== -->
+<section id="tema3" class="panel">
+  <span class="rotulo-dia">TEMA 3 · UNIDAD 3</span>
+  <h2>El costo de los inventarios: qué entra, qué no entra y por qué</h2>
+  <p class="intro-panel">Una factura de compra dice «USD 8.000,00». Pero el costo contable de esa mercadería casi nunca es 8.000,00. Puede ser 10.195,00 o puede ser 7.400,00. Este tema te enseña a construir el costo real, peso a peso, con fundamento normativo en cada rubro.</p>
+
+  <h3>3.1 La pregunta que resuelve el párrafo 10</h3>
+  <p>Imagina que compras una laptop por internet a un vendedor de Miami. Pagas USD 900,00 por el equipo, USD 60,00 de envío internacional, USD 25,00 de seguro y USD 95,00 al llegar al Ecuador entre tributos aduaneros. ¿Cuánto te costó la laptop? Intuitivamente responderías: <strong>1.080,00</strong>, porque ese fue el sacrificio total que hiciste para tenerla en tus manos y funcionando. Esa intuición, exactamente esa, es el principio contable que recoge la NIC 2.</p>
+
+  <div class="norma">
+    <span class="titulo-caja">NIC 2, párrafo 10 — Componentes del costo</span>
+    <p>El <strong>costo de los inventarios</strong> comprenderá todos los <strong>costos derivados de su adquisición</strong> y <strong>transformación</strong>, así como <strong>otros costos</strong> en los que se haya incurrido para darles su <strong>condición y ubicación actuales</strong>.</p>
+  </div>
+
+  <p>La frase «condición y ubicación actuales» es el criterio maestro de todo este tema y conviene memorizarla textualmente. Todo desembolso que haya sido necesario para que el bien esté <em>donde está</em> y <em>como está</em>, listo para venderse, forma parte de su costo. Todo desembolso posterior a ese punto, o ajeno a ese propósito, es gasto del periodo.</p>
+
+  <h3>3.2 Costos de adquisición (párrafo 11)</h3>
+
+  <div class="norma">
+    <span class="titulo-caja">NIC 2, párrafo 11 — Costos de adquisición</span>
+    <p>El costo de adquisición comprenderá el <strong>precio de compra</strong>, los <strong>aranceles de importación</strong> y <strong>otros impuestos que no sean recuperables posteriormente</strong> de las autoridades fiscales, los <strong>transportes</strong>, el <strong>almacenamiento</strong> y <strong>otros costos directamente atribuibles</strong> a la adquisición de las mercaderías, los materiales y los servicios. Los <strong>descuentos comerciales</strong>, las <strong>rebajas</strong> y otras partidas similares <strong>se deducirán</strong> para determinar el costo de adquisición.</p>
+  </div>
+
+  <p>Desglosemos el párrafo aplicándolo al Ecuador:</p>
+  <ul>
+    <li><strong>Precio de compra:</strong> el valor facturado por el proveedor, antes de IVA.</li>
+    <li><strong>Aranceles de importación:</strong> el <em>ad valorem</em> y demás tributos al comercio exterior establecidos conforme al <strong>Código Orgánico de la Producción, Comercio e Inversiones (COPCI)</strong>. Como no son recuperables, <strong>sí integran el costo</strong>.</li>
+    <li><strong>Otros impuestos no recuperables:</strong> el <strong>FODINFA</strong> (0,5% sobre el valor CIF), el Impuesto a los Consumos Especiales cuando no es recuperable, y las tasas aduaneras. <strong>Sí integran el costo.</strong></li>
+    <li><strong>IVA:</strong> aquí está la excepción decisiva. En el Ecuador, el IVA pagado en la compra o en la aduana por un contribuyente que genera ventas gravadas es <strong>crédito tributario recuperable</strong>. Por lo tanto, <strong>NO forma parte del costo del inventario</strong>: se registra en la cuenta <em>IVA en compras</em> como activo, tal como estudiamos el Día 4. En cambio, si el contribuyente vende exclusivamente bienes con tarifa 0% y no tiene derecho a crédito tributario, ese IVA <strong>sí se capitaliza</strong> al costo, porque deja de ser recuperable.</li>
+    <li><strong>Transportes:</strong> flete internacional, flete interno hasta la bodega, manipuleo portuario. <strong>Sí integran el costo.</strong></li>
+    <li><strong>Seguros:</strong> la prima del seguro de la carga durante el traslado. <strong>Sí integra el costo.</strong></li>
+    <li><strong>Otros costos directamente atribuibles:</strong> honorarios del agente de aduana, gastos de desaduanización, inspección previa al embarque, almacenaje temporal en zona primaria.</li>
+    <li><strong>Descuentos comerciales y rebajas:</strong> se <strong>restan</strong>. Si el proveedor concede un 5% por volumen, el costo del inventario baja en ese 5%. No se registra como ingreso: reduce el activo.</li>
+  </ul>
+
+  <div class="alerta">
+    <span class="titulo-caja">Distinción que se pregunta siempre</span>
+    <p>El <strong>descuento comercial</strong> (por volumen, por temporada, por lista) <strong>reduce el costo del inventario</strong> conforme al párrafo 11. El <strong>descuento financiero o por pronto pago</strong> (por ejemplo, 2% si paga en 10 días) es de naturaleza financiera y no se resta del costo del inventario: se trata como un <strong>ingreso financiero</strong> o una reducción del costo financiero, porque premia la velocidad del pago, no el precio del bien. Confundirlos altera tanto el costo de ventas como el resultado financiero.</p>
+  </div>
+
+  <h3>3.3 Caso práctico integral — Importación de electrodomésticos</h3>
+  <p><strong>Comercial El Astillero S.A.</strong>, empresa comercial domiciliada en Guayaquil, contribuyente designado <strong>agente de retención</strong> por el SRI, importa desde Barranquilla (Colombia) <strong>50 licuadoras industriales</strong>, bajo condición <strong>CIF Guayaquil</strong>. Los datos de la Declaración Aduanera de Importación (DAI) y de la liquidación tributaria son:</p>
+
+  <div class="tabla-wrap">
+    <table class="datos">
+      <tr><th>Concepto</th><th>Fundamento</th><th>Valor USD</th><th>¿Integra el costo?</th></tr>
+      <tr><td>Valor FOB de la mercadería</td><td>Factura comercial del proveedor</td><td class="num">8.000,00</td><td>Sí — NIC 2, párr. 11</td></tr>
+      <tr><td>Flete internacional</td><td>Conocimiento de embarque</td><td class="num">700,00</td><td>Sí — NIC 2, párr. 11</td></tr>
+      <tr><td>Seguro de la carga</td><td>Póliza de transporte</td><td class="num">300,00</td><td>Sí — NIC 2, párr. 11</td></tr>
+      <tr><td><strong>Valor CIF (base de cálculo aduanero)</strong></td><td>FOB + flete + seguro</td><td class="num"><strong>9.000,00</strong></td><td>—</td></tr>
+      <tr><td>Arancel ad valorem 10% sobre CIF</td><td>COPCI y arancel nacional</td><td class="num">900,00</td><td>Sí — impuesto no recuperable</td></tr>
+      <tr><td>FODINFA 0,5% sobre CIF</td><td>Tributo al comercio exterior</td><td class="num">45,00</td><td>Sí — impuesto no recuperable</td></tr>
+      <tr><td><strong>Base imponible del IVA en importación</strong></td><td>LRTI, art. 59</td><td class="num"><strong>9.945,00</strong></td><td>—</td></tr>
+      <tr><td>IVA 15% pagado en aduana</td><td>LRTI, arts. 52 y 65</td><td class="num">1.491,75</td><td><strong>No</strong> — es crédito tributario</td></tr>
+      <tr><td>Honorarios del agente de aduana</td><td>Factura de servicios</td><td class="num">250,00</td><td>Sí — costo directamente atribuible</td></tr>
+    </table>
+  </div>
+
+  <div class="definicion">
+    <span class="titulo-caja">Determinación del costo del inventario</span>
+    <p>Costo total = 9.000,00 (CIF) + 900,00 (arancel) + 45,00 (FODINFA) + 250,00 (agente de aduana) = <strong>USD 10.195,00</strong></p>
+    <p>Costo unitario = 10.195,00 ÷ 50 licuadoras = <strong>USD 203,90 por unidad</strong></p>
+    <p>Observa que el IVA de 1.491,75 <strong>no</strong> se incluyó: por eso el costo unitario no es 233,74. Si se hubiera capitalizado el IVA, el inventario estaría sobrevalorado en casi un 15% y el costo de ventas futuro sería falso.</p>
+  </div>
+
+  <p>Base imponible del IVA en importaciones según el <strong>artículo 59 de la LRTI</strong>: el valor en aduana de los bienes, más los impuestos, aranceles, tasas, derechos, recargos y otros gastos que figuren en la declaración de importación y en los demás documentos pertinentes. Por eso la base fue 9.945,00 y no 9.000,00.</p>
+
+  <h4>Jornalización de la importación</h4>
+
+  <div class="tabla-wrap-diario">
+    <table class="diario">
+      <caption>Libro Diario — Comercial El Astillero S.A. — Julio 2026 (expresado en USD)</caption>
+      <tr><th>Fecha</th><th>Código</th><th>Detalle</th><th>Parcial</th><th>Debe</th><th>Haber</th></tr>
+      <tr class="num-asiento"><td colspan="6">− 1 −</td></tr>
+      <tr><td class="fecha">10/07/2026</td><td class="codigo">1.1.03.01</td><td class="detalle">Inventario de mercaderías — Licuadoras industriales</td><td class="parcial"></td><td class="debe">9.945,00</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo"></td><td class="detalle">&nbsp;&nbsp;&nbsp;Valor CIF (FOB 8.000,00 + flete 700,00 + seguro 300,00)</td><td class="parcial">9.000,00</td><td class="debe"></td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo"></td><td class="detalle">&nbsp;&nbsp;&nbsp;Arancel ad valorem 10%</td><td class="parcial">900,00</td><td class="debe"></td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo"></td><td class="detalle">&nbsp;&nbsp;&nbsp;FODINFA 0,5% sobre CIF</td><td class="parcial">45,00</td><td class="debe"></td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">1.1.05.01</td><td class="detalle">IVA en compras (crédito tributario) — pagado en aduana</td><td class="parcial"></td><td class="debe">1.491,75</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">1.1.01.02</td><td class="detalle credito">a) Bancos</td><td class="parcial"></td><td class="debe"></td><td class="haber">11.436,75</td></tr>
+      <tr class="glosa"><td></td><td></td><td colspan="4">P/R Nacionalización de 50 licuadoras industriales según Declaración Aduanera de Importación N.° 028-2026-10-00147852 y liquidación SENAE. El costo del inventario incorpora el valor CIF y los tributos al comercio exterior no recuperables, conforme a la NIC 2, párrafo 11. El IVA se registra como crédito tributario por ser recuperable (LRTI, arts. 59, 65 y 66) y por ello se excluye del costo, según el mismo párrafo 11.</td></tr>
+
+      <tr class="num-asiento"><td colspan="6">− 2 −</td></tr>
+      <tr><td class="fecha">10/07/2026</td><td class="codigo">1.1.03.01</td><td class="detalle">Inventario de mercaderías — Licuadoras industriales</td><td class="parcial"></td><td class="debe">250,00</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">1.1.05.01</td><td class="detalle">IVA en compras (crédito tributario) 15%</td><td class="parcial"></td><td class="debe">37,50</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">2.1.03.02</td><td class="detalle credito">a) Retención en la fuente de Impuesto a la Renta por pagar 3%</td><td class="parcial"></td><td class="debe"></td><td class="haber">7,50</td></tr>
+      <tr><td class="fecha"></td><td class="codigo">2.1.03.03</td><td class="detalle credito">a) Retención en la fuente de IVA por pagar 70%</td><td class="parcial"></td><td class="debe"></td><td class="haber">26,25</td></tr>
+      <tr><td class="fecha"></td><td class="codigo">1.1.01.02</td><td class="detalle credito">a) Bancos</td><td class="parcial"></td><td class="debe"></td><td class="haber">253,75</td></tr>
+      <tr class="glosa"><td></td><td></td><td colspan="4">P/R Honorarios del agente de aduana según factura N.° 001-002-000004517, costo directamente atribuible a la adquisición que se capitaliza al inventario conforme a la NIC 2, párrafo 11. Retención en la fuente del 3% aplicando el porcentaje residual para servicios de la Resolución NAC-DGERCGC26-00000009, y retención del 70% del IVA en servicios conforme a la Resolución NAC-DGERCGC20-00000061.</td></tr>
+
+      <tr class="suman"><td></td><td></td><td class="detalle">SUMAN</td><td class="parcial"></td><td class="debe">11.724,25</td><td class="haber">11.724,25</td></tr>
+    </table>
+  </div>
+
+  <div class="ejemplo">
+    <span class="titulo-caja">Nota metodológica sobre el asiento 1</span>
+    <p>En la realidad, el valor FOB se paga al proveedor del exterior, el flete a la naviera, el seguro a la aseguradora y los tributos al SENAE, en fechas distintas y con documentos distintos. Aquí los presentamos consolidados en una sola salida de Bancos para que veas con claridad <strong>cómo se arma el costo</strong>. La apertura por proveedor se practicará en los ejercicios integradores.</p>
+    <p>Observa además que en la importación de bienes <strong>no se practica retención en la fuente al proveedor del exterior</strong>, porque el ingreso que este obtiene por la venta de bienes desde el extranjero no constituye renta de fuente ecuatoriana conforme a los artículos 8 y 13 de la LRTI. Sí se retiene, en cambio, al agente de aduana, que es un prestador de servicios local.</p>
+  </div>
+
+  <h3>3.4 Costos de transformación (párrafos 12 y 13)</h3>
+  <p>Cuando la empresa no compra terminado sino que <strong>fabrica</strong>, al costo de adquisición de la materia prima se le suman los costos de convertirla en producto.</p>
+
+  <div class="norma">
+    <span class="titulo-caja">NIC 2, párrafo 12 — Costos de transformación</span>
+    <p>Los costos de transformación comprenderán los costos <strong>directamente relacionados con las unidades producidas</strong>, tales como la <strong>mano de obra directa</strong>. También comprenderán una parte, calculada de forma sistemática, de los <strong>costos indirectos, variables o fijos</strong>, en los que se haya incurrido para transformar las materias primas en productos terminados.</p>
+  </div>
+
+  <p>Los <strong>costos indirectos variables</strong> cambian con el volumen de producción (energía eléctrica de las máquinas, materiales indirectos). Los <strong>costos indirectos fijos</strong> permanecen relativamente constantes con independencia del volumen (depreciación de la planta, arriendo de la fábrica, sueldo del jefe de producción).</p>
+
+  <div class="norma">
+    <span class="titulo-caja">NIC 2, párrafo 13 — La regla de la capacidad normal</span>
+    <p>La distribución de los <strong>costos indirectos fijos</strong> a los costos de transformación se basará en la <strong>capacidad normal de trabajo</strong> de los medios de producción. El importe de costo indirecto fijo distribuido a cada unidad <strong>no se incrementará</strong> como consecuencia de un bajo nivel de producción o de la existencia de capacidad ociosa. Los costos indirectos <strong>no distribuidos</strong> se reconocerán como <strong>gastos del periodo</strong>.</p>
+  </div>
+
+  <p>Esta regla protege la verdad del balance. Si una fábrica con capacidad normal de 1.000 unidades mensuales produce solo 400 por falta de pedidos, y repartiera todo el costo fijo entre esas 400 unidades, cada producto «costaría» mucho más. La NIC 2 lo prohíbe: la ineficiencia y la ociosidad <strong>no se esconden dentro del activo</strong>, se reconocen como gasto del periodo, a la vista de todos.</p>
+
+  <div class="adelanto"><strong>Trayectoria formativa:</strong> el estudio sistemático de la determinación, acumulación y distribución de los costos indirectos de fabricación —tasas predeterminadas, bases de asignación, variaciones— corresponde a <strong>Contabilidad de Costos</strong>. En Contabilidad General te llevaremos hasta el registro contable del costo de producción, y lo haremos en el Tema 4 de hoy. El desarrollo formal del sistema de costos no forma parte de esta asignatura.</div>
+
+  <h3>3.5 Costos excluidos del inventario (párrafo 16)</h3>
+  <p>Tan importante como saber qué entra es saber qué <strong>no</strong> puede entrar. Aquí se concentra la mayoría de los fraudes contables relacionados con inventarios: inflar el activo escondiendo gastos dentro de él.</p>
+
+  <div class="norma">
+    <span class="titulo-caja">NIC 2, párrafo 16 — Costos excluidos, reconocidos como gastos del periodo</span>
+    <p><strong>(a)</strong> los importes <strong>anormales</strong> de desperdicio de materiales, mano de obra u otros costos de producción;</p>
+    <p><strong>(b)</strong> los costos de <strong>almacenamiento</strong>, a menos que sean necesarios en el proceso productivo previamente a un proceso de elaboración ulterior;</p>
+    <p><strong>(c)</strong> los costos <strong>indirectos de administración</strong> que no hayan contribuido a dar a los inventarios su condición y ubicación actuales; y</p>
+    <p><strong>(d)</strong> los <strong>costos de venta</strong>.</p>
+  </div>
+
+  <div class="tabla-wrap">
+    <table class="datos">
+      <tr><th>Desembolso</th><th>¿Entra al costo del inventario?</th><th>Fundamento</th></tr>
+      <tr><td>Merma normal del 2% de la madera por el corte (esperada e inevitable)</td><td><strong>Sí</strong>, se absorbe en el costo de las unidades buenas</td><td>NIC 2, párr. 12 (por contraste con el párr. 16a)</td></tr>
+      <tr><td>500,00 de madera destruida porque el montacargas volcó el pallet</td><td><strong>No</strong>, es gasto del periodo</td><td>NIC 2, párr. 16(a) — desperdicio anormal</td></tr>
+      <tr><td>Almacenaje del grano de cacao mientras completa su proceso de secado</td><td><strong>Sí</strong>, es necesario para un proceso ulterior</td><td>NIC 2, párr. 16(b), excepción</td></tr>
+      <tr><td>Arriendo de la bodega donde se guarda el producto ya terminado, esperando venderse</td><td><strong>No</strong>, es gasto del periodo</td><td>NIC 2, párr. 16(b), regla general</td></tr>
+      <tr><td>Sueldo del contador general y del gerente administrativo</td><td><strong>No</strong>, es gasto del periodo</td><td>NIC 2, párr. 16(c)</td></tr>
+      <tr><td>Comisión del vendedor y publicidad del producto</td><td><strong>No</strong>, es gasto del periodo</td><td>NIC 2, párr. 16(d)</td></tr>
+      <tr><td>Flete de compra desde el proveedor hasta nuestra bodega</td><td><strong>Sí</strong></td><td>NIC 2, párr. 11</td></tr>
+      <tr><td>Flete de venta desde nuestra bodega hasta el cliente</td><td><strong>No</strong>, es costo de venta</td><td>NIC 2, párr. 16(d)</td></tr>
+    </table>
+  </div>
+
+  <div class="alerta">
+    <span class="titulo-caja">La regla mnemotécnica del flete</span>
+    <p><strong>Flete que ENTRA a la bodega, entra al costo. Flete que SALE de la bodega, sale a resultados.</strong> El primero es necesario para dar al inventario su condición y ubicación actuales; el segundo ocurre después de que el inventario ya está listo y solo sirve para venderlo.</p>
+  </div>
+
+  <h3>3.6 El reconocimiento como gasto (párrafo 34)</h3>
+
+  <div class="norma">
+    <span class="titulo-caja">NIC 2, párrafo 34 — Del activo al resultado</span>
+    <p>Cuando los inventarios sean <strong>vendidos</strong>, el importe en libros de los mismos se reconocerá como <strong>gasto del periodo</strong> en el que se reconozcan los correspondientes ingresos de operación.</p>
+  </div>
+
+  <p>Este párrafo cierra el círculo conceptual de la clase. El inventario es un <strong>gasto en espera</strong>: permanece en el activo mientras el bien no se vende y se traslada al resultado —bajo el nombre de <strong>costo de ventas</strong>— exactamente en el mismo periodo en que se reconoce el ingreso por su venta. Es la aplicación pura del principio de correlación entre ingresos y gastos que estudiamos en el Marco Conceptual el Día 2.</p>
+
+  <div class="carrera-box">
+    <h4>¿Qué tiene que ver esto con Negocios Internacionales?</h4>
+    <ul>
+      <li><span class="area">Comercio exterior:</span> el costeo de una importación es una competencia técnica central del profesional de comercio exterior. Determinar el <em>landed cost</em> —costo puesto en bodega— exige conocer exactamente qué tributos son recuperables y cuáles no. Un error aquí destruye el margen de toda una operación.</li>
+      <li><span class="area">Finanzas internacionales:</span> capitalizar indebidamente gastos dentro del inventario infla el activo y el resultado del ejercicio. Es una de las manipulaciones contables más frecuentes y la primera que revisa un analista financiero o un auditor forense al evaluar la calidad de las utilidades de una empresa.</li>
+      <li><span class="area">Marketing y negociación internacional:</span> el párrafo 11 convierte cada descuento comercial negociado en una reducción directa del costo unitario. Y la distinción entre descuento comercial y descuento financiero determina si el beneficio aparece en el margen bruto o en el resultado financiero: dos lecturas muy distintas del desempeño comercial.</li>
+      <li><span class="area">Marco legal y normativo:</span> la base imponible del IVA en importaciones (LRTI, art. 59), los tributos al comercio exterior del COPCI y las resoluciones de retención del SRI son el marco jurídico que da contenido concreto a cada línea del asiento contable. La norma contable dice <em>qué</em> se capitaliza; la norma tributaria ecuatoriana dice <em>cuánto</em>.</li>
+    </ul>
+  </div>
+
+  <div class="conclusion">
+    <span class="titulo-caja">Idea clave del Tema 3</span>
+    <p>El costo del inventario se construye, no se copia de la factura. Entra todo lo necesario para dar al bien su <strong>condición y ubicación actuales</strong>: precio de compra, aranceles y tributos no recuperables, fletes de entrada, seguros, costos directamente atribuibles y costos de transformación distribuidos según la <strong>capacidad normal</strong>. Se restan los descuentos comerciales. Y quedan fuera —como gasto del periodo— los desperdicios anormales, el almacenamiento de producto terminado, los gastos de administración y los costos de venta. El IVA recuperable nunca es costo: es crédito tributario.</p>
+  </div>
+</section>
+
+<!-- ===================== PESTAÑA: TEMA 4 ===================== -->
+<section id="tema4" class="panel">
+  <span class="rotulo-dia">TEMA 4 · UNIDAD 3</span>
+  <h2>De la naturaleza al hogar: seguir un comedor por toda la cadena de valor</h2>
+  <p class="intro-panel">Este es el corazón de la clase de hoy. Vamos a tomar un objeto común —un comedor de madera— y a seguirlo desde el árbol en pie hasta el departamento donde alguien cena con su familia, escribiendo <strong>cada asiento contable</strong> que se genera en el camino. Al terminar, tu forma de mirar los objetos ya no será la misma.</p>
+
+  <h3>4.1 El escenario</h3>
+  <p>Trabajaremos con tres empresas ecuatorianas ficticias que ocupan tres eslabones consecutivos de la cadena, más un consumidor final y una oficina. Todas las cifras están en dólares de los Estados Unidos de América, moneda de curso legal en el Ecuador. <strong>Comercial El Astillero S.A.</strong> y <strong>Muebles del Litoral Cía. Ltda.</strong> son contribuyentes designados <strong>agentes de retención</strong> por el SRI.</p>
+
+  <div class="tabla-wrap">
+    <table class="datos">
+      <tr><th>Eslabón</th><th>Empresa</th><th>Actividad</th><th>Inventario que maneja</th><th>Norma aplicable</th></tr>
+      <tr><td>1 — Naturaleza</td><td>Forestal El Guayacán S.A. (Quevedo)</td><td>Agropecuaria / forestal</td><td>Plantación de teca en pie → madera en troza cosechada</td><td>NIC 41 → NIC 2</td></tr>
+      <tr><td>2 — Transformación</td><td>Muebles del Litoral Cía. Ltda. (Durán)</td><td>Industrial</td><td>Materia prima → productos en proceso → productos terminados</td><td>NIC 2</td></tr>
+      <tr><td>3 — Comercialización</td><td>Comercial El Astillero S.A. (Guayaquil)</td><td>Comercial</td><td>Inventario de mercaderías</td><td>NIC 2</td></tr>
+      <tr><td>4 — Destino final</td><td>Familia Vera / Estudio Jurídico Andrade</td><td>Consumo / uso</td><td>Sin registro / Propiedades, planta y equipo</td><td>— / NIC 16</td></tr>
+    </table>
+  </div>
+
+  <h3>4.2 Eslabón 1 — La naturaleza: del árbol vivo a la madera cosechada</h3>
+  <p>Forestal El Guayacán S.A. mantiene una plantación de teca. Mientras los árboles están <strong>en pie y creciendo</strong>, son <strong>activos biológicos</strong> bajo la NIC 41 y no aparecen en la cuenta de inventarios. El 15 de julio de 2026 se cosechan <strong>40 m³ de madera en troza</strong>, cuyo valor razonable menos los costos de venta en el punto de cosecha asciende a <strong>USD 300,00 por m³</strong>.</p>
+  <p>En ese instante —el instante del corte— ocurre la transición normativa más elegante de toda la contabilidad: el bien deja de ser un ser vivo regulado por la NIC 41 y se convierte en un producto agrícola que ingresa a los inventarios regulados por la NIC 2.</p>
+
+  <div class="tabla-wrap-diario">
+    <table class="diario">
+      <caption>Libro Diario — Forestal El Guayacán S.A. — Julio 2026 (USD)</caption>
+      <tr><th>Fecha</th><th>Código</th><th>Detalle</th><th>Parcial</th><th>Debe</th><th>Haber</th></tr>
+      <tr class="num-asiento"><td colspan="6">− 1 −</td></tr>
+      <tr><td class="fecha">15/07/2026</td><td class="codigo">1.1.03.06</td><td class="detalle">Inventario de productos agrícolas — Madera en troza de teca</td><td class="parcial"></td><td class="debe">12.000,00</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo"></td><td class="detalle">&nbsp;&nbsp;&nbsp;40 m³ × USD 300,00 por m³</td><td class="parcial">12.000,00</td><td class="debe"></td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">1.2.05.01</td><td class="detalle credito">a) Activos biológicos — Plantación forestal de teca</td><td class="parcial"></td><td class="debe"></td><td class="haber">12.000,00</td></tr>
+      <tr class="glosa"><td></td><td></td><td colspan="4">P/R Traslado a inventarios de 40 m³ de madera en troza cosechada, según Acta de Cosecha N.° 07-2026 y Guía Forestal N.° GF-2026-1188 del Ministerio del Ambiente. Los productos agrícolas cosechados se miden en el reconocimiento inicial a su valor razonable menos los costos de venta en el punto de cosecha, conforme a la NIC 41, párrafo 13; dicho importe constituye el costo del inventario a efectos de la NIC 2, párrafo 20.</td></tr>
+      <tr class="suman"><td></td><td></td><td class="detalle">SUMAN</td><td class="parcial"></td><td class="debe">12.000,00</td><td class="haber">12.000,00</td></tr>
+    </table>
+  </div>
+
+  <div class="ejemplo">
+    <span class="titulo-caja">Lo que este asiento te enseña</span>
+    <p>Ningún dinero cambió de manos. No hubo compra, no hubo venta, no hubo factura de un tercero. Y sin embargo <strong>hubo un asiento contable</strong>, porque un hecho económico ocurrió: un activo cambió de naturaleza y de norma. La contabilidad no registra únicamente movimientos de efectivo; registra <strong>transformaciones de la realidad económica</strong>. Esta es una de las lecciones más importantes que te llevarás del primer semestre.</p>
+  </div>
+
+  <h3>4.3 Eslabón 1 → 2 — La venta de la madera a la fábrica</h3>
+  <p>El 18 de julio de 2026, Forestal El Guayacán S.A. vende los 40 m³ de madera a Muebles del Litoral Cía. Ltda. en <strong>USD 12.000,00</strong>, con IVA 15%, cobrando por transferencia bancaria. El comprador, en su calidad de agente de retención, practica la <strong>retención en la fuente del Impuesto a la Renta del 2%</strong> (adquisición de bienes muebles de naturaleza corporal, Resolución NAC-DGERCGC26-00000009) y la <strong>retención del 30% del IVA</strong> (Resolución NAC-DGERCGC20-00000061).</p>
+
+  <div class="tabla-wrap">
+    <table class="datos">
+      <tr><th>Concepto</th><th>Cálculo</th><th>Valor USD</th></tr>
+      <tr><td>Base imponible</td><td>40 m³ × 300,00</td><td class="num">12.000,00</td></tr>
+      <tr><td>IVA 15%</td><td>12.000,00 × 15%</td><td class="num">1.800,00</td></tr>
+      <tr><td>Total factura</td><td>12.000,00 + 1.800,00</td><td class="num">13.800,00</td></tr>
+      <tr><td>(−) Retención en la fuente IR 2%</td><td>12.000,00 × 2%</td><td class="num">240,00</td></tr>
+      <tr><td>(−) Retención de IVA 30%</td><td>1.800,00 × 30%</td><td class="num">540,00</td></tr>
+      <tr><td><strong>Valor neto recibido</strong></td><td>13.800,00 − 240,00 − 540,00</td><td class="num"><strong>13.020,00</strong></td></tr>
+    </table>
+  </div>
+
+  <div class="tabla-wrap-diario">
+    <table class="diario">
+      <caption>Libro Diario — Forestal El Guayacán S.A. (VENDEDOR) — Julio 2026 (USD)</caption>
+      <tr><th>Fecha</th><th>Código</th><th>Detalle</th><th>Parcial</th><th>Debe</th><th>Haber</th></tr>
+      <tr class="num-asiento"><td colspan="6">− 2 −</td></tr>
+      <tr><td class="fecha">18/07/2026</td><td class="codigo">1.1.01.02</td><td class="detalle">Bancos</td><td class="parcial"></td><td class="debe">13.020,00</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">1.1.05.03</td><td class="detalle">Anticipo de Impuesto a la Renta — retenciones que nos efectuaron</td><td class="parcial"></td><td class="debe">240,00</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">1.1.05.04</td><td class="detalle">Crédito tributario por retenciones de IVA que nos efectuaron</td><td class="parcial"></td><td class="debe">540,00</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">4.1.01.01</td><td class="detalle credito">a) Ventas</td><td class="parcial"></td><td class="debe"></td><td class="haber">12.000,00</td></tr>
+      <tr><td class="fecha"></td><td class="codigo">2.1.03.01</td><td class="detalle credito">a) IVA en ventas</td><td class="parcial"></td><td class="debe"></td><td class="haber">1.800,00</td></tr>
+      <tr class="glosa"><td></td><td></td><td colspan="4">P/R Venta de 40 m³ de madera en troza según factura N.° 001-001-000002341 y comprobante de retención N.° 001-001-000000987 emitido por el cliente. Las retenciones sufridas se reconocen como activo (anticipo y crédito tributario), no como gasto.</td></tr>
+
+      <tr class="num-asiento"><td colspan="6">− 3 −</td></tr>
+      <tr><td class="fecha">18/07/2026</td><td class="codigo">5.1.01.01</td><td class="detalle">Costo de ventas</td><td class="parcial"></td><td class="debe">12.000,00</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">1.1.03.06</td><td class="detalle credito">a) Inventario de productos agrícolas — Madera en troza de teca</td><td class="parcial"></td><td class="debe"></td><td class="haber">12.000,00</td></tr>
+      <tr class="glosa"><td></td><td></td><td colspan="4">P/R Baja del inventario por su importe en libros y reconocimiento del costo de ventas en el mismo periodo del ingreso, conforme a la NIC 2, párrafo 34. Se aplica el sistema de cuenta permanente.</td></tr>
+      <tr class="suman"><td></td><td></td><td class="detalle">SUMAN</td><td class="parcial"></td><td class="debe">25.800,00</td><td class="haber">25.800,00</td></tr>
+    </table>
+  </div>
+
+  <div class="alerta">
+    <span class="titulo-caja">¿Por qué el margen es cero? Un detalle que no es un error</span>
+    <p>Habrás notado que la madera se vendió en 12.000,00 y su costo también fue 12.000,00: la utilidad bruta de esta venta es cero. <strong>No es una equivocación.</strong> Es la consecuencia lógica de la NIC 41: la ganancia del productor forestal ya se reconoció antes, durante el crecimiento del árbol y en el momento de la cosecha, a través de los cambios en el valor razonable del activo biológico. Cuando el producto se vende al mismo valor razonable con el que ingresó a inventarios, no queda margen adicional que reconocer. En las empresas agropecuarias, el resultado se genera en el <strong>crecimiento</strong>, no en la venta.</p>
+  </div>
+
+  <h3>4.4 Eslabón 2 — La transformación: de la madera al comedor</h3>
+  <p>Muebles del Litoral Cía. Ltda. recibe la madera y la convierte en <strong>10 comedores de teca</strong>. Veamos el ciclo industrial completo.</p>
+
+  <h4>a) Compra de la materia prima</h4>
+  <div class="tabla-wrap-diario">
+    <table class="diario">
+      <caption>Libro Diario — Muebles del Litoral Cía. Ltda. (COMPRADOR) — Julio 2026 (USD)</caption>
+      <tr><th>Fecha</th><th>Código</th><th>Detalle</th><th>Parcial</th><th>Debe</th><th>Haber</th></tr>
+      <tr class="num-asiento"><td colspan="6">− 1 −</td></tr>
+      <tr><td class="fecha">18/07/2026</td><td class="codigo">1.1.03.02</td><td class="detalle">Inventario de materia prima — Madera en troza de teca</td><td class="parcial"></td><td class="debe">12.000,00</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">1.1.05.01</td><td class="detalle">IVA en compras (crédito tributario) 15%</td><td class="parcial"></td><td class="debe">1.800,00</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">2.1.03.02</td><td class="detalle credito">a) Retención en la fuente de Impuesto a la Renta por pagar 2%</td><td class="parcial"></td><td class="debe"></td><td class="haber">240,00</td></tr>
+      <tr><td class="fecha"></td><td class="codigo">2.1.03.03</td><td class="detalle credito">a) Retención en la fuente de IVA por pagar 30%</td><td class="parcial"></td><td class="debe"></td><td class="haber">540,00</td></tr>
+      <tr><td class="fecha"></td><td class="codigo">1.1.01.02</td><td class="detalle credito">a) Bancos</td><td class="parcial"></td><td class="debe"></td><td class="haber">13.020,00</td></tr>
+      <tr class="glosa"><td></td><td></td><td colspan="4">P/R Compra de 40 m³ de madera en troza según factura N.° 001-001-000002341 del proveedor Forestal El Guayacán S.A. El precio de compra integra el costo del inventario conforme a la NIC 2, párrafo 11; el IVA se excluye del costo por ser recuperable. Retenciones practicadas en calidad de agente de retención designado por el SRI.</td></tr>
+    </table>
+  </div>
+
+  <div class="definicion">
+    <span class="titulo-caja">Observa la simetría</span>
+    <p>El mismo hecho económico generó dos asientos distintos, uno en cada empresa. Lo que para el vendedor fue <em>Ventas</em> e <em>IVA en ventas</em>, para el comprador fue <em>Inventario</em> e <em>IVA en compras</em>. Lo que para el vendedor fue un <em>activo</em> (anticipo de IR), para el comprador fue un <em>pasivo</em> (retención por pagar). La contabilidad es un espejo: cada transacción tiene dos caras que se corresponden exactamente.</p>
+  </div>
+
+  <h4>b) Un accidente en bodega: el desperdicio anormal</h4>
+  <p>El 20 de julio, un montacargas vuelca un pallet y se destruyen <strong>USD 500,00</strong> de madera. Este no es un desperdicio normal del proceso de corte: es un <strong>desperdicio anormal</strong>, y por lo tanto no puede esconderse dentro del costo del producto.</p>
+
+  <div class="tabla-wrap-diario">
+    <table class="diario">
+      <tr><th>Fecha</th><th>Código</th><th>Detalle</th><th>Parcial</th><th>Debe</th><th>Haber</th></tr>
+      <tr class="num-asiento"><td colspan="6">− 2 −</td></tr>
+      <tr><td class="fecha">20/07/2026</td><td class="codigo">5.2.04.03</td><td class="detalle">Pérdida por desperdicio anormal de materiales</td><td class="parcial"></td><td class="debe">500,00</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">1.1.03.02</td><td class="detalle credito">a) Inventario de materia prima — Madera en troza de teca</td><td class="parcial"></td><td class="debe"></td><td class="haber">500,00</td></tr>
+      <tr class="glosa"><td></td><td></td><td colspan="4">P/R Baja de materia prima destruida en accidente de bodega según Acta de Baja N.° 004-2026 e informe del jefe de planta. El importe anormal de desperdicio de materiales se reconoce como gasto del periodo y se excluye del costo del inventario, conforme a la NIC 2, párrafo 16, literal (a).</td></tr>
+    </table>
+  </div>
+
+  <h4>c) Consumo de materia prima, mano de obra y costos indirectos</h4>
+  <div class="tabla-wrap-diario">
+    <table class="diario">
+      <tr><th>Fecha</th><th>Código</th><th>Detalle</th><th>Parcial</th><th>Debe</th><th>Haber</th></tr>
+      <tr class="num-asiento"><td colspan="6">− 3 −</td></tr>
+      <tr><td class="fecha">21/07/2026</td><td class="codigo">1.1.03.03</td><td class="detalle">Inventario de productos en proceso</td><td class="parcial"></td><td class="debe">11.500,00</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">1.1.03.02</td><td class="detalle credito">a) Inventario de materia prima — Madera en troza de teca</td><td class="parcial"></td><td class="debe"></td><td class="haber">11.500,00</td></tr>
+      <tr class="glosa"><td></td><td></td><td colspan="4">P/R Envío de materia prima a la planta según Orden de Producción N.° OP-2026-041 y requisición de materiales N.° RM-0177 (12.000,00 recibidos menos 500,00 dados de baja). Los materiales consumidos se incorporan al costo de transformación conforme a la NIC 2, párrafo 12.</td></tr>
+
+      <tr class="num-asiento"><td colspan="6">− 4 −</td></tr>
+      <tr><td class="fecha">25/07/2026</td><td class="codigo">1.1.03.03</td><td class="detalle">Inventario de productos en proceso</td><td class="parcial"></td><td class="debe">4.500,00</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">2.1.02.01</td><td class="detalle credito">a) Nómina de fábrica por pagar</td><td class="parcial"></td><td class="debe"></td><td class="haber">4.500,00</td></tr>
+      <tr class="glosa"><td></td><td></td><td colspan="4">P/R Mano de obra directa de la Orden de Producción N.° OP-2026-041 según rol de pagos de planta del mes de julio. Los costos directamente relacionados con las unidades producidas integran el costo de transformación, conforme a la NIC 2, párrafo 12.</td></tr>
+
+      <tr class="num-asiento"><td colspan="6">− 5 −</td></tr>
+      <tr><td class="fecha">26/07/2026</td><td class="codigo">1.1.03.03</td><td class="detalle">Inventario de productos en proceso</td><td class="parcial"></td><td class="debe">3.500,00</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">5.1.02.09</td><td class="detalle credito">a) Costos indirectos de fabricación aplicados</td><td class="parcial"></td><td class="debe"></td><td class="haber">3.500,00</td></tr>
+      <tr class="glosa"><td></td><td></td><td colspan="4">P/R Aplicación de costos indirectos de fabricación fijos y variables a la Orden de Producción N.° OP-2026-041, distribuidos sobre la base de la capacidad normal de trabajo de la planta, conforme a la NIC 2, párrafos 12 y 13. Los costos indirectos fijos no distribuidos por capacidad ociosa se reconocen como gasto del periodo.</td></tr>
+
+      <tr class="num-asiento"><td colspan="6">− 6 −</td></tr>
+      <tr><td class="fecha">28/07/2026</td><td class="codigo">1.1.03.04</td><td class="detalle">Inventario de productos terminados — Comedores de teca</td><td class="parcial"></td><td class="debe">19.500,00</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo"></td><td class="detalle">&nbsp;&nbsp;&nbsp;10 comedores × USD 1.950,00 costo unitario</td><td class="parcial">19.500,00</td><td class="debe"></td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">1.1.03.03</td><td class="detalle credito">a) Inventario de productos en proceso</td><td class="parcial"></td><td class="debe"></td><td class="haber">19.500,00</td></tr>
+      <tr class="glosa"><td></td><td></td><td colspan="4">P/R Terminación de la Orden de Producción N.° OP-2026-041 e ingreso a bodega de 10 comedores de teca según Nota de Ingreso N.° NI-2026-0233. Costo de producción: materia prima 11.500,00 + mano de obra directa 4.500,00 + costos indirectos aplicados 3.500,00 = 19.500,00.</td></tr>
+    </table>
+  </div>
+
+  <div class="definicion">
+    <span class="titulo-caja">La ruta del costo dentro de la fábrica</span>
+    <p>Materia prima <strong>11.500,00</strong> + Mano de obra directa <strong>4.500,00</strong> + Costos indirectos aplicados <strong>3.500,00</strong> = Costo de producción <strong>19.500,00</strong> ÷ 10 comedores = <strong>USD 1.950,00 por comedor</strong>.</p>
+    <p>Fíjate en que el costo <strong>nunca salió del activo</strong> mientras el producto se fabricaba: solo se mudó de casillero, de materia prima a productos en proceso y de allí a productos terminados. Los 500,00 del accidente, en cambio, sí abandonaron el activo, porque el párrafo 16(a) no les permitió quedarse.</p>
+  </div>
+
+  <h3>4.5 Eslabón 2 → 3 — La fábrica vende a la comercializadora</h3>
+  <p>El 30 de julio, Muebles del Litoral vende los 10 comedores a Comercial El Astillero S.A. en <strong>USD 2.600,00 cada uno</strong>, es decir 26.000,00 más IVA. El comprador, agente de retención, retiene el 2% de IR y el 30% del IVA.</p>
+
+  <div class="tabla-wrap-diario">
+    <table class="diario">
+      <caption>Libro Diario — Muebles del Litoral Cía. Ltda. (VENDEDOR) — Julio 2026 (USD)</caption>
+      <tr><th>Fecha</th><th>Código</th><th>Detalle</th><th>Parcial</th><th>Debe</th><th>Haber</th></tr>
+      <tr class="num-asiento"><td colspan="6">− 7 −</td></tr>
+      <tr><td class="fecha">30/07/2026</td><td class="codigo">1.1.01.02</td><td class="detalle">Bancos</td><td class="parcial"></td><td class="debe">28.210,00</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">1.1.05.03</td><td class="detalle">Anticipo de Impuesto a la Renta — retenciones que nos efectuaron</td><td class="parcial"></td><td class="debe">520,00</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">1.1.05.04</td><td class="detalle">Crédito tributario por retenciones de IVA que nos efectuaron</td><td class="parcial"></td><td class="debe">1.170,00</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">4.1.01.01</td><td class="detalle credito">a) Ventas</td><td class="parcial"></td><td class="debe"></td><td class="haber">26.000,00</td></tr>
+      <tr><td class="fecha"></td><td class="codigo">2.1.03.01</td><td class="detalle credito">a) IVA en ventas</td><td class="parcial"></td><td class="debe"></td><td class="haber">3.900,00</td></tr>
+      <tr class="glosa"><td></td><td></td><td colspan="4">P/R Venta de 10 comedores de teca según factura N.° 002-001-000000876 y comprobante de retención N.° 003-001-000001204 emitido por Comercial El Astillero S.A.</td></tr>
+
+      <tr class="num-asiento"><td colspan="6">− 8 −</td></tr>
+      <tr><td class="fecha">30/07/2026</td><td class="codigo">5.1.01.01</td><td class="detalle">Costo de ventas</td><td class="parcial"></td><td class="debe">19.500,00</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">1.1.03.04</td><td class="detalle credito">a) Inventario de productos terminados — Comedores de teca</td><td class="parcial"></td><td class="debe"></td><td class="haber">19.500,00</td></tr>
+      <tr class="glosa"><td></td><td></td><td colspan="4">P/R Reconocimiento del costo de ventas de 10 comedores a USD 1.950,00 cada uno, en el mismo periodo del ingreso correspondiente, conforme a la NIC 2, párrafo 34.</td></tr>
+      <tr class="suman"><td></td><td></td><td class="detalle">SUMAN</td><td class="parcial"></td><td class="debe">49.400,00</td><td class="haber">49.400,00</td></tr>
+    </table>
+  </div>
+
+  <p>La utilidad bruta de la fábrica en esta operación fue de 26.000,00 − 19.500,00 = <strong>USD 6.500,00</strong>, es decir USD 650,00 por comedor. Aquí sí hay margen, porque la empresa industrial <strong>agregó valor mediante la transformación</strong>.</p>
+
+  <h3>4.6 Eslabón 3 — La comercializadora vende al público</h3>
+  <p>Comercial El Astillero S.A. registra la compra y, el 5 de agosto, vende <strong>un comedor</strong> a la señora Mercedes Vera, consumidora final, en <strong>USD 3.500,00</strong> más IVA, al contado.</p>
+
+  <div class="tabla-wrap-diario">
+    <table class="diario">
+      <caption>Libro Diario — Comercial El Astillero S.A. — Julio y agosto 2026 (USD)</caption>
+      <tr><th>Fecha</th><th>Código</th><th>Detalle</th><th>Parcial</th><th>Debe</th><th>Haber</th></tr>
+      <tr class="num-asiento"><td colspan="6">− 3 −</td></tr>
+      <tr><td class="fecha">30/07/2026</td><td class="codigo">1.1.03.01</td><td class="detalle">Inventario de mercaderías — Comedores de teca</td><td class="parcial"></td><td class="debe">26.000,00</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo"></td><td class="detalle">&nbsp;&nbsp;&nbsp;10 comedores × USD 2.600,00</td><td class="parcial">26.000,00</td><td class="debe"></td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">1.1.05.01</td><td class="detalle">IVA en compras (crédito tributario) 15%</td><td class="parcial"></td><td class="debe">3.900,00</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">2.1.03.02</td><td class="detalle credito">a) Retención en la fuente de Impuesto a la Renta por pagar 2%</td><td class="parcial"></td><td class="debe"></td><td class="haber">520,00</td></tr>
+      <tr><td class="fecha"></td><td class="codigo">2.1.03.03</td><td class="detalle credito">a) Retención en la fuente de IVA por pagar 30%</td><td class="parcial"></td><td class="debe"></td><td class="haber">1.170,00</td></tr>
+      <tr><td class="fecha"></td><td class="codigo">1.1.01.02</td><td class="detalle credito">a) Bancos</td><td class="parcial"></td><td class="debe"></td><td class="haber">28.210,00</td></tr>
+      <tr class="glosa"><td></td><td></td><td colspan="4">P/R Compra de 10 comedores de teca según factura N.° 002-001-000000876. Costo unitario de inventario USD 2.600,00, determinado conforme a la NIC 2, párrafo 11.</td></tr>
+
+      <tr class="num-asiento"><td colspan="6">− 4 −</td></tr>
+      <tr><td class="fecha">05/08/2026</td><td class="codigo">1.1.01.01</td><td class="detalle">Caja</td><td class="parcial"></td><td class="debe">4.025,00</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">4.1.01.01</td><td class="detalle credito">a) Ventas</td><td class="parcial"></td><td class="debe"></td><td class="haber">3.500,00</td></tr>
+      <tr><td class="fecha"></td><td class="codigo">2.1.03.01</td><td class="detalle credito">a) IVA en ventas</td><td class="parcial"></td><td class="debe"></td><td class="haber">525,00</td></tr>
+      <tr class="glosa"><td></td><td></td><td colspan="4">P/R Venta de un comedor de teca a consumidora final según factura N.° 003-002-000015479. No se practica retención alguna por tratarse de una persona natural no obligada a llevar contabilidad que actúa como consumidora final.</td></tr>
+
+      <tr class="num-asiento"><td colspan="6">− 5 −</td></tr>
+      <tr><td class="fecha">05/08/2026</td><td class="codigo">5.1.01.01</td><td class="detalle">Costo de ventas</td><td class="parcial"></td><td class="debe">2.600,00</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">1.1.03.01</td><td class="detalle credito">a) Inventario de mercaderías — Comedores de teca</td><td class="parcial"></td><td class="debe"></td><td class="haber">2.600,00</td></tr>
+      <tr class="glosa"><td></td><td></td><td colspan="4">P/R Reconocimiento del costo de la unidad vendida, conforme a la NIC 2, párrafo 34. Saldo en bodega: 9 comedores por USD 23.400,00.</td></tr>
+      <tr class="suman"><td></td><td></td><td class="detalle">SUMAN</td><td class="parcial"></td><td class="debe">36.525,00</td><td class="haber">36.525,00</td></tr>
+    </table>
+  </div>
+
+  <h3>4.7 Eslabón 4 — El destino final: el mismo comedor, dos desenlaces</h3>
+  <p>Aquí termina el viaje, y termina de dos maneras completamente distintas según quién compre.</p>
+
+  <h4>Desenlace A — La señora Mercedes Vera lo lleva a su comedor familiar</h4>
+  <p>No hay ningún asiento contable. Una persona natural no obligada a llevar contabilidad que adquiere un bien para su uso personal no registra nada. Para la contabilidad, el ciclo del comedor <strong>terminó</strong> en el asiento −5− de Comercial El Astillero. El bien salió del sistema de información económica y entró en la vida cotidiana de una familia.</p>
+
+  <h4>Desenlace B — El Estudio Jurídico Andrade Cía. Ltda. lo compra para su sala de juntas</h4>
+  <p>Mismo comedor, mismo precio de 3.500,00 más IVA. Pero el comprador es una sociedad que <strong>no lo va a vender</strong>: lo va a usar durante varios años. Por lo tanto, para el Estudio Jurídico ese comedor <strong>no es inventario</strong>: es <strong>propiedades, planta y equipo</strong> bajo la NIC 16.</p>
+
+  <div class="tabla-wrap-diario">
+    <table class="diario">
+      <caption>Libro Diario — Estudio Jurídico Andrade Cía. Ltda. — Agosto 2026 (USD)</caption>
+      <tr><th>Fecha</th><th>Código</th><th>Detalle</th><th>Parcial</th><th>Debe</th><th>Haber</th></tr>
+      <tr class="num-asiento"><td colspan="6">− 1 −</td></tr>
+      <tr><td class="fecha">05/08/2026</td><td class="codigo">1.2.01.05</td><td class="detalle">Muebles y enseres</td><td class="parcial"></td><td class="debe">3.500,00</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">1.1.05.01</td><td class="detalle">IVA en compras (crédito tributario) 15%</td><td class="parcial"></td><td class="debe">525,00</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">2.1.03.02</td><td class="detalle credito">a) Retención en la fuente de Impuesto a la Renta por pagar 2%</td><td class="parcial"></td><td class="debe"></td><td class="haber">70,00</td></tr>
+      <tr><td class="fecha"></td><td class="codigo">2.1.03.03</td><td class="detalle credito">a) Retención en la fuente de IVA por pagar 30%</td><td class="parcial"></td><td class="debe"></td><td class="haber">157,50</td></tr>
+      <tr><td class="fecha"></td><td class="codigo">1.1.01.02</td><td class="detalle credito">a) Bancos</td><td class="parcial"></td><td class="debe"></td><td class="haber">3.797,50</td></tr>
+      <tr class="glosa"><td></td><td></td><td colspan="4">P/R Adquisición de un comedor de teca destinado a la sala de juntas de la compañía, según factura N.° 003-002-000015480. El bien se reconoce como propiedades, planta y equipo por estar destinado al uso en la operación y no a la venta, conforme a la NIC 16, párrafo 6. No constituye inventario porque no cumple ninguna de las tres condiciones de la NIC 2, párrafo 6.</td></tr>
+      <tr class="suman"><td></td><td></td><td class="detalle">SUMAN</td><td class="parcial"></td><td class="debe">4.025,00</td><td class="haber">4.025,00</td></tr>
+    </table>
+  </div>
+
+  <div class="adelanto"><strong>Se estudia en unidades posteriores:</strong> la <strong>depreciación</strong> de este comedor como propiedades, planta y equipo, y el asiento de ajuste correspondiente, se desarrollan en el <strong>Día 11 (jueves 27 de agosto)</strong>, dentro de los asientos de ajuste de la Unidad 3. Hoy solo nos interesa el <strong>reconocimiento inicial</strong> y la razón por la cual el bien no entró a inventarios.</div>
+
+  <h3>4.8 Resumen visual del viaje completo</h3>
+  <div class="tabla-wrap">
+    <table class="datos">
+      <tr><th>Momento</th><th>Dónde está el bien</th><th>Cuenta contable</th><th>Valor USD</th><th>Norma</th></tr>
+      <tr><td>Antes del 15/07</td><td>Árbol en pie en la plantación</td><td>Activos biológicos</td><td class="num">12.000,00</td><td>NIC 41</td></tr>
+      <tr><td>15/07</td><td>Madera cosechada en patio</td><td>Inventario de productos agrícolas</td><td class="num">12.000,00</td><td>NIC 2, párr. 20</td></tr>
+      <tr><td>18/07</td><td>Madera en bodega de la fábrica</td><td>Inventario de materia prima</td><td class="num">12.000,00</td><td>NIC 2, párr. 6(c)</td></tr>
+      <tr><td>21/07 al 27/07</td><td>Comedor a medio armar en planta</td><td>Inventario de productos en proceso</td><td class="num">19.500,00</td><td>NIC 2, párr. 6(b)</td></tr>
+      <tr><td>28/07</td><td>Comedor terminado en bodega de fábrica</td><td>Inventario de productos terminados</td><td class="num">19.500,00</td><td>NIC 2, párr. 6(a)</td></tr>
+      <tr><td>30/07</td><td>Comedor en la sala de exhibición del almacén</td><td>Inventario de mercaderías</td><td class="num">26.000,00</td><td>NIC 2, párr. 6(a)</td></tr>
+      <tr><td>05/08 — Desenlace A</td><td>Comedor en la casa de la familia Vera</td><td>Sin registro contable</td><td class="num">—</td><td>—</td></tr>
+      <tr><td>05/08 — Desenlace B</td><td>Comedor en la sala de juntas del estudio jurídico</td><td>Muebles y enseres (PPE)</td><td class="num">3.500,00</td><td>NIC 16, párr. 6</td></tr>
+    </table>
+  </div>
+
+  <div class="vida-real">
+    <span class="titulo-caja">Ahora practica con lo que tienes alrededor</span>
+    <p>Levanta la vista de la pantalla y elige un objeto: la silla en la que estás sentado, la cocina de tu casa, el celular en tu mano, la fruta en la mesa, el ventilador de la pared. Recorre mentalmente su historia hacia atrás: ¿de qué material está hecho?, ¿de dónde salió ese material?, ¿quién lo extrajo de la naturaleza?, ¿quién lo transformó?, ¿quién lo distribuyó?, ¿quién te lo vendió? En cada uno de esos pasos hubo <strong>una factura, una glosa, una fecha y un asiento contable</strong>. Nada de lo que te rodea llegó ahí sin dejar un rastro en los libros de alguien.</p>
+    <p>Cuando esa mirada se te vuelva automática —cuando ya no puedas ver un comedor sin pensar «esto fue producto en proceso hace tres meses»— habrás cruzado la frontera que separa a quien <em>estudia</em> contabilidad de quien <em>piensa</em> contablemente.</p>
+  </div>
+
+  <div class="carrera-box">
+    <h4>¿Qué tiene que ver esto con Negocios Internacionales?</h4>
+    <ul>
+      <li><span class="area">Comercio exterior:</span> esta cadena, en el mundo real, cruza fronteras. La teca ecuatoriana se exporta a la India, el cacao a Suiza, el banano a Rusia. Cada cruce de frontera es un cambio de propietario del inventario regido por un Incoterm, una partida arancelaria y una declaración aduanera. Entender la cadena contablemente es entender <strong>dónde exactamente se traslada el riesgo y el control</strong>.</li>
+      <li><span class="area">Finanzas internacionales:</span> el margen se genera en distintos eslabones y en distintas proporciones. El productor forestal reconoció su resultado por crecimiento biológico; la industria por transformación; el comercio por intermediación. Un analista que financia cadenas de valor debe saber leer <strong>dónde está el valor y dónde está el riesgo</strong> antes de colocar un dólar.</li>
+      <li><span class="area">Marketing y negociación internacional:</span> los precios de esta cadena (300,00 el m³, 1.950,00 el costo de producción, 2.600,00 el precio mayorista, 3.500,00 el precio final) no son cifras arbitrarias: son el resultado de negociaciones sucesivas. Quien negocia sin conocer la estructura de costos del otro lado negocia a ciegas.</li>
+      <li><span class="area">Marco legal y normativo:</span> tres normas internacionales (NIC 41, NIC 2, NIC 16), la LRTI con sus tarifas de IVA, dos resoluciones vigentes del SRI sobre retenciones y la normativa forestal ambiental convivieron en una sola cadena de ocho asientos. Ese entramado normativo <strong>es</strong> el terreno profesional en el que trabajarás.</li>
+    </ul>
+  </div>
+
+  <div class="conclusion">
+    <span class="titulo-caja">Idea clave del Tema 4</span>
+    <p>Todo bien que existe en el mundo recorrió una cadena, y cada eslabón de esa cadena dejó asientos contables. El mismo objeto físico cambió de nombre contable seis veces —activo biológico, producto agrícola, materia prima, producto en proceso, producto terminado, mercadería— sin cambiar un solo gramo de su materia. Y al final, según quién lo compre y para qué, terminó siendo un activo fijo o simplemente el comedor donde una familia cena. <strong>La contabilidad no describe cosas: describe la posición económica que las cosas ocupan en la vida de las organizaciones.</strong></p>
+  </div>
+</section>
+
+<!-- ===================== PESTAÑA: TEMA 5 ===================== -->
+<section id="tema5" class="panel">
+  <span class="rotulo-dia">TEMA 5 · UNIDAD 3</span>
+  <h2>Sistemas de contabilización de inventarios: cuenta múltiple y cuenta permanente</h2>
+  <p class="intro-panel">Dos empresas pueden hacer exactamente las mismas compras y las mismas ventas, y llevar libros que se ven completamente distintos. No porque una esté mal, sino porque eligieron sistemas de contabilización diferentes. Este tema te enseña ambos, y a decidir cuál corresponde en cada situación.</p>
+
+  <h3>5.1 El problema que los sistemas resuelven</h3>
+  <p>Piensa en la tienda de la esquina de tu barrio. Vende gaseosas, galletas, pan, fideos, jabón. En un día normal hace doscientas ventas pequeñas. Si el dueño tuviera que anotar, en cada venta, el costo exacto de cada galleta que salió del estante, no le alcanzaría el día. Ahora piensa en una concesionaria de vehículos: vende ocho autos al mes, cada uno con número de chasis, y conoce con precisión de centavo cuánto le costó cada unidad.</p>
+  <p>Son dos realidades operativas distintas, y por eso la contabilidad desarrolló dos formas de controlar el inventario. La pregunta que ambos sistemas responden es la misma: <strong>¿cuánto costó lo que vendí y cuánto vale lo que me queda?</strong> Lo que cambia es <em>cuándo</em> se responde: en cada venta o al final del periodo.</p>
+
+  <div class="definicion">
+    <span class="titulo-caja">Nota terminológica</span>
+    <p>El <strong>sistema de cuenta múltiple</strong> también se conoce como <strong>sistema de inventario periódico</strong>. El <strong>sistema de cuenta permanente</strong> también se conoce como <strong>sistema de inventario perpetuo</strong> o <strong>continuo</strong>. Ambos pares de nombres son equivalentes y los encontrarás indistintamente en la bibliografía; en este curso usaremos preferentemente «cuenta múltiple» y «cuenta permanente», que es la terminología del texto de Zapata Sánchez.</p>
+  </div>
+
+  <h3>5.2 Sistema de cuenta múltiple (inventario periódico)</h3>
+  <p>Se llama <strong>múltiple</strong> porque no usa una sola cuenta para el inventario: abre <strong>varias cuentas auxiliares</strong> para registrar por separado cada tipo de movimiento. Su rasgo definitorio es que <strong>durante el periodo no se conoce el costo de ventas ni el saldo real del inventario</strong>. Ambos se determinan al final, mediante una <strong>toma física</strong> (contar la mercadería, una por una) y un cálculo.</p>
+
+  <h4>Cuentas que utiliza</h4>
+  <div class="tabla-wrap">
+    <table class="datos">
+      <tr><th>Cuenta</th><th>Naturaleza</th><th>Qué registra</th></tr>
+      <tr><td>Inventario de mercaderías</td><td>Deudora (activo)</td><td>Solo el saldo inicial y el final del periodo. Permanece inmóvil durante el periodo.</td></tr>
+      <tr><td>Compras</td><td>Deudora</td><td>El valor de todas las mercaderías adquiridas</td></tr>
+      <tr><td>Devoluciones en compras</td><td>Acreedora</td><td>Mercadería devuelta al proveedor (disminuye las compras)</td></tr>
+      <tr><td>Descuentos en compras</td><td>Acreedora</td><td>Descuentos comerciales obtenidos (disminuyen las compras)</td></tr>
+      <tr><td>Transporte en compras</td><td>Deudora</td><td>Fletes de entrada (aumentan el costo, NIC 2, párr. 11)</td></tr>
+      <tr><td>Ventas</td><td>Acreedora (ingreso)</td><td>El valor de las mercaderías vendidas, a precio de venta</td></tr>
+      <tr><td>Devoluciones en ventas</td><td>Deudora</td><td>Mercadería devuelta por los clientes</td></tr>
+      <tr><td>Descuentos en ventas</td><td>Deudora</td><td>Descuentos concedidos a los clientes</td></tr>
+      <tr><td>Costo de ventas</td><td>Deudora (gasto)</td><td>Se calcula y registra únicamente al final del periodo</td></tr>
+    </table>
+  </div>
+
+  <div class="definicion">
+    <span class="titulo-caja">La fórmula del costo de ventas en el sistema de cuenta múltiple</span>
+    <p><strong>Compras netas</strong> = Compras + Transporte en compras − Devoluciones en compras − Descuentos en compras</p>
+    <p><strong>Mercadería disponible para la venta</strong> = Inventario inicial + Compras netas</p>
+    <p><strong>Costo de ventas</strong> = Mercadería disponible para la venta − Inventario final (determinado por toma física)</p>
+  </div>
+
+  <p>Observa la elegancia del razonamiento: si sé lo que tenía al empezar, sé lo que compré, y cuento lo que me queda, entonces por diferencia sé lo que salió. Es aritmética simple aplicada a una bodega real.</p>
+
+  <h3>5.3 Sistema de cuenta permanente (inventario perpetuo)</h3>
+  <p>Se llama <strong>permanente</strong> porque la cuenta <em>Inventario de mercaderías</em> está <strong>permanentemente actualizada</strong>: se debita en cada compra y se acredita en cada venta, de modo que su saldo refleja en todo momento el valor real de la bodega. No hay cuentas de Compras, ni de Devoluciones en compras: todo se registra directamente contra la cuenta de inventario.</p>
+  <p>Su rasgo definitorio es que <strong>cada venta genera dos asientos</strong>:</p>
+  <ul>
+    <li><strong>Asiento del ingreso:</strong> registra el precio de venta, el IVA y la forma de cobro.</li>
+    <li><strong>Asiento del costo:</strong> debita Costo de ventas y acredita Inventario de mercaderías por el <em>costo</em> de la unidad vendida.</li>
+  </ul>
+  <p>Este sistema requiere un control auxiliar por producto llamado <strong>Kardex</strong>, que registra entradas, salidas y saldos en unidades y en valores.</p>
+
+  <div class="adelanto"><strong>Se estudia el Día 10 (miércoles 26 de agosto):</strong> el diseño y llenado del <strong>Kardex</strong> con ambos métodos de valuación. Y en los <strong>Días 8 y 9</strong> aprenderás las fórmulas de costo <strong>FIFO</strong> y <strong>costo promedio ponderado</strong> (NIC 2, párrafos 23 a 27), que son las que determinan <em>qué costo</em> se le asigna a la unidad que sale. Hoy trabajaremos con productos de costo unitario único, para que el mecanismo del sistema quede claro sin la complicación adicional de la valuación.</div>
+
+  <h3>5.4 Comparación práctica: las mismas transacciones, los dos sistemas</h3>
+  <p>Comercial El Astillero S.A. realiza durante agosto de 2026 las siguientes operaciones con los comedores de teca. No existe inventario inicial de este producto.</p>
+  <ol>
+    <li><strong>02/08:</strong> compra 10 comedores a USD 2.600,00 cada uno, a crédito, más IVA 15%, con retenciones del 2% de IR y 30% de IVA.</li>
+    <li><strong>06/08:</strong> devuelve 1 comedor con defecto de fabricación.</li>
+    <li><strong>15/08:</strong> vende 6 comedores a USD 3.500,00 cada uno, al contado, a consumidores finales.</li>
+    <li><strong>31/08:</strong> cierre del mes. La toma física confirma 3 comedores en bodega.</li>
+  </ol>
+
+  <h4>Transacción 1 — Compra de 10 comedores a crédito</h4>
+  <div class="tabla-wrap-diario">
+    <table class="diario">
+      <caption>Sistema de CUENTA PERMANENTE (inventario perpetuo)</caption>
+      <tr><th>Fecha</th><th>Código</th><th>Detalle</th><th>Parcial</th><th>Debe</th><th>Haber</th></tr>
+      <tr class="num-asiento"><td colspan="6">− 1 −</td></tr>
+      <tr><td class="fecha">02/08/2026</td><td class="codigo">1.1.03.01</td><td class="detalle">Inventario de mercaderías — Comedores de teca</td><td class="parcial"></td><td class="debe">26.000,00</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">1.1.05.01</td><td class="detalle">IVA en compras (crédito tributario) 15%</td><td class="parcial"></td><td class="debe">3.900,00</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">2.1.03.02</td><td class="detalle credito">a) Retención en la fuente de Impuesto a la Renta por pagar 2%</td><td class="parcial"></td><td class="debe"></td><td class="haber">520,00</td></tr>
+      <tr><td class="fecha"></td><td class="codigo">2.1.03.03</td><td class="detalle credito">a) Retención en la fuente de IVA por pagar 30%</td><td class="parcial"></td><td class="debe"></td><td class="haber">1.170,00</td></tr>
+      <tr><td class="fecha"></td><td class="codigo">2.1.01.01</td><td class="detalle credito">a) Cuentas por pagar — Proveedores</td><td class="parcial"></td><td class="debe"></td><td class="haber">28.210,00</td></tr>
+      <tr class="glosa"><td></td><td></td><td colspan="4">P/R Compra de 10 comedores según factura N.° 002-001-000000901. El costo ingresa directamente a la cuenta de inventario, conforme a la NIC 2, párrafo 11.</td></tr>
+    </table>
+  </div>
+
+  <div class="tabla-wrap-diario">
+    <table class="diario">
+      <caption>Sistema de CUENTA MÚLTIPLE (inventario periódico)</caption>
+      <tr><th>Fecha</th><th>Código</th><th>Detalle</th><th>Parcial</th><th>Debe</th><th>Haber</th></tr>
+      <tr class="num-asiento"><td colspan="6">− 1 −</td></tr>
+      <tr><td class="fecha">02/08/2026</td><td class="codigo">5.1.02.01</td><td class="detalle">Compras</td><td class="parcial"></td><td class="debe">26.000,00</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">1.1.05.01</td><td class="detalle">IVA en compras (crédito tributario) 15%</td><td class="parcial"></td><td class="debe">3.900,00</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">2.1.03.02</td><td class="detalle credito">a) Retención en la fuente de Impuesto a la Renta por pagar 2%</td><td class="parcial"></td><td class="debe"></td><td class="haber">520,00</td></tr>
+      <tr><td class="fecha"></td><td class="codigo">2.1.03.03</td><td class="detalle credito">a) Retención en la fuente de IVA por pagar 30%</td><td class="parcial"></td><td class="debe"></td><td class="haber">1.170,00</td></tr>
+      <tr><td class="fecha"></td><td class="codigo">2.1.01.01</td><td class="detalle credito">a) Cuentas por pagar — Proveedores</td><td class="parcial"></td><td class="debe"></td><td class="haber">28.210,00</td></tr>
+      <tr class="glosa"><td></td><td></td><td colspan="4">P/R Compra de 10 comedores según factura N.° 002-001-000000901. La cuenta Inventario de mercaderías no se mueve: mantiene su saldo inicial hasta el cierre del periodo.</td></tr>
+    </table>
+  </div>
+
+  <h4>Transacción 2 — Devolución de 1 comedor defectuoso</h4>
+  <p>Se devuelve una unidad de USD 2.600,00 más IVA de 390,00. Las retenciones se reversan proporcionalmente: 52,00 de IR y 117,00 de IVA. La cuenta por pagar disminuye en 2.990,00 − 52,00 − 117,00 = <strong>2.821,00</strong>.</p>
+
+  <div class="tabla-wrap-diario">
+    <table class="diario">
+      <caption>Sistema de CUENTA PERMANENTE</caption>
+      <tr><th>Fecha</th><th>Código</th><th>Detalle</th><th>Parcial</th><th>Debe</th><th>Haber</th></tr>
+      <tr class="num-asiento"><td colspan="6">− 2 −</td></tr>
+      <tr><td class="fecha">06/08/2026</td><td class="codigo">2.1.01.01</td><td class="detalle">Cuentas por pagar — Proveedores</td><td class="parcial"></td><td class="debe">2.821,00</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">2.1.03.02</td><td class="detalle">Retención en la fuente de Impuesto a la Renta por pagar 2%</td><td class="parcial"></td><td class="debe">52,00</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">2.1.03.03</td><td class="detalle">Retención en la fuente de IVA por pagar 30%</td><td class="parcial"></td><td class="debe">117,00</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">1.1.03.01</td><td class="detalle credito">a) Inventario de mercaderías — Comedores de teca</td><td class="parcial"></td><td class="debe"></td><td class="haber">2.600,00</td></tr>
+      <tr><td class="fecha"></td><td class="codigo">1.1.05.01</td><td class="detalle credito">a) IVA en compras (crédito tributario)</td><td class="parcial"></td><td class="debe"></td><td class="haber">390,00</td></tr>
+      <tr class="glosa"><td></td><td></td><td colspan="4">P/R Devolución de un comedor con defecto de fabricación según nota de crédito N.° 002-001-000000033 y acta de devolución. El inventario se reduce directamente.</td></tr>
+    </table>
+  </div>
+
+  <div class="tabla-wrap-diario">
+    <table class="diario">
+      <caption>Sistema de CUENTA MÚLTIPLE</caption>
+      <tr><th>Fecha</th><th>Código</th><th>Detalle</th><th>Parcial</th><th>Debe</th><th>Haber</th></tr>
+      <tr class="num-asiento"><td colspan="6">− 2 −</td></tr>
+      <tr><td class="fecha">06/08/2026</td><td class="codigo">2.1.01.01</td><td class="detalle">Cuentas por pagar — Proveedores</td><td class="parcial"></td><td class="debe">2.821,00</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">2.1.03.02</td><td class="detalle">Retención en la fuente de Impuesto a la Renta por pagar 2%</td><td class="parcial"></td><td class="debe">52,00</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">2.1.03.03</td><td class="detalle">Retención en la fuente de IVA por pagar 30%</td><td class="parcial"></td><td class="debe">117,00</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">5.1.02.02</td><td class="detalle credito">a) Devoluciones en compras</td><td class="parcial"></td><td class="debe"></td><td class="haber">2.600,00</td></tr>
+      <tr><td class="fecha"></td><td class="codigo">1.1.05.01</td><td class="detalle credito">a) IVA en compras (crédito tributario)</td><td class="parcial"></td><td class="debe"></td><td class="haber">390,00</td></tr>
+      <tr class="glosa"><td></td><td></td><td colspan="4">P/R Devolución de un comedor según nota de crédito N.° 002-001-000000033. Se emplea la cuenta auxiliar Devoluciones en compras, de naturaleza acreedora, que reduce las compras netas del periodo.</td></tr>
+    </table>
+  </div>
+
+  <h4>Transacción 3 — Venta de 6 comedores al contado</h4>
+  <div class="tabla-wrap-diario">
+    <table class="diario">
+      <caption>Sistema de CUENTA PERMANENTE — obsérvese que son DOS asientos</caption>
+      <tr><th>Fecha</th><th>Código</th><th>Detalle</th><th>Parcial</th><th>Debe</th><th>Haber</th></tr>
+      <tr class="num-asiento"><td colspan="6">− 3 −</td></tr>
+      <tr><td class="fecha">15/08/2026</td><td class="codigo">1.1.01.01</td><td class="detalle">Caja</td><td class="parcial"></td><td class="debe">24.150,00</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">4.1.01.01</td><td class="detalle credito">a) Ventas</td><td class="parcial"></td><td class="debe"></td><td class="haber">21.000,00</td></tr>
+      <tr><td class="fecha"></td><td class="codigo">2.1.03.01</td><td class="detalle credito">a) IVA en ventas</td><td class="parcial"></td><td class="debe"></td><td class="haber">3.150,00</td></tr>
+      <tr class="glosa"><td></td><td></td><td colspan="4">P/R Venta de 6 comedores a USD 3.500,00 cada uno según facturas N.° 003-002-000015501 a 000015506, a consumidores finales.</td></tr>
+      <tr class="num-asiento"><td colspan="6">− 4 −</td></tr>
+      <tr><td class="fecha">15/08/2026</td><td class="codigo">5.1.01.01</td><td class="detalle">Costo de ventas</td><td class="parcial"></td><td class="debe">15.600,00</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo"></td><td class="detalle">&nbsp;&nbsp;&nbsp;6 comedores × USD 2.600,00 de costo unitario</td><td class="parcial">15.600,00</td><td class="debe"></td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">1.1.03.01</td><td class="detalle credito">a) Inventario de mercaderías — Comedores de teca</td><td class="parcial"></td><td class="debe"></td><td class="haber">15.600,00</td></tr>
+      <tr class="glosa"><td></td><td></td><td colspan="4">P/R Reconocimiento del costo de las unidades vendidas y baja del inventario, conforme a la NIC 2, párrafo 34. Saldo en libros después de la venta: 3 comedores por USD 7.800,00.</td></tr>
+    </table>
+  </div>
+
+  <div class="tabla-wrap-diario">
+    <table class="diario">
+      <caption>Sistema de CUENTA MÚLTIPLE — obsérvese que es UN solo asiento</caption>
+      <tr><th>Fecha</th><th>Código</th><th>Detalle</th><th>Parcial</th><th>Debe</th><th>Haber</th></tr>
+      <tr class="num-asiento"><td colspan="6">− 3 −</td></tr>
+      <tr><td class="fecha">15/08/2026</td><td class="codigo">1.1.01.01</td><td class="detalle">Caja</td><td class="parcial"></td><td class="debe">24.150,00</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">4.1.01.01</td><td class="detalle credito">a) Ventas</td><td class="parcial"></td><td class="debe"></td><td class="haber">21.000,00</td></tr>
+      <tr><td class="fecha"></td><td class="codigo">2.1.03.01</td><td class="detalle credito">a) IVA en ventas</td><td class="parcial"></td><td class="debe"></td><td class="haber">3.150,00</td></tr>
+      <tr class="glosa"><td></td><td></td><td colspan="4">P/R Venta de 6 comedores según facturas N.° 003-002-000015501 a 000015506. En este sistema NO se registra el costo de ventas en el momento de la venta: se determinará al cierre del periodo mediante toma física.</td></tr>
+    </table>
+  </div>
+
+  <div class="alerta">
+    <span class="titulo-caja">La diferencia que debes poder explicar en un examen</span>
+    <p>En <strong>cuenta permanente</strong>, después del 15 de agosto la gerencia puede consultar el saldo de la cuenta Inventario y ver 7.800,00, y el saldo de Costo de ventas y ver 15.600,00. En <strong>cuenta múltiple</strong>, esa misma gerencia, el 15 de agosto, <strong>no sabe cuánto ganó ni cuánto tiene</strong>: solo sabe que vendió 21.000,00. Tendrá que esperar al 31 de agosto y contar la bodega.</p>
+  </div>
+
+  <h4>Transacción 4 — Cierre del periodo (31 de agosto)</h4>
+  <p>La toma física confirma 3 comedores, valorados en 3 × 2.600,00 = <strong>USD 7.800,00</strong>.</p>
+  <p>En el <strong>sistema de cuenta permanente</strong> no se requiere ningún asiento para determinar el costo de ventas: ya está registrado. La toma física cumple aquí una función de <strong>control</strong>, no de cálculo. Si al contar aparecieran solo 2 comedores, la diferencia de 2.600,00 se registraría como una pérdida por faltante de inventario, lo cual permite <strong>detectar robos, mermas o errores</strong>. Esta capacidad de detección es la ventaja más valiosa del sistema.</p>
+  <p>En el <strong>sistema de cuenta múltiple</strong> sí se requiere un asiento, llamado <strong>asiento de regulación de inventarios</strong>, que cancela las cuentas auxiliares, establece el inventario final y determina el costo de ventas por diferencia:</p>
+
+  <div class="definicion">
+    <span class="titulo-caja">Cálculo del costo de ventas (cuenta múltiple)</span>
+    <p>Inventario inicial: 0,00</p>
+    <p>(+) Compras: 26.000,00</p>
+    <p>(−) Devoluciones en compras: 2.600,00</p>
+    <p>(=) Compras netas: 23.400,00</p>
+    <p>(=) Mercadería disponible para la venta: 0,00 + 23.400,00 = 23.400,00</p>
+    <p>(−) Inventario final según toma física: 7.800,00</p>
+    <p>(=) <strong>Costo de ventas: 15.600,00</strong></p>
+  </div>
+
+  <div class="tabla-wrap-diario">
+    <table class="diario">
+      <caption>Sistema de CUENTA MÚLTIPLE — Asiento de regulación de inventarios</caption>
+      <tr><th>Fecha</th><th>Código</th><th>Detalle</th><th>Parcial</th><th>Debe</th><th>Haber</th></tr>
+      <tr class="num-asiento"><td colspan="6">− 4 −</td></tr>
+      <tr><td class="fecha">31/08/2026</td><td class="codigo">1.1.03.01</td><td class="detalle">Inventario de mercaderías (final, según toma física)</td><td class="parcial"></td><td class="debe">7.800,00</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">5.1.01.01</td><td class="detalle">Costo de ventas</td><td class="parcial"></td><td class="debe">15.600,00</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">5.1.02.02</td><td class="detalle">Devoluciones en compras</td><td class="parcial"></td><td class="debe">2.600,00</td><td class="haber"></td></tr>
+      <tr><td class="fecha"></td><td class="codigo">5.1.02.01</td><td class="detalle credito">a) Compras</td><td class="parcial"></td><td class="debe"></td><td class="haber">26.000,00</td></tr>
+      <tr class="glosa"><td></td><td></td><td colspan="4">P/R Regulación de la cuenta de inventarios al cierre de agosto de 2026, según Acta de Toma Física de Inventarios N.° TF-08-2026. Se cancelan las cuentas auxiliares Compras y Devoluciones en compras, se establece el inventario final y se determina el costo de ventas por diferencia. Reconocimiento del costo conforme a la NIC 2, párrafo 34.</td></tr>
+      <tr class="suman"><td></td><td></td><td class="detalle">SUMAN</td><td class="parcial"></td><td class="debe">26.000,00</td><td class="haber">26.000,00</td></tr>
+    </table>
+  </div>
+
+  <div class="adelanto"><strong>Se desarrolla formalmente más adelante:</strong> el estudio sistemático de los <strong>asientos de ajuste</strong> corresponde al <strong>Día 11 (jueves 27 de agosto)</strong>, el <strong>balance de comprobación ajustado</strong> al <strong>Día 12</strong>, y los <strong>asientos de cierre</strong> al <strong>Día 15 (miércoles 2 de septiembre)</strong>. El asiento de regulación se presenta aquí únicamente porque sin él el sistema de cuenta múltiple resultaría incomprensible: es la pieza que le da sentido a todo el mecanismo.</div>
+
+  <h3>5.5 Verificación: ambos sistemas llegan al mismo resultado</h3>
+  <div class="tabla-wrap">
+    <table class="datos">
+      <tr><th>Concepto</th><th>Cuenta permanente</th><th>Cuenta múltiple</th><th>¿Coinciden?</th></tr>
+      <tr><td>Ventas del periodo</td><td class="num">21.000,00</td><td class="num">21.000,00</td><td>Sí</td></tr>
+      <tr><td>Costo de ventas</td><td class="num">15.600,00</td><td class="num">15.600,00</td><td>Sí</td></tr>
+      <tr><td>Utilidad bruta en ventas</td><td class="num">5.400,00</td><td class="num">5.400,00</td><td>Sí</td></tr>
+      <tr><td>Saldo final de inventario</td><td class="num">7.800,00</td><td class="num">7.800,00</td><td>Sí</td></tr>
+      <tr><td>¿Cuándo se supo el costo de ventas?</td><td>En cada venta (15/08)</td><td>Al cierre (31/08)</td><td>No</td></tr>
+      <tr><td>Número de asientos del periodo</td><td>4</td><td>4 (uno de ellos, de regulación)</td><td>—</td></tr>
+    </table>
+  </div>
+  <p class="pie-tabla">Este es el punto conceptual central: los dos sistemas son caminos distintos hacia el mismo destino. La contabilidad no cambia la realidad económica; cambia la oportunidad y el detalle con que la informa.</p>
+
+  <h3>5.6 ¿Cuál sistema elegir?</h3>
+  <div class="tabla-wrap">
+    <table class="datos">
+      <tr><th>Criterio</th><th>Cuenta múltiple (periódico)</th><th>Cuenta permanente (perpetuo)</th></tr>
+      <tr><td>Conocimiento del costo de ventas</td><td>Solo al final del periodo</td><td>En todo momento</td></tr>
+      <tr><td>Saldo de inventario en libros</td><td>Desactualizado durante el periodo</td><td>Siempre actualizado</td></tr>
+      <tr><td>Detección de faltantes y robos</td><td>Imposible: el faltante se confunde con el costo de ventas</td><td>Inmediata, por comparación libros vs. toma física</td></tr>
+      <tr><td>Costo de implementación</td><td>Bajo</td><td>Alto: requiere Kardex y sistema informático</td></tr>
+      <tr><td>Requiere Kardex</td><td>No</td><td>Sí, obligatoriamente</td></tr>
+      <tr><td>Apropiado para</td><td>Negocios pequeños, alto volumen de artículos de bajo valor</td><td>Empresas medianas y grandes, artículos de valor significativo</td></tr>
+      <tr><td>Ejemplo típico ecuatoriano</td><td>Tienda de barrio, bazar, papelería pequeña</td><td>Supermercado, importadora, concesionaria, farmacia de cadena</td></tr>
+    </table>
+  </div>
+
+  <div class="alerta">
+    <span class="titulo-caja">Consideración normativa y tributaria</span>
+    <p>La NIC 2 <strong>no impone</strong> un sistema de contabilización: su exigencia es sobre la <em>medición</em> del inventario (párrafo 9) y sobre la <em>revelación</em> de información (párrafo 36), no sobre el mecanismo de registro. Sin embargo, en la práctica ecuatoriana, la posibilidad de sustentar costos y gastos deducibles y de responder a requerimientos de información del SRI y de la Superintendencia de Compañías, Valores y Seguros hace que el <strong>sistema de cuenta permanente con Kardex</strong> sea el estándar exigible en empresas de tamaño relevante. Una empresa que no puede demostrar el movimiento de su inventario tiene un problema de control interno antes que un problema contable.</p>
+  </div>
+
+  <div class="carrera-box">
+    <h4>¿Qué tiene que ver esto con Negocios Internacionales?</h4>
+    <ul>
+      <li><span class="area">Comercio exterior:</span> una operación de importación o exportación no puede planificarse sin saber, en tiempo real, cuánto stock hay disponible. El sistema de cuenta permanente es lo que permite responder a un comprador extranjero «tengo 1.200 unidades listas para embarcar» con certeza y no con esperanza.</li>
+      <li><span class="area">Finanzas internacionales:</span> los indicadores de rotación de inventarios y de días de inventario, que los bancos y las casas de factoring internacional exigen para otorgar financiamiento comercial, requieren saldos confiables durante todo el periodo. Con cuenta múltiple, esos indicadores solo se pueden calcular una vez al año.</li>
+      <li><span class="area">Marketing y negociación internacional:</span> ofrecer un plazo de entrega en una negociación internacional es comprometer disponibilidad futura. Un vendedor que negocia sin datos de inventario actualizados está negociando promesas que su bodega no puede respaldar, y el incumplimiento de un plazo destruye una relación comercial que costó años construir.</li>
+      <li><span class="area">Marco legal y normativo:</span> el respaldo documental del costo de ventas ante el SRI, la sustentación de los inventarios ante la Superintendencia de Compañías y la trazabilidad exigida por SENAE en regímenes aduaneros especiales dependen del sistema de registro adoptado. La elección del sistema es también una decisión de cumplimiento normativo.</li>
+    </ul>
+  </div>
+
+  <div class="conclusion">
+    <span class="titulo-caja">Idea clave del Tema 5</span>
+    <p>Existen dos sistemas de contabilización de inventarios. El de <strong>cuenta múltiple</strong> usa cuentas auxiliares (Compras, Devoluciones en compras, Transporte en compras), no toca la cuenta de inventario durante el periodo y determina el costo de ventas al cierre por diferencia, tras una toma física. El de <strong>cuenta permanente</strong> registra todo directamente en la cuenta de inventario y genera <strong>dos asientos en cada venta</strong>: uno por el ingreso y otro por el costo. Ambos llegan a la misma utilidad bruta y al mismo inventario final, pero solo el segundo permite conocer el resultado en cualquier momento y <strong>detectar faltantes</strong>. La NIC 2 no obliga a elegir uno u otro; la exigencia de control y de sustento tributario, sí.</p>
+  </div>
+</section>
+
+<!-- ===================== PESTAÑA: EJERCICIO INTERACTIVO ===================== -->
+<section id="ejercicio" class="panel">
+  <span class="rotulo-dia">EJERCICIO INTERACTIVO</span>
+  <h2>Clasifica correctamente: ¿inventario, activo biológico, activo fijo o gasto?</h2>
+  <p class="intro-panel">Diez situaciones reales tomadas de las empresas de la cadena de valor que estudiamos hoy. Para cada una, decide la clasificación contable correcta. <strong>Responde las diez antes de verificar:</strong> el botón te avisará si dejaste alguna en blanco. Al verificar verás, ítem por ítem, la respuesta correcta y su fundamento normativo.</p>
+
+  <div class="definicion">
+    <span class="titulo-caja">Opciones disponibles en todos los ítems</span>
+    <p><strong>A)</strong> Inventario — NIC 2 &nbsp;·&nbsp; <strong>B)</strong> Activo biológico — NIC 41 &nbsp;·&nbsp; <strong>C)</strong> Propiedades, planta y equipo — NIC 16 &nbsp;·&nbsp; <strong>D)</strong> Gasto del periodo</p>
+  </div>
+
+  <div class="item-eval" id="ei1-box">
+    <span class="enunciado"><span class="numero">1.</span> Los 200 comedores de teca almacenados en la bodega de Comercial El Astillero S.A., destinados a la venta al público.</span>
+    <div class="opciones">
+      <label><input type="radio" name="ei1" value="a"> A) Inventario — NIC 2</label>
+      <label><input type="radio" name="ei1" value="b"> B) Activo biológico — NIC 41</label>
+      <label><input type="radio" name="ei1" value="c"> C) Propiedades, planta y equipo — NIC 16</label>
+      <label><input type="radio" name="ei1" value="d"> D) Gasto del periodo</label>
+    </div>
+    <div class="feedback" id="ei1-fb"></div>
+  </div>
+
+  <div class="item-eval" id="ei2-box">
+    <span class="enunciado"><span class="numero">2.</span> El comedor que Comercial El Astillero S.A. retiró de la sala de exhibición e instaló en su propia sala de juntas, donde permanecerá varios años.</span>
+    <div class="opciones">
+      <label><input type="radio" name="ei2" value="a"> A) Inventario — NIC 2</label>
+      <label><input type="radio" name="ei2" value="b"> B) Activo biológico — NIC 41</label>
+      <label><input type="radio" name="ei2" value="c"> C) Propiedades, planta y equipo — NIC 16</label>
+      <label><input type="radio" name="ei2" value="d"> D) Gasto del periodo</label>
+    </div>
+    <div class="feedback" id="ei2-fb"></div>
+  </div>
+
+  <div class="item-eval" id="ei3-box">
+    <span class="enunciado"><span class="numero">3.</span> La plantación de teca de Forestal El Guayacán S.A., con árboles sembrados y en crecimiento, aún no cosechados.</span>
+    <div class="opciones">
+      <label><input type="radio" name="ei3" value="a"> A) Inventario — NIC 2</label>
+      <label><input type="radio" name="ei3" value="b"> B) Activo biológico — NIC 41</label>
+      <label><input type="radio" name="ei3" value="c"> C) Propiedades, planta y equipo — NIC 16</label>
+      <label><input type="radio" name="ei3" value="d"> D) Gasto del periodo</label>
+    </div>
+    <div class="feedback" id="ei3-fb"></div>
+  </div>
+
+  <div class="item-eval" id="ei4-box">
+    <span class="enunciado"><span class="numero">4.</span> Los 40 m³ de madera en troza ya cortada y apilada en el patio de Forestal El Guayacán S.A., a la espera de ser vendida.</span>
+    <div class="opciones">
+      <label><input type="radio" name="ei4" value="a"> A) Inventario — NIC 2</label>
+      <label><input type="radio" name="ei4" value="b"> B) Activo biológico — NIC 41</label>
+      <label><input type="radio" name="ei4" value="c"> C) Propiedades, planta y equipo — NIC 16</label>
+      <label><input type="radio" name="ei4" value="d"> D) Gasto del periodo</label>
+    </div>
+    <div class="feedback" id="ei4-fb"></div>
+  </div>
+
+  <div class="item-eval" id="ei5-box">
+    <span class="enunciado"><span class="numero">5.</span> Los USD 500,00 de madera destruida cuando el montacargas volcó un pallet en la bodega de Muebles del Litoral Cía. Ltda.</span>
+    <div class="opciones">
+      <label><input type="radio" name="ei5" value="a"> A) Inventario — NIC 2</label>
+      <label><input type="radio" name="ei5" value="b"> B) Activo biológico — NIC 41</label>
+      <label><input type="radio" name="ei5" value="c"> C) Propiedades, planta y equipo — NIC 16</label>
+      <label><input type="radio" name="ei5" value="d"> D) Gasto del periodo</label>
+    </div>
+    <div class="feedback" id="ei5-fb"></div>
+  </div>
+
+  <div class="item-eval" id="ei6-box">
+    <span class="enunciado"><span class="numero">6.</span> Un lote de cuchillas de repuesto para la sierra industrial, que se consumirán íntegramente en los próximos cuatro meses de producción.</span>
+    <div class="opciones">
+      <label><input type="radio" name="ei6" value="a"> A) Inventario — NIC 2</label>
+      <label><input type="radio" name="ei6" value="b"> B) Activo biológico — NIC 41</label>
+      <label><input type="radio" name="ei6" value="c"> C) Propiedades, planta y equipo — NIC 16</label>
+      <label><input type="radio" name="ei6" value="d"> D) Gasto del periodo</label>
+    </div>
+    <div class="feedback" id="ei6-fb"></div>
+  </div>
+
+  <div class="item-eval" id="ei7-box">
+    <span class="enunciado"><span class="numero">7.</span> Un motor de repuesto adquirido exclusivamente para la sierra industrial de la planta, que la empresa espera utilizar durante los próximos cinco años y que no sirve para ninguna otra máquina.</span>
+    <div class="opciones">
+      <label><input type="radio" name="ei7" value="a"> A) Inventario — NIC 2</label>
+      <label><input type="radio" name="ei7" value="b"> B) Activo biológico — NIC 41</label>
+      <label><input type="radio" name="ei7" value="c"> C) Propiedades, planta y equipo — NIC 16</label>
+      <label><input type="radio" name="ei7" value="d"> D) Gasto del periodo</label>
+    </div>
+    <div class="feedback" id="ei7-fb"></div>
+  </div>
+
+  <div class="item-eval" id="ei8-box">
+    <span class="enunciado"><span class="numero">8.</span> La comisión de USD 900,00 pagada al vendedor por haber colocado los comedores entre los clientes del almacén.</span>
+    <div class="opciones">
+      <label><input type="radio" name="ei8" value="a"> A) Inventario — NIC 2</label>
+      <label><input type="radio" name="ei8" value="b"> B) Activo biológico — NIC 41</label>
+      <label><input type="radio" name="ei8" value="c"> C) Propiedades, planta y equipo — NIC 16</label>
+      <label><input type="radio" name="ei8" value="d"> D) Gasto del periodo</label>
+    </div>
+    <div class="feedback" id="ei8-fb"></div>
+  </div>
+
+  <div class="item-eval" id="ei9-box">
+    <span class="enunciado"><span class="numero">9.</span> Los USD 900,00 de arancel ad valorem pagados al SENAE por la nacionalización de las 50 licuadoras importadas, que aún permanecen en bodega sin venderse.</span>
+    <div class="opciones">
+      <label><input type="radio" name="ei9" value="a"> A) Inventario — NIC 2 (integran su costo)</label>
+      <label><input type="radio" name="ei9" value="b"> B) Activo biológico — NIC 41</label>
+      <label><input type="radio" name="ei9" value="c"> C) Propiedades, planta y equipo — NIC 16</label>
+      <label><input type="radio" name="ei9" value="d"> D) Gasto del periodo</label>
+    </div>
+    <div class="feedback" id="ei9-fb"></div>
+  </div>
+
+  <div class="item-eval" id="ei10-box">
+    <span class="enunciado"><span class="numero">10.</span> Las 60 resmas de papel bond que el Estudio Jurídico Andrade Cía. Ltda. mantiene en su bodega para consumirlas al elaborar los escritos y documentos de sus clientes.</span>
+    <div class="opciones">
+      <label><input type="radio" name="ei10" value="a"> A) Inventario — NIC 2</label>
+      <label><input type="radio" name="ei10" value="b"> B) Activo biológico — NIC 41</label>
+      <label><input type="radio" name="ei10" value="c"> C) Propiedades, planta y equipo — NIC 16</label>
+      <label><input type="radio" name="ei10" value="d"> D) Gasto del periodo</label>
+    </div>
+    <div class="feedback" id="ei10-fb"></div>
+  </div>
+
+  <div class="aviso-falta" id="aviso-ejercicio">Faltan ítems por responder. Revisa el ejercicio y contesta los diez antes de verificar.</div>
+
+  <div class="botonera">
+    <button class="btn btn-verificar" onclick="verificarEjercicio()">Verificar respuestas</button>
+    <button class="btn btn-reiniciar" onclick="reiniciarEjercicio()">Reiniciar</button>
+  </div>
+
+  <div class="resultado" id="resultado-ejercicio">
+    <h4 id="titulo-res-ejercicio"></h4>
+    <div class="barra-fondo"><div class="barra-relleno" id="barra-ejercicio"></div></div>
+    <p id="mensaje-res-ejercicio"></p>
+  </div>
+</section>
+
+<!-- ===================== PESTAÑA: CUESTIONARIO ===================== -->
+<section id="cuestionario" class="panel">
+  <span class="rotulo-dia">CUESTIONARIO DE EVALUACIÓN</span>
+  <h2>Diez preguntas de opción múltiple</h2>
+  <p class="intro-panel">Siete preguntas <strong>teóricas</strong>, que puedes responder con el contenido de este widget, y tres de <strong>análisis de caso</strong>, que exigen que apliques por tu cuenta lo aprendido a una situación nueva. Responde las diez y luego presiona «Verificar respuestas».</p>
+
+  <div class="item-eval" id="qi1-box">
+    <span class="badge badge-teorica">TEÓRICA</span>
+    <span class="enunciado"><span class="numero">1.</span> Según la NIC 2, párrafo 6, ¿cuál de los siguientes activos se clasifica como inventario?</span>
+    <div class="opciones">
+      <label><input type="radio" name="qi1" value="a"> a) El vehículo que utiliza el gerente comercial para visitar clientes</label>
+      <label><input type="radio" name="qi1" value="b"> b) El edificio en el que funciona la bodega de la empresa</label>
+      <label><input type="radio" name="qi1" value="c"> c) Las 300 licuadoras que un almacén mantiene en bodega para revenderlas</label>
+      <label><input type="radio" name="qi1" value="d"> d) El programa informático con el que se registran las ventas</label>
+    </div>
+    <div class="feedback" id="qi1-fb"></div>
+  </div>
+
+  <div class="item-eval" id="qi2-box">
+    <span class="badge badge-teorica">TEÓRICA</span>
+    <span class="enunciado"><span class="numero">2.</span> Un ganadero de Santo Domingo mantiene 80 reses vivas en su hacienda, destinadas a ser faenadas y comercializadas. ¿Cómo se clasifican esas reses mientras están vivas?</span>
+    <div class="opciones">
+      <label><input type="radio" name="qi2" value="a"> a) Activos biológicos, conforme a la NIC 41</label>
+      <label><input type="radio" name="qi2" value="b"> b) Inventario de mercaderías, conforme a la NIC 2</label>
+      <label><input type="radio" name="qi2" value="c"> c) Propiedades, planta y equipo, conforme a la NIC 16</label>
+      <label><input type="radio" name="qi2" value="d"> d) Propiedades de inversión, conforme a la NIC 40</label>
+    </div>
+    <div class="feedback" id="qi2-fb"></div>
+  </div>
+
+  <div class="item-eval" id="qi3-box">
+    <span class="badge badge-teorica">TEÓRICA</span>
+    <span class="enunciado"><span class="numero">3.</span> De acuerdo con la NIC 2, párrafo 11, ¿cuál de los siguientes rubros forma parte del costo de adquisición de un inventario importado?</span>
+    <div class="opciones">
+      <label><input type="radio" name="qi3" value="a"> a) El IVA pagado en aduana por un contribuyente con derecho a crédito tributario</label>
+      <label><input type="radio" name="qi3" value="b"> b) La comisión pagada al vendedor por colocar la mercadería en el mercado</label>
+      <label><input type="radio" name="qi3" value="c"> c) El sueldo del contador general de la compañía</label>
+      <label><input type="radio" name="qi3" value="d"> d) Los aranceles de importación, por tratarse de impuestos no recuperables</label>
+    </div>
+    <div class="feedback" id="qi3-fb"></div>
+  </div>
+
+  <div class="item-eval" id="qi4-box">
+    <span class="badge badge-teorica">TEÓRICA</span>
+    <span class="enunciado"><span class="numero">4.</span> ¿Qué tratamiento establece la NIC 2, párrafo 16, para los importes anormales de desperdicio de materiales?</span>
+    <div class="opciones">
+      <label><input type="radio" name="qi4" value="a"> a) Se capitalizan como parte del costo de las unidades buenas producidas</label>
+      <label><input type="radio" name="qi4" value="b"> b) Se difieren hasta el momento en que el producto se venda</label>
+      <label><input type="radio" name="qi4" value="c"> c) Se reconocen como gasto del periodo en que se incurren</label>
+      <label><input type="radio" name="qi4" value="d"> d) Se reclasifican como activo biológico hasta su recuperación</label>
+    </div>
+    <div class="feedback" id="qi4-fb"></div>
+  </div>
+
+  <div class="item-eval" id="qi5-box">
+    <span class="badge badge-teorica">TEÓRICA</span>
+    <span class="enunciado"><span class="numero">5.</span> En el sistema de cuenta permanente (inventario perpetuo), ¿qué ocurre en el momento de cada venta?</span>
+    <div class="opciones">
+      <label><input type="radio" name="qi5" value="a"> a) Se registran dos asientos: uno por el ingreso y otro por el costo de ventas contra el inventario</label>
+      <label><input type="radio" name="qi5" value="b"> b) Se registra únicamente el ingreso; el costo se determina al final del periodo</label>
+      <label><input type="radio" name="qi5" value="c"> c) Se registra solamente el costo de ventas, y el ingreso al cierre del ejercicio</label>
+      <label><input type="radio" name="qi5" value="d"> d) No se registra nada hasta que se practique la toma física de inventarios</label>
+    </div>
+    <div class="feedback" id="qi5-fb"></div>
+  </div>
+
+  <div class="item-eval" id="qi6-box">
+    <span class="badge badge-teorica">TEÓRICA</span>
+    <span class="enunciado"><span class="numero">6.</span> En el sistema de cuenta múltiple (inventario periódico), la adquisición de mercadería se debita a la cuenta:</span>
+    <div class="opciones">
+      <label><input type="radio" name="qi6" value="a"> a) Inventario de mercaderías</label>
+      <label><input type="radio" name="qi6" value="b"> b) Compras</label>
+      <label><input type="radio" name="qi6" value="c"> c) Costo de ventas</label>
+      <label><input type="radio" name="qi6" value="d"> d) Devoluciones en compras</label>
+    </div>
+    <div class="feedback" id="qi6-fb"></div>
+  </div>
+
+  <div class="item-eval" id="qi7-box">
+    <span class="badge badge-teorica">TEÓRICA</span>
+    <span class="enunciado"><span class="numero">7.</span> Según la NIC 2, párrafo 9, los inventarios se medirán al:</span>
+    <div class="opciones">
+      <label><input type="radio" name="qi7" value="a"> a) Costo histórico, en todos los casos y sin excepción</label>
+      <label><input type="radio" name="qi7" value="b"> b) Valor razonable, en todos los casos y sin excepción</label>
+      <label><input type="radio" name="qi7" value="c"> c) Mayor entre el costo y el valor razonable</label>
+      <label><input type="radio" name="qi7" value="d"> d) Menor entre el costo y el valor neto realizable</label>
+    </div>
+    <div class="feedback" id="qi7-fb"></div>
+  </div>
+
+  <div class="item-eval" id="qi8-box">
+    <span class="badge badge-caso">ANÁLISIS DE CASO</span>
+    <span class="enunciado"><span class="numero">8.</span> Una importadora guayaquileña nacionalizó 40 televisores. Valor CIF USD 20.000,00; arancel USD 2.000,00; FODINFA USD 100,00; honorarios del agente de aduana USD 300,00; e IVA pagado en aduana USD 3.315,00, que la empresa recuperará como crédito tributario. ¿Cuál es el costo unitario del inventario?</span>
+    <div class="opciones">
+      <label><input type="radio" name="qi8" value="a"> a) USD 642,88</label>
+      <label><input type="radio" name="qi8" value="b"> b) USD 550,00</label>
+      <label><input type="radio" name="qi8" value="c"> c) USD 560,00</label>
+      <label><input type="radio" name="qi8" value="d"> d) USD 500,00</label>
+    </div>
+    <div class="feedback" id="qi8-fb"></div>
+  </div>
+
+  <div class="item-eval" id="qi9-box">
+    <span class="badge badge-caso">ANÁLISIS DE CASO</span>
+    <span class="enunciado"><span class="numero">9.</span> Comercial Milagro S.A. utiliza el sistema de cuenta múltiple. Al cierre del ejercicio presenta: inventario inicial USD 5.000,00; compras USD 40.000,00; devoluciones en compras USD 2.000,00; e inventario final según toma física USD 8.000,00. ¿Cuál es el costo de ventas del periodo?</span>
+    <div class="opciones">
+      <label><input type="radio" name="qi9" value="a"> a) USD 37.000,00</label>
+      <label><input type="radio" name="qi9" value="b"> b) USD 43.000,00</label>
+      <label><input type="radio" name="qi9" value="c"> c) USD 33.000,00</label>
+      <label><input type="radio" name="qi9" value="d"> d) USD 35.000,00</label>
+    </div>
+    <div class="feedback" id="qi9-fb"></div>
+  </div>
+
+  <div class="item-eval" id="qi10-box">
+    <span class="badge badge-caso">ANÁLISIS DE CASO</span>
+    <span class="enunciado"><span class="numero">10.</span> Un taller automotriz de Guayaquil adquiere, el mismo día, dos bienes: (i) un juego de 60 filtros de aceite que consumirá en los próximos tres meses al prestar servicios de mantenimiento a sus clientes; y (ii) una prensa hidráulica que utilizará en el taller durante ocho años. ¿Cómo deben clasificarse?</span>
+    <div class="opciones">
+      <label><input type="radio" name="qi10" value="a"> a) Ambos como inventario, porque ambos se usan en la prestación del servicio</label>
+      <label><input type="radio" name="qi10" value="b"> b) Ambos como propiedades, planta y equipo, porque ambos son bienes tangibles del taller</label>
+      <label><input type="radio" name="qi10" value="c"> c) Los filtros como inventario (NIC 2) y la prensa como propiedades, planta y equipo (NIC 16)</label>
+      <label><input type="radio" name="qi10" value="d"> d) Los filtros como gasto inmediato del periodo y la prensa como inventario</label>
+    </div>
+    <div class="feedback" id="qi10-fb"></div>
+  </div>
+
+  <div class="aviso-falta" id="aviso-cuestionario">Faltan preguntas por responder. Revisa el cuestionario y contesta las diez antes de verificar.</div>
+
+  <div class="botonera">
+    <button class="btn btn-verificar" onclick="verificarCuestionario()">Verificar respuestas</button>
+    <button class="btn btn-reiniciar" onclick="reiniciarCuestionario()">Reiniciar</button>
+  </div>
+
+  <div class="resultado" id="resultado-cuestionario">
+    <h4 id="titulo-res-cuestionario"></h4>
+    <div class="barra-fondo"><div class="barra-relleno" id="barra-cuestionario"></div></div>
+    <p id="mensaje-res-cuestionario"></p>
+  </div>
+</section>
+
+<!-- ===================== PESTAÑA: ACTIVIDAD CON IA ===================== -->
+<section id="actividadia" class="panel">
+  <span class="rotulo-dia">ACTIVIDAD CON INTELIGENCIA ARTIFICIAL</span>
+  <h2>El rastro contable de un objeto de tu casa</h2>
+  <p class="intro-panel">Esta actividad se realiza con <strong>Claude</strong>, la inteligencia artificial de Anthropic, disponible de forma gratuita en <strong>claude.ai</strong>. Crea una cuenta con tu correo, inicia una conversación nueva y sigue el procedimiento. No necesitas pagar nada.</p>
+
+  <h3>Objetivo</h3>
+  <p>Que reconstruyas, por tu cuenta y con verificación crítica, la cadena de valor completa de un objeto real de tu entorno, identificando en cada eslabón el tipo de inventario, la norma aplicable y el asiento contable correspondiente. La IA será tu interlocutor, no tu redactor: tu trabajo consiste en <strong>auditar lo que la máquina te responda</strong>.</p>
+
+  <h3>Paso 1 — Elige tu objeto</h3>
+  <p>Camina por tu casa y elige un objeto que puedas ver y tocar ahora mismo. Debe ser algo fabricado a partir de materia prima natural. Por ejemplo: una silla de madera, una olla de aluminio, una camiseta de algodón, un pan, una botella de aceite, un cuaderno, una lámpara. Anota su nombre, de qué material está hecho y dónde lo compraste.</p>
+
+  <h3>Paso 2 — Copia y adapta este prompt</h3>
+  <div class="prompt-box">Actúa como docente de Contabilidad General de primer semestre en el Ecuador.
+
+Voy a analizar la cadena de valor contable de este objeto: [ESCRIBE AQUÍ TU OBJETO, SU MATERIAL Y DÓNDE LO COMPRASTE].
+
+Quiero que me ayudes a reconstruirla, pero SIN darme las respuestas armadas. Procede así:
+
+1. Hazme preguntas, una por una, para que YO identifique los eslabones de la cadena, desde la obtención de la materia prima en la naturaleza hasta la venta al consumidor final. No avances al siguiente eslabón hasta que yo responda.
+
+2. En cada eslabón que yo identifique, pregúntame:
+   - Qué tipo de empresa es (comercial, industrial, agropecuaria, extractiva, de servicios)
+   - Qué cuenta de inventario correspondería
+   - Si aplica la NIC 2, la NIC 41 o la NIC 16, y por qué
+
+3. Cuando yo me equivoque, NO me des la respuesta correcta de inmediato: dame una pista y déjame corregir.
+
+4. Al final, pídeme que redacte un asiento contable de un eslabón que tú elijas, con formato de seis columnas (Fecha, Código, Detalle, Parcial, Debe, Haber), glosa que cite la norma aplicable, y considerando IVA del 15% y las retenciones ecuatorianas vigentes.
+
+5. Revisa mi asiento y señálame los errores explicándome el porqué de cada uno.
+
+Contexto normativo ecuatoriano: IVA general 15% y tarifa 0% según los artículos 55 y 56 de la LRTI; retención en la fuente del 2% en compra de bienes según la Resolución NAC-DGERCGC26-00000009; retención del 30% del IVA en bienes y 70% en servicios según la Resolución NAC-DGERCGC20-00000061.
+
+Empieza con la primera pregunta.</div>
+
+  <h3>Paso 3 — Qué hacer con la respuesta</h3>
+  <ol>
+    <li><strong>No copies nada al inicio.</strong> Responde tú primero cada pregunta que te haga la IA, aunque no estés seguro. Equivocarse es parte del método.</li>
+    <li><strong>Verifica cada cita normativa.</strong> Si la IA menciona un párrafo de la NIC 2, búscalo en el widget o en el texto de la norma y confirma que dice lo que la IA afirma. <strong>Las inteligencias artificiales pueden citar párrafos que no existen o atribuir contenidos equivocados.</strong> Detectar un error de la IA vale más que responder todo correctamente.</li>
+    <li><strong>Discute al menos una vez.</strong> Encuentra un punto donde no estés de acuerdo con la IA y arguméntalo con fundamento. Registra qué respondió.</li>
+    <li><strong>Entrega un documento</strong> de 2 a 3 páginas que contenga: (a) el objeto elegido y su cadena de valor completa; (b) el asiento contable que redactaste, ya corregido; (c) <strong>un apartado obligatorio</strong> titulado «Errores o imprecisiones que detecté en la IA», con al menos una observación fundamentada; y (d) un párrafo final sobre qué aprendiste del proceso.</li>
+  </ol>
+
+  <div class="criterio">
+    <h4>Criterio que distingue el pensamiento crítico de la copia simple</h4>
+    <p>Este trabajo <strong>no</strong> se evalúa por la extensión ni por la elegancia del texto. Se evalúa por tres señales concretas:</p>
+    <ul>
+      <li><strong>Señal de copia:</strong> el documento reproduce respuestas de la IA sin marcas de proceso, todos los eslabones aparecen perfectos desde el inicio, el apartado de errores está vacío o dice «no encontré errores», y las citas normativas no fueron verificadas.</li>
+      <li><strong>Señal de pensamiento crítico:</strong> el documento muestra al menos un intento equivocado propio y cómo se corrigió; identifica una imprecisión real de la IA y la fundamenta con la norma; y el asiento final tiene una glosa escrita con voz propia, con un documento fuente verosímil y una cita normativa comprobada.</li>
+      <li><strong>Señal de dominio:</strong> el estudiante logra explicar <em>por qué</em> el objeto cambió de clasificación contable en algún eslabón, sin repetir la frase del widget, usando su propio objeto y su propio lenguaje.</li>
+    </ul>
+    <p>Un documento breve con dos errores propios corregidos y una imprecisión de la IA bien detectada vale más que uno extenso y perfecto sin rastro de pensamiento.</p>
+  </div>
+
+  <div class="alerta">
+    <span class="titulo-caja">Advertencia sobre el uso de IA en la formación contable</span>
+    <p>La inteligencia artificial es una herramienta poderosa y estará presente en toda tu vida profesional. Pero un contador que firma un estado financiero es <strong>personalmente responsable</strong> de cada cifra, y esa responsabilidad no se delega en una máquina. Los principios éticos de integridad, objetividad y <em>competencia y diligencia profesional</em> que estudiamos el Día 2 se aplican íntegramente al uso de estas herramientas: puedes usarlas para pensar mejor, nunca para no pensar.</p>
+  </div>
+</section>
+
+<!-- ===================== PESTAÑA: REFLEXIÓN ===================== -->
+<section id="reflexion" class="panel">
+  <span class="rotulo-dia">REFLEXIÓN</span>
+  <h2>Del inventario a tu propia vida</h2>
+
+  <div class="marco-reflexion">
+    <p>Muchas personas creen que estudiar Negocios Internacionales consiste, básicamente, en aprender a negociar. Esa idea es tan común como incompleta. Negociar es apenas uno de los momentos de una profesión mucho más ancha: el profesional de negocios internacionales <strong>lee marcos normativos</strong> de más de un país, <strong>estructura operaciones financieras</strong> que cruzan monedas y jurisdicciones, <strong>diseña cadenas logísticas</strong> que atraviesan océanos, <strong>comprende culturas</strong> para construir relaciones comerciales duraderas y, en el centro de todo eso, <strong>interpreta información contable</strong> para saber si una operación crea o destruye valor. La clase de hoy es un ejemplo exacto de ello: un solo comedor de teca activó tres normas internacionales, dos resoluciones tributarias ecuatorianas, una regulación forestal y una decisión aduanera. Nada de eso se resuelve conversando bien. Se resuelve <strong>sabiendo</strong>.</p>
+    <p>Las siguientes preguntas no tienen respuesta correcta. No se califican por lo que contestes, sino por la honestidad con que te mires a ti mismo al contestarlas. Escríbelas en tu portafolio.</p>
+  </div>
+
+  <div class="pregunta-reflexion">
+    <span class="etiqueta">MIRADA SOBRE LO COTIDIANO</span>
+    <p>Hoy aprendiste que el comedor de tu casa fue árbol, materia prima, producto en proceso, producto terminado y mercadería antes de llegar allí. Elige un objeto de tu casa al que nunca le hayas prestado atención y reconstruye mentalmente su historia. <strong>¿Qué sentiste al descubrir que detrás de un objeto ordinario hay decenas de personas, decisiones y registros?</strong> ¿Cambia eso, en algo, la forma en que valoras lo que tienes?</p>
+  </div>
+
+  <div class="pregunta-reflexion">
+    <span class="etiqueta">AUTOCONOCIMIENTO</span>
+    <p>Durante esta clase hubo momentos que te resultaron claros y momentos que te costaron. Sé específico contigo mismo: <strong>¿qué parte exacta te costó más</strong> —la frontera entre NIC 41 y NIC 2, la composición del costo, la diferencia entre los dos sistemas, la lectura de los asientos—? ¿Y qué hiciste cuando notaste que no entendías: releíste, seguiste de largo, te frustraste, buscaste ayuda? Esa reacción tuya frente a la dificultad se va a repetir toda tu carrera. <strong>¿Te sirve como es, o necesitas cambiarla?</strong></p>
+  </div>
+
+  <div class="pregunta-reflexion">
+    <span class="etiqueta">INTELIGENCIA EMOCIONAL</span>
+    <p>El párrafo 16 de la NIC 2 obliga a reconocer como gasto los desperdicios anormales: la norma no permite esconder los errores dentro del valor de un activo. <strong>¿Qué pasaría si aplicaras ese principio a tu propia vida?</strong> ¿Reconoces tus errores cuando ocurren, o tiendes a «capitalizarlos» —guardarlos, justificarlos, disimularlos— esperando que no se noten? ¿Qué te cuesta más: admitir un error frente a otros, o admitirlo frente a ti mismo?</p>
+  </div>
+
+  <div class="pregunta-reflexion">
+    <span class="etiqueta">VALORES Y ÉTICA PROFESIONAL</span>
+    <p>Inflar el inventario capitalizando gastos que no corresponden es una de las formas más habituales de maquillar resultados. Nadie roba dinero: solo se «acomoda» una cifra. Imagina que en tu primer empleo un superior te pide hacerlo, explicándote que es una práctica normal y que la empresa necesita mostrar mejores números este año. <strong>¿Qué harías?</strong> ¿De dónde sacarías la fuerza para sostener tu posición? ¿Qué precio estarías dispuesto a pagar por no ceder, y cuál no?</p>
+  </div>
+
+  <div class="pregunta-reflexion">
+    <span class="etiqueta">EXPLORACIÓN VOCACIONAL</span>
+    <p>La cadena de hoy tuvo cuatro eslabones muy distintos: el productor que trabaja con la naturaleza y sus tiempos largos; el industrial que transforma y organiza procesos; el comerciante que conecta oferta con demanda; y el importador que gestiona fronteras, aranceles y logística. <strong>¿Cuál de esos cuatro mundos te atrajo más mientras leías?</strong> ¿Qué crees que dice esa preferencia sobre el tipo de profesional que te gustaría llegar a ser: alguien que crea, alguien que transforma, alguien que conecta o alguien que abre caminos entre países?</p>
+  </div>
+
+  <div class="pregunta-reflexion">
+    <span class="etiqueta">PROYECCIÓN PROFESIONAL</span>
+    <p>Antes de esta clase, si alguien te preguntaba qué hace un profesional de Negocios Internacionales, ¿qué habrías respondido? <strong>¿Qué responderías ahora, después de haber visto convivir la NIC 41, la NIC 2, la NIC 16, la LRTI, el COPCI y dos resoluciones del SRI en una sola cadena de ocho asientos?</strong> Escribe las dos respuestas, una debajo de la otra, y guárdalas. Al terminar el semestre las vas a releer.</p>
+  </div>
+
+  <div class="conclusion">
+    <span class="titulo-caja">Para llevarte de hoy</span>
+    <p>La contabilidad enseña algo que trasciende los números: que <strong>todo lo que existe tiene un origen, un proceso y un costo</strong>, y que casi siempre no los vemos. Aprender a verlos —en un comedor, en una empresa, en una decisión propia— es una forma de honestidad intelectual. Y esa honestidad, más que cualquier técnica, es lo que distingue a un profesional en quien se puede confiar.</p>
+  </div>
+</section>
+
+<!-- ===================== PESTAÑA: BIBLIOGRAFÍA ===================== -->
+<section id="bibliografia" class="panel">
+  <span class="rotulo-dia">BIBLIOGRAFÍA</span>
+  <h2>Referencias en formato APA 7.ª edición</h2>
+  <p class="intro-panel">Fuentes normativas, bibliográficas y legales utilizadas en el desarrollo de esta clase. Las obras de Zapata Sánchez, Moreno Fernández y Vite Rangel corresponden a la bibliografía básica declarada en el sílabo de la asignatura.</p>
+
+  <div class="ref-card">
+    <span class="tipo">NORMA CONTABLE</span>
+    <p>Consejo de Normas Internacionales de Contabilidad. (2023). <em>Norma Internacional de Contabilidad 2: Inventarios</em>. Fundación IFRS. https://www.ifrs.org</p>
+  </div>
+
+  <div class="ref-card">
+    <span class="tipo">NORMA CONTABLE</span>
+    <p>Consejo de Normas Internacionales de Contabilidad. (2023). <em>Norma Internacional de Contabilidad 16: Propiedades, Planta y Equipo</em>. Fundación IFRS. https://www.ifrs.org</p>
+  </div>
+
+  <div class="ref-card">
+    <span class="tipo">NORMA CONTABLE</span>
+    <p>Consejo de Normas Internacionales de Contabilidad. (2023). <em>Norma Internacional de Contabilidad 41: Agricultura</em>. Fundación IFRS. https://www.ifrs.org</p>
+  </div>
+
+  <div class="ref-card">
+    <span class="tipo">BIBLIOGRAFÍA BÁSICA DEL SÍLABO</span>
+    <p>Zapata Sánchez, P. (2011). <em>Laboratorio de contabilidad general</em> (7.ª ed.). McGraw-Hill.</p>
+  </div>
+
+  <div class="ref-card">
+    <span class="tipo">BIBLIOGRAFÍA BÁSICA DEL SÍLABO</span>
+    <p>Moreno Fernández, J. A. (2014). <em>Contabilidad básica</em> (4.ª ed.). Grupo Editorial Patria. https://elibro.net/es/ereader/uguayaquil/39416</p>
+  </div>
+
+  <div class="ref-card">
+    <span class="tipo">BIBLIOGRAFÍA BÁSICA DEL SÍLABO</span>
+    <p>Vite Rangel, V. T. (2017). <em>Contabilidad general</em>. Editorial Digital UNID. https://elibro.net/es/ereader/uguayaquil/41179</p>
+  </div>
+
+  <div class="ref-card">
+    <span class="tipo">TEXTO COMPLEMENTARIO</span>
+    <p>Horngren, C. T., Datar, S. M., y Rajan, M. V. (2012). <em>Contabilidad de costos: un enfoque gerencial</em> (14.ª ed.). Pearson Educación.</p>
+  </div>
+
+  <div class="ref-card">
+    <span class="tipo">NORMATIVA ECUATORIANA</span>
+    <p>Congreso Nacional del Ecuador. (2004). <em>Ley de Régimen Tributario Interno</em> [LRTI]. Registro Oficial Suplemento 463, 17 de noviembre de 2004 (última reforma vigente). https://www.sri.gob.ec</p>
+  </div>
+
+  <div class="ref-card">
+    <span class="tipo">NORMATIVA ECUATORIANA</span>
+    <p>Asamblea Nacional del Ecuador. (2010). <em>Código Orgánico de la Producción, Comercio e Inversiones</em> [COPCI]. Registro Oficial Suplemento 351, 29 de diciembre de 2010. https://www.aduana.gob.ec</p>
+  </div>
+
+  <div class="ref-card">
+    <span class="tipo">RESOLUCIÓN TRIBUTARIA</span>
+    <p>Servicio de Rentas Internas. (2020). <em>Resolución NAC-DGERCGC20-00000061: Porcentajes de retención en la fuente del Impuesto al Valor Agregado</em>. https://www.sri.gob.ec</p>
+  </div>
+
+  <div class="ref-card">
+    <span class="tipo">RESOLUCIÓN TRIBUTARIA</span>
+    <p>Servicio de Rentas Internas. (2026). <em>Resolución NAC-DGERCGC26-00000009: Porcentajes de retención en la fuente del Impuesto a la Renta</em>. https://www.sri.gob.ec</p>
+  </div>
+
+  <div class="nota-pie">
+    <strong>Nota para el estudiante:</strong> verifica siempre la vigencia y los datos exactos de estas fuentes antes de citarlas en un trabajo académico. Consulta el <strong>repositorio institucional de la Universidad de Guayaquil</strong>, la <strong>biblioteca virtual eLibro</strong> a la que tienes acceso con tu cuenta institucional, <strong>Google Scholar</strong> (scholar.google.com), el sitio oficial de la <strong>Fundación IFRS</strong> (www.ifrs.org) y el portal del <strong>Servicio de Rentas Internas</strong> (www.sri.gob.ec). La normativa tributaria ecuatoriana se reforma con frecuencia: una cita correcta hoy puede estar desactualizada en seis meses.
+  </div>
+</section>
+
+</main>
+
+<!-- ===================== PIE ===================== -->
+<footer class="pie">
+  <p><strong>Universidad de Guayaquil</strong> · Facultad de Ciencias Administrativas · Carrera de Negocios Internacionales</p>
+  <p>Contabilidad General (091601124) — Unidad 3: NIC 2 Inventarios y el proceso contable (II parte)</p>
+  <p>Día 7 · Miércoles 19 de agosto de 2026 · Periodo Académico Extraordinario 2026</p>
+  <p>Recurso de aprendizaje autónomo · Próxima clase: Día 8 — Métodos de valuación: VR, VNR y Costo, e introducción a FIFO</p>
+</footer>
+
+<!-- ===================== JAVASCRIPT ===================== -->
+<script>
+/* ------------------------------------------------------------------
+   1. NAVEGACIÓN POR PESTAÑAS
+   El CSS oculta con .panel { display:none } y muestra con .panel.active
+   Por lo tanto el JS opera exclusivamente con classList.
+------------------------------------------------------------------- */
+function showTab(idPanel, boton) {
+  var paneles = document.querySelectorAll(".panel");
+  for (var i = 0; i < paneles.length; i++) {
+    paneles[i].classList.remove("active");
+  }
+  var destino = document.getElementById(idPanel);
+  if (destino) { destino.classList.add("active"); }
+
+  var botones = document.querySelectorAll(".menu button");
+  for (var j = 0; j < botones.length; j++) {
+    botones[j].classList.remove("active");
+  }
+  if (boton) { boton.classList.add("active"); }
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+/* ------------------------------------------------------------------
+   2. ACORDEÓN DEL REPASO
+   El CSS oculta con .acc-panel { display:none } y muestra con .abierto
+------------------------------------------------------------------- */
+function toggleAcordeon(cabecera) {
+  var panel = cabecera.nextElementSibling;
+  var flecha = cabecera.querySelector(".acc-flecha");
+  if (panel.classList.contains("abierto")) {
+    panel.classList.remove("abierto");
+    flecha.innerHTML = "&#9654;";
+  } else {
+    panel.classList.add("abierto");
+    flecha.innerHTML = "&#9660;";
+  }
+}
+
+/* ------------------------------------------------------------------
+   3. EJERCICIO INTERACTIVO — clave de respuestas y retroalimentación
+------------------------------------------------------------------- */
+var clavesEjercicio = {
+  ei1: "a", ei2: "c", ei3: "b", ei4: "a", ei5: "d",
+  ei6: "a", ei7: "c", ei8: "d", ei9: "a", ei10: "a"
+};
+
+var feedbackEjercicio = {
+  ei1: "Correcto: A) Inventario — NIC 2. Los comedores se mantienen para ser vendidos en el curso normal de la operación de un almacén, que es exactamente el literal (a) del párrafo 6 de la NIC 2. No son activo fijo porque la empresa no los va a usar, sino a vender.",
+  ei2: "Correcto: C) Propiedades, planta y equipo — NIC 16. Al retirarlo de la exhibición e instalarlo en su sala de juntas, la empresa cambió el propósito del bien: ya no se mantiene para la venta sino para el uso en la operación durante varios periodos. El mismo objeto, con el mismo costo, cambió de norma por una decisión de la administración.",
+  ei3: "Correcto: B) Activo biológico — NIC 41. Los árboles sembrados y en crecimiento son plantas vivas. La NIC 2, párrafo 2, literal (b), excluye expresamente de su alcance los activos biológicos relacionados con la actividad agrícola. Solo se convertirán en inventario en el punto de cosecha.",
+  ei4: "Correcto: A) Inventario — NIC 2. Ya se produjo la cosecha, y con ella el cruce de frontera normativa: la madera cortada es producto agrícola, medido a valor razonable menos costos de venta en el punto de cosecha (NIC 41, párr. 13), importe que constituye su costo como inventario (NIC 2, párr. 20).",
+  ei5: "Correcto: D) Gasto del periodo. Se trata de un importe anormal de desperdicio de materiales, causado por un accidente y no por el proceso productivo normal. La NIC 2, párrafo 16, literal (a), prohíbe expresamente incluirlo en el costo del inventario: debe reconocerse como gasto del periodo. Si se capitalizara, el activo quedaría sobrevalorado y el error se ocultaría dentro del balance.",
+  ei6: "Correcto: A) Inventario — NIC 2. La NIC 16, párrafo 8, dispone que las piezas de repuesto y el equipo auxiliar se contabilizan como inventarios y se reconocen en el resultado cuando se consumen. Como estas cuchillas se consumirán en cuatro meses, es decir dentro de un mismo periodo, la regla general se aplica sin excepción.",
+  ei7: "Correcto: C) Propiedades, planta y equipo — NIC 16. Aquí operan las DOS condiciones de excepción del párrafo 8 de la NIC 16 al mismo tiempo: la empresa espera utilizarlo durante más de un periodo (cinco años) y solo puede emplearse en conexión con un elemento específico de propiedades, planta y equipo (la sierra industrial). Compara este ítem con el anterior: son repuestos ambos, pero su clasificación es opuesta.",
+  ei8: "Correcto: D) Gasto del periodo. La comisión del vendedor es un costo de venta, y la NIC 2, párrafo 16, literal (d), lo excluye expresamente del costo del inventario. La regla de fondo es la del párrafo 10: solo entra al costo lo necesario para dar al bien su condición y ubicación actuales, y la mercadería ya estaba lista antes de que el vendedor la colocara.",
+  ei9: "Correcto: A) Inventario — NIC 2. La NIC 2, párrafo 11, incluye expresamente los aranceles de importación dentro del costo de adquisición, precisamente porque no son recuperables de la autoridad fiscal. Distíngalo del IVA pagado en aduana, que sí es recuperable como crédito tributario y por eso NO integra el costo.",
+  ei10: "Correcto: A) Inventario — NIC 2. Aunque el estudio jurídico es una empresa de servicios, el papel bond encaja perfectamente en el literal (c) del párrafo 6 de la NIC 2: materiales o suministros para ser consumidos en la prestación de servicios. Permanecerá como inventario mientras esté en bodega y se convertirá en gasto a medida que se consuma."
+};
+
+function verificarEjercicio() {
+  var claves = Object.keys(clavesEjercicio);
+  var faltantes = 0;
+  for (var i = 0; i < claves.length; i++) {
+    if (!document.querySelector("input[name=\"" + claves[i] + "\"]:checked")) { faltantes++; }
+  }
+  var aviso = document.getElementById("aviso-ejercicio");
+  if (faltantes > 0) {
+    aviso.classList.add("visible");
+    aviso.scrollIntoView({ behavior: "smooth", block: "center" });
+    return;
+  }
+  aviso.classList.remove("visible");
+
+  var aciertos = 0;
+  for (var k = 0; k < claves.length; k++) {
+    var nombre = claves[k];
+    var marcado = document.querySelector("input[name=\"" + nombre + "\"]:checked");
+    var caja = document.getElementById(nombre + "-box");
+    var fb = document.getElementById(nombre + "-fb");
+    var etiquetas = caja.querySelectorAll(".opciones label");
+
+    for (var m = 0; m < etiquetas.length; m++) {
+      etiquetas[m].classList.remove("marcado-ok", "marcado-mal");
+      var radio = etiquetas[m].querySelector("input");
+      if (radio.value === clavesEjercicio[nombre]) { etiquetas[m].classList.add("marcado-ok"); }
+    }
+
+    caja.classList.remove("ok", "mal");
+    if (marcado.value === clavesEjercicio[nombre]) {
+      aciertos++;
+      caja.classList.add("ok");
+      fb.innerHTML = "<strong>Respuesta correcta.</strong> " + feedbackEjercicio[nombre];
+    } else {
+      caja.classList.add("mal");
+      for (var n = 0; n < etiquetas.length; n++) {
+        var r2 = etiquetas[n].querySelector("input");
+        if (r2.checked && r2.value !== clavesEjercicio[nombre]) { etiquetas[n].classList.add("marcado-mal"); }
+      }
+      fb.innerHTML = "<strong>Respuesta incorrecta.</strong> " + feedbackEjercicio[nombre];
+    }
+    fb.classList.add("visible");
+  }
+
+  mostrarResultado("ejercicio", aciertos, claves.length);
+}
+
+function reiniciarEjercicio() {
+  var claves = Object.keys(clavesEjercicio);
+  for (var i = 0; i < claves.length; i++) {
+    var radios = document.querySelectorAll("input[name=\"" + claves[i] + "\"]");
+    for (var j = 0; j < radios.length; j++) { radios[j].checked = false; }
+    var caja = document.getElementById(claves[i] + "-box");
+    caja.classList.remove("ok", "mal");
+    var etiquetas = caja.querySelectorAll(".opciones label");
+    for (var m = 0; m < etiquetas.length; m++) { etiquetas[m].classList.remove("marcado-ok", "marcado-mal"); }
+    var fb = document.getElementById(claves[i] + "-fb");
+    fb.classList.remove("visible");
+    fb.innerHTML = "";
+  }
+  document.getElementById("aviso-ejercicio").classList.remove("visible");
+  document.getElementById("resultado-ejercicio").classList.remove("visible");
+  document.getElementById("barra-ejercicio").style.width = "0%";
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+/* ------------------------------------------------------------------
+   4. CUESTIONARIO — clave de respuestas y retroalimentación
+------------------------------------------------------------------- */
+var clavesCuestionario = {
+  qi1: "c", qi2: "a", qi3: "d", qi4: "c", qi5: "a",
+  qi6: "b", qi7: "d", qi8: "c", qi9: "d", qi10: "c"
+};
+
+var feedbackCuestionario = {
+  qi1: "La respuesta correcta es la c). Las licuadoras se mantienen para ser vendidas en el curso normal de la operación, cumpliendo el literal (a) del párrafo 6 de la NIC 2. El vehículo del gerente y el edificio son propiedades, planta y equipo (NIC 16) porque se usan, no se venden; el programa informático es un activo intangible (NIC 38). Recuerda: lo que define al inventario es el propósito, no el tipo de bien.",
+  qi2: "La respuesta correcta es la a). Las reses vivas son animales vivos y, por tanto, activos biológicos regulados por la NIC 41, expresamente excluidos del alcance de la NIC 2 por su párrafo 2, literal (b). Solo cuando sean faenadas, la carne obtenida será producto agrícola e ingresará a inventarios a su valor razonable menos costos de venta en el punto de cosecha (NIC 41, párr. 13; NIC 2, párr. 20). No es NIC 16 porque no se usan en la operación, y no es NIC 40 porque esa norma regula inmuebles.",
+  qi3: "La respuesta correcta es la d). El párrafo 11 de la NIC 2 incluye expresamente los aranceles de importación y otros impuestos NO recuperables dentro del costo de adquisición. El IVA pagado en aduana por un contribuyente con derecho a crédito tributario SÍ es recuperable, y por eso queda fuera del costo. La comisión del vendedor es costo de venta, excluida por el párrafo 16(d), y el sueldo del contador es gasto de administración, excluido por el párrafo 16(c).",
+  qi4: "La respuesta correcta es la c). El párrafo 16, literal (a), de la NIC 2 dispone que los importes anormales de desperdicio de materiales, mano de obra u otros costos de producción se reconocen como gastos del periodo. La lógica es de transparencia: si los errores y accidentes se capitalizaran dentro del inventario, el activo quedaría inflado y la ineficiencia quedaría escondida en el balance en lugar de mostrarse en el resultado.",
+  qi5: "La respuesta correcta es la a). El rasgo definitorio del sistema de cuenta permanente es que cada venta genera dos asientos: uno que registra el ingreso, el IVA y la forma de cobro, y otro que debita Costo de ventas y acredita Inventario de mercaderías por el costo de la unidad vendida. La opción b) describe el sistema de cuenta múltiple, no el permanente. Gracias a este doble registro, el saldo del inventario está actualizado en todo momento y los faltantes pueden detectarse.",
+  qi6: "La respuesta correcta es la b). En el sistema de cuenta múltiple no se toca la cuenta de inventario durante el periodo: las adquisiciones se debitan a la cuenta auxiliar Compras, de naturaleza deudora. La cuenta Inventario de mercaderías conserva su saldo inicial hasta el asiento de regulación del cierre. Debitar directamente Inventario de mercaderías, como propone la opción a), correspondería al sistema de cuenta permanente.",
+  qi7: "La respuesta correcta es la d). El párrafo 9 de la NIC 2 establece que los inventarios se medirán al menor entre el costo y el valor neto realizable. El fundamento es que un activo no puede figurar en libros por un importe superior al que se espera recuperar de él. La opción c) invierte la regla, y las opciones a) y b) la absolutizan: ni el costo ni el valor razonable se aplican solos y en todos los casos.",
+  qi8: "La respuesta correcta es la c) USD 560,00. El costo del inventario se forma con el CIF de 20.000,00 más el arancel de 2.000,00 más el FODINFA de 100,00 más los honorarios del agente de aduana de 300,00, lo que da 22.400,00; dividido entre 40 televisores resulta 560,00 por unidad. El IVA de 3.315,00 NO se incluye porque es recuperable como crédito tributario (NIC 2, párr. 11): si lo hubieras sumado habrías obtenido 642,88, que es la opción a). La opción b) omite los honorarios del agente y la d) omite todos los tributos.",
+  qi9: "La respuesta correcta es la d) USD 35.000,00. Se aplica la fórmula del sistema de cuenta múltiple: compras netas = 40.000,00 − 2.000,00 = 38.000,00; mercadería disponible para la venta = 5.000,00 + 38.000,00 = 43.000,00; costo de ventas = 43.000,00 − 8.000,00 = 35.000,00. La opción a) resulta de olvidar restar las devoluciones en compras; la opción b) de olvidar restar el inventario final, y la c) de restar dos veces las devoluciones.",
+  qi10: "La respuesta correcta es la c). Los filtros se consumirán en tres meses, dentro de un mismo periodo, por lo que la regla general de la NIC 16, párrafo 8, los mantiene como inventarios que se reconocerán en resultados al consumirse. La prensa hidráulica se usará ocho años en la operación del taller y no está destinada a la venta, por lo que es propiedades, planta y equipo bajo la NIC 16. Nota que el criterio decisivo no es que ambos sean tangibles ni que ambos sirvan al servicio, sino el horizonte de uso y el destino de cada bien."
+};
+
+function verificarCuestionario() {
+  var claves = Object.keys(clavesCuestionario);
+  var faltantes = 0;
+  for (var i = 0; i < claves.length; i++) {
+    if (!document.querySelector("input[name=\"" + claves[i] + "\"]:checked")) { faltantes++; }
+  }
+  var aviso = document.getElementById("aviso-cuestionario");
+  if (faltantes > 0) {
+    aviso.classList.add("visible");
+    aviso.scrollIntoView({ behavior: "smooth", block: "center" });
+    return;
+  }
+  aviso.classList.remove("visible");
+
+  var aciertos = 0;
+  for (var k = 0; k < claves.length; k++) {
+    var nombre = claves[k];
+    var marcado = document.querySelector("input[name=\"" + nombre + "\"]:checked");
+    var caja = document.getElementById(nombre + "-box");
+    var fb = document.getElementById(nombre + "-fb");
+    var etiquetas = caja.querySelectorAll(".opciones label");
+
+    for (var m = 0; m < etiquetas.length; m++) {
+      etiquetas[m].classList.remove("marcado-ok", "marcado-mal");
+      var radio = etiquetas[m].querySelector("input");
+      if (radio.value === clavesCuestionario[nombre]) { etiquetas[m].classList.add("marcado-ok"); }
+    }
+
+    caja.classList.remove("ok", "mal");
+    if (marcado.value === clavesCuestionario[nombre]) {
+      aciertos++;
+      caja.classList.add("ok");
+      fb.innerHTML = "<strong>Respuesta correcta.</strong> " + feedbackCuestionario[nombre];
+    } else {
+      caja.classList.add("mal");
+      for (var n = 0; n < etiquetas.length; n++) {
+        var r2 = etiquetas[n].querySelector("input");
+        if (r2.checked && r2.value !== clavesCuestionario[nombre]) { etiquetas[n].classList.add("marcado-mal"); }
+      }
+      fb.innerHTML = "<strong>Respuesta incorrecta.</strong> " + feedbackCuestionario[nombre];
+    }
+    fb.classList.add("visible");
+  }
+
+  mostrarResultado("cuestionario", aciertos, claves.length);
+}
+
+function reiniciarCuestionario() {
+  var claves = Object.keys(clavesCuestionario);
+  for (var i = 0; i < claves.length; i++) {
+    var radios = document.querySelectorAll("input[name=\"" + claves[i] + "\"]");
+    for (var j = 0; j < radios.length; j++) { radios[j].checked = false; }
+    var caja = document.getElementById(claves[i] + "-box");
+    caja.classList.remove("ok", "mal");
+    var etiquetas = caja.querySelectorAll(".opciones label");
+    for (var m = 0; m < etiquetas.length; m++) { etiquetas[m].classList.remove("marcado-ok", "marcado-mal"); }
+    var fb = document.getElementById(claves[i] + "-fb");
+    fb.classList.remove("visible");
+    fb.innerHTML = "";
+  }
+  document.getElementById("aviso-cuestionario").classList.remove("visible");
+  document.getElementById("resultado-cuestionario").classList.remove("visible");
+  document.getElementById("barra-cuestionario").style.width = "0%";
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+/* ------------------------------------------------------------------
+   5. RESULTADO COMÚN CON BARRA ANIMADA Y EMOJI POR RANGO
+------------------------------------------------------------------- */
+function mostrarResultado(tipo, aciertos, total) {
+  var porcentaje = Math.round((aciertos / total) * 100);
+  var emoji, mensaje;
+
+  if (porcentaje === 100) {
+    emoji = "\uD83C\uDFC6";
+    mensaje = "Dominio completo del tema. Puedes avanzar con seguridad al Día 8, donde estudiaremos los métodos de valuación y la diferencia entre valor razonable, valor neto realizable y costo.";
+  } else if (porcentaje >= 80) {
+    emoji = "\uD83C\uDFAF";
+    mensaje = "Muy buen desempeño. Revisa la retroalimentación de los ítems que fallaste y relee la sección correspondiente antes de continuar; ese repaso corto te ahorrará dificultades en los días siguientes.";
+  } else if (porcentaje >= 60) {
+    emoji = "\uD83D\uDCD8";
+    mensaje = "Comprensión aceptable, pero con vacíos. Vuelve a los Temas 1 y 2 para afianzar la definición y el alcance de la NIC 2, y al Tema 5 si fallaste en los sistemas de contabilización. Luego repite el ejercicio.";
+  } else if (porcentaje >= 40) {
+    emoji = "\u26A0\uFE0F";
+    mensaje = "Necesitas reforzar el tema antes de avanzar. Relee con calma los cinco temas, prestando atención especial a las cajas moradas con el texto de la norma y a las cajas verdes de idea clave. No pases al Día 8 sin volver a intentarlo.";
+  } else {
+    emoji = "\uD83D\uDCD6";
+    mensaje = "Es momento de estudiar el contenido desde el inicio, sin apuro. Lee un tema por vez y detente en cada ejemplo hasta poder explicarlo con tus propias palabras. Este es el primer día de la Unidad 3 y todo lo que sigue se apoya en él: vale la pena invertir el tiempo ahora.";
+  }
+
+  var titulo = document.getElementById("titulo-res-" + tipo);
+  var texto = document.getElementById("mensaje-res-" + tipo);
+  var barra = document.getElementById("barra-" + tipo);
+  var caja = document.getElementById("resultado-" + tipo);
+
+  titulo.innerHTML = emoji + " Calificación: " + aciertos + " / " + total + " &nbsp;·&nbsp; " + porcentaje + "%";
+  texto.innerHTML = mensaje;
+  caja.classList.add("visible");
+
+  barra.style.width = "0%";
+  barra.innerHTML = "";
+  setTimeout(function () {
+    barra.style.width = porcentaje + "%";
+    barra.innerHTML = porcentaje + "%";
+  }, 120);
+
+  caja.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+</script>
+
+</body>
+</html>

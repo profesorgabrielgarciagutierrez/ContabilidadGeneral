@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dia 8 - Metodos de valuacion: VR, VNR y Costo | Introduccion a FIFO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============ BASE ============ */
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Source Sans 3",Arial,sans-serif;background:#eef2f6;color:#1e2b38;line-height:1.7;font-size:16px}
+.wrap{max-width:1140px;margin:0 auto;background:#fff;box-shadow:0 0 24px rgba(0,0,0,.12)}
+
+/* ============ ENCABEZADO ============ */
+.header{background:#003366;color:#fff;padding:26px 22px}
+.header .inst{font-size:.82rem;letter-spacing:.6px;text-transform:uppercase;color:#cfe3f5;font-weight:600}
+.header h1{font-family:"Lora",Georgia,serif;font-size:1.85rem;margin:10px 0 6px;color:#fff;line-height:1.25}
+.header .sub{font-size:1rem;color:#e3f0fb}
+.header .meta{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px}
+.header .chip{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.35);color:#fff;padding:4px 12px;border-radius:16px;font-size:.82rem;font-weight:600}
+
+/* ============ MENU DE PESTANAS ============ */
+.tabs{background:#87CEEB;display:flex;overflow-x:auto;white-space:nowrap;border-bottom:3px solid #003366}
+.tabs::-webkit-scrollbar{height:6px}
+.tabs::-webkit-scrollbar-thumb{background:#003366;border-radius:3px}
+.tab-btn{background:transparent;border:none;color:#000;font-family:"Source Sans 3",sans-serif;font-size:.94rem;font-weight:600;padding:13px 17px;cursor:pointer;flex:0 0 auto;border-right:1px solid rgba(0,51,102,.22)}
+.tab-btn:hover{background:rgba(255,255,255,.45)}
+.tab-btn.active{background:#fff;color:#003366;font-weight:700}
+
+/* ============ PANELES ============ */
+.panel{display:none;padding:28px 26px 46px}
+.panel.active{display:block}
+.panel h2{font-family:"Lora",Georgia,serif;color:#003366;font-size:1.5rem;margin:0 0 6px;border-bottom:3px solid #87CEEB;padding-bottom:9px}
+.panel h3{font-family:"Lora",Georgia,serif;color:#0b4d8c;font-size:1.18rem;margin:26px 0 9px}
+.panel h4{font-family:"Source Sans 3",sans-serif;color:#003366;font-size:1.03rem;margin:18px 0 6px;font-weight:700}
+.panel p{margin:0 0 13px;text-align:justify}
+.panel ul,.panel ol{margin:0 0 14px 24px}
+.panel li{margin-bottom:7px;text-align:justify}
+.intro{font-size:1.02rem;color:#42526a;font-style:italic;margin-bottom:20px}
+strong{color:#00284f}
+.small{font-size:.88rem;color:#5a6a7d}
+
+/* ============ RECUADROS ============ */
+.def-box{background:#eaf3fb;border-left:6px solid #003366;padding:16px 18px;margin:16px 0;border-radius:0 8px 8px 0}
+.def-box .rot{display:block;font-size:.76rem;text-transform:uppercase;letter-spacing:1px;color:#003366;font-weight:700;margin-bottom:6px}
+.cotidiano-box{background:#fff6e3;border-left:6px solid #e08a00;padding:16px 18px;margin:16px 0;border-radius:0 8px 8px 0}
+.cotidiano-box .rot{display:block;font-size:.76rem;text-transform:uppercase;letter-spacing:1px;color:#a35f00;font-weight:700;margin-bottom:6px}
+.ejemplo-box{background:#f2f6fa;border:1px solid #c3d5e6;padding:16px 18px;margin:16px 0;border-radius:8px}
+.ejemplo-box .rot{display:block;font-size:.76rem;text-transform:uppercase;letter-spacing:1px;color:#0b4d8c;font-weight:700;margin-bottom:6px}
+.norma-box{background:#f4f0fa;border-left:6px solid #5b3fa8;padding:15px 18px;margin:16px 0;border-radius:0 8px 8px 0;font-size:.95rem}
+.norma-box .rot{display:block;font-size:.76rem;text-transform:uppercase;letter-spacing:1px;color:#4a2f96;font-weight:700;margin-bottom:6px}
+.clave-box{background:#003366;color:#fff;padding:18px 20px;margin:22px 0 6px;border-radius:10px}
+.clave-box .rot{display:block;font-size:.76rem;text-transform:uppercase;letter-spacing:1px;color:#9fd0f5;font-weight:700;margin-bottom:7px}
+.clave-box p{color:#fff;margin-bottom:9px}
+.clave-box strong{color:#ffe08a}
+.alerta-box{background:#fdecec;border-left:6px solid #c0392b;padding:15px 18px;margin:16px 0;border-radius:0 8px 8px 0}
+.alerta-box .rot{display:block;font-size:.76rem;text-transform:uppercase;letter-spacing:1px;color:#a02c1e;font-weight:700;margin-bottom:6px}
+.futuro-box{background:#eef7f1;border:2px dashed #2e7d4f;padding:15px 18px;margin:16px 0;border-radius:8px}
+.futuro-box .rot{display:block;font-size:.76rem;text-transform:uppercase;letter-spacing:1px;color:#1e5c39;font-weight:700;margin-bottom:6px}
+.carrera-box{background:#e8f6ec;border-left:6px solid #1e7a3c;padding:16px 18px;margin:20px 0;border-radius:0 8px 8px 0}
+.carrera-box .rot{display:block;font-size:.76rem;text-transform:uppercase;letter-spacing:1px;color:#14602e;font-weight:700;margin-bottom:8px}
+.carrera-box ul{margin:8px 0 0 20px}
+.carrera-box li{margin-bottom:6px}
+
+/* ============ TABLAS ============ */
+.tabla-cont{overflow-x:auto;margin:16px 0}
+.tabla{border-collapse:collapse;width:100%;font-size:.92rem;min-width:520px}
+.tabla th{background:#003366;color:#fff;padding:10px 11px;text-align:left;font-weight:600;border:1px solid #00284f}
+.tabla td{padding:9px 11px;border:1px solid #c8d6e3;vertical-align:top}
+.tabla tr:nth-child(even) td{background:#f5f9fc}
+.tabla td.num{text-align:right;font-family:"Courier New",monospace;white-space:nowrap}
+.tabla th.num{text-align:right}
+.tabla tr.total td{background:#dcebf7;font-weight:700;border-top:2px solid #003366}
+.tabla td.centro{text-align:center}
+
+/* ============ ASIENTOS CONTABLES ============ */
+.asiento{margin:18px 0;border:1px solid #c8d6e3;border-radius:8px;overflow:hidden}
+.asiento-head{background:#003366;color:#fff;padding:8px 13px;font-weight:700;font-size:.92rem}
+.asiento table{border-collapse:collapse;width:100%;font-size:.9rem}
+.asiento th{background:#e2edf6;color:#003366;padding:7px 10px;text-align:left;border-bottom:1px solid #b9cde0;font-weight:600}
+.asiento td{padding:6px 10px;border-bottom:1px solid #e3ebf2}
+.asiento td.num{text-align:right;font-family:"Courier New",monospace;white-space:nowrap}
+.asiento td.credito{padding-left:34px}
+.asiento tr.suman td{border-top:2px solid #003366;font-weight:700;background:#eff5fa}
+.glosa{font-style:italic;font-size:.86rem;color:#4a5a6b;padding:9px 12px;background:#f7fafc}
+
+/* ============ ACORDEON (REPASO) ============ */
+.acordeon{margin:12px 0}
+.acordeon-btn{width:100%;text-align:left;background:#e7f0f8;border:1px solid #b9cde0;color:#003366;font-family:"Source Sans 3",sans-serif;font-size:1rem;font-weight:600;padding:12px 15px;cursor:pointer;border-radius:7px;margin-top:9px;display:block}
+.acordeon-btn:hover{background:#d7e8f6}
+.acordeon-btn.abierto{background:#003366;color:#fff;border-radius:7px 7px 0 0}
+.acordeon-btn .fl{display:inline-block;width:18px}
+.acordeon-panel{display:none;border:1px solid #b9cde0;border-top:none;padding:16px 18px;border-radius:0 0 7px 7px;background:#fdfefe}
+.acordeon-panel.visible{display:block}
+
+/* ============ EJERCICIO Y CUESTIONARIO ============ */
+.item{border:1px solid #d3dfea;border-radius:9px;padding:15px 17px;margin:15px 0;background:#fcfdfe}
+.item .enun{font-weight:600;color:#00284f;margin-bottom:10px}
+.opciones{margin:0}
+.opcion{display:block;padding:7px 10px;margin:4px 0;border-radius:6px;cursor:pointer;border:1px solid transparent}
+.opcion:hover{background:#eef5fb}
+.opcion input{margin-right:9px}
+.feedback{display:none;margin-top:11px;padding:11px 13px;border-radius:7px;font-size:.92rem}
+.feedback.visible{display:block}
+.feedback.ok{background:#e6f6ec;border-left:5px solid #1e7a3c;color:#14512a}
+.feedback.mal{background:#fdecec;border-left:5px solid #c0392b;color:#7d2018}
+.badge{display:inline-block;font-size:.7rem;text-transform:uppercase;letter-spacing:.8px;font-weight:700;padding:3px 9px;border-radius:11px;margin-bottom:7px}
+.badge-teorica{background:#dcebf7;color:#003366}
+.badge-caso{background:#fdeccf;color:#8a5200}
+.marcado-ok{border-color:#1e7a3c;background:#eaf7ef}
+.marcado-mal{border-color:#c0392b;background:#fdeeee}
+
+/* ============ BOTONES Y RESULTADOS ============ */
+.acciones{margin:22px 0 6px;display:flex;gap:11px;flex-wrap:wrap}
+.btn{font-family:"Source Sans 3",sans-serif;font-size:.97rem;font-weight:700;padding:12px 24px;border:none;border-radius:7px;cursor:pointer}
+.btn-verificar{background:#003366;color:#fff}
+.btn-verificar:hover{background:#00284f}
+.btn-reiniciar{background:#e7f0f8;color:#003366;border:1px solid #b9cde0}
+.btn-reiniciar:hover{background:#d7e8f6}
+.aviso{display:none;background:#fff6e3;border-left:5px solid #e08a00;padding:11px 14px;border-radius:0 7px 7px 0;margin:13px 0;color:#7a4700;font-weight:600}
+.aviso.visible{display:block}
+.resultado{display:none;margin:20px 0;padding:20px;background:#f2f7fb;border:1px solid #c3d5e6;border-radius:10px;text-align:center}
+.resultado.visible{display:block}
+.resultado .emoji{font-size:2.6rem;display:block;margin-bottom:7px}
+.resultado .nota{font-family:"Lora",serif;font-size:1.5rem;color:#003366;font-weight:700}
+.resultado .det{color:#4a5a6b;margin-top:5px}
+.barra-cont{background:#dce6ef;border-radius:11px;height:20px;margin:14px auto 0;max-width:460px;overflow:hidden}
+.barra{height:100%;width:0;background:linear-gradient(90deg,#0b4d8c,#87CEEB);border-radius:11px;transition:width 1.1s ease}
+
+/* ============ IA / REFLEXION / BIBLIOGRAFIA ============ */
+.prompt-box{background:#0f2135;color:#e8f1f8;padding:18px 20px;border-radius:9px;font-family:"Courier New",monospace;font-size:.88rem;white-space:pre-wrap;margin:14px 0;line-height:1.6;overflow-x:auto}
+.paso{background:#f2f6fa;border-left:5px solid #0b4d8c;padding:13px 16px;margin:11px 0;border-radius:0 7px 7px 0}
+.paso .rot{font-weight:700;color:#003366;display:block;margin-bottom:4px}
+.reflex-q{background:#fff;border:1px solid #d3dfea;border-left:5px solid #87CEEB;padding:14px 17px;margin:12px 0;border-radius:0 8px 8px 0}
+.reflex-q .n{font-family:"Lora",serif;font-weight:700;color:#0b4d8c;font-size:1.02rem;display:block;margin-bottom:5px}
+.ref-card{background:#fbfdfe;border:1px solid #d3dfea;border-radius:9px;padding:14px 17px;margin:12px 0}
+.ref-tipo{display:inline-block;font-size:.7rem;text-transform:uppercase;letter-spacing:.9px;font-weight:700;background:#003366;color:#fff;padding:3px 10px;border-radius:11px;margin-bottom:8px}
+.ref-card p{font-size:.94rem;margin:0;text-align:left}
+.nota-pie{background:#fff6e3;border-left:5px solid #e08a00;padding:14px 17px;border-radius:0 8px 8px 0;margin-top:22px;font-size:.92rem}
+.pie{background:#00284f;color:#c9dcec;text-align:center;padding:17px;font-size:.85rem}
+
+@media(max-width:640px){
+ .header h1{font-size:1.35rem}
+ .panel{padding:20px 15px 40px}
+ .panel h2{font-size:1.24rem}
+ .tab-btn{font-size:.86rem;padding:11px 13px}
+ body{font-size:15px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ================= ENCABEZADO ================= -->
+<header class="header">
+  <div class="inst">Universidad de Guayaquil &middot; Facultad de Ciencias Administrativas &middot; Carrera de Negocios Internacionales</div>
+  <h1>D&iacute;a 8 &mdash; M&eacute;todos de valuaci&oacute;n: Valor Razonable, Valor Neto Realizable y Costo. Introducci&oacute;n al m&eacute;todo FIFO</h1>
+  <div class="sub">Contabilidad General (091601124) &middot; Unidad 3: NIC 2 Inventarios y el proceso contable (II parte)</div>
+  <div class="meta">
+    <span class="chip">Jueves 20 de agosto de 2026</span>
+    <span class="chip">5 horas</span>
+    <span class="chip">Clase aut&oacute;noma</span>
+    <span class="chip">PAE 2026</span>
+  </div>
+</header>
+
+<!-- ================= MENU DE PESTANAS ================= -->
+<nav class="tabs">
+  <button class="tab-btn active" onclick="showTab('repaso',this)">Repaso</button>
+  <button class="tab-btn" onclick="showTab('tema1',this)">Tema 1: El Costo</button>
+  <button class="tab-btn" onclick="showTab('tema2',this)">Tema 2: VNR</button>
+  <button class="tab-btn" onclick="showTab('tema3',this)">Tema 3: Valor Razonable</button>
+  <button class="tab-btn" onclick="showTab('tema4',this)">Tema 4: Comparativo</button>
+  <button class="tab-btn" onclick="showTab('tema5',this)">Tema 5: FIFO</button>
+  <button class="tab-btn" onclick="showTab('ejercicio',this)">Ejercicio Interactivo</button>
+  <button class="tab-btn" onclick="showTab('cuestionario',this)">Cuestionario</button>
+  <button class="tab-btn" onclick="showTab('ia',this)">Actividad con IA</button>
+  <button class="tab-btn" onclick="showTab('reflexion',this)">Reflexi&oacute;n</button>
+  <button class="tab-btn" onclick="showTab('biblio',this)">Bibliograf&iacute;a</button>
+</nav>
+
+<!-- ================= PANEL: REPASO ================= -->
+<section id="repaso" class="panel active">
+  <h2>Repaso de las clases anteriores</h2>
+  <p class="intro">Antes de entrar al tema de hoy, recorra este acorde&oacute;n. Cada entrada contiene el contenido completo de la clase, no solo el t&iacute;tulo. Haga clic para abrir. Los D&iacute;as 7 y 8 forman una sola secuencia: el D&iacute;a 7 respondi&oacute; <em>qu&eacute; es un inventario y c&oacute;mo se registra</em>; hoy responderemos <em>a qu&eacute; importe se mide</em>.</p>
+
+  <div class="acordeon">
+
+    <button class="acordeon-btn" onclick="toggleAcordeon(this)"><span class="fl">&#9654;</span> D&iacute;a 1 &mdash; Martes 11 de agosto: La contabilidad como sistema de informaci&oacute;n</button>
+    <div class="acordeon-panel">
+      <p>La <strong>contabilidad</strong> es un sistema de informaci&oacute;n que identifica, mide, registra, clasifica, resume y comunica en t&eacute;rminos monetarios los hechos econ&oacute;micos de una organizaci&oacute;n, para que sus usuarios tomen decisiones. Su objetivo no es &ldquo;llenar libros&rdquo;, sino <strong>producir informaci&oacute;n &uacute;til, comparable y confiable</strong>.</p>
+      <p>Vimos los <strong>principios b&aacute;sicos de las normas contables</strong> bajo NIIF: negocio en marcha, devengo, uniformidad, importancia relativa, prudencia y esencia sobre forma. Aprendimos que la informaci&oacute;n financiera debe cumplir caracter&iacute;sticas cualitativas <em>fundamentales</em> (relevancia y representaci&oacute;n fiel) y <em>de mejora</em> (comparabilidad, verificabilidad, oportunidad y comprensibilidad).</p>
+      <p>Clasificamos las empresas por su <strong>actividad</strong> (servicios, comerciales, industriales), por su <strong>origen de capital</strong> (p&uacute;blicas, privadas, mixtas), por su <strong>tama&ntilde;o</strong> y por su <strong>forma jur&iacute;dica</strong> (persona natural, S.A., Cía. Ltda., S.A.S.). Identificamos los <strong>usuarios</strong> internos (gerencia, empleados) y externos (inversionistas, bancos, SRI, Superintendencia de Compa&ntilde;&iacute;as, proveedores, clientes) y los <strong>tipos de contabilidad</strong>: financiera, de costos, gerencial, fiscal, gubernamental.</p>
+      <p><strong>Idea clave que sigue vigente hoy:</strong> si el n&uacute;mero que registramos no representa fielmente la realidad econ&oacute;mica, toda la cadena de decisiones que se apoya en &eacute;l se contamina. Por eso hoy discutiremos <em>cu&aacute;l</em> es el n&uacute;mero correcto para medir un inventario.</p>
+    </div>
+
+    <button class="acordeon-btn" onclick="toggleAcordeon(this)"><span class="fl">&#9654;</span> D&iacute;a 2 &mdash; Mi&eacute;rcoles 12 de agosto: &Eacute;tica, organismos de control, Marco Conceptual y NIC 1</button>
+    <div class="acordeon-panel">
+      <p>Estudiamos los <strong>principios &eacute;ticos de la profesi&oacute;n contable</strong>: integridad, objetividad, competencia profesional y debido cuidado, confidencialidad y comportamiento profesional. Discutimos que el contador administra <em>informaci&oacute;n que otros usan para arriesgar su dinero</em>, y que por eso la &eacute;tica no es un adorno sino la base t&eacute;cnica de la profesi&oacute;n.</p>
+      <p>Identificamos los <strong>organismos de control</strong> en Ecuador: el <strong>Servicio de Rentas Internas (SRI)</strong> en materia tributaria; la <strong>Superintendencia de Compa&ntilde;&iacute;as, Valores y Seguros</strong> en materia societaria y de informaci&oacute;n financiera; el <strong>Ministerio del Trabajo</strong> y el <strong>IESS</strong> en materia laboral; y el <strong>SENAE</strong> en comercio exterior.</p>
+      <p>Revisamos el <strong>Marco Conceptual para la Informaci&oacute;n Financiera</strong>: objetivo de la informaci&oacute;n financiera, entidad que informa, definiciones de activo, pasivo, patrimonio, ingreso y gasto, criterios de <strong>reconocimiento</strong> y <strong>baja en cuentas</strong>, y las <strong>bases de medici&oacute;n</strong> (costo hist&oacute;rico y valor corriente &mdash; que a su vez incluye valor razonable, valor en uso y costo corriente).</p>
+      <p>Con <strong>NIC 1 Presentaci&oacute;n de estados financieros</strong> conocimos el juego completo de estados financieros, la hip&oacute;tesis de negocio en marcha, la base contable de acumulaci&oacute;n (devengo), la uniformidad en la presentaci&oacute;n y las partidas m&iacute;nimas que deben mostrarse en el estado de situaci&oacute;n financiera &mdash; entre ellas, <strong>los inventarios</strong> (NIC 1, p&aacute;rrafo 54, literal g).</p>
+      <p><strong>Conexi&oacute;n con hoy:</strong> la clase de hoy es la aplicaci&oacute;n concreta de una de las bases de medici&oacute;n del Marco Conceptual. Cuando hoy hablemos de &ldquo;valor razonable&rdquo; estaremos usando exactamente el concepto que el Marco Conceptual ya defini&oacute;.</p>
+    </div>
+
+    <button class="acordeon-btn" onclick="toggleAcordeon(this)"><span class="fl">&#9654;</span> D&iacute;a 3 &mdash; Jueves 13 de agosto: Estructura de los estados, cuenta contable, partida doble y ecuaci&oacute;n contable</button>
+    <div class="acordeon-panel">
+      <p>Analizamos la <strong>estructura del Estado de Situaci&oacute;n Financiera</strong> (activo = pasivo + patrimonio, con clasificaci&oacute;n corriente/no corriente) y del <strong>Estado de Resultados</strong> (ingresos &minus; costos &minus; gastos = resultado del ejercicio).</p>
+      <p>Definimos la <strong>cuenta contable</strong> como el registro donde se agrupan hechos econ&oacute;micos de la misma naturaleza, con sus partes: c&oacute;digo, denominaci&oacute;n, debe, haber y saldo. Estudiamos la <strong>naturaleza de las cuentas</strong>: activo y gasto son deudoras (aumentan al debe); pasivo, patrimonio e ingreso son acreedoras (aumentan al haber).</p>
+      <p>Conocimos el <strong>plan de cuentas</strong> jerarquizado por niveles (elemento, grupo, subgrupo, cuenta, subcuenta) siguiendo las convenciones de la Superintendencia de Compa&ntilde;&iacute;as, y la <strong>partida doble</strong>: no hay deudor sin acreedor, y la suma del debe siempre iguala la suma del haber.</p>
+      <p>Practicamos la <strong>ecuaci&oacute;n contable</strong> y los <strong>tipos de asientos</strong>: simples (una cuenta al debe y una al haber) y compuestos (m&aacute;s de dos cuentas). Con esto cerramos la Unidad 1.</p>
+      <p><strong>Conexi&oacute;n con hoy:</strong> la cuenta <em>Inventario de mercader&iacute;as</em> es un activo de naturaleza deudora. Hoy veremos que, cuando su valor cae, no se le acredita directamente: se usa una <strong>cuenta correctora del activo</strong>, y entenderemos por qu&eacute;.</p>
+    </div>
+
+    <button class="acordeon-btn" onclick="toggleAcordeon(this)"><span class="fl">&#9654;</span> D&iacute;a 4 &mdash; Viernes 14 de agosto: IVA (0% y 15%) y retenciones</button>
+    <div class="acordeon-panel">
+      <p>Iniciamos la Unidad 2 con la <strong>norma tributaria</strong>. Distinguimos bienes y servicios gravados con <strong>tarifa 15%</strong> y con <strong>tarifa 0%</strong> de IVA, aprendiendo a reconocerlos por su naturaleza (alimentos en estado natural, medicinas, educaci&oacute;n, servicios de salud, entre otros, con tarifa 0%).</p>
+      <p>Estudiamos las <strong>retenciones de IVA</strong> (Resoluci&oacute;n NAC-DGERCGC20-00000061) y su contabilizaci&oacute;n, diferenciando al agente de retenci&oacute;n del sujeto retenido. Comprendimos que el IVA pagado en compras por un contribuyente con derecho a cr&eacute;dito tributario <strong>no es un gasto ni un costo</strong>: es un <strong>activo por impuestos</strong> que se compensa con el IVA cobrado en ventas (Ley de R&eacute;gimen Tributario Interno, art&iacute;culo 66).</p>
+      <p>Revisamos la <strong>base imponible</strong> y los <strong>porcentajes de retenci&oacute;n en la fuente del Impuesto a la Renta</strong> vigentes seg&uacute;n la Resoluci&oacute;n NAC-DGERCGC26-00000009 (vigente desde el 1 de marzo de 2026): 2% en bienes, 3% residual en servicios, 5% en servicios profesionales prestados por sociedades y 10% en arrendamiento de inmuebles, entre otros.</p>
+      <p><strong>Conexi&oacute;n con hoy:</strong> hoy volveremos a este punto con fuerza. El IVA recuperable <strong>no entra al costo del inventario</strong>; el arancel, que no es recuperable, <strong>s&iacute; entra</strong>. Esa distinci&oacute;n cambia el costo unitario y, por tanto, la utilidad.</p>
+    </div>
+
+    <button class="acordeon-btn" onclick="toggleAcordeon(this)"><span class="fl">&#9654;</span> D&iacute;a 5 &mdash; Lunes 17 de agosto: Proceso contable (I parte) &mdash; jornalizaci&oacute;n, mayorizaci&oacute;n y balance preliminar</button>
+    <div class="acordeon-panel">
+      <p>Con el caso <strong>AduanaPro C&iacute;a. Ltda.</strong> recorrimos los primeros pasos del ciclo contable: (1) <strong>an&aacute;lisis y reconocimiento</strong> de la transacci&oacute;n a partir del documento fuente; (2) <strong>jornalizaci&oacute;n</strong> o registro en el Libro Diario, con fecha, c&oacute;digo, detalle, parcial, debe, haber y glosa; (3) <strong>mayorizaci&oacute;n</strong> o traslado al Libro Mayor por cuenta; y (4) elaboraci&oacute;n del <strong>balance de comprobaci&oacute;n preliminar</strong>.</p>
+      <p>Aprendimos que el balance de comprobaci&oacute;n demuestra la <em>igualdad aritm&eacute;tica</em> del sistema, pero <strong>no garantiza que la informaci&oacute;n sea correcta</strong>: un asiento puede estar cuadrado y aun as&iacute; usar la cuenta equivocada o el importe equivocado.</p>
+      <p><strong>Conexi&oacute;n con hoy:</strong> hoy veremos un caso exacto de esto. Un inventario puede estar perfectamente cuadrado en el balance y aun as&iacute; estar <em>sobrevalorado</em>, porque su valor de mercado cay&oacute; y nadie lo ajust&oacute;.</p>
+    </div>
+
+    <button class="acordeon-btn" onclick="toggleAcordeon(this)"><span class="fl">&#9654;</span> D&iacute;a 6 &mdash; Martes 18 de agosto: Ejercicio integrador de empresa de servicios (cierre Unidad 2)</button>
+    <div class="acordeon-panel">
+      <p>Con <strong>Ruta Pac&iacute;fico Servicios Log&iacute;sticos C&iacute;a. Ltda.</strong> resolvimos un ejercicio integrador de 12 transacciones: aportes de capital, compra de activos, prestaci&oacute;n de servicios con IVA y retenciones, pago de sueldos, gastos operativos y cobros de clientes, hasta obtener el <strong>balance de comprobaci&oacute;n preliminar</strong>.</p>
+      <p>Observamos una caracter&iacute;stica estructural de las empresas de servicios: <strong>no tienen inventario de mercader&iacute;as</strong>, y por tanto no tienen costo de ventas en el sentido de una comercializadora. Su resultado se explica por ingresos menos gastos operativos.</p>
+      <p><strong>Conexi&oacute;n con hoy:</strong> justamente porque la empresa de servicios no tiene inventario, todo lo que estudiaremos hoy pertenece al mundo de las <strong>empresas comerciales e industriales</strong> &mdash; que son, precisamente, las que participan en el comercio internacional.</p>
+    </div>
+
+    <button class="acordeon-btn" onclick="toggleAcordeon(this)"><span class="fl">&#9654;</span> D&iacute;a 7 &mdash; Mi&eacute;rcoles 19 de agosto: NIC 2 Inventarios y sistemas de contabilizaci&oacute;n (base directa de la clase de hoy)</button>
+    <div class="acordeon-panel">
+      <p>Iniciamos la Unidad 3 con la <strong>NIC 2 Inventarios</strong>. Definimos <strong>inventarios</strong> (NIC 2, p&aacute;rrafo 6) como los activos: (a) pose&iacute;dos para ser vendidos en el curso normal de la operaci&oacute;n; (b) en proceso de producci&oacute;n con vistas a esa venta; o (c) en forma de materiales o suministros para ser consumidos en el proceso de producci&oacute;n o en la prestaci&oacute;n de servicios.</p>
+      <p>Recorrimos la <strong>cadena de valor del juego de comedor de teca</strong> a trav&eacute;s de cuatro empresas (aserradero, f&aacute;brica, distribuidora, exportadora) con 15 asientos, comprobando que <em>lo que para una empresa es producto terminado, para la siguiente es materia prima</em>.</p>
+      <p>Estudiamos los dos <strong>sistemas de contabilizaci&oacute;n</strong> de inventarios:</p>
+      <ul>
+        <li><strong>Sistema peri&oacute;dico (o de cuenta m&uacute;ltiple):</strong> no se actualiza el inventario en cada movimiento. Se usan cuentas de Compras, Devoluciones, Descuentos y Fletes; el costo de ventas se determina al final del per&iacute;odo mediante toma f&iacute;sica: <em>Inventario inicial + Compras netas &minus; Inventario final</em>.</li>
+        <li><strong>Sistema perpetuo (o de inventario permanente):</strong> cada compra y cada venta actualiza de inmediato la cuenta Inventario de mercader&iacute;as y la cuenta Costo de ventas. Permite conocer el saldo en cualquier momento.</li>
+      </ul>
+      <p>Resolvimos un <strong>caso completo de importaci&oacute;n</strong> (50 licuadoras) identificando los componentes del costo hasta la bodega, y comparamos ambos sistemas sobre las mismas transacciones.</p>
+      <div class="futuro-box"><span class="rot">Lo que qued&oacute; pendiente el D&iacute;a 7 y se resuelve HOY</span>
+        <p>Al final del D&iacute;a 7 se&ntilde;alamos expresamente tres temas diferidos: el <strong>Valor Neto Realizable (VNR)</strong>, el <strong>Valor Razonable (VR)</strong> y las <strong>f&oacute;rmulas de c&aacute;lculo del costo (FIFO y promedio ponderado)</strong>. Hoy se desarrollan los dos primeros de forma completa y se introduce el m&eacute;todo FIFO.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="clave-box"><span class="rot">Puente hacia la clase de hoy</span>
+    <p>El D&iacute;a 7 respondi&oacute;: <strong>&iquest;qu&eacute; es un inventario y c&oacute;mo lo registro?</strong></p>
+    <p>El D&iacute;a 8 responde una pregunta distinta y m&aacute;s dif&iacute;cil: <strong>&iquest;a qu&eacute; importe debo medirlo?</strong> Porque una misma caja de mercader&iacute;a puede tener, al mismo tiempo, tres cifras diferentes asociadas: lo que me cost&oacute;, lo que espero obtener al venderla, y lo que vale en el mercado. Elegir mal entre esas tres cifras produce estados financieros que enga&ntilde;an.</p>
+  </div>
+</section>
+
+<!-- ================= PANEL: TEMA 1 ================= -->
+<section id="tema1" class="panel">
+  <h2>Tema 1. El Costo: qu&eacute; entra y qu&eacute; no entra en el valor de un inventario</h2>
+  <p class="intro">Antes de comparar tres formas de medir un inventario, hay que dominar la primera y m&aacute;s importante: el costo. Es el punto de partida obligatorio de toda medici&oacute;n.</p>
+
+  <div class="cotidiano-box"><span class="rot">Empecemos por la vida diaria</span>
+    <p>Imagine que compra un celular por internet en una tienda de China. El anuncio dice <strong>USD 300</strong>. Usted paga con su tarjeta. Tres semanas despu&eacute;s le llega un correo del courier: debe pagar <strong>USD 45</strong> de env&iacute;o, <strong>USD 60</strong> de impuestos aduaneros y <strong>USD 8</strong> de la moto que se lo lleva hasta su casa.</p>
+    <p>Ahora responda con sinceridad: <em>&iquest;cu&aacute;nto le cost&oacute; el celular?</em> Si su respuesta fue &ldquo;300&rdquo;, se enga&ntilde;&oacute;. Le cost&oacute; <strong>413</strong>. Y si ma&ntilde;ana quiere revenderlo y lo ofrece en 320 creyendo que gana 20, en realidad est&aacute; <em>perdiendo 93</em>.</p>
+    <p>Esa es exactamente la l&oacute;gica del costo de un inventario. <strong>El costo no es el precio de la factura: es todo lo que hubo que sacrificar para que ese bien llegara a estar donde est&aacute; y como est&aacute;, listo para venderse.</strong></p>
+  </div>
+
+  <h3>1.1. Definici&oacute;n normativa de costo de los inventarios</h3>
+  <div class="def-box"><span class="rot">Definici&oacute;n</span>
+    <p><strong>Costo de los inventarios:</strong> comprende todos los <strong>costos derivados de la adquisici&oacute;n</strong> y <strong>transformaci&oacute;n</strong> de los inventarios, as&iacute; como <strong>otros costos</strong> en los que se haya incurrido para darles su <strong>condici&oacute;n y ubicaci&oacute;n actuales</strong>.</p>
+  </div>
+  <div class="norma-box"><span class="rot">Sustento normativo</span>
+    <p>NIC 2 <em>Inventarios</em>, p&aacute;rrafo 10. La frase clave &mdash;&ldquo;condici&oacute;n y ubicaci&oacute;n actuales&rdquo;&mdash; es el criterio de decisi&oacute;n que usted usar&aacute; toda su vida profesional: si un desembolso ayud&oacute; a que el bien <em>llegue</em> a donde debe estar o <em>quede</em> como debe estar para venderse, es costo. Si no, no lo es.</p>
+  </div>
+
+  <p>La NIC 2 descompone el costo en tres bloques:</p>
+
+  <h4>a) Costos de adquisici&oacute;n (NIC 2, p&aacute;rrafo 11)</h4>
+  <p>Incluyen el <strong>precio de compra</strong>, los <strong>aranceles de importaci&oacute;n</strong> y <strong>otros impuestos no recuperables</strong>, los <strong>transportes</strong>, el <strong>almacenamiento necesario</strong> y <strong>otros costos directamente atribuibles</strong> a la adquisici&oacute;n de mercader&iacute;as, materiales o servicios. El mismo p&aacute;rrafo ordena que los <strong>descuentos comerciales, las rebajas y otras partidas similares se deduzcan</strong> para determinar el costo.</p>
+  <p>Dos precisiones que suelen confundirse en primer semestre:</p>
+  <ul>
+    <li><strong>&ldquo;Impuestos no recuperables&rdquo;</strong> significa impuestos que la empresa paga y <em>nunca podr&aacute; recuperar</em> del Estado. El arancel de importaci&oacute;n es no recuperable: nadie se lo devuelve. En cambio, el <strong>IVA pagado por un contribuyente con derecho a cr&eacute;dito tributario s&iacute; es recuperable</strong>, porque se compensa contra el IVA cobrado en ventas (Ley de R&eacute;gimen Tributario Interno, art&iacute;culo 66). Por eso el IVA <strong>no entra al costo</strong>.</li>
+    <li><strong>&ldquo;Descuento comercial&rdquo;</strong> es la reducci&oacute;n del precio que el proveedor concede por volumen, por temporada o por relaci&oacute;n comercial. Se resta del costo. No se registra como un ingreso: <em>la empresa no gana por comprar, gana por vender</em>.</li>
+  </ul>
+
+  <h4>b) Costos de transformaci&oacute;n (NIC 2, p&aacute;rrafos 12 a 14)</h4>
+  <p>Aplican a las <strong>empresas industriales</strong>. Comprenden la <strong>mano de obra directa</strong> y la distribuci&oacute;n sistem&aacute;tica de los <strong>costos indirectos de producci&oacute;n</strong> (fijos y variables) incurridos para transformar materias primas en productos terminados. Los costos indirectos fijos se distribuyen sobre la base de la <strong>capacidad normal</strong> de producci&oacute;n; el importe no distribuido por producir menos que lo normal se reconoce como gasto del per&iacute;odo.</p>
+  <div class="futuro-box"><span class="rot">Alcance de esta clase</span>
+    <p>El tratamiento detallado de los costos de transformaci&oacute;n (materia prima, mano de obra, costos indirectos de fabricaci&oacute;n, capacidad normal y sistemas de costeo) pertenece a la asignatura <strong>Contabilidad de Costos</strong>, posterior a este m&oacute;dulo. Aqu&iacute; los mencionamos para que usted sepa que existen y que forman parte del costo, pero no los desarrollaremos.</p>
+  </div>
+
+  <h4>c) Otros costos (NIC 2, p&aacute;rrafo 15)</h4>
+  <p>Se incluyen en el costo <strong>solo en la medida en que sean necesarios</strong> para dar a los inventarios su condici&oacute;n y ubicaci&oacute;n actuales. Ejemplo t&iacute;pico: costos de dise&ntilde;o de un producto espec&iacute;fico para un cliente determinado.</p>
+
+  <h3>1.2. Lo que NO forma parte del costo</h3>
+  <p>Este es el punto donde m&aacute;s errores se cometen en la pr&aacute;ctica profesional. La NIC 2, en su <strong>p&aacute;rrafo 16</strong>, es taxativa: se reconocen como <strong>gastos del per&iacute;odo en que se incurren</strong> (no como costo del inventario) los siguientes:</p>
+  <div class="tabla-cont">
+  <table class="tabla">
+    <tr><th style="width:34%">Partida excluida</th><th>Raz&oacute;n t&eacute;cnica</th><th style="width:16%">Base</th></tr>
+    <tr><td>Importes <strong>anormales</strong> de desperdicio de materiales, mano de obra u otros costos de producci&oacute;n</td><td>Un desperdicio anormal no agrega valor al bien: es una p&eacute;rdida de eficiencia. Capitalizarlo equivaldr&iacute;a a &ldquo;esconder&rdquo; la ineficiencia dentro del activo.</td><td>P&aacute;rr. 16(a)</td></tr>
+    <tr><td>Costos de <strong>almacenamiento</strong>, salvo que sean necesarios en el proceso productivo antes de una elaboraci&oacute;n ulterior</td><td>Guardar un producto ya terminado no lo mejora ni lo acerca al cliente. Distinto es a&ntilde;ejar un vino o secar madera: ah&iacute; el almacenamiento <em>s&iacute;</em> es parte del proceso.</td><td>P&aacute;rr. 16(b)</td></tr>
+    <tr><td>Costos indirectos de <strong>administraci&oacute;n</strong> que no contribuyan a dar al inventario su condici&oacute;n y ubicaci&oacute;n actuales</td><td>El sueldo del gerente general o del contador no hace que la mercader&iacute;a llegue a bodega.</td><td>P&aacute;rr. 16(c)</td></tr>
+    <tr><td>Costos de <strong>venta</strong> (comisiones, publicidad, transporte al cliente)</td><td>Son posteriores: ocurren cuando el bien <em>sale</em>, no cuando <em>llega</em>. Adem&aacute;s, si se capitalizaran, la empresa reconocer&iacute;a utilidad antes de vender.</td><td>P&aacute;rr. 16(d)</td></tr>
+  </table>
+  </div>
+  <p>A ello se agrega el <strong>componente de financiaci&oacute;n</strong>: cuando la compra se pacta con pago aplazado en condiciones que exceden los t&eacute;rminos normales de cr&eacute;dito, la diferencia entre el precio de contado y el precio pagado se reconoce como <strong>gasto por intereses</strong> durante el per&iacute;odo de financiaci&oacute;n, y <strong>no</strong> como mayor costo del inventario (NIC 2, p&aacute;rrafo 18).</p>
+
+  <div class="alerta-box"><span class="rot">Advertencia t&eacute;cnica &mdash; error frecuente</span>
+    <p>Muchos estudiantes (y no pocos profesionales) meten al costo del inventario <em>todo lo que se pag&oacute; en la operaci&oacute;n</em>. El resultado es un activo inflado y una utilidad inflada, porque ese exceso solo se descubre cuando el bien se vende. Inflar el costo del inventario es una de las formas m&aacute;s comunes de <strong>maquillaje de estados financieros</strong>, y es precisamente lo que una auditor&iacute;a busca detectar.</p>
+  </div>
+
+  <h3>1.3. Caso aplicado: importaci&oacute;n de Comercial El Astillero S.A.</h3>
+  <p><strong>Comercial El Astillero S.A.</strong> (Guayaquil) importa desde Shangh&aacute;i <strong>200 licuadoras modelo Andina LX-3</strong>. El proveedor factura un precio de lista de USD 24.000,00 y concede un descuento comercial del proveedor de USD 400,00 en la misma factura. Los datos de la operaci&oacute;n son:</p>
+  <div class="tabla-cont">
+  <table class="tabla">
+    <tr><th style="width:52%">Concepto</th><th class="num">Valor USD</th><th style="width:22%">&iquest;Integra el costo?</th></tr>
+    <tr><td>Precio de lista del proveedor (200 u &times; 120,00)</td><td class="num">24.000,00</td><td>S&iacute;</td></tr>
+    <tr><td>(&minus;) Descuento comercial en factura</td><td class="num">(400,00)</td><td>Lo disminuye</td></tr>
+    <tr class="total"><td><strong>Valor de transacci&oacute;n (base para aduana)</strong></td><td class="num">23.600,00</td><td>&mdash;</td></tr>
+    <tr><td>(+) Flete internacional Shangh&aacute;i &ndash; Guayaquil</td><td class="num">2.000,00</td><td>S&iacute;</td></tr>
+    <tr><td>(+) Seguro de la carga en tr&aacute;nsito</td><td class="num">400,00</td><td>S&iacute;</td></tr>
+    <tr class="total"><td><strong>Valor CIF</strong></td><td class="num">26.000,00</td><td>&mdash;</td></tr>
+    <tr><td>(+) Arancel ad val&oacute;rem 15% sobre CIF (impuesto no recuperable)</td><td class="num">3.900,00</td><td>S&iacute;</td></tr>
+    <tr><td>(+) FODINFA 0,5% sobre CIF (impuesto no recuperable)</td><td class="num">130,00</td><td>S&iacute;</td></tr>
+    <tr><td>(+) Transporte interno del puerto a la bodega</td><td class="num">270,00</td><td>S&iacute;</td></tr>
+    <tr class="total"><td><strong>COSTO TOTAL DEL INVENTARIO</strong></td><td class="num">30.300,00</td><td>&mdash;</td></tr>
+    <tr><td>IVA 15% sobre (CIF + arancel + FODINFA) = 15% de 30.030,00</td><td class="num">4.504,50</td><td><strong>NO</strong> &mdash; cr&eacute;dito tributario</td></tr>
+    <tr><td>Publicidad de lanzamiento del producto</td><td class="num">900,00</td><td><strong>NO</strong> &mdash; gasto de venta</td></tr>
+    <tr><td>Sueldo del gerente administrativo del mes</td><td class="num">1.800,00</td><td><strong>NO</strong> &mdash; gasto de administraci&oacute;n</td></tr>
+  </table>
+  </div>
+
+  <div class="ejemplo-box"><span class="rot">C&aacute;lculo del costo unitario</span>
+    <p style="text-align:center;font-size:1.12rem"><strong>Costo unitario = 30.300,00 &divide; 200 unidades = <span style="color:#0b4d8c">USD 151,50</span></strong></p>
+    <p>Observe la magnitud del error que se evita: si la empresa hubiera considerado &ldquo;costo&rdquo; solo el precio facturado neto (23.600,00 &divide; 200 = 118,00), habr&iacute;a cre&iacute;do que cada licuadora le costaba 118,00 cuando en realidad le cuesta 151,50. Un <strong>28,4% de diferencia</strong>. Con ese error, una venta a 140,00 parecer&iacute;a una ganancia de 22,00 cuando en verdad es una <em>p&eacute;rdida de 11,50</em> por unidad.</p>
+    <p>Y al rev&eacute;s: si hubiera sumado tambi&eacute;n el IVA de 4.504,50, el costo unitario habr&iacute;a subido artificialmente a 173,52, dejando de reconocer un activo tributario real y sobrevaluando el inventario en el estado de situaci&oacute;n financiera.</p>
+  </div>
+
+  <div class="asiento">
+    <div class="asiento-head">Asiento 1 &mdash; Registro del inventario importado (sistema perpetuo)</div>
+    <table>
+      <tr><th style="width:11%">Fecha</th><th style="width:11%">C&oacute;digo</th><th>Detalle</th><th class="num" style="width:14%">Parcial</th><th class="num" style="width:14%">Debe</th><th class="num" style="width:14%">Haber</th></tr>
+      <tr><td>05/08/2026</td><td>10306</td><td>Inventario de mercader&iacute;as &mdash; Licuadora Andina LX-3</td><td class="num">&nbsp;</td><td class="num">30.300,00</td><td class="num">&nbsp;</td></tr>
+      <tr><td>&nbsp;</td><td>10501</td><td>Cr&eacute;dito tributario a favor de la empresa (IVA)</td><td class="num">&nbsp;</td><td class="num">4.504,50</td><td class="num">&nbsp;</td></tr>
+      <tr><td>&nbsp;</td><td>10101</td><td class="credito">a) Efectivo y equivalentes al efectivo</td><td class="num">&nbsp;</td><td class="num">&nbsp;</td><td class="num">34.804,50</td></tr>
+      <tr class="suman"><td>&nbsp;</td><td>&nbsp;</td><td>SUMAN</td><td class="num">&nbsp;</td><td class="num">34.804,50</td><td class="num">34.804,50</td></tr>
+    </table>
+    <div class="glosa">P/R Importaci&oacute;n de 200 licuadoras Andina LX-3 seg&uacute;n factura comercial del proveedor, DAI (Declaraci&oacute;n Aduanera de Importaci&oacute;n) y liquidaci&oacute;n de tributos al comercio exterior emitida por el SENAE. Costo determinado conforme NIC 2, p&aacute;rrafos 10 y 11; el IVA se reconoce como cr&eacute;dito tributario por ser impuesto recuperable (LRTI, art. 66) y no como costo del inventario.</div>
+  </div>
+
+  <div class="alerta-box"><span class="rot">Regla de proporcionalidad del cr&eacute;dito tributario</span>
+    <p>El IVA se trata como cr&eacute;dito tributario <strong>&iacute;ntegro</strong> solo cuando la empresa destina la mercader&iacute;a a ventas gravadas con tarifa 15%. Si la empresa vendiera tambi&eacute;n bienes con tarifa 0%, deber&iacute;a aplicar el <strong>factor de proporcionalidad</strong> previsto en el art&iacute;culo 66 de la LRTI, y la porci&oacute;n no recuperable del IVA <em>s&iacute; se sumar&iacute;a al costo</em>. En todos los casos de esta clase asumimos ventas 100% gravadas con 15%, por lo que el IVA es &iacute;ntegramente recuperable.</p>
+  </div>
+
+  <div class="carrera-box"><span class="rot">&iquest;Por qu&eacute; esto le importa en Negocios Internacionales?</span>
+    <ul>
+      <li><strong>Comercio exterior:</strong> el Incoterm que usted negocie (EXW, FOB, CIF, DDP) determina <em>qui&eacute;n paga</em> el flete, el seguro y los tributos, y por tanto qu&eacute; partidas entran al costo de su inventario. Un mismo producto tiene distinto costo contable seg&uacute;n el Incoterm pactado.</li>
+      <li><strong>Finanzas internacionales:</strong> el costo unitario correcto es la base del margen bruto, del punto de equilibrio y de la valoraci&oacute;n de la empresa. Un costo mal calculado destruye todo el an&aacute;lisis financiero que se construya encima.</li>
+      <li><strong>Marketing y negociaci&oacute;n internacional:</strong> usted no puede fijar un precio de exportaci&oacute;n ni conceder un descuento en la mesa de negociaci&oacute;n si no sabe cu&aacute;l es su piso real de costo. Negociar sin conocer el costo es negociar a ciegas.</li>
+      <li><strong>Marco legal y normativo:</strong> el arancel y el FODINFA nacen del COPCI y del arancel nacional; el IVA y su recuperabilidad, de la LRTI; la medici&oacute;n del inventario, de la NIC 2. Tres cuerpos normativos distintos confluyen en una sola cifra.</li>
+    </ul>
+  </div>
+
+  <div class="clave-box"><span class="rot">Idea clave del Tema 1</span>
+    <p><strong>El costo de un inventario es todo lo necesario para ponerlo en su condici&oacute;n y ubicaci&oacute;n actuales &mdash; ni un centavo m&aacute;s, ni un centavo menos.</strong></p>
+    <p>Entra: precio de compra, aranceles e impuestos <em>no recuperables</em>, fletes, seguros de tr&aacute;nsito, transporte interno hasta bodega, y todo costo directamente atribuible. Se resta: descuentos comerciales y rebajas.</p>
+    <p>No entra: IVA recuperable, gastos de venta y publicidad, gastos de administraci&oacute;n, desperdicios anormales, almacenamiento de producto ya terminado e intereses por financiaci&oacute;n.</p>
+  </div>
+</section>
+
+<!-- ================= PANEL: TEMA 2 ================= -->
+<section id="tema2" class="panel">
+  <h2>Tema 2. El Valor Neto Realizable (VNR)</h2>
+  <p class="intro">El costo dice lo que la mercader&iacute;a me cost&oacute;. El VNR dice lo que realmente espero sacar de ella. Cuando el segundo es menor que el primero, la contabilidad exige reconocer la mala noticia de inmediato.</p>
+
+  <div class="cotidiano-box"><span class="rot">Empecemos por la vida diaria</span>
+    <p>Usted compr&oacute; hace ocho meses un celular en <strong>USD 413</strong> (el del ejemplo anterior). Hoy necesita dinero y decide venderlo. Revisa Marketplace y ve que modelos iguales al suyo se ofrecen en <strong>USD 260</strong>. Adem&aacute;s, para venderlo tiene que pagar <strong>USD 10</strong> de env&iacute;o al comprador y <strong>USD 5</strong> de una funda nueva para que se vea presentable.</p>
+    <p>&iquest;Cu&aacute;nto vale realmente su celular <em>para usted</em>? No 413 (eso ya pas&oacute;). Tampoco 260 (de ah&iacute; le van a descontar cosas). Vale <strong>260 &minus; 10 &minus; 5 = USD 245</strong>. Eso es lo que efectivamente entrar&aacute; a su bolsillo.</p>
+    <p>Ese n&uacute;mero &mdash;<strong>lo que espero recibir menos lo que a&uacute;n tengo que gastar para lograr la venta</strong>&mdash; es el <strong>Valor Neto Realizable</strong>. Y f&iacute;jese en algo muy importante: usted <em>perdi&oacute;</em> 168 d&oacute;lares y esa p&eacute;rdida ya ocurri&oacute;, aunque todav&iacute;a no haya vendido nada. La contabilidad, con la NIC 2, dice lo mismo: la mala noticia se reconoce cuando se conoce, no cuando se cobra.</p>
+  </div>
+
+  <h3>2.1. Definici&oacute;n normativa</h3>
+  <div class="def-box"><span class="rot">Definici&oacute;n</span>
+    <p><strong>Valor Neto Realizable (VNR):</strong> es el <strong>precio estimado de venta</strong> de un activo en el <strong>curso normal de la operaci&oacute;n</strong>, menos los <strong>costos estimados para terminar su producci&oacute;n</strong> y los <strong>costos estimados necesarios para llevar a cabo la venta</strong>.</p>
+  </div>
+  <div class="norma-box"><span class="rot">Sustento normativo</span>
+    <p>NIC 2 <em>Inventarios</em>, p&aacute;rrafo 6 (definici&oacute;n) y p&aacute;rrafos 28 a 33 (aplicaci&oacute;n).</p>
+  </div>
+
+  <p>Desarmemos la definici&oacute;n palabra por palabra, porque cada t&eacute;rmino tiene consecuencias:</p>
+  <ul>
+    <li><strong>&ldquo;Precio <em>estimado</em> de venta&rdquo;:</strong> es una estimaci&oacute;n hecha por la entidad con la mejor evidencia disponible a la fecha del balance. No es un precio publicado ni un precio de bolsa: es <em>el precio al que esta empresa espera vender esta mercader&iacute;a</em>.</li>
+    <li><strong>&ldquo;En el <em>curso normal</em> de la operaci&oacute;n&rdquo;:</strong> el precio de una venta forzada, de una liquidaci&oacute;n por quiebra o de un remate <strong>no</strong> sirve. Debe ser el precio de la operaci&oacute;n habitual del negocio.</li>
+    <li><strong>&ldquo;Menos los costos estimados para <em>terminar</em> su producci&oacute;n&rdquo;:</strong> aplica a productos en proceso. Si a un mueble le falta el lacado, ese costo pendiente se resta.</li>
+    <li><strong>&ldquo;Menos los costos <em>necesarios para llevar a cabo la venta</em>&rdquo;:</strong> comisiones de vendedores, embalaje de despacho, transporte al cliente, certificaciones exigidas por el comprador, gastos de exportaci&oacute;n.</li>
+  </ul>
+  <p>De ah&iacute; el nombre: es <strong>realizable</strong> porque se refiere a lo que se va a <em>realizar</em> (convertir en efectivo), y es <strong>neto</strong> porque ya se le descontaron los sacrificios pendientes.</p>
+
+  <h4>F&oacute;rmula operativa</h4>
+  <div class="ejemplo-box"><span class="rot">F&oacute;rmula</span>
+    <p style="text-align:center;font-size:1.06rem"><strong>VNR = Precio estimado de venta &minus; Costos estimados para terminar &minus; Costos estimados de venta</strong></p>
+  </div>
+
+  <h3>2.2. La regla de medici&oacute;n: el menor entre costo y VNR</h3>
+  <div class="norma-box"><span class="rot">Regla central de la NIC 2</span>
+    <p>NIC 2, p&aacute;rrafo 9: <em>los inventarios se medir&aacute;n al costo o al valor neto realizable, seg&uacute;n cu&aacute;l sea menor</em>.</p>
+  </div>
+  <p>Esta regla es la aplicaci&oacute;n directa de un principio que usted ya conoce desde el D&iacute;a 1: la <strong>prudencia</strong>, o m&aacute;s t&eacute;cnicamente, el criterio de que un activo <strong>no debe figurar en libros por encima del importe que la entidad espera obtener de &eacute;l</strong> (NIC 2, p&aacute;rrafo 28). Un activo es, por definici&oacute;n, un recurso del que se esperan beneficios econ&oacute;micos futuros; si esos beneficios ya no alcanzan al valor registrado, el activo est&aacute; sobrevalorado y hay que corregirlo.</p>
+  <p>N&oacute;tese la <strong>asimetr&iacute;a deliberada</strong> de la norma:</p>
+  <div class="tabla-cont">
+  <table class="tabla">
+    <tr><th style="width:30%">Situaci&oacute;n</th><th style="width:26%">Medici&oacute;n</th><th>Tratamiento y raz&oacute;n</th></tr>
+    <tr><td>VNR <strong>menor</strong> que el costo</td><td>Se mide al <strong>VNR</strong></td><td>Se reconoce una <strong>p&eacute;rdida</strong> en el per&iacute;odo. La mala noticia se reconoce apenas se conoce.</td></tr>
+    <tr><td>VNR <strong>mayor</strong> que el costo</td><td>Se mantiene al <strong>costo</strong></td><td>No se reconoce ganancia alguna. La utilidad se reconoce cuando la venta efectivamente ocurre, no antes.</td></tr>
+  </table>
+  </div>
+  <div class="alerta-box"><span class="rot">No confunda</span>
+    <p>La regla <strong>nunca</strong> permite subir el inventario por encima del costo. Si usted compr&oacute; a 100 y hoy podr&iacute;a vender neto en 180, el inventario sigue valiendo <strong>100</strong> en libros. Reconocer 180 ser&iacute;a anticipar una utilidad que a&uacute;n no se gan&oacute;.</p>
+  </div>
+
+  <h3>2.3. &iquest;Cu&aacute;ndo cae el VNR por debajo del costo?</h3>
+  <p>La NIC 2, p&aacute;rrafo 28, enumera las circunstancias t&iacute;picas. Todas son reconocibles en el comercio ecuatoriano:</p>
+  <ul>
+    <li><strong>Da&ntilde;o f&iacute;sico:</strong> mercader&iacute;a mojada por una inundaci&oacute;n en bodega, empaques rotos en tr&aacute;nsito.</li>
+    <li><strong>Obsolescencia total o parcial:</strong> celulares de un modelo descontinuado, ropa de temporada pasada, repuestos de veh&iacute;culos que salieron del mercado.</li>
+    <li><strong>Ca&iacute;da de los precios de venta en el mercado:</strong> ingres&oacute; un competidor con un producto equivalente m&aacute;s barato, o baj&oacute; el precio internacional del commodity.</li>
+    <li><strong>Aumento de los costos estimados para terminar o para vender:</strong> subi&oacute; el flete internacional, se exige una nueva certificaci&oacute;n al exportar.</li>
+  </ul>
+  <div class="cotidiano-box"><span class="rot">Lo ve todos los d&iacute;as</span>
+    <p>Cuando usted entra a una farmacia y ve la canasta de &ldquo;pr&oacute;ximos a vencer &minus;50%&rdquo;, o cuando la panader&iacute;a remata el pan del d&iacute;a anterior, o cuando una tienda de ropa saca el rack de &ldquo;temporada pasada&rdquo;, est&aacute; viendo <strong>VNR por debajo del costo</strong> en acci&oacute;n. La empresa no est&aacute; siendo generosa: est&aacute; reconociendo que el valor de esa mercader&iacute;a ya cay&oacute;.</p>
+  </div>
+
+  <h3>2.4. Caso aplicado: las licuadoras de Comercial El Astillero S.A.</h3>
+  <p>Al 31 de agosto de 2026, las <strong>200 licuadoras Andina LX-3</strong> siguen en bodega con un costo unitario de <strong>USD 151,50</strong> (calculado en el Tema 1). Sin embargo, un competidor lanz&oacute; un modelo superior y el mercado se movi&oacute;. La gerencia comercial estima ahora:</p>
+  <div class="tabla-cont">
+  <table class="tabla">
+    <tr><th style="width:62%">Concepto</th><th class="num">USD por unidad</th></tr>
+    <tr><td>Precio estimado de venta en el curso normal de la operaci&oacute;n</td><td class="num">160,00</td></tr>
+    <tr><td>(&minus;) Comisi&oacute;n del vendedor: 5% sobre el precio de venta</td><td class="num">(8,00)</td></tr>
+    <tr><td>(&minus;) Embalaje y transporte hasta el cliente</td><td class="num">(4,00)</td></tr>
+    <tr class="total"><td><strong>VALOR NETO REALIZABLE (VNR) unitario</strong></td><td class="num">148,00</td></tr>
+    <tr><td>Costo unitario en libros (Tema 1)</td><td class="num">151,50</td></tr>
+    <tr class="total"><td><strong>Diferencia por unidad (rebaja necesaria)</strong></td><td class="num">3,50</td></tr>
+  </table>
+  </div>
+  <p><strong>Comparaci&oacute;n:</strong> VNR 148,00 &lt; Costo 151,50. Por lo tanto, seg&uacute;n NIC 2 p&aacute;rrafo 9, el inventario debe medirse al VNR.</p>
+  <div class="ejemplo-box"><span class="rot">Determinaci&oacute;n del importe de la rebaja</span>
+    <p>Rebaja unitaria: 151,50 &minus; 148,00 = <strong>3,50</strong></p>
+    <p>Rebaja total: 3,50 &times; 200 unidades = <strong>USD 700,00</strong></p>
+    <p>Valor en libros antes del ajuste: 200 &times; 151,50 = 30.300,00<br>
+       Valor en libros despu&eacute;s del ajuste: 200 &times; 148,00 = <strong>29.600,00</strong></p>
+  </div>
+  <p>La NIC 2, p&aacute;rrafo 34, establece que <strong>el importe de cualquier rebaja de valor hasta alcanzar el VNR se reconocer&aacute; como gasto en el per&iacute;odo en que ocurra la rebaja</strong>. En Ecuador, siguiendo las convenciones de cuentas de la Superintendencia de Compa&ntilde;&iacute;as, la contrapartida no se acredita directamente al inventario, sino a una <strong>cuenta correctora del activo</strong> (de saldo acreedor), de modo que el estado financiero muestre simult&aacute;neamente el costo original y el deterioro reconocido.</p>
+
+  <div class="futuro-box"><span class="rot">Anticipo ilustrativo &mdash; se sistematiza el D&iacute;a 11</span>
+    <p>El asiento que sigue se muestra <strong>solo para que usted vea el efecto contable completo</strong>. El tratamiento sistem&aacute;tico de los <strong>asientos de ajuste</strong> (qu&eacute; conceptos requieren ajuste, cu&aacute;ndo y con qu&eacute; metodolog&iacute;a) corresponde al <strong>D&iacute;a 11 (Unidad 3)</strong>, y el <strong>balance de comprobaci&oacute;n ajustado</strong> al <strong>D&iacute;a 12</strong>. Por ahora, conc&eacute;ntrese en el c&aacute;lculo del VNR y en la l&oacute;gica de la comparaci&oacute;n; el procedimiento de ajuste se estudiar&aacute; en su momento.</p>
+  </div>
+
+  <div class="asiento">
+    <div class="asiento-head">Asiento 2 (ilustrativo) &mdash; Rebaja del inventario a su Valor Neto Realizable</div>
+    <table>
+      <tr><th style="width:11%">Fecha</th><th style="width:11%">C&oacute;digo</th><th>Detalle</th><th class="num" style="width:14%">Parcial</th><th class="num" style="width:14%">Debe</th><th class="num" style="width:14%">Haber</th></tr>
+      <tr><td>31/08/2026</td><td>52302</td><td>P&eacute;rdida por ajuste al valor neto de realizaci&oacute;n de inventarios</td><td class="num">&nbsp;</td><td class="num">700,00</td><td class="num">&nbsp;</td></tr>
+      <tr><td>&nbsp;</td><td>10307</td><td class="credito">a) (&minus;) Provisi&oacute;n por valor neto de realizaci&oacute;n de inventarios</td><td class="num">&nbsp;</td><td class="num">&nbsp;</td><td class="num">700,00</td></tr>
+      <tr class="suman"><td>&nbsp;</td><td>&nbsp;</td><td>SUMAN</td><td class="num">&nbsp;</td><td class="num">700,00</td><td class="num">700,00</td></tr>
+    </table>
+    <div class="glosa">P/R Rebaja de 200 licuadoras Andina LX-3 desde su costo de 151,50 hasta su valor neto realizable de 148,00 por unidad, seg&uacute;n informe de la gerencia comercial y estudio de precios de mercado al cierre. Aplicaci&oacute;n de NIC 2, p&aacute;rrafos 9, 28 y 34. La contrapartida se registra en cuenta correctora del activo conforme a las convenciones del catalogo de cuentas de la Superintendencia de Compa&ntilde;&iacute;as, Valores y Seguros.</div>
+  </div>
+
+  <p>Presentaci&oacute;n en el Estado de Situaci&oacute;n Financiera:</p>
+  <div class="tabla-cont">
+  <table class="tabla">
+    <tr><th style="width:70%">Activo corriente &mdash; Inventarios</th><th class="num">USD</th></tr>
+    <tr><td>Inventario de mercader&iacute;as (al costo)</td><td class="num">30.300,00</td></tr>
+    <tr><td>(&minus;) Provisi&oacute;n por valor neto de realizaci&oacute;n de inventarios</td><td class="num">(700,00)</td></tr>
+    <tr class="total"><td><strong>Inventarios, neto</strong></td><td class="num">29.600,00</td></tr>
+  </table>
+  </div>
+
+  <h3>2.5. Reversi&oacute;n de la rebaja</h3>
+  <p>&iquest;Qu&eacute; ocurre si en el per&iacute;odo siguiente las circunstancias cambian y el VNR se recupera? La NIC 2, <strong>p&aacute;rrafo 33</strong>, lo resuelve: cuando han dejado de existir las circunstancias que causaron la rebaja, o cuando hay evidencia clara de un incremento del VNR por un cambio en las circunstancias econ&oacute;micas, <strong>se revertir&aacute; el importe de la rebaja</strong>, de manera que el nuevo valor contable sea <strong>el menor entre el costo y el VNR revisado</strong>. La reversi&oacute;n se reconoce como una <strong>reducci&oacute;n del valor de los inventarios reconocido como gasto</strong> en el per&iacute;odo en que ocurre.</p>
+  <div class="alerta-box"><span class="rot">L&iacute;mite de la reversi&oacute;n</span>
+    <p>La reversi&oacute;n <strong>nunca puede exceder el importe de la rebaja originalmente reconocida</strong>. En el caso de El Astillero, si el VNR se recuperara a 155,00, el inventario volver&iacute;a a 151,50 (el costo) y la reversi&oacute;n ser&iacute;a de 700,00 &mdash; no m&aacute;s. Jam&aacute;s se registrar&iacute;a a 155,00.</p>
+  </div>
+
+  <h3>2.6. Nivel de aplicaci&oacute;n de la comparaci&oacute;n</h3>
+  <p>La NIC 2, <strong>p&aacute;rrafo 29</strong>, precisa que la rebaja se calcula normalmente <strong>partida por partida</strong> (art&iacute;culo por art&iacute;culo). No es aceptable compensar el deterioro de un producto con la ganancia potencial de otro. Excepcionalmente puede agruparse cuando se trata de partidas similares o relacionadas de la misma l&iacute;nea de productos, con prop&oacute;sitos similares y que se producen y venden en la misma zona geogr&aacute;fica. Nunca se admite agrupar por clases enteras (por ejemplo, &ldquo;todos los productos terminados&rdquo;) ni por segmentos completos de la entidad.</p>
+
+  <div class="carrera-box"><span class="rot">&iquest;Por qu&eacute; esto le importa en Negocios Internacionales?</span>
+    <ul>
+      <li><strong>Comercio exterior:</strong> los costos estimados de venta de un exportador incluyen flete internacional, seguro, certificados de origen, certificados fitosanitarios y comisiones del agente en destino. Cuanto mayores esos costos, menor el VNR &mdash; y una operaci&oacute;n de exportaci&oacute;n aparentemente rentable puede terminar exigiendo una rebaja contable.</li>
+      <li><strong>Finanzas internacionales:</strong> las rebajas al VNR reducen la utilidad y el patrimonio, afectando indicadores de liquidez y solvencia que los bancos y las l&iacute;neas de cr&eacute;dito internacionales revisan antes de financiar una operaci&oacute;n.</li>
+      <li><strong>Marketing y negociaci&oacute;n internacional:</strong> cada descuento que usted concede en una negociaci&oacute;n reduce el precio estimado de venta y, con &eacute;l, el VNR. Negociar sin este dato es comprometer utilidades futuras sin saberlo.</li>
+      <li><strong>Marco legal y normativo:</strong> la p&eacute;rdida contable por VNR no es autom&aacute;ticamente deducible en Ecuador. La baja de inventarios por obsolescencia o desperdicio exige cumplir requisitos formales, entre ellos la <strong>declaraci&oacute;n juramentada ante notario</strong> prevista en el Reglamento para la Aplicaci&oacute;n de la LRTI. Norma contable y norma tributaria no coinciden autom&aacute;ticamente: esa diferencia es un tema central de la auditor&iacute;a y del cumplimiento fiscal.</li>
+    </ul>
+  </div>
+
+  <div class="clave-box"><span class="rot">Idea clave del Tema 2</span>
+    <p><strong>El VNR responde a la pregunta: &ldquo;de esta mercader&iacute;a, &iquest;cu&aacute;nto dinero me va a quedar realmente a m&iacute;?&rdquo;</strong></p>
+    <p>Es un valor <strong>espec&iacute;fico de la entidad</strong>: depende de <em>mis</em> precios, <em>mis</em> comisiones y <em>mis</em> costos de despacho. Dos empresas con la misma mercader&iacute;a pueden tener VNR distintos, y ambas estar correctas.</p>
+    <p>Regla: se mide al <strong>menor entre costo y VNR</strong>. Se baja cuando hay p&eacute;rdida; nunca se sube por encima del costo. Se reversa hasta el l&iacute;mite de la rebaja original, jam&aacute;s m&aacute;s.</p>
+  </div>
+</section>
+
+<!-- ================= PANEL: TEMA 3 ================= -->
+<section id="tema3" class="panel">
+  <h2>Tema 3. El Valor Razonable (VR)</h2>
+  <p class="intro">Si el VNR mira hacia adentro &mdash;lo que <em>yo</em> espero obtener&mdash;, el valor razonable mira hacia afuera: lo que <em>el mercado</em> pagar&iacute;a por ese bien, sin importar qui&eacute;n sea el due&ntilde;o.</p>
+
+  <div class="cotidiano-box"><span class="rot">Empecemos por la vida diaria</span>
+    <p>Piense en un gramo de oro, en un d&oacute;lar frente al euro, o en un quintal de cacao. Nadie pregunta &ldquo;&iquest;cu&aacute;nto vale <em>tu</em> gramo de oro?&rdquo;, porque un gramo de oro vale lo mismo para todos: lo que diga el mercado hoy. Usted puede consultarlo en internet en dos segundos.</p>
+    <p>Ahora piense en su celular usado del Tema 2. No existe una &ldquo;bolsa de celulares usados&rdquo; con un precio oficial. El valor depende de <em>su</em> estado, <em>su</em> urgencia y <em>su</em> canal de venta.</p>
+    <p>Esa es la diferencia esencial: hay bienes con un <strong>precio de mercado observable e id&eacute;ntico para todos</strong> (valor razonable) y bienes cuyo valor depende de <strong>la situaci&oacute;n particular de quien los posee</strong> (valor neto realizable).</p>
+  </div>
+
+  <h3>3.1. Definici&oacute;n normativa</h3>
+  <div class="def-box"><span class="rot">Definici&oacute;n</span>
+    <p><strong>Valor Razonable (VR):</strong> es el <strong>precio que se recibir&iacute;a por vender un activo</strong>, o que se pagar&iacute;a por transferir un pasivo, en una <strong>transacci&oacute;n ordenada entre participantes del mercado</strong> en la <strong>fecha de la medici&oacute;n</strong>.</p>
+  </div>
+  <div class="norma-box"><span class="rot">Sustento normativo</span>
+    <p>NIIF 13 <em>Medici&oacute;n del Valor Razonable</em>, p&aacute;rrafo 9; definici&oacute;n recogida tambi&eacute;n en NIC 2, p&aacute;rrafo 6.</p>
+  </div>
+
+  <p>Cada elemento de la definici&oacute;n tiene un significado t&eacute;cnico preciso:</p>
+  <ul>
+    <li><strong>&ldquo;Precio que se recibir&iacute;a por vender&rdquo;</strong> &mdash; es un <strong>precio de salida</strong> (de venta), no un precio de entrada (de compra). No es lo que a usted le costar&iacute;a reponer el bien.</li>
+    <li><strong>&ldquo;Transacci&oacute;n ordenada&rdquo;</strong> &mdash; una transacci&oacute;n con exposici&oacute;n normal al mercado durante un per&iacute;odo razonable. Excluye ventas forzadas, liquidaciones y remates judiciales.</li>
+    <li><strong>&ldquo;Entre participantes del mercado&rdquo;</strong> &mdash; compradores y vendedores independientes, informados, capaces y dispuestos a transar, actuando en su mejor inter&eacute;s econ&oacute;mico. Es una medici&oacute;n <em>impersonal</em>.</li>
+    <li><strong>&ldquo;En la fecha de la medici&oacute;n&rdquo;</strong> &mdash; el valor razonable es una foto de un momento espec&iacute;fico. El de hoy no sirve para ayer ni para ma&ntilde;ana.</li>
+  </ul>
+  <p>La NIIF 13 a&ntilde;ade que el valor razonable se determina en el <strong>mercado principal</strong> del activo (aquel con mayor volumen y nivel de actividad) o, si no existe, en el <strong>mercado m&aacute;s ventajoso</strong>. Y establece una <strong>jerarqu&iacute;a de tres niveles</strong> seg&uacute;n la calidad de los datos usados:</p>
+  <div class="tabla-cont">
+  <table class="tabla">
+    <tr><th style="width:14%">Nivel</th><th style="width:42%">Tipo de dato de entrada</th><th>Ejemplo</th></tr>
+    <tr><td class="centro"><strong>1</strong></td><td>Precios cotizados <em>sin ajustar</em> en mercados activos para activos id&eacute;nticos</td><td>Precio de la tonelada de cacao en la bolsa internacional; precio de la onza de oro.</td></tr>
+    <tr><td class="centro"><strong>2</strong></td><td>Datos observables distintos de los precios cotizados de Nivel 1 (precios de activos similares, o del mismo activo en mercados no activos)</td><td>Precio de una variedad de cacao similar, ajustado por calidad y ubicaci&oacute;n.</td></tr>
+    <tr><td class="centro"><strong>3</strong></td><td>Datos <em>no observables</em>, basados en supuestos propios de la entidad</td><td>Proyecciones internas de flujos cuando no hay mercado de referencia.</td></tr>
+  </table>
+  </div>
+  <p>Mientras m&aacute;s alto el nivel (m&aacute;s cerca del 1), m&aacute;s objetiva y verificable es la medici&oacute;n. Esta jerarqu&iacute;a es la que impide que el valor razonable se convierta en una cifra arbitraria.</p>
+
+  <h3>3.2. La diferencia t&eacute;cnica entre VNR y VR</h3>
+  <p>Este es el punto que la NIC 2 se ocupa de aclarar expresamente, porque en la pr&aacute;ctica se confunden:</p>
+  <div class="norma-box"><span class="rot">NIC 2, p&aacute;rrafo 7 &mdash; la distinci&oacute;n esencial</span>
+    <p>El valor neto realizable se refiere al <strong>importe neto que la entidad espera obtener</strong> por la venta de los inventarios en el curso normal de su operaci&oacute;n. El valor razonable refleja el precio al que tendr&iacute;a lugar una transacci&oacute;n ordenada para vender <strong>ese mismo inventario</strong> en el mercado principal (o m&aacute;s ventajoso) <strong>entre participantes del mercado</strong> en la fecha de medici&oacute;n.</p>
+    <p>La conclusi&oacute;n normativa: <strong>el primero es un valor espec&iacute;fico para la entidad; el segundo no lo es</strong>. Por ello, el valor neto realizable de los inventarios <strong>puede no ser igual</strong> al valor razonable menos los costos de venta.</p>
+  </div>
+
+  <div class="ejemplo-box"><span class="rot">Ejemplo que aclara la diferencia de una vez</span>
+    <p>Dos empresas ecuatorianas poseen, cada una, <strong>10 toneladas de cacao fino de aroma</strong> de la misma calidad, en la misma bodega de Guayaquil, en la misma fecha.</p>
+    <ul>
+      <li>El <strong>valor razonable</strong> de esas 10 toneladas es <strong>el mismo para ambas</strong>: es el precio de mercado del cacao. No depende de qui&eacute;n sea el due&ntilde;o.</li>
+      <li>El <strong>valor neto realizable</strong> puede ser <strong>distinto para cada una</strong>: la primera tiene un contrato de exportaci&oacute;n directa a Suiza y paga 2% de comisi&oacute;n; la segunda vende a trav&eacute;s de un intermediario que le cobra 8%. Misma mercader&iacute;a, mismo mercado, distinto VNR.</li>
+    </ul>
+    <p>Por eso el VNR es &ldquo;espec&iacute;fico de la entidad&rdquo;: <strong>responde a la pregunta &ldquo;&iquest;cu&aacute;nto me queda a m&iacute;?&rdquo;, no &ldquo;&iquest;cu&aacute;nto vale esto en el mundo?&rdquo;</strong>.</p>
+  </div>
+
+  <h3>3.3. &iquest;Cu&aacute;ndo aparece el valor razonable en la medici&oacute;n de inventarios?</h3>
+  <p>Aqu&iacute; conviene ser muy claro, porque es fuente constante de error:</p>
+  <div class="alerta-box"><span class="rot">Punto cr&iacute;tico</span>
+    <p><strong>La regla general de la NIC 2 NO usa valor razonable.</strong> La regla general es &ldquo;el menor entre costo y VNR&rdquo; (p&aacute;rrafo 9). El valor razonable interviene solo en situaciones <em>excepcionales</em>, expresamente previstas por la norma.</p>
+  </div>
+  <p>Esas excepciones son tres:</p>
+
+  <h4>a) Intermediarios que comercian con materias primas cotizadas</h4>
+  <p>La NIC 2, <strong>p&aacute;rrafo 3, literal b)</strong>, excluye de sus requerimientos de medici&oacute;n a los <strong>intermediarios que comercian con materias primas cotizadas</strong>, cuando midan sus inventarios al <strong>valor razonable menos los costos de venta</strong>. El p&aacute;rrafo 5 explica la raz&oacute;n: estos intermediarios compran o venden materias primas de terceros por cuenta propia o de terceros, con el prop&oacute;sito de <strong>obtener ganancias por las fluctuaciones del precio</strong> o por el margen de intermediaci&oacute;n, no de usarlas o transformarlas. Los cambios en ese valor se reconocen <strong>directamente en el resultado del per&iacute;odo</strong>.</p>
+
+  <h4>b) Productos agr&iacute;colas cosechados</h4>
+  <p>La NIC 2, <strong>p&aacute;rrafo 20</strong>, en concordancia con la <strong>NIC 41 Agricultura</strong>, dispone que los productos agr&iacute;colas cosechados de activos biol&oacute;gicos se midan, en el <strong>punto de la cosecha</strong>, a su <strong>valor razonable menos los costos de venta</strong>. Y ese importe pasa a ser el <strong>costo</strong> de esos inventarios a efectos de la NIC 2 desde ese momento en adelante.</p>
+  <div class="ejemplo-box"><span class="rot">Aplicaci&oacute;n directa a Ecuador</span>
+    <p>Este p&aacute;rrafo es especialmente relevante para la econom&iacute;a ecuatoriana: <strong>banano, cacao, caf&eacute;, flores, palma africana, camar&oacute;n</strong>. Un exportador de banano no valora la fruta cosechada a &ldquo;lo que le cost&oacute; producirla&rdquo;, sino a su valor razonable menos costos de venta en el momento de la cosecha. A partir de ah&iacute;, ese importe funciona como costo, y todo lo dem&aacute;s (empaque, transporte, almacenamiento necesario) sigue las reglas normales de la NIC 2.</p>
+  </div>
+
+  <h4>c) Productores de productos agr&iacute;colas, forestales y minerales</h4>
+  <p>La NIC 2, <strong>p&aacute;rrafo 3, literal a)</strong>, tambi&eacute;n excluye de sus requerimientos de medici&oacute;n a los productores de productos agr&iacute;colas y forestales, de productos agr&iacute;colas tras la cosecha, y de minerales y productos minerales, <strong>siempre que midan sus inventarios al valor neto realizable</strong> de acuerdo con pr&aacute;cticas bien consolidadas del sector. El p&aacute;rrafo 4 aclara que, en esos sectores, existen momentos en que la venta est&aacute; asegurada por un contrato a plazo o por una garant&iacute;a gubernamental, o cuando existe un mercado activo con riesgo insignificante de no vender.</p>
+
+  <h3>3.4. Caso aplicado: las tres cifras conviviendo</h3>
+  <p><strong>Exportadora del Guayas S.A.</strong> mantiene al 31 de agosto de 2026 <strong>10 toneladas de cacao</strong> adquiridas a productores de Los R&iacute;os. Al cierre dispone de estos datos:</p>
+  <div class="tabla-cont">
+  <table class="tabla">
+    <tr><th style="width:52%">Concepto</th><th class="num">Por tonelada</th><th class="num">10 toneladas</th></tr>
+    <tr><td><strong>Costo de adquisici&oacute;n</strong> (pagado al productor + transporte a bodega)</td><td class="num">6.900,00</td><td class="num">69.000,00</td></tr>
+    <tr><td><strong>Valor Razonable</strong> (precio cotizado en el mercado internacional, Nivel 1)</td><td class="num">7.200,00</td><td class="num">72.000,00</td></tr>
+    <tr><td>(&minus;) Costos estimados de venta: certificaci&oacute;n, transporte a puerto, comisi&oacute;n del broker</td><td class="num">(480,00)</td><td class="num">(4.800,00)</td></tr>
+    <tr class="total"><td><strong>Valor Neto Realizable (VNR)</strong></td><td class="num">6.720,00</td><td class="num">67.200,00</td></tr>
+  </table>
+  </div>
+  <p>Tres cifras distintas para la misma mercader&iacute;a, en la misma fecha, todas correctas dentro de su propia definici&oacute;n:</p>
+  <ul>
+    <li><strong>69.000,00</strong> &mdash; lo que cost&oacute;.</li>
+    <li><strong>72.000,00</strong> &mdash; lo que el mercado paga por ella (valor razonable).</li>
+    <li><strong>67.200,00</strong> &mdash; lo que efectivamente le quedar&aacute; a esta empresa (VNR).</li>
+  </ul>
+  <p><strong>Decisi&oacute;n:</strong> Exportadora del Guayas es una comercializadora ordinaria, no un intermediario de materias primas cotizadas del p&aacute;rrafo 3(b). Por lo tanto aplica la regla general del p&aacute;rrafo 9: <strong>el menor entre costo (69.000,00) y VNR (67.200,00)</strong>. Mide su inventario en <strong>67.200,00</strong> y reconoce una rebaja de <strong>1.800,00</strong>.</p>
+  <div class="alerta-box"><span class="rot">Observe la trampa</span>
+    <p>El valor razonable de 72.000,00 es <strong>mayor</strong> que el costo, lo que podr&iacute;a hacer creer que la empresa est&aacute; ganando. Sin embargo, tras descontar los costos necesarios para llevar esa mercader&iacute;a al mercado, el importe que la empresa realmente obtendr&aacute; es <em>menor</em> que el costo. <strong>Un precio de mercado favorable no garantiza una operaci&oacute;n rentable.</strong> Esa es exactamente la lecci&oacute;n que un profesional de Negocios Internacionales debe interiorizar antes de firmar un contrato de exportaci&oacute;n.</p>
+    <p>Si esta misma empresa fuera un <em>intermediario que comercia con materias primas cotizadas</em> (p&aacute;rr. 3b), medir&iacute;a a valor razonable menos costos de venta &mdash; que aqu&iacute; coincide num&eacute;ricamente con 67.200,00 &mdash; pero reconocer&iacute;a los cambios de valor <strong>en resultados</strong> tanto al alza como a la baja, sin el l&iacute;mite del costo. Misma cifra hoy, l&oacute;gica contable completamente distinta.</p>
+  </div>
+
+  <div class="carrera-box"><span class="rot">&iquest;Por qu&eacute; esto le importa en Negocios Internacionales?</span>
+    <ul>
+      <li><strong>Comercio exterior:</strong> Ecuador exporta principalmente commodities (banano, cacao, camar&oacute;n, caf&eacute;, flores, petr&oacute;leo). Estos son precisamente los bienes con valor razonable de Nivel 1 observable en bolsas internacionales. Comprender c&oacute;mo se mide es comprender c&oacute;mo se valora la principal riqueza exportable del pa&iacute;s.</li>
+      <li><strong>Finanzas internacionales:</strong> los precios de bolsa fluctúan a diario, y con ellos el valor de los inventarios y las coberturas (futuros, forwards) que las empresas contratan para protegerse. El valor razonable es el lenguaje de esos instrumentos.</li>
+      <li><strong>Marketing y negociaci&oacute;n internacional:</strong> conocer el precio de referencia internacional le da poder en la mesa. Un comprador extranjero que sabe el precio de bolsa y un vendedor que no lo sabe es una negociaci&oacute;n perdida antes de empezar.</li>
+      <li><strong>Marco legal y normativo:</strong> la NIIF 13 fija la jerarqu&iacute;a de datos de entrada, la NIC 41 rige los activos biol&oacute;gicos y la NIC 2 la medici&oacute;n de inventarios. Saber cu&aacute;l norma aplica a cada situaci&oacute;n es una competencia t&eacute;cnica que se le exigir&aacute; profesionalmente.</li>
+    </ul>
+  </div>
+
+  <div class="clave-box"><span class="rot">Idea clave del Tema 3</span>
+    <p><strong>El valor razonable es el precio del mercado; el VNR es el resultado que ese mercado le deja a usted.</strong></p>
+    <p>El valor razonable es <em>impersonal</em>: igual para todos los participantes. El VNR es <em>personal</em>: depende de los costos de venta particulares de cada entidad (NIC 2, p&aacute;rrafo 7).</p>
+    <p>En la medici&oacute;n ordinaria de inventarios <strong>no se usa valor razonable</strong>: se usa el menor entre costo y VNR. El valor razonable aparece solo en las excepciones de los p&aacute;rrafos 3 y 20 de la NIC 2.</p>
+  </div>
+</section>
+
+<!-- ================= PANEL: TEMA 4 ================= -->
+<section id="tema4" class="panel">
+  <h2>Tema 4. Comparativo integrado: Costo, VNR y Valor Razonable</h2>
+  <p class="intro">Ya conoce las tres medidas por separado. Ahora hay que saber elegir. Esta pesta&ntilde;a es la herramienta de decisi&oacute;n que usar&aacute; en el ejercicio, en el cuestionario y en su vida profesional.</p>
+
+  <div class="cotidiano-box"><span class="rot">Una analog&iacute;a para no olvidarlo nunca</span>
+    <p>Piense en un auto usado que usted quiere vender:</p>
+    <ul>
+      <li><strong>Costo</strong> = lo que usted pag&oacute; cuando lo compr&oacute;, m&aacute;s la matr&iacute;cula y el traspaso. Es historia: un hecho ocurrido y documentado.</li>
+      <li><strong>Valor razonable</strong> = lo que dice la gu&iacute;a de precios de autos usados para ese modelo, a&ntilde;o y kilometraje. Es el mercado: impersonal, verificable, igual para cualquiera que tenga ese auto.</li>
+      <li><strong>VNR</strong> = ese precio de gu&iacute;a, menos la comisi&oacute;n del patio de autos, menos el pulido que le tiene que hacer, menos la revisi&oacute;n t&eacute;cnica pendiente. Es <em>su</em> realidad: lo que finalmente entrar&aacute; a su cuenta.</li>
+    </ul>
+    <p><strong>Costo = pasado. Valor razonable = mercado. VNR = mi bolsillo.</strong></p>
+  </div>
+
+  <h3>4.1. Cuadro comparativo</h3>
+  <div class="tabla-cont">
+  <table class="tabla">
+    <tr><th style="width:19%">Criterio</th><th style="width:27%">COSTO</th><th style="width:27%">VALOR NETO REALIZABLE</th><th style="width:27%">VALOR RAZONABLE</th></tr>
+    <tr><td><strong>Pregunta que responde</strong></td><td>&iquest;Cu&aacute;nto me cost&oacute; ponerlo aqu&iacute;?</td><td>&iquest;Cu&aacute;nto me va a quedar a m&iacute;?</td><td>&iquest;Cu&aacute;nto vale en el mercado?</td></tr>
+    <tr><td><strong>Perspectiva temporal</strong></td><td>Pasado (hecho consumado)</td><td>Futuro esperado por la entidad</td><td>Presente del mercado (fecha de medici&oacute;n)</td></tr>
+    <tr><td><strong>&iquest;Es espec&iacute;fico de la entidad?</strong></td><td>S&iacute; (depende de c&oacute;mo compr&oacute; cada empresa)</td><td><strong>S&iacute;</strong> (NIC 2, p&aacute;rr. 7)</td><td><strong>No</strong> (NIC 2, p&aacute;rr. 7)</td></tr>
+    <tr><td><strong>Descuenta costos de venta</strong></td><td>No aplica</td><td><strong>S&iacute;</strong>, y tambi&eacute;n los costos para terminar</td><td>No los descuenta en su definici&oacute;n; se restan aparte cuando la norma lo exige</td></tr>
+    <tr><td><strong>Fuente del dato</strong></td><td>Documentos fuente: factura, DAI, liquidaci&oacute;n aduanera, planilla de flete</td><td>Estimaci&oacute;n de la entidad con evidencia disponible al cierre</td><td>Precio observable de mercado, seg&uacute;n jerarqu&iacute;a de NIIF 13</td></tr>
+    <tr><td><strong>Norma que lo regula</strong></td><td>NIC 2, p&aacute;rr. 10 a 22</td><td>NIC 2, p&aacute;rr. 6, 9 y 28 a 33</td><td>NIIF 13, p&aacute;rr. 9; NIC 2, p&aacute;rr. 3, 6 y 20</td></tr>
+    <tr><td><strong>&iquest;Se usa en la medici&oacute;n ordinaria de inventarios?</strong></td><td><strong>S&iacute;</strong>, es la base</td><td><strong>S&iacute;</strong>, como techo de la medici&oacute;n</td><td><strong>No</strong>, salvo excepciones expresas</td></tr>
+    <tr><td><strong>&iquest;Puede subir el valor del inventario?</strong></td><td>No</td><td>No por encima del costo</td><td>S&iacute;, en los casos de excepci&oacute;n (intermediarios de commodities)</td></tr>
+  </table>
+  </div>
+
+  <h3>4.2. Ruta de decisi&oacute;n en cuatro preguntas</h3>
+  <p>Ante cualquier inventario, usted debe recorrer esta secuencia en orden:</p>
+  <div class="paso"><span class="rot">Pregunta 1 &mdash; &iquest;La entidad est&aacute; dentro del alcance de medici&oacute;n de la NIC 2?</span>
+    Si es un <strong>intermediario que comercia con materias primas cotizadas</strong> que mide a valor razonable menos costos de venta (p&aacute;rr. 3b), o un <strong>productor agr&iacute;cola, forestal o minero</strong> que mide a VNR seg&uacute;n pr&aacute;cticas consolidadas del sector (p&aacute;rr. 3a), <strong>no aplica</strong> la regla del menor. Si no es ninguno de esos casos, contin&uacute;e.</div>
+  <div class="paso"><span class="rot">Pregunta 2 &mdash; &iquest;Cu&aacute;l es el costo?</span>
+    Determ&iacute;nelo con NIC 2 p&aacute;rrafos 10 a 22: precio de compra + aranceles e impuestos no recuperables + fletes + seguros + otros costos atribuibles &minus; descuentos comerciales. Excluya lo que ordena el p&aacute;rrafo 16.</div>
+  <div class="paso"><span class="rot">Pregunta 3 &mdash; &iquest;Cu&aacute;l es el VNR?</span>
+    Precio estimado de venta en el curso normal &minus; costos para terminar &minus; costos de venta. Calc&uacute;lelo <strong>partida por partida</strong> (p&aacute;rr. 29).</div>
+  <div class="paso"><span class="rot">Pregunta 4 &mdash; &iquest;Cu&aacute;l de los dos es menor?</span>
+    Mida al menor (p&aacute;rr. 9). Si el menor es el VNR, reconozca la rebaja como gasto del per&iacute;odo (p&aacute;rr. 34). Si el menor es el costo, no haga nada: el inventario ya est&aacute; correctamente medido.</div>
+
+  <h3>4.3. Tres situaciones para fijar el criterio</h3>
+  <div class="tabla-cont">
+  <table class="tabla">
+    <tr><th style="width:24%">Situaci&oacute;n</th><th class="num" style="width:12%">Costo</th><th class="num" style="width:12%">VNR</th><th class="num" style="width:14%">Medici&oacute;n</th><th>Efecto en resultados</th></tr>
+    <tr><td>Licuadoras El Astillero (200 u)</td><td class="num">30.300,00</td><td class="num">29.600,00</td><td class="num"><strong>29.600,00</strong></td><td>P&eacute;rdida de 700,00 en el per&iacute;odo</td></tr>
+    <tr><td>Cacao Exportadora del Guayas (10 t)</td><td class="num">69.000,00</td><td class="num">67.200,00</td><td class="num"><strong>67.200,00</strong></td><td>P&eacute;rdida de 1.800,00 en el per&iacute;odo</td></tr>
+    <tr><td>Mercader&iacute;a de alta demanda (hip&oacute;tesis)</td><td class="num">50.000,00</td><td class="num">62.000,00</td><td class="num"><strong>50.000,00</strong></td><td>Ninguno: la utilidad se reconocer&aacute; al vender</td></tr>
+  </table>
+  </div>
+
+  <div class="alerta-box"><span class="rot">Los tres errores m&aacute;s frecuentes en ex&aacute;menes y en la pr&aacute;ctica</span>
+    <ul>
+      <li><strong>Error 1:</strong> confundir VNR con valor razonable menos costos de venta y usarlos como sin&oacute;nimos. La NIC 2, p&aacute;rrafo 7, dice expresamente que <em>pueden no ser iguales</em>.</li>
+      <li><strong>Error 2:</strong> subir el inventario cuando el VNR supera el costo. Nunca. El techo es el costo.</li>
+      <li><strong>Error 3:</strong> comparar totales globales en lugar de partida por partida, compensando productos deteriorados con productos rentables. Prohibido por el p&aacute;rrafo 29.</li>
+    </ul>
+  </div>
+
+  <div class="carrera-box"><span class="rot">&iquest;Por qu&eacute; esto le importa en Negocios Internacionales?</span>
+    <ul>
+      <li><strong>Comercio exterior:</strong> al armar la estructura de costos de una exportaci&oacute;n, usted separa costo de adquisici&oacute;n, costos log&iacute;sticos hasta puerto y costos de venta en destino. Esa separaci&oacute;n es exactamente la que exige la comparaci&oacute;n costo/VNR.</li>
+      <li><strong>Finanzas internacionales:</strong> los covenants de un cr&eacute;dito internacional suelen fijar niveles m&iacute;nimos de capital de trabajo. Una rebaja al VNR reduce el activo corriente y puede activar un incumplimiento contractual.</li>
+      <li><strong>Marketing y negociaci&oacute;n internacional:</strong> antes de aceptar una condici&oacute;n de pago o un descuento por volumen, calcule el VNR resultante. Si cae bajo el costo, esa negociaci&oacute;n destruye valor aunque cierre.</li>
+      <li><strong>Marco legal y normativo:</strong> convivir con tres normas (NIC 2, NIIF 13, NIC 41) y con la normativa tributaria ecuatoriana exige precisi&oacute;n conceptual. Un t&eacute;rmino usado mal en un informe puede tener consecuencias legales.</li>
+    </ul>
+  </div>
+
+  <div class="clave-box"><span class="rot">Idea clave del Tema 4</span>
+    <p><strong>Costo y VNR son las dos medidas que se comparan; el valor razonable es la referencia del mercado que casi nunca entra en la comparaci&oacute;n ordinaria.</strong></p>
+    <p>La medici&oacute;n ordinaria de inventarios es siempre: <em>el menor entre costo y VNR</em>. El valor razonable solo se usa cuando la norma lo dice expresamente.</p>
+    <p>Y una advertencia profesional: <strong>un precio de mercado alto no significa una operaci&oacute;n rentable</strong>. Lo que importa es lo que queda despu&eacute;s de los costos de llegar a ese mercado.</p>
+  </div>
+</section>
+
+<!-- ================= PANEL: TEMA 5 ================= -->
+<section id="tema5" class="panel">
+  <h2>Tema 5. Introducci&oacute;n al m&eacute;todo FIFO (Primeras Entradas, Primeras Salidas)</h2>
+  <p class="intro">Hasta aqu&iacute; supusimos que todas las unidades ten&iacute;an el mismo costo. En la realidad, cada compra tiene un costo distinto. Cuando se vende, &iquest;cu&aacute;l de esos costos sale? Esa es la pregunta que responden las f&oacute;rmulas de c&aacute;lculo del costo.</p>
+
+  <div class="cotidiano-box"><span class="rot">Empecemos por la vida diaria</span>
+    <p>Abra mentalmente la refrigeradora de su casa. Hay tres cartones de leche: uno comprado el lunes, otro el mi&eacute;rcoles y otro el viernes. Su mam&aacute; le pide que saque uno. <strong>&iquest;Cu&aacute;l saca?</strong></p>
+    <p>Cualquier persona sensata saca el del <strong>lunes</strong>: es el m&aacute;s antiguo, el que vence primero. Si sacara el del viernes, el del lunes se da&ntilde;ar&iacute;a y se perder&iacute;a dinero.</p>
+    <p>Eso es <strong>FIFO</strong>: <em>first in, first out</em> &mdash; primero en entrar, primero en salir. En espa&ntilde;ol se lo conoce tambi&eacute;n como <strong>PEPS</strong> (Primeras Entradas, Primeras Salidas).</p>
+    <p>Lo mismo hace la fila del banco: quien lleg&oacute; primero se atiende primero. Lo mismo hace la panader&iacute;a: el pan de ayer se vende antes que el de hoy. Lo mismo hace la farmacia con los medicamentos por fecha de caducidad. <strong>FIFO no es un invento contable: es la forma natural de administrar cosas que se deterioran.</strong></p>
+  </div>
+
+  <h3>5.1. &iquest;Por qu&eacute; hace falta una f&oacute;rmula de c&aacute;lculo del costo?</h3>
+  <p>Suponga que <strong>Comercial El Astillero S.A.</strong> tiene en bodega 340 licuadoras id&eacute;nticas, pero compradas en tres momentos distintos y a tres costos distintos: unas a 148,00, otras a 151,50 y otras a 154,00. Vende 180. La pregunta que la contabilidad debe responder es: <strong>&iquest;cu&aacute;nto cuesta la mercader&iacute;a que sali&oacute;?</strong></p>
+  <p>El problema es real y no tiene respuesta &uacute;nica: f&iacute;sicamente las licuadoras son id&eacute;nticas, est&aacute;n mezcladas en el mismo estante y nadie sabe cu&aacute;l vino de cu&aacute;l embarque. Se necesita entonces un <strong>supuesto sistem&aacute;tico</strong> y consistente. A ese supuesto se lo llama <strong>f&oacute;rmula de c&aacute;lculo del costo</strong>.</p>
+
+  <div class="def-box"><span class="rot">Definici&oacute;n</span>
+    <p><strong>F&oacute;rmula de c&aacute;lculo del costo:</strong> supuesto sistem&aacute;tico que la entidad aplica para determinar qu&eacute; costos se asignan a las unidades vendidas (costo de ventas) y qu&eacute; costos permanecen asignados a las unidades en existencia (inventario final), cuando las unidades son intercambiables entre s&iacute; y fueron adquiridas a precios distintos.</p>
+  </div>
+
+  <h3>5.2. Lo que permite y lo que prohíbe la NIC 2</h3>
+  <div class="norma-box"><span class="rot">Sustento normativo</span>
+    <p><strong>NIC 2, p&aacute;rrafo 23:</strong> el costo de los inventarios de productos que <strong>no son habitualmente intercambiables entre s&iacute;</strong>, as&iacute; como de los bienes producidos y segregados para proyectos espec&iacute;ficos, se determinar&aacute; a trav&eacute;s de la <strong>identificaci&oacute;n espec&iacute;fica</strong> de sus costos individuales.</p>
+    <p><strong>NIC 2, p&aacute;rrafo 25:</strong> el costo de los inventarios distintos de los tratados en el p&aacute;rrafo 23 se asignar&aacute; utilizando los m&eacute;todos de <strong>primera entrada primera salida (FIFO)</strong> o <strong>costo promedio ponderado</strong>. La entidad utilizar&aacute; la misma f&oacute;rmula de costo para todos los inventarios que tengan una naturaleza y uso similares.</p>
+    <p><strong>NIC 2, p&aacute;rrafo 26:</strong> cuando los inventarios tengan naturaleza o uso diferentes, puede estar justificada la utilizaci&oacute;n de f&oacute;rmulas de costo distintas.</p>
+  </div>
+
+  <div class="tabla-cont">
+  <table class="tabla">
+    <tr><th style="width:26%">M&eacute;todo</th><th style="width:16%">&iquest;Lo admite la NIC 2?</th><th>Cu&aacute;ndo se usa</th></tr>
+    <tr><td><strong>Identificaci&oacute;n espec&iacute;fica</strong></td><td class="centro">S&iacute; (p&aacute;rr. 23)</td><td>Obligatoria para bienes <em>no intercambiables</em>: un veh&iacute;culo con n&uacute;mero de chasis, una obra de arte, una maquinaria fabricada a pedido, un lote segregado para un proyecto espec&iacute;fico.</td></tr>
+    <tr><td><strong>FIFO / PEPS</strong></td><td class="centro">S&iacute; (p&aacute;rr. 25)</td><td>Bienes intercambiables. Supone que las primeras unidades adquiridas son las primeras en venderse.</td></tr>
+    <tr><td><strong>Costo promedio ponderado</strong></td><td class="centro">S&iacute; (p&aacute;rr. 25)</td><td>Bienes intercambiables. Promedia los costos de todas las unidades disponibles.</td></tr>
+    <tr><td><strong>LIFO / UEPS</strong> (&uacute;ltimas entradas, primeras salidas)</td><td class="centro"><strong>NO</strong></td><td>No est&aacute; contemplado entre las f&oacute;rmulas admitidas por el p&aacute;rrafo 25. No es aplicable bajo NIIF.</td></tr>
+  </table>
+  </div>
+  <div class="alerta-box"><span class="rot">Pregunta cl&aacute;sica de examen</span>
+    <p>&ldquo;&iquest;Qu&eacute; m&eacute;todos de valuaci&oacute;n admite la NIC 2?&rdquo; La respuesta correcta es: <strong>identificaci&oacute;n espec&iacute;fica</strong> (para bienes no intercambiables), <strong>FIFO</strong> y <strong>costo promedio ponderado</strong>. El m&eacute;todo <strong>LIFO no est&aacute; admitido</strong>. Si en un texto antiguo o en un video de internet ve LIFO presentado como alternativa v&aacute;lida bajo NIIF, esa fuente est&aacute; desactualizada.</p>
+  </div>
+
+  <h3>5.3. La l&oacute;gica del FIFO</h3>
+  <div class="def-box"><span class="rot">Definici&oacute;n</span>
+    <p><strong>M&eacute;todo FIFO (PEPS):</strong> f&oacute;rmula de c&aacute;lculo del costo que asume que las <strong>primeras unidades adquiridas son las primeras en venderse</strong>. En consecuencia, el costo de ventas se compone de los costos <strong>m&aacute;s antiguos</strong>, y el inventario final queda valorado a los costos <strong>m&aacute;s recientes</strong>.</p>
+  </div>
+  <p>Dos precisiones t&eacute;cnicas importantes:</p>
+  <ul>
+    <li><strong>FIFO es un supuesto de flujo de <em>costos</em>, no necesariamente de flujo <em>f&iacute;sico</em>.</strong> Una empresa puede aplicar FIFO contablemente aunque en bodega el despachador tome cualquier caja. Lo que se ordena es la asignaci&oacute;n de costos, no el movimiento de cajas. Ahora bien, en la mayor&iacute;a de los negocios reales el flujo f&iacute;sico <em>tambi&eacute;n</em> es FIFO, porque nadie quiere que se le venza la mercader&iacute;a.</li>
+    <li><strong>El resultado del FIFO es id&eacute;ntico bajo sistema peri&oacute;dico y bajo sistema perpetuo.</strong> Esto es una particularidad del FIFO: como el orden de salida es siempre el mismo (lo m&aacute;s antiguo primero), no importa si el c&aacute;lculo se hace transacci&oacute;n por transacci&oacute;n o al final del per&iacute;odo. El total llega al mismo n&uacute;mero. (Con el promedio ponderado esto <em>no</em> ocurre, como veremos el D&iacute;a 9.)</li>
+  </ul>
+
+  <h3>5.4. Caso aplicado paso a paso: Comercial El Astillero S.A.</h3>
+  <p>Movimientos del producto <strong>Licuadora Andina LX-3</strong> durante agosto de 2026 (sistema perpetuo):</p>
+  <div class="tabla-cont">
+  <table class="tabla">
+    <tr><th style="width:13%">Fecha</th><th style="width:29%">Movimiento</th><th class="num">Unidades</th><th class="num">Costo unitario</th><th class="num">Costo total</th></tr>
+    <tr><td>01/08/2026</td><td>Inventario inicial</td><td class="num">40</td><td class="num">148,00</td><td class="num">5.920,00</td></tr>
+    <tr><td>05/08/2026</td><td>Compra (importaci&oacute;n del Tema 1)</td><td class="num">200</td><td class="num">151,50</td><td class="num">30.300,00</td></tr>
+    <tr><td>12/08/2026</td><td>Venta</td><td class="num">(180)</td><td class="num">&mdash;</td><td class="num">&mdash;</td></tr>
+    <tr><td>20/08/2026</td><td>Compra local</td><td class="num">100</td><td class="num">154,00</td><td class="num">15.400,00</td></tr>
+    <tr><td>26/08/2026</td><td>Venta</td><td class="num">(120)</td><td class="num">&mdash;</td><td class="num">&mdash;</td></tr>
+    <tr class="total"><td colspan="2"><strong>Unidades disponibles para la venta</strong></td><td class="num">340</td><td class="num">&mdash;</td><td class="num">51.620,00</td></tr>
+  </table>
+  </div>
+  <p class="small">Nota: 40 + 200 + 100 = 340 unidades disponibles. Vendidas: 180 + 120 = 300. Existencia final: 40 unidades. Costo total disponible: 5.920,00 + 30.300,00 + 15.400,00 = 51.620,00.</p>
+
+  <h4>Paso 1 &mdash; Venta del 12 de agosto: 180 unidades</h4>
+  <p>Bajo FIFO, salen primero las m&aacute;s antiguas. Las m&aacute;s antiguas son las 40 del inventario inicial (148,00). Faltan 140, que se toman de la compra del 05/08 (151,50).</p>
+  <div class="tabla-cont">
+  <table class="tabla">
+    <tr><th style="width:44%">Capa de costo utilizada</th><th class="num">Unidades</th><th class="num">Costo unit.</th><th class="num">Costo asignado</th></tr>
+    <tr><td>Del inventario inicial (01/08)</td><td class="num">40</td><td class="num">148,00</td><td class="num">5.920,00</td></tr>
+    <tr><td>De la compra del 05/08</td><td class="num">140</td><td class="num">151,50</td><td class="num">21.210,00</td></tr>
+    <tr class="total"><td><strong>Costo de la mercader&iacute;a vendida el 12/08</strong></td><td class="num">180</td><td class="num">&mdash;</td><td class="num">27.130,00</td></tr>
+  </table>
+  </div>
+  <p><strong>Saldo despu&eacute;s de esta venta:</strong> 60 unidades a 151,50 = 9.090,00. La capa de 148,00 qued&oacute; agotada.</p>
+
+  <h4>Paso 2 &mdash; Compra del 20 de agosto: 100 unidades a 154,00</h4>
+  <p>La compra se agrega como una <strong>nueva capa</strong>, sin mezclarse con la anterior. El inventario queda con dos capas:</p>
+  <div class="tabla-cont">
+  <table class="tabla">
+    <tr><th style="width:44%">Capa</th><th class="num">Unidades</th><th class="num">Costo unit.</th><th class="num">Valor</th></tr>
+    <tr><td>Remanente de la compra del 05/08</td><td class="num">60</td><td class="num">151,50</td><td class="num">9.090,00</td></tr>
+    <tr><td>Compra del 20/08</td><td class="num">100</td><td class="num">154,00</td><td class="num">15.400,00</td></tr>
+    <tr class="total"><td><strong>Saldo en existencia al 20/08</strong></td><td class="num">160</td><td class="num">&mdash;</td><td class="num">24.490,00</td></tr>
+  </table>
+  </div>
+
+  <h4>Paso 3 &mdash; Venta del 26 de agosto: 120 unidades</h4>
+  <p>Nuevamente salen primero las m&aacute;s antiguas: las 60 que quedaban a 151,50, y luego 60 de la capa de 154,00.</p>
+  <div class="tabla-cont">
+  <table class="tabla">
+    <tr><th style="width:44%">Capa de costo utilizada</th><th class="num">Unidades</th><th class="num">Costo unit.</th><th class="num">Costo asignado</th></tr>
+    <tr><td>Remanente de la compra del 05/08</td><td class="num">60</td><td class="num">151,50</td><td class="num">9.090,00</td></tr>
+    <tr><td>De la compra del 20/08</td><td class="num">60</td><td class="num">154,00</td><td class="num">9.240,00</td></tr>
+    <tr class="total"><td><strong>Costo de la mercader&iacute;a vendida el 26/08</strong></td><td class="num">120</td><td class="num">&mdash;</td><td class="num">18.330,00</td></tr>
+  </table>
+  </div>
+
+  <h4>Paso 4 &mdash; Resultado del per&iacute;odo</h4>
+  <div class="tabla-cont">
+  <table class="tabla">
+    <tr><th style="width:56%">Concepto</th><th class="num">Unidades</th><th class="num">USD</th></tr>
+    <tr><td>Costo de ventas del 12/08</td><td class="num">180</td><td class="num">27.130,00</td></tr>
+    <tr><td>Costo de ventas del 26/08</td><td class="num">120</td><td class="num">18.330,00</td></tr>
+    <tr class="total"><td><strong>COSTO DE VENTAS DEL PER&Iacute;ODO</strong></td><td class="num">300</td><td class="num">45.460,00</td></tr>
+    <tr><td><strong>INVENTARIO FINAL</strong> (40 u de la compra del 20/08 a 154,00)</td><td class="num">40</td><td class="num">6.160,00</td></tr>
+    <tr class="total"><td><strong>Comprobaci&oacute;n: costo de ventas + inventario final</strong></td><td class="num">340</td><td class="num">51.620,00</td></tr>
+  </table>
+  </div>
+  <div class="ejemplo-box"><span class="rot">La comprobaci&oacute;n que nunca debe fallar</span>
+    <p style="text-align:center"><strong>Costo de la mercader&iacute;a disponible = Costo de ventas + Inventario final</strong></p>
+    <p style="text-align:center">51.620,00 = 45.460,00 + 6.160,00 &nbsp; &#10004;</p>
+    <p>Si esta igualdad no se cumple, hay un error aritm&eacute;tico. H&aacute;gala siempre, en el ejercicio, en el examen y en la vida profesional: es la forma m&aacute;s r&aacute;pida de detectar un fallo antes de que llegue a los estados financieros.</p>
+  </div>
+
+  <h3>5.5. Efectos del FIFO sobre los estados financieros</h3>
+  <p>En el caso resuelto, los costos <strong>subieron</strong> a lo largo del mes (148,00 &rarr; 151,50 &rarr; 154,00), que es el escenario habitual en una econom&iacute;a con inflaci&oacute;n o con presi&oacute;n en fletes internacionales. Bajo FIFO:</p>
+  <div class="tabla-cont">
+  <table class="tabla">
+    <tr><th style="width:34%">Partida</th><th style="width:33%">Efecto bajo FIFO con costos crecientes</th><th>Consecuencia</th></tr>
+    <tr><td>Costo de ventas</td><td>Se compone de costos <strong>antiguos</strong>, m&aacute;s bajos</td><td>Costo de ventas menor</td></tr>
+    <tr><td>Utilidad bruta</td><td>M&aacute;s <strong>alta</strong></td><td>Mayor base imponible y mayor impuesto a la renta a pagar</td></tr>
+    <tr><td>Inventario final (Estado de Situaci&oacute;n Financiera)</td><td>Valorado a costos <strong>recientes</strong></td><td>Cifra m&aacute;s cercana al valor actual de reposici&oacute;n: mejor representaci&oacute;n del activo</td></tr>
+  </table>
+  </div>
+  <p>Con costos <strong>decrecientes</strong> el efecto se invierte: el costo de ventas ser&iacute;a mayor, la utilidad menor y el inventario final quedar&iacute;a valorado a los costos m&aacute;s bajos.</p>
+  <div class="alerta-box"><span class="rot">Precisi&oacute;n conceptual</span>
+    <p>El m&eacute;todo de valuaci&oacute;n <strong>no cambia el efectivo</strong> que entra o sale de la empresa: cambia <em>c&oacute;mo se reparte</em> un mismo costo total entre el resultado del per&iacute;odo y el activo del balance. En el caso resuelto, los 51.620,00 son los mismos con cualquier m&eacute;todo; lo que cambia es cu&aacute;nto de esa cifra va al costo de ventas y cu&aacute;nto queda en el inventario.</p>
+    <p>Y una consecuencia importante: como el m&eacute;todo afecta la utilidad, afecta el impuesto. Por eso la NIC 2, p&aacute;rrafo 25, exige <strong>uniformidad</strong>: la misma f&oacute;rmula para todos los inventarios de naturaleza y uso similares. No se puede escoger el m&eacute;todo a conveniencia cada per&iacute;odo.</p>
+  </div>
+
+  <div class="futuro-box"><span class="rot">Lo que sigue &mdash; no se estudia hoy</span>
+    <ul>
+      <li><strong>D&iacute;a 9 (Viernes 21 de agosto):</strong> pr&aacute;ctica extendida de FIFO y desarrollo completo del <strong>costo promedio ponderado</strong>, con comparaci&oacute;n num&eacute;rica entre ambos m&eacute;todos sobre los mismos datos.</li>
+      <li><strong>D&iacute;a 10 (Mi&eacute;rcoles 26 de agosto):</strong> registro formal en la <strong>tarjeta Kardex</strong> con sus columnas de entradas, salidas y existencias, aplicando ambos m&eacute;todos.</li>
+      <li><strong>D&iacute;a 11 (Jueves 27 de agosto):</strong> <strong>asientos de ajuste</strong>, donde se sistematiza el tratamiento de la rebaja al VNR que hoy vimos solo de forma ilustrativa.</li>
+    </ul>
+    <p>Hoy basta con que usted domine la <em>l&oacute;gica</em> del FIFO por capas de costo y sepa comprobar el resultado. El formato de registro viene despu&eacute;s.</p>
+  </div>
+
+  <div class="carrera-box"><span class="rot">&iquest;Por qu&eacute; esto le importa en Negocios Internacionales?</span>
+    <ul>
+      <li><strong>Comercio exterior:</strong> cada embarque llega con un costo distinto porque cambian el flete, el tipo de cambio del proveedor, el arancel o el precio internacional. Un importador vive literalmente en capas de costo: FIFO es la herramienta que le permite saber cu&aacute;l capa est&aacute; vendiendo.</li>
+      <li><strong>Finanzas internacionales:</strong> el m&eacute;todo elegido modifica la utilidad reportada y, con ella, indicadores como el margen bruto y la rotaci&oacute;n de inventarios que se comparan entre empresas de distintos pa&iacute;ses. Comparar dos empresas que usan m&eacute;todos distintos sin advertirlo lleva a conclusiones falsas.</li>
+      <li><strong>Marketing y negociaci&oacute;n internacional:</strong> si usted sabe que a&uacute;n le quedan capas antiguas de costo bajo, tiene margen real de maniobra para una promoci&oacute;n o para cerrar una negociaci&oacute;n agresiva. Si no lo sabe, negocia con informaci&oacute;n prestada.</li>
+      <li><strong>Marco legal y normativo:</strong> el m&eacute;todo de valuaci&oacute;n adoptado debe revelarse en las notas a los estados financieros (NIC 2, p&aacute;rrafo 36) y aplicarse de manera uniforme (NIC 1). Cambiarlo sin justificaci&oacute;n es un cambio de pol&iacute;tica contable con consecuencias normativas.</li>
+    </ul>
+  </div>
+
+  <div class="clave-box"><span class="rot">Idea clave del Tema 5</span>
+    <p><strong>FIFO: lo primero que entr&oacute; es lo primero que sale. Por lo tanto, el costo de ventas queda con los costos viejos y el inventario final con los costos nuevos.</strong></p>
+    <p>La NIC 2 admite <strong>identificaci&oacute;n espec&iacute;fica</strong> (bienes no intercambiables), <strong>FIFO</strong> y <strong>costo promedio ponderado</strong>. <strong>LIFO no est&aacute; admitido.</strong></p>
+    <p>Y la comprobaci&oacute;n que siempre debe cuadrar: <strong>costo disponible = costo de ventas + inventario final</strong>.</p>
+  </div>
+</section>
+
+<!-- ================= PANEL: EJERCICIO INTERACTIVO ================= -->
+<section id="ejercicio" class="panel">
+  <h2>Ejercicio Interactivo &mdash; Clasificaci&oacute;n de partidas</h2>
+  <p class="intro">Comercial El Astillero S.A. realiz&oacute; su importaci&oacute;n de licuadoras. El contador debe decidir el tratamiento de cada desembolso. Clasifique <strong>las 10 partidas</strong> y solo entonces presione &ldquo;Verificar respuestas&rdquo;. Recibir&aacute; explicaci&oacute;n completa de cada una, acierte o no.</p>
+  <div class="norma-box"><span class="rot">Criterio de decisi&oacute;n</span>
+    <p>Preg&uacute;ntese siempre: <em>&iquest;este desembolso ayud&oacute; a que el bien llegara a su condici&oacute;n y ubicaci&oacute;n actuales?</em> (NIC 2, p&aacute;rr. 10). Y adem&aacute;s: <em>&iquest;este impuesto lo puedo recuperar del Estado?</em> (LRTI, art. 66).</p>
+  </div>
+  <div class="item">
+    <div class="enun">1. Flete internacional pagado a la naviera para trasladar la mercader&iacute;a desde Shangh&aacute;i hasta el puerto de Guayaquil.</div>
+    <div class="opciones">
+        <label class="opcion" id="ei1a"><input type="radio" name="ei1" value="a"> a) Integra el costo del inventario</label>
+        <label class="opcion" id="ei1b"><input type="radio" name="ei1" value="b"> b) Se reconoce como gasto del per&iacute;odo</label>
+        <label class="opcion" id="ei1c"><input type="radio" name="ei1" value="c"> c) Se registra como cr&eacute;dito tributario (activo por impuestos)</label>
+        <label class="opcion" id="ei1d"><input type="radio" name="ei1" value="d"> d) Disminuye el costo del inventario</label>
+    </div>
+    <div class="feedback" id="fei1"></div>
+  </div>
+  <div class="item">
+    <div class="enun">2. IVA 15% pagado en la importaci&oacute;n por una sociedad que vende exclusivamente bienes gravados con tarifa 15%.</div>
+    <div class="opciones">
+        <label class="opcion" id="ei2a"><input type="radio" name="ei2" value="a"> a) Integra el costo del inventario</label>
+        <label class="opcion" id="ei2b"><input type="radio" name="ei2" value="b"> b) Se reconoce como gasto del per&iacute;odo</label>
+        <label class="opcion" id="ei2c"><input type="radio" name="ei2" value="c"> c) Se registra como cr&eacute;dito tributario (activo por impuestos)</label>
+        <label class="opcion" id="ei2d"><input type="radio" name="ei2" value="d"> d) Disminuye el costo del inventario</label>
+    </div>
+    <div class="feedback" id="fei2"></div>
+  </div>
+  <div class="item">
+    <div class="enun">3. Arancel ad val&oacute;rem del 15% liquidado por el SENAE sobre el valor CIF de la importaci&oacute;n.</div>
+    <div class="opciones">
+        <label class="opcion" id="ei3a"><input type="radio" name="ei3" value="a"> a) Integra el costo del inventario</label>
+        <label class="opcion" id="ei3b"><input type="radio" name="ei3" value="b"> b) Se reconoce como gasto del per&iacute;odo</label>
+        <label class="opcion" id="ei3c"><input type="radio" name="ei3" value="c"> c) Se registra como cr&eacute;dito tributario (activo por impuestos)</label>
+        <label class="opcion" id="ei3d"><input type="radio" name="ei3" value="d"> d) Disminuye el costo del inventario</label>
+    </div>
+    <div class="feedback" id="fei3"></div>
+  </div>
+  <div class="item">
+    <div class="enun">4. Sueldo mensual del gerente administrativo de la empresa importadora.</div>
+    <div class="opciones">
+        <label class="opcion" id="ei4a"><input type="radio" name="ei4" value="a"> a) Integra el costo del inventario</label>
+        <label class="opcion" id="ei4b"><input type="radio" name="ei4" value="b"> b) Se reconoce como gasto del per&iacute;odo</label>
+        <label class="opcion" id="ei4c"><input type="radio" name="ei4" value="c"> c) Se registra como cr&eacute;dito tributario (activo por impuestos)</label>
+        <label class="opcion" id="ei4d"><input type="radio" name="ei4" value="d"> d) Disminuye el costo del inventario</label>
+    </div>
+    <div class="feedback" id="fei4"></div>
+  </div>
+  <div class="item">
+    <div class="enun">5. Descuento comercial del 2% concedido por el proveedor extranjero y reflejado en la propia factura comercial.</div>
+    <div class="opciones">
+        <label class="opcion" id="ei5a"><input type="radio" name="ei5" value="a"> a) Integra el costo del inventario</label>
+        <label class="opcion" id="ei5b"><input type="radio" name="ei5" value="b"> b) Se reconoce como gasto del per&iacute;odo</label>
+        <label class="opcion" id="ei5c"><input type="radio" name="ei5" value="c"> c) Se registra como cr&eacute;dito tributario (activo por impuestos)</label>
+        <label class="opcion" id="ei5d"><input type="radio" name="ei5" value="d"> d) Disminuye el costo del inventario</label>
+    </div>
+    <div class="feedback" id="fei5"></div>
+  </div>
+  <div class="item">
+    <div class="enun">6. Comisi&oacute;n del 5% pagada al vendedor por haber colocado la mercader&iacute;a en un cliente mayorista.</div>
+    <div class="opciones">
+        <label class="opcion" id="ei6a"><input type="radio" name="ei6" value="a"> a) Integra el costo del inventario</label>
+        <label class="opcion" id="ei6b"><input type="radio" name="ei6" value="b"> b) Se reconoce como gasto del per&iacute;odo</label>
+        <label class="opcion" id="ei6c"><input type="radio" name="ei6" value="c"> c) Se registra como cr&eacute;dito tributario (activo por impuestos)</label>
+        <label class="opcion" id="ei6d"><input type="radio" name="ei6" value="d"> d) Disminuye el costo del inventario</label>
+    </div>
+    <div class="feedback" id="fei6"></div>
+  </div>
+  <div class="item">
+    <div class="enun">7. P&eacute;rdida por un derrame accidental en bodega que da&ntilde;&oacute; de forma irrecuperable 12 unidades: constituye un desperdicio anormal.</div>
+    <div class="opciones">
+        <label class="opcion" id="ei7a"><input type="radio" name="ei7" value="a"> a) Integra el costo del inventario</label>
+        <label class="opcion" id="ei7b"><input type="radio" name="ei7" value="b"> b) Se reconoce como gasto del per&iacute;odo</label>
+        <label class="opcion" id="ei7c"><input type="radio" name="ei7" value="c"> c) Se registra como cr&eacute;dito tributario (activo por impuestos)</label>
+        <label class="opcion" id="ei7d"><input type="radio" name="ei7" value="d"> d) Disminuye el costo del inventario</label>
+    </div>
+    <div class="feedback" id="fei7"></div>
+  </div>
+  <div class="item">
+    <div class="enun">8. Transporte interno contratado para llevar la mercader&iacute;a desde el puerto mar&iacute;timo hasta la bodega de la empresa.</div>
+    <div class="opciones">
+        <label class="opcion" id="ei8a"><input type="radio" name="ei8" value="a"> a) Integra el costo del inventario</label>
+        <label class="opcion" id="ei8b"><input type="radio" name="ei8" value="b"> b) Se reconoce como gasto del per&iacute;odo</label>
+        <label class="opcion" id="ei8c"><input type="radio" name="ei8" value="c"> c) Se registra como cr&eacute;dito tributario (activo por impuestos)</label>
+        <label class="opcion" id="ei8d"><input type="radio" name="ei8" value="d"> d) Disminuye el costo del inventario</label>
+    </div>
+    <div class="feedback" id="fei8"></div>
+  </div>
+  <div class="item">
+    <div class="enun">9. Costos de almacenamiento de producto terminado que ya est&aacute; listo para la venta y espera en bodega a que aparezca un comprador.</div>
+    <div class="opciones">
+        <label class="opcion" id="ei9a"><input type="radio" name="ei9" value="a"> a) Integra el costo del inventario</label>
+        <label class="opcion" id="ei9b"><input type="radio" name="ei9" value="b"> b) Se reconoce como gasto del per&iacute;odo</label>
+        <label class="opcion" id="ei9c"><input type="radio" name="ei9" value="c"> c) Se registra como cr&eacute;dito tributario (activo por impuestos)</label>
+        <label class="opcion" id="ei9d"><input type="radio" name="ei9" value="d"> d) Disminuye el costo del inventario</label>
+    </div>
+    <div class="feedback" id="fei9"></div>
+  </div>
+  <div class="item">
+    <div class="enun">10. Prima del seguro de la carga contratado para cubrir la mercader&iacute;a durante el transporte internacional.</div>
+    <div class="opciones">
+        <label class="opcion" id="ei10a"><input type="radio" name="ei10" value="a"> a) Integra el costo del inventario</label>
+        <label class="opcion" id="ei10b"><input type="radio" name="ei10" value="b"> b) Se reconoce como gasto del per&iacute;odo</label>
+        <label class="opcion" id="ei10c"><input type="radio" name="ei10" value="c"> c) Se registra como cr&eacute;dito tributario (activo por impuestos)</label>
+        <label class="opcion" id="ei10d"><input type="radio" name="ei10" value="d"> d) Disminuye el costo del inventario</label>
+    </div>
+    <div class="feedback" id="fei10"></div>
+  </div>
+  <div class="aviso" id="avisoEj">Debe responder <strong>todas</strong> las partidas antes de verificar. Revise las que quedaron en blanco.</div>
+  <div class="acciones">
+    <button class="btn btn-verificar" onclick="verificarEjercicio()">Verificar respuestas</button>
+    <button class="btn btn-reiniciar" onclick="reiniciarEjercicio()">Reiniciar</button>
+  </div>
+  <div class="resultado" id="resEj">
+    <span class="emoji" id="emojiEj">&#128218;</span>
+    <div class="nota" id="notaEj"></div>
+    <div class="det" id="detEj"></div>
+    <div class="barra-cont"><div class="barra" id="barraEj"></div></div>
+  </div>
+</section>
+
+<!-- ================= PANEL: CUESTIONARIO ================= -->
+<section id="cuestionario" class="panel">
+  <h2>Cuestionario de evaluaci&oacute;n</h2>
+  <p class="intro">Diez preguntas de opci&oacute;n m&uacute;ltiple: <strong>siete te&oacute;ricas</strong>, que puede responder con el contenido de este widget, y <strong>tres de an&aacute;lisis de caso</strong>, que exigen aplicar el criterio de forma aut&oacute;noma. Responda todas y luego presione &ldquo;Verificar respuestas&rdquo;. Cada pregunta le devolver&aacute; una explicaci&oacute;n completa.</p>
+  <div class="item">
+    <span class="badge badge-teorica">Te&oacute;rica</span>
+    <div class="enun">1. Seg&uacute;n la NIC 2, p&aacute;rrafo 9, &iquest;a qu&eacute; importe deben medirse los inventarios en la medici&oacute;n ordinaria?</div>
+    <div class="opciones">
+        <label class="opcion" id="qi1a"><input type="radio" name="qi1" value="a"> a) Siempre al costo hist&oacute;rico de adquisici&oacute;n, sin excepciones</label>
+        <label class="opcion" id="qi1b"><input type="radio" name="qi1" value="b"> b) Siempre al valor razonable menos los costos de venta</label>
+        <label class="opcion" id="qi1c"><input type="radio" name="qi1" value="c"> c) Al costo o al valor neto realizable, seg&uacute;n cu&aacute;l sea menor</label>
+        <label class="opcion" id="qi1d"><input type="radio" name="qi1" value="d"> d) Al mayor entre el costo y el valor neto realizable</label>
+    </div>
+    <div class="feedback" id="fqi1"></div>
+  </div>
+  <div class="item">
+    <span class="badge badge-teorica">Te&oacute;rica</span>
+    <div class="enun">2. El Valor Neto Realizable (VNR) se determina como:</div>
+    <div class="opciones">
+        <label class="opcion" id="qi2a"><input type="radio" name="qi2" value="a"> a) El precio estimado de venta menos el costo de adquisici&oacute;n de la mercader&iacute;a</label>
+        <label class="opcion" id="qi2b"><input type="radio" name="qi2" value="b"> b) El precio estimado de venta en el curso normal de la operaci&oacute;n, menos los costos estimados para terminar su producci&oacute;n y los costos estimados necesarios para llevar a cabo la venta</label>
+        <label class="opcion" id="qi2c"><input type="radio" name="qi2" value="c"> c) El precio cotizado en el mercado principal del bien en la fecha de la medici&oacute;n</label>
+        <label class="opcion" id="qi2d"><input type="radio" name="qi2" value="d"> d) El costo de adquisici&oacute;n m&aacute;s los costos estimados necesarios para vender</label>
+    </div>
+    <div class="feedback" id="fqi2"></div>
+  </div>
+  <div class="item">
+    <span class="badge badge-teorica">Te&oacute;rica</span>
+    <div class="enun">3. &iquest;Cu&aacute;l es la diferencia esencial entre el Valor Neto Realizable y el Valor Razonable seg&uacute;n la NIC 2, p&aacute;rrafo 7?</div>
+    <div class="opciones">
+        <label class="opcion" id="qi3a"><input type="radio" name="qi3" value="a"> a) El VNR se calcula al inicio del per&iacute;odo y el valor razonable al cierre del per&iacute;odo</label>
+        <label class="opcion" id="qi3b"><input type="radio" name="qi3" value="b"> b) El VNR aplica &uacute;nicamente a empresas industriales y el valor razonable &uacute;nicamente a empresas comerciales</label>
+        <label class="opcion" id="qi3c"><input type="radio" name="qi3" value="c"> c) El VNR siempre resulta mayor que el valor razonable del mismo bien</label>
+        <label class="opcion" id="qi3d"><input type="radio" name="qi3" value="d"> d) El VNR es un valor espec&iacute;fico para la entidad, mientras que el valor razonable no lo es</label>
+    </div>
+    <div class="feedback" id="fqi3"></div>
+  </div>
+  <div class="item">
+    <span class="badge badge-teorica">Te&oacute;rica</span>
+    <div class="enun">4. &iquest;Cu&aacute;l de las siguientes partidas NO forma parte del costo de los inventarios, conforme al p&aacute;rrafo 16 de la NIC 2?</div>
+    <div class="opciones">
+        <label class="opcion" id="qi4a"><input type="radio" name="qi4" value="a"> a) Las comisiones pagadas a los vendedores por colocar la mercader&iacute;a en los clientes</label>
+        <label class="opcion" id="qi4b"><input type="radio" name="qi4" value="b"> b) El arancel ad val&oacute;rem pagado al SENAE en la importaci&oacute;n</label>
+        <label class="opcion" id="qi4c"><input type="radio" name="qi4" value="c"> c) El flete internacional pagado para traer la mercader&iacute;a al pa&iacute;s</label>
+        <label class="opcion" id="qi4d"><input type="radio" name="qi4" value="d"> d) La prima del seguro de la carga durante el transporte hasta la bodega</label>
+    </div>
+    <div class="feedback" id="fqi4"></div>
+  </div>
+  <div class="item">
+    <span class="badge badge-teorica">Te&oacute;rica</span>
+    <div class="enun">5. &iquest;Qu&eacute; f&oacute;rmulas o m&eacute;todos de c&aacute;lculo del costo de inventarios admite la NIC 2?</div>
+    <div class="opciones">
+        <label class="opcion" id="qi5a"><input type="radio" name="qi5" value="a"> a) FIFO, LIFO y costo promedio ponderado</label>
+        <label class="opcion" id="qi5b"><input type="radio" name="qi5" value="b"> b) Identificaci&oacute;n espec&iacute;fica (para bienes no intercambiables), FIFO y costo promedio ponderado</label>
+        <label class="opcion" id="qi5c"><input type="radio" name="qi5" value="c"> c) Exclusivamente LIFO y costo promedio ponderado</label>
+        <label class="opcion" id="qi5d"><input type="radio" name="qi5" value="d"> d) &Uacute;nicamente el costo promedio ponderado, por ser el m&aacute;s objetivo</label>
+    </div>
+    <div class="feedback" id="fqi5"></div>
+  </div>
+  <div class="item">
+    <span class="badge badge-teorica">Te&oacute;rica</span>
+    <div class="enun">6. En un contexto de costos de adquisici&oacute;n crecientes, bajo el m&eacute;todo FIFO el inventario final queda valorado a:</div>
+    <div class="opciones">
+        <label class="opcion" id="qi6a"><input type="radio" name="qi6" value="a"> a) Los costos m&aacute;s antiguos, lo que reduce la utilidad del per&iacute;odo</label>
+        <label class="opcion" id="qi6b"><input type="radio" name="qi6" value="b"> b) Un promedio ponderado de todos los costos del per&iacute;odo</label>
+        <label class="opcion" id="qi6c"><input type="radio" name="qi6" value="c"> c) Los costos m&aacute;s recientes, por lo que se aproxima m&aacute;s al valor actual del bien</label>
+        <label class="opcion" id="qi6d"><input type="radio" name="qi6" value="d"> d) El valor razonable de mercado a la fecha de cierre del per&iacute;odo</label>
+    </div>
+    <div class="feedback" id="fqi6"></div>
+  </div>
+  <div class="item">
+    <span class="badge badge-teorica">Te&oacute;rica</span>
+    <div class="enun">7. Respecto de la reversi&oacute;n de una rebaja del inventario a su VNR (NIC 2, p&aacute;rrafo 33), es correcto afirmar que:</div>
+    <div class="opciones">
+        <label class="opcion" id="qi7a"><input type="radio" name="qi7" value="a"> a) Procede cuando dejan de existir las circunstancias que la causaron, y est&aacute; limitada al importe de la rebaja originalmente reconocida</label>
+        <label class="opcion" id="qi7b"><input type="radio" name="qi7" value="b"> b) No est&aacute; permitida bajo ninguna circunstancia, por aplicaci&oacute;n del principio de prudencia</label>
+        <label class="opcion" id="qi7c"><input type="radio" name="qi7" value="c"> c) Procede sin l&iacute;mite alguno, pudiendo llevar el inventario hasta su valor razonable de mercado</label>
+        <label class="opcion" id="qi7d"><input type="radio" name="qi7" value="d"> d) Solo procede si la Superintendencia de Compa&ntilde;&iacute;as la autoriza previamente por escrito</label>
+    </div>
+    <div class="feedback" id="fqi7"></div>
+  </div>
+  <div class="item">
+    <span class="badge badge-caso">An&aacute;lisis de caso</span>
+    <div class="enun">8. <strong>Caso.</strong> Una comercializadora mantiene 300 camisetas con un costo unitario en libros de USD 12,50. Al cierre estima un precio de venta de USD 14,00 por unidad; deber&aacute; pagar una comisi&oacute;n de venta del 10% sobre el precio de venta y USD 0,60 por unidad de etiquetado exigido por el cliente. &iquest;Cu&aacute;l es el importe de la rebaja que debe reconocerse?</div>
+    <div class="opciones">
+        <label class="opcion" id="qi8a"><input type="radio" name="qi8" value="a"> a) USD 0,00, porque el precio de venta de 14,00 es superior al costo de 12,50</label>
+        <label class="opcion" id="qi8b"><input type="radio" name="qi8" value="b"> b) USD 600,00</label>
+        <label class="opcion" id="qi8c"><input type="radio" name="qi8" value="c"> c) USD 450,00</label>
+        <label class="opcion" id="qi8d"><input type="radio" name="qi8" value="d"> d) USD 150,00</label>
+    </div>
+    <div class="feedback" id="fqi8"></div>
+  </div>
+  <div class="item">
+    <span class="badge badge-caso">An&aacute;lisis de caso</span>
+    <div class="enun">9. <strong>Caso.</strong> Una empresa aplica el m&eacute;todo FIFO. Inicia el mes con 50 unidades a USD 20,00 cada una. Durante el mes compra 80 unidades a USD 22,00 cada una. Al final del mes vende 100 unidades. &iquest;Cu&aacute;l es el costo de la mercader&iacute;a vendida?</div>
+    <div class="opciones">
+        <label class="opcion" id="qi9a"><input type="radio" name="qi9" value="a"> a) USD 2.000,00</label>
+        <label class="opcion" id="qi9b"><input type="radio" name="qi9" value="b"> b) USD 2.100,00</label>
+        <label class="opcion" id="qi9c"><input type="radio" name="qi9" value="c"> c) USD 2.123,08</label>
+        <label class="opcion" id="qi9d"><input type="radio" name="qi9" value="d"> d) USD 2.200,00</label>
+    </div>
+    <div class="feedback" id="fqi9"></div>
+  </div>
+  <div class="item">
+    <span class="badge badge-caso">An&aacute;lisis de caso</span>
+    <div class="enun">10. <strong>Caso.</strong> Una empresa se dedica a comprar y vender caf&eacute; en mercados internacionales de materias primas cotizadas, por cuenta propia, con el prop&oacute;sito de obtener ganancias derivadas de las fluctuaciones del precio. No transforma ni consume el producto. &iquest;C&oacute;mo debe medir sus inventarios?</div>
+    <div class="opciones">
+        <label class="opcion" id="qi10a"><input type="radio" name="qi10" value="a"> a) Al costo de adquisici&oacute;n, sin excepci&oacute;n alguna</label>
+        <label class="opcion" id="qi10b"><input type="radio" name="qi10" value="b"> b) Al menor entre el costo y el valor neto realizable, igual que cualquier otra entidad</label>
+        <label class="opcion" id="qi10c"><input type="radio" name="qi10" value="c"> c) Al valor razonable menos los costos de venta, reconociendo los cambios de valor en el resultado del per&iacute;odo</label>
+        <label class="opcion" id="qi10d"><input type="radio" name="qi10" value="d"> d) Al precio pactado en el contrato de exportaci&oacute;n que tenga vigente</label>
+    </div>
+    <div class="feedback" id="fqi10"></div>
+  </div>
+  <div class="aviso" id="avisoCu">Debe responder <strong>las 10 preguntas</strong> antes de verificar. Revise las que quedaron en blanco.</div>
+  <div class="acciones">
+    <button class="btn btn-verificar" onclick="verificarCuestionario()">Verificar respuestas</button>
+    <button class="btn btn-reiniciar" onclick="reiniciarCuestionario()">Reiniciar</button>
+  </div>
+  <div class="resultado" id="resCu">
+    <span class="emoji" id="emojiCu">&#128218;</span>
+    <div class="nota" id="notaCu"></div>
+    <div class="det" id="detCu"></div>
+    <div class="barra-cont"><div class="barra" id="barraCu"></div></div>
+  </div>
+</section>
+
+<!-- ================= PANEL: ACTIVIDAD CON IA ================= -->
+<section id="ia" class="panel">
+  <h2>Actividad con Inteligencia Artificial</h2>
+  <p class="intro">Esta actividad no se aprueba copiando la respuesta de la IA. Se aprueba <strong>detectando d&oacute;nde la IA se equivoca</strong> y demostr&aacute;ndolo con norma y aritm&eacute;tica.</p>
+
+  <h3>Herramienta</h3>
+  <p>Use <strong>Claude</strong> en <strong>claude.ai</strong>. El plan gratuito es suficiente para esta actividad. Cree una cuenta con su correo institucional, abra una conversaci&oacute;n nueva y trabaje en ella. Si prefiere otra herramienta de IA, tambi&eacute;n es v&aacute;lida: el criterio de evaluaci&oacute;n es el mismo.</p>
+
+  <h3>Misi&oacute;n: <em>auditar a la m&aacute;quina</em></h3>
+  <p>Va a pedirle a la IA que resuelva un caso que <strong>usted ya sabe resolver</strong>. Su trabajo no es aprender la respuesta: es <strong>verificarla</strong>. Copie el siguiente prompt tal cual:</p>
+
+  <div class="prompt-box">Actúa como profesor de Contabilidad General de una universidad ecuatoriana.
+
+Resuelve el siguiente caso y muestra TODOS los cálculos paso a paso, citando el
+párrafo exacto de la NIC 2 que sustenta cada decisión.
+
+CASO — Importadora Puerto Sur S.A. (Guayaquil), agosto 2026:
+
+Parte A. Determina el costo unitario de una importación de 400 termos:
+- Precio de lista del proveedor: USD 20.000,00
+- Descuento comercial en factura: USD 1.000,00
+- Flete internacional: USD 1.500,00
+- Seguro de la carga en tránsito: USD 300,00
+- Arancel ad valórem 10% sobre CIF
+- FODINFA 0,5% sobre CIF
+- IVA 15% (la empresa vende solo bienes gravados con 15%)
+- Transporte del puerto a la bodega: USD 400,00
+- Publicidad de lanzamiento: USD 800,00
+- Sueldo del contador del mes: USD 1.200,00
+
+Parte B. Al 31/08/2026 quedan las 400 unidades. Se estima un precio de venta de
+USD 58,00 por unidad, una comisión de venta del 6% sobre el precio y USD 1,50 por
+unidad de embalaje de despacho. Determina el VNR unitario, compáralo con el costo
+y calcula la rebaja si corresponde.
+
+Parte C. Explica en qué se diferencia el VNR del valor razonable y si en este caso
+correspondía usar valor razonable.
+
+Parte D. Con estos movimientos, calcula por FIFO el costo de ventas y el
+inventario final:
+- Inventario inicial: 100 u a USD 45,00
+- Compra: 400 u al costo unitario de la Parte A
+- Venta: 350 u
+
+Presenta cada parte en una tabla.</div>
+
+  <h3>Qu&eacute; hacer con la respuesta</h3>
+  <div class="paso"><span class="rot">Paso 1 &mdash; Resuelva usted primero, en papel</span>
+    Antes de leer la respuesta de la IA, resuelva el caso a mano. Solo as&iacute; tendr&aacute; con qu&eacute; comparar. Si lee primero la respuesta, su cerebro la aceptar&aacute; como correcta: es un sesgo bien documentado, no un defecto suyo.</div>
+  <div class="paso"><span class="rot">Paso 2 &mdash; Verifique la aritm&eacute;tica, l&iacute;nea por l&iacute;nea</span>
+    Recalcule el CIF, el arancel, el FODINFA y el costo unitario. Compruebe la igualdad <em>costo disponible = costo de ventas + inventario final</em> en la Parte D. Un solo n&uacute;mero desalineado invalida toda la cadena.</div>
+  <div class="paso"><span class="rot">Paso 3 &mdash; Cace los cuatro errores t&iacute;picos</span>
+    En este tipo de caso, los modelos de IA suelen fallar en uno o m&aacute;s de estos puntos. Rev&iacute;selos expresamente:
+    <ul>
+      <li>&iquest;Meti&oacute; el <strong>IVA</strong> dentro del costo del inventario? (No debe: es cr&eacute;dito tributario, LRTI art. 66.)</li>
+      <li>&iquest;Meti&oacute; la <strong>publicidad</strong> o el <strong>sueldo del contador</strong> al costo? (No debe: NIC 2, p&aacute;rr. 16 c y d.)</li>
+      <li>&iquest;Rest&oacute; el <strong>descuento comercial</strong> antes de calcular el CIF? (Debe hacerlo: NIC 2, p&aacute;rr. 11.)</li>
+      <li>&iquest;Confundi&oacute; <strong>VNR con valor razonable menos costos de venta</strong> tratándolos como sinónimos? (NIC 2, p&aacute;rr. 7 dice expresamente que pueden no ser iguales.)</li>
+    </ul></div>
+  <div class="paso"><span class="rot">Paso 4 &mdash; Verifique las citas normativas</span>
+    Las IA a veces citan p&aacute;rrafos que no dicen lo que se les atribuye. Contraste cada cita con el contenido de este widget. Si la IA cita un p&aacute;rrafo que usted no encuentra respaldado aqu&iacute;, marque la cita como <em>no verificada</em>.</div>
+  <div class="paso"><span class="rot">Paso 5 &mdash; Confronte a la IA</span>
+    Si encontr&oacute; un error, r&eacute;plique en la misma conversaci&oacute;n: <em>&ldquo;Revisa la Parte A: el IVA de un contribuyente con derecho a cr&eacute;dito tributario no integra el costo del inventario. Recalcula.&rdquo;</em> Observe si corrige, si insiste o si cambia de posici&oacute;n sin argumento. Esa observaci&oacute;n es parte del entregable.</div>
+
+  <h3>Entregable</h3>
+  <p>Un documento de <strong>una p&aacute;gina</strong> con cuatro secciones:</p>
+  <ol>
+    <li><strong>Mi soluci&oacute;n</strong> (tablas de las Partes A, B y D con sus cifras).</li>
+    <li><strong>Errores detectados</strong>: qu&eacute; dijo la IA, por qu&eacute; est&aacute; mal y qu&eacute; p&aacute;rrafo de la NIC 2 lo demuestra. Si no encontr&oacute; ninguno, expl&iacute;quelo y muestre las verificaciones que hizo para descartarlos.</li>
+    <li><strong>Reacci&oacute;n de la IA</strong> al ser confrontada.</li>
+    <li><strong>Conclusi&oacute;n personal</strong>: &iquest;en qu&eacute; parte del trabajo la IA le fue &uacute;til y en cu&aacute;l no pod&iacute;a reemplazarlo a usted?</li>
+  </ol>
+
+  <div class="alerta-box"><span class="rot">Criterio que distingue pensamiento cr&iacute;tico de copia</span>
+    <p><strong>Copia simple:</strong> pegar la respuesta de la IA, reformular un poco y entregar. Se detecta de inmediato porque no hay verificaci&oacute;n aritm&eacute;tica propia, las citas normativas no est&aacute;n contrastadas y no hay ning&uacute;n desacuerdo registrado con la m&aacute;quina.</p>
+    <p><strong>Pensamiento cr&iacute;tico:</strong> hay una soluci&oacute;n propia previa, cada cifra fue recalculada, cada cita fue contrastada contra la norma, y existe al menos un juicio fundamentado del estudiante &mdash; sea para corregir a la IA o para confirmarla explicando <em>por qu&eacute;</em> est&aacute; bien.</p>
+    <p>En su vida profesional nadie le pagar&aacute; por preguntarle a una IA. Le pagar&aacute;n por <strong>saber si la respuesta sirve o no</strong>, y por firmar debajo. Esta actividad entrena exactamente esa competencia.</p>
+  </div>
+
+  <div class="carrera-box"><span class="rot">Conexi&oacute;n con las cuatro &aacute;reas de Negocios Internacionales</span>
+    <ul>
+      <li><strong>Comercio exterior:</strong> el caso reproduce una liquidaci&oacute;n aduanera real, con CIF, arancel y FODINFA.</li>
+      <li><strong>Finanzas internacionales:</strong> el costo unitario y el VNR determinan el margen esperado de la operaci&oacute;n.</li>
+      <li><strong>Marketing y negociaci&oacute;n internacional:</strong> la comisi&oacute;n de venta del 6% que reduce el VNR es exactamente el tipo de concesi&oacute;n que se pacta en una negociaci&oacute;n.</li>
+      <li><strong>Marco legal y normativo:</strong> verificar citas de la NIC 2 y de la LRTI es la destreza b&aacute;sica del cumplimiento normativo y de la auditor&iacute;a.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================= PANEL: REFLEXION ================= -->
+<section id="reflexion" class="panel">
+  <h2>Reflexi&oacute;n</h2>
+  <p>Muchas personas creen que estudiar <strong>Negocios Internacionales</strong> consiste en &ldquo;aprender a negociar&rdquo;. Es una idea comprensible, pero incompleta y, si se la toma en serio, limitante. Negociar es apenas uno de los cuatro pilares de su formaci&oacute;n: junto a &eacute;l est&aacute;n el <strong>comercio exterior</strong> (c&oacute;mo se mueven f&iacute;sica y documentalmente las mercader&iacute;as entre pa&iacute;ses), las <strong>finanzas internacionales</strong> (c&oacute;mo se financian, se valoran y se cubren esas operaciones) y el <strong>marco legal y normativo</strong> (qu&eacute; reglas nacionales e internacionales las hacen v&aacute;lidas). Un profesional que solo sabe negociar es un profesional que puede cerrar acuerdos que destruyen valor sin darse cuenta. La clase de hoy es un ejemplo n&iacute;tido: usted puede cerrar una venta a un precio de mercado excelente y aun as&iacute; estar perdiendo dinero, porque los costos necesarios para llegar a ese mercado se comieron el margen. Esa es una verdad que no se descubre negociando: se descubre <strong>midiendo</strong>.</p>
+  <p>Las siguientes preguntas no tienen respuesta correcta. No se califican por acierto, sino por honestidad y profundidad. Resp&oacute;ndalas por escrito, para usted.</p>
+
+  <div class="reflex-q"><span class="n">1. De un objeto suyo a una cadena de decisiones</span>
+    Elija un objeto que tenga cerca en este momento: el celular, la mochila, los audífonos, el cuaderno. Ahora reconstruya su recorrido hacia atr&aacute;s: alguien lo fabric&oacute;, alguien lo transport&oacute;, alguien pag&oacute; un arancel para que entrara al pa&iacute;s, alguien lo puso en un estante, alguien decidi&oacute; su precio. <strong>&iquest;Cu&aacute;ntas personas tuvieron que confiar en un n&uacute;mero que no calcularon ellas mismas para que ese objeto llegara a sus manos?</strong> Y una pregunta m&aacute;s inc&oacute;moda: si el contador de una de esas empresas hubiera medido mal el inventario, &iquest;qui&eacute;n habr&iacute;a pagado el error &mdash;la empresa, el trabajador, o usted como consumidor?</div>
+
+  <div class="reflex-q"><span class="n">2. El valor de lo que usted ya tiene</span>
+    Piense en algo que compr&oacute; con ilusi&oacute;n y que hoy vale mucho menos: una consola, una bicicleta, ropa que ya no usa. <strong>&iquest;Cu&aacute;nto tiempo tard&oacute; en aceptar que su valor hab&iacute;a ca&iacute;do?</strong> La NIC 2 obliga a reconocer esa ca&iacute;da apenas se conoce, no cuando duele menos. &iquest;Qu&eacute; le cuesta m&aacute;s a usted en la vida: reconocer a tiempo que algo perdi&oacute; valor, o sostener la ilusi&oacute;n de que lo conserva? &iquest;Le pasa tambi&eacute;n con proyectos, decisiones o relaciones, no solo con objetos?</div>
+
+  <div class="reflex-q"><span class="n">3. Precio, valor y lo que a usted le queda</span>
+    Hoy vimos que una misma mercader&iacute;a tiene tres cifras distintas: lo que cost&oacute;, lo que el mercado dice que vale, y lo que realmente le queda a quien la posee. Traslade esa distinci&oacute;n a su propia vida: <strong>&iquest;cu&aacute;nto le &ldquo;cost&oacute;&rdquo; llegar hasta este semestre &mdash;en tiempo, en dinero, en renuncias&mdash;, cu&aacute;nto cree que &ldquo;vale&rdquo; su carrera para el mercado laboral, y qu&eacute; le queda realmente a usted despu&eacute;s de descontar todo lo que a&uacute;n tiene que invertir?</strong> Las tres cifras rara vez coinciden, y eso no es un problema: es informaci&oacute;n.</div>
+
+  <div class="reflex-q"><span class="n">4. Autoconocimiento &mdash; su relaci&oacute;n con las malas noticias</span>
+    La regla del menor entre costo y VNR es, en el fondo, una regla emocional: obliga a registrar la p&eacute;rdida antes de que ocurra la venta. Piense en la &uacute;ltima vez que recibi&oacute; una mala noticia acad&eacute;mica &mdash;una nota baja, un tema que no entendi&oacute;&mdash;. <strong>&iquest;La enfrent&oacute; de inmediato o la postergó?</strong> &iquest;Qu&eacute; siente en el cuerpo cuando aparece la evidencia de que algo no est&aacute; funcionando? Reconocerlo sin castigarse es una habilidad entrenable, y es exactamente la que distingue a un profesional confiable de uno que oculta problemas hasta que estallan.</div>
+
+  <div class="reflex-q"><span class="n">5. Exploraci&oacute;n vocacional</span>
+    Dentro de Negocios Internacionales hay caminos muy distintos: log&iacute;stica y operaciones aduaneras, an&aacute;lisis financiero y riesgo, inteligencia de mercados y negociaci&oacute;n, o cumplimiento normativo y auditor&iacute;a. <strong>De todo lo trabajado hoy, &iquest;qu&eacute; parte le result&oacute; genuinamente interesante y no solo &ldquo;necesaria para aprobar&rdquo;?</strong> &iquest;Le atrajo m&aacute;s desarmar la liquidaci&oacute;n aduanera, calcular el margen que queda despu&eacute;s de los costos, o detectar el error en el razonamiento? Anote la respuesta y gu&aacute;rdela: al terminar el semestre volver&aacute; a leerla y ver&aacute; si la intuici&oacute;n se confirm&oacute;.</div>
+
+  <div class="reflex-q"><span class="n">6. &Eacute;tica aplicada</span>
+    Imagine que trabaja en una empresa y detecta que el inventario est&aacute; sobrevalorado en USD 40.000 porque nadie reconoci&oacute; la ca&iacute;da del VNR. Su jefe le dice: &ldquo;d&eacute;jalo as&iacute;, el pr&oacute;ximo a&ntilde;o se recupera&rdquo;. <strong>&iquest;Qu&eacute; hace?</strong> Antes de responder lo que &ldquo;se debe&rdquo; responder, pregúntese con honestidad qu&eacute; har&iacute;a realmente, qu&eacute; necesitar&iacute;a tener resuelto en su vida para poder sostener su posici&oacute;n, y qu&eacute; le dar&iacute;a miedo perder. Esa reflexi&oacute;n vale m&aacute;s que cualquier declaraci&oacute;n de principios.</div>
+
+  <div class="carrera-box"><span class="rot">Cierre: las cuatro &aacute;reas en una sola cifra</span>
+    <p>Una sola l&iacute;nea del estado de situaci&oacute;n financiera &mdash;&ldquo;Inventarios&rdquo;&mdash; concentra hoy: el <strong>comercio exterior</strong> (aranceles, fletes, Incoterms), las <strong>finanzas internacionales</strong> (margen, precios de commodities, indicadores de solvencia), el <strong>marketing y la negociaci&oacute;n internacional</strong> (precios estimados, comisiones, descuentos) y el <strong>marco legal y normativo</strong> (NIC 2, NIIF 13, NIC 41, LRTI, COPCI). Si alguna vez alguien le dice que la contabilidad es &ldquo;solo n&uacute;meros&rdquo;, mu&eacute;strele esta cifra y explique todo lo que hubo que entender para escribirla.</p>
+  </div>
+</section>
+
+<!-- ================= PANEL: BIBLIOGRAFIA ================= -->
+<section id="biblio" class="panel">
+  <h2>Bibliograf&iacute;a</h2>
+  <p class="intro">Referencias en formato APA, 7.&ordf; edici&oacute;n. Todas corresponden a obras y normas realmente existentes.</p>
+
+  <div class="ref-card"><span class="ref-tipo">Norma internacional</span>
+    <p>International Accounting Standards Board. (2023). <em>Norma Internacional de Contabilidad 2: Inventarios</em>. IFRS Foundation. https://www.ifrs.org</p>
+  </div>
+  <div class="ref-card"><span class="ref-tipo">Norma internacional</span>
+    <p>International Accounting Standards Board. (2023). <em>Norma Internacional de Informaci&oacute;n Financiera 13: Medici&oacute;n del Valor Razonable</em>. IFRS Foundation. https://www.ifrs.org</p>
+  </div>
+  <div class="ref-card"><span class="ref-tipo">Norma internacional</span>
+    <p>International Accounting Standards Board. (2023). <em>Norma Internacional de Contabilidad 41: Agricultura</em>. IFRS Foundation. https://www.ifrs.org</p>
+  </div>
+  <div class="ref-card"><span class="ref-tipo">Texto b&aacute;sico &mdash; s&iacute;labo</span>
+    <p>Zapata S&aacute;nchez, P. (2011). <em>Laboratorio de contabilidad general</em> (7.&ordf; ed.). McGraw-Hill.</p>
+  </div>
+  <div class="ref-card"><span class="ref-tipo">Texto b&aacute;sico &mdash; s&iacute;labo</span>
+    <p>Vite Rangel, V. T. (2015). <em>Contabilidad general</em>. Editorial Digital UNID. https://elibro.net/es/ereader/uguayaquil/41179</p>
+  </div>
+  <div class="ref-card"><span class="ref-tipo">Texto b&aacute;sico &mdash; s&iacute;labo</span>
+    <p>Moreno Fern&aacute;ndez, J. A. (2014). <em>Contabilidad b&aacute;sica</em> (4.&ordf; ed.). Grupo Editorial Patria. https://elibro.net/es/ereader/uguayaquil/39416</p>
+  </div>
+  <div class="ref-card"><span class="ref-tipo">Texto complementario</span>
+    <p>Zapata S&aacute;nchez, P. (2017). <em>Contabilidad general: con base en Normas Internacionales de Informaci&oacute;n Financiera</em> (8.&ordf; ed.). Alfaomega.</p>
+  </div>
+  <div class="ref-card"><span class="ref-tipo">Texto complementario</span>
+    <p>Guajardo Cant&uacute;, G., &amp; Andrade de Guajardo, N. E. (2014). <em>Contabilidad financiera</em> (6.&ordf; ed.). McGraw-Hill.</p>
+  </div>
+  <div class="ref-card"><span class="ref-tipo">Normativa ecuatoriana</span>
+    <p>Congreso Nacional del Ecuador. (2004, &uacute;ltima reforma vigente). <em>Ley de R&eacute;gimen Tributario Interno</em>. Registro Oficial Suplemento 463. https://www.sri.gob.ec</p>
+  </div>
+  <div class="ref-card"><span class="ref-tipo">Normativa ecuatoriana</span>
+    <p>Asamblea Nacional del Ecuador. (2010). <em>C&oacute;digo Org&aacute;nico de la Producci&oacute;n, Comercio e Inversiones (COPCI)</em>. Registro Oficial Suplemento 351. https://www.aduana.gob.ec</p>
+  </div>
+  <div class="ref-card"><span class="ref-tipo">Organismo de control</span>
+    <p>Superintendencia de Compa&ntilde;&iacute;as, Valores y Seguros. (s.f.). <em>Normativa contable y cat&aacute;logo de cuentas bajo NIIF</em>. https://www.supercias.gob.ec</p>
+  </div>
+
+  <div class="nota-pie">
+    <strong>Nota metodol&oacute;gica.</strong> Verifique siempre las referencias antes de citarlas en un trabajo acad&eacute;mico. Consulte <strong>Google Scholar</strong> (scholar.google.com), el <strong>repositorio institucional de la Universidad de Guayaquil</strong> y la <strong>biblioteca virtual eLibro</strong> con su cuenta institucional. Los textos normativos deben consultarse siempre en su fuente oficial: <em>ifrs.org</em> para las NIIF, <em>sri.gob.ec</em> para la normativa tributaria y <em>supercias.gob.ec</em> para la normativa societaria. Una cita que usted no verific&oacute; es una cita que no puede defender.
+  </div>
+</section>
+
+<footer class="pie">
+  Universidad de Guayaquil &middot; Facultad de Ciencias Administrativas &middot; Carrera de Negocios Internacionales<br>
+  Contabilidad General (091601124) &middot; Unidad 3 &middot; D&iacute;a 8 &mdash; Jueves 20 de agosto de 2026 &middot; Periodo Acad&eacute;mico Extraordinario 2026
+</footer>
+
+</div><!-- /wrap -->
+
+<script>
+/* ============================================================
+   1. NAVEGACION POR PESTANAS
+   ============================================================ */
+function showTab(id, btn){
+  var paneles = document.getElementsByClassName("panel");
+  for(var i=0;i<paneles.length;i++){ paneles[i].classList.remove("active"); }
+  var botones = document.getElementsByClassName("tab-btn");
+  for(var j=0;j<botones.length;j++){ botones[j].classList.remove("active"); }
+  document.getElementById(id).classList.add("active");
+  if(btn){ btn.classList.add("active"); }
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+/* ============================================================
+   2. ACORDEON DEL REPASO
+   ============================================================ */
+function toggleAcordeon(btn){
+  var panel = btn.nextElementSibling;
+  var flecha = btn.getElementsByClassName("fl")[0];
+  if(panel.classList.contains("visible")){
+    panel.classList.remove("visible");
+    btn.classList.remove("abierto");
+    if(flecha){ flecha.innerHTML = "&#9654;"; }
+  } else {
+    panel.classList.add("visible");
+    btn.classList.add("abierto");
+    if(flecha){ flecha.innerHTML = "&#9660;"; }
+  }
+}
+
+/* ============================================================
+   3. EJERCICIO INTERACTIVO - claves y retroalimentacion
+   ============================================================ */
+var clavesEj = {
+  ei1:"a", ei2:"c", ei3:"a", ei4:"b", ei5:"d",
+  ei6:"b", ei7:"b", ei8:"a", ei9:"b", ei10:"a"
+};
+
+var feedEj = {
+  ei1:"<strong>Integra el costo del inventario.</strong> El flete internacional es un costo directamente atribuible a la adquisicion: sin el, la mercaderia no habria llegado a su ubicacion actual. La NIC 2, parrafo 11, incluye expresamente los transportes dentro de los costos de adquisicion. En el caso de El Astillero, los 2.000,00 de flete forman parte del valor CIF y por tanto del costo.",
+  ei2:"<strong>Se registra como credito tributario.</strong> Este es el punto que mas confunde. El IVA pagado en la importacion por un contribuyente que vende bienes gravados con 15% es un impuesto <em>recuperable</em>: se compensa contra el IVA cobrado en ventas (LRTI, art. 66). Por eso no es costo ni gasto, sino un <em>activo por impuestos</em>. La NIC 2, parrafo 11, solo incorpora al costo los impuestos <em>no recuperables</em>, como el arancel. Si la empresa vendiera tambien bienes con tarifa 0%, la porcion no recuperable segun el factor de proporcionalidad si se sumaria al costo.",
+  ei3:"<strong>Integra el costo del inventario.</strong> El arancel ad valorem es un impuesto <em>no recuperable</em>: el Estado no lo devuelve ni se compensa con nada. La NIC 2, parrafo 11, ordena incluir en el costo los aranceles de importacion y otros impuestos no recuperables. Note el contraste con el IVA del item anterior: dos tributos pagados en la misma aduana, el mismo dia, con tratamiento contable opuesto. Lo que decide no es el nombre del tributo, sino si se puede recuperar.",
+  ei4:"<strong>Se reconoce como gasto del periodo.</strong> El sueldo del gerente administrativo es un costo indirecto de administracion que no contribuye a dar al inventario su condicion y ubicacion actuales. La NIC 2, parrafo 16 literal c), lo excluye expresamente del costo. Piense en la prueba practica: si manana la empresa no comprara ni una sola unidad, ese sueldo se pagaria igual. Eso demuestra que no es atribuible al inventario.",
+  ei5:"<strong>Disminuye el costo del inventario.</strong> La NIC 2, parrafo 11, es explicita: los descuentos comerciales, las rebajas y otras partidas similares <em>se deduciran</em> para determinar el costo de adquisicion. No se registran como un ingreso: la empresa no obtiene utilidad por comprar, sino por vender. En el caso de El Astillero, el descuento de 400,00 redujo el valor de transaccion de 24.000,00 a 23.600,00, que fue la base para el calculo aduanero.",
+  ei6:"<strong>Se reconoce como gasto del periodo.</strong> La comision del vendedor es un costo de <em>venta</em>, excluido del costo del inventario por la NIC 2, parrafo 16 literal d). El criterio temporal ayuda a recordarlo: los costos de venta ocurren cuando el bien <em>sale</em>, no cuando <em>llega</em>. Ademas, capitalizarlos significaria reconocer utilidad antes de haber vendido. Ojo con un matiz importante: esta misma comision <em>si</em> se resta al calcular el VNR, porque el VNR mide lo que quedara despues de vender. Una cosa es el costo y otra el VNR.",
+  ei7:"<strong>Se reconoce como gasto del periodo.</strong> La NIC 2, parrafo 16 literal a), excluye del costo los importes <em>anormales</em> de desperdicio de materiales, mano de obra u otros costos. Un derrame accidental no agrega valor a la mercaderia: es una perdida de eficiencia. Si se capitalizara, la ineficiencia quedaria escondida dentro del activo y se descubriria solo al vender. La palabra clave es <em>anormal</em>: los desperdicios normales y previsibles del proceso si integran el costo.",
+  ei8:"<strong>Integra el costo del inventario.</strong> El transporte del puerto a la bodega es necesario para que la mercaderia alcance su <em>ubicacion actual</em>, que es el criterio del parrafo 10 de la NIC 2, y esta comprendido entre los transportes del parrafo 11. En el caso de El Astillero son 270,00 que se suman al costo. Distinto seria el transporte posterior <em>hacia el cliente</em>: ese ya es costo de venta (parrafo 16 d).",
+  ei9:"<strong>Se reconoce como gasto del periodo.</strong> La NIC 2, parrafo 16 literal b), excluye los costos de almacenamiento, <em>salvo</em> que sean necesarios en el proceso productivo antes de una elaboracion ulterior. Guardar producto ya terminado esperando comprador no lo mejora ni lo acerca al cliente. La excepcion existe y es real: anejar un vino, secar madera o madurar un queso son almacenamientos que <em>si</em> integran el costo, porque forman parte del proceso que da al bien su condicion final.",
+  ei10:"<strong>Integra el costo del inventario.</strong> El seguro de la carga en transito protege la mercaderia mientras viaja hacia su ubicacion actual; es un costo directamente atribuible a la adquisicion (NIC 2, parrafo 11). En comercio exterior forma parte del valor CIF junto con el costo de la mercaderia y el flete. En el caso de El Astillero son 400,00. Distinto es el seguro de la bodega de producto terminado ya almacenado: ese es gasto operativo."
+};
+
+function verificarEjercicio(){
+  var total = 10, sinResponder = 0, correctas = 0;
+  for(var i=1;i<=total;i++){
+    if(!document.querySelector("input[name=ei" + i + "]:checked")){ sinResponder++; }
+  }
+  var aviso = document.getElementById("avisoEj");
+  if(sinResponder > 0){ aviso.classList.add("visible"); aviso.scrollIntoView({behavior:"smooth", block:"center"}); return; }
+  aviso.classList.remove("visible");
+
+  for(var k=1;k<=total;k++){
+    var n = "ei" + k;
+    var sel = document.querySelector("input[name=" + n + "]:checked");
+    var val = sel.value;
+    var correcta = clavesEj[n];
+    var fb = document.getElementById("f" + n);
+    for(var L=0; L<4; L++){
+      var letra = ["a","b","c","d"][L];
+      var lab = document.getElementById(n + letra);
+      lab.classList.remove("marcado-ok","marcado-mal");
+    }
+    document.getElementById(n + correcta).classList.add("marcado-ok");
+    if(val === correcta){
+      correctas++;
+      fb.className = "feedback ok visible";
+      fb.innerHTML = "&#10004; <strong>Correcto.</strong> " + feedEj[n];
+    } else {
+      document.getElementById(n + val).classList.add("marcado-mal");
+      fb.className = "feedback mal visible";
+      fb.innerHTML = "&#10008; <strong>Incorrecto.</strong> Usted marco la opcion " + val + "; la correcta es la " + correcta + ". " + feedEj[n];
+    }
+  }
+  mostrarResultado("Ej", correctas, total);
+}
+
+function reiniciarEjercicio(){
+  for(var i=1;i<=10;i++){
+    var n = "ei" + i;
+    var radios = document.getElementsByName(n);
+    for(var r=0;r<radios.length;r++){ radios[r].checked = false; }
+    var fb = document.getElementById("f" + n);
+    fb.className = "feedback"; fb.innerHTML = "";
+    for(var L=0; L<4; L++){
+      var lab = document.getElementById(n + ["a","b","c","d"][L]);
+      lab.classList.remove("marcado-ok","marcado-mal");
+    }
+  }
+  document.getElementById("avisoEj").classList.remove("visible");
+  var res = document.getElementById("resEj");
+  res.classList.remove("visible");
+  document.getElementById("barraEj").style.width = "0%";
+  document.getElementById("ejercicio").scrollIntoView({behavior:"smooth"});
+}
+
+/* ============================================================
+   4. CUESTIONARIO - claves y retroalimentacion
+   ============================================================ */
+var clavesCu = {
+  qi1:"c", qi2:"b", qi3:"d", qi4:"a", qi5:"b",
+  qi6:"c", qi7:"a", qi8:"d", qi9:"b", qi10:"c"
+};
+
+var feedCu = {
+  qi1:"La NIC 2, parrafo 9, establece que los inventarios se mediran <strong>al costo o al valor neto realizable, segun cual sea menor</strong>. Es una regla asimetrica y deliberada: si el VNR cae por debajo del costo se reconoce la perdida de inmediato; si el VNR supera al costo <em>no</em> se reconoce ganancia alguna, porque la utilidad se gana al vender. Medir siempre al costo (opcion a) ignoraria el deterioro; medir a valor razonable (opcion b) solo aplica a las excepciones de los parrafos 3 y 20; y tomar el mayor (opcion d) sobrevaluaria el activo.",
+  qi2:"La definicion del parrafo 6 de la NIC 2 tiene tres componentes y los tres importan: <strong>precio estimado de venta en el curso normal de la operacion</strong>, menos <strong>costos estimados para terminar la produccion</strong>, menos <strong>costos estimados necesarios para llevar a cabo la venta</strong>. La opcion a resta el costo de adquisicion, que no interviene en el calculo del VNR (interviene despues, en la comparacion). La opcion c describe el <em>valor razonable</em>, no el VNR. La opcion d suma en lugar de restar los costos de venta, invirtiendo la logica.",
+  qi3:"La NIC 2, parrafo 7, lo dice de forma directa: <strong>el VNR es un valor especifico para la entidad, mientras que el valor razonable no lo es</strong>. Por eso dos empresas con la misma mercaderia, en la misma bodega y la misma fecha, tienen identico valor razonable pero pueden tener VNR distintos, segun sus propias comisiones y costos de despacho. El mismo parrafo advierte que el VNR <em>puede no ser igual</em> al valor razonable menos los costos de venta. Las demas opciones inventan distinciones que la norma no establece.",
+  qi4:"Las <strong>comisiones pagadas a los vendedores</strong> son costos de venta y estan excluidas del costo del inventario por el parrafo 16 literal d) de la NIC 2. El criterio temporal lo aclara: los costos de venta ocurren cuando el bien <em>sale</em>, no cuando <em>llega</em>. Las otras tres opciones (arancel, flete internacional y seguro en transito) si integran el costo por el parrafo 11, porque contribuyen a dar al inventario su condicion y ubicacion actuales. Atencion al matiz: esa misma comision <em>si</em> se resta al calcular el VNR.",
+  qi5:"La NIC 2 admite tres vias: <strong>identificacion especifica</strong> para bienes que no son habitualmente intercambiables o que se segregan para proyectos especificos (parrafo 23), y <strong>FIFO</strong> o <strong>costo promedio ponderado</strong> para los demas inventarios (parrafo 25). El metodo <strong>LIFO no esta admitido</strong> bajo NIIF, lo que descarta las opciones a y c. La opcion d es falsa porque excluye indebidamente al FIFO y a la identificacion especifica. Si encuentra una fuente que presenta LIFO como valido bajo NIIF, esa fuente esta desactualizada.",
+  qi6:"Bajo FIFO salen primero las unidades mas antiguas; por lo tanto, las que <em>quedan</em> en existencia son las adquiridas mas recientemente. Con costos crecientes, eso significa que el <strong>inventario final queda valorado a los costos mas recientes</strong>, mas cercanos al valor actual del bien: es la principal ventaja del metodo en terminos de representacion del activo. La opcion a invierte el efecto (esos son los costos que van al costo de ventas). La opcion b describe el promedio ponderado. La opcion d confunde el metodo de valuacion con una medicion a valor razonable, que la NIC 2 no exige aqui.",
+  qi7:"La NIC 2, parrafo 33, permite la reversion cuando han dejado de existir las circunstancias que causaron la rebaja o cuando hay evidencia clara de un incremento del VNR por cambios en las circunstancias economicas, <strong>limitada al importe de la rebaja originalmente reconocida</strong>. El nuevo valor en libros sera el menor entre el costo y el VNR revisado. La opcion b niega una posibilidad que la norma concede expresamente. La opcion c ignora el limite y llevaria a reconocer utilidades no realizadas. La opcion d inventa una autorizacion administrativa que no existe.",
+  qi8:"<strong>Calculo:</strong> VNR unitario = 14,00 &minus; (10% de 14,00 = 1,40) &minus; 0,60 = <strong>12,00</strong>. Costo unitario en libros = 12,50. Como el VNR (12,00) es <em>menor</em> que el costo (12,50), procede la rebaja: (12,50 &minus; 12,00) &times; 300 unidades = <strong>USD 150,00</strong>. La opcion a es la trampa central del ejercicio: compara el precio de venta bruto (14,00) con el costo, olvidando descontar los costos necesarios para vender. Es el error mas frecuente en la practica y el que hace que operaciones aparentemente rentables no lo sean.",
+  qi9:"<strong>Calculo bajo FIFO:</strong> salen primero las 50 unidades mas antiguas a 20,00 = 1.000,00; las 50 restantes salen de la compra a 22,00 = 1.100,00. Costo de ventas = <strong>USD 2.100,00</strong>. Comprobacion: costo disponible = 1.000,00 + 1.760,00 = 2.760,00; inventario final = 30 u a 22,00 = 660,00; y 2.100,00 + 660,00 = 2.760,00 &#10004;. La opcion c (2.123,08) es el resultado que daria el <em>costo promedio ponderado</em>, no el FIFO. La opcion d (2.200,00) asume que las 100 unidades salieron todas a 22,00, que seria el resultado bajo LIFO, metodo no admitido por la NIC 2.",
+  qi10:"Se trata de un <strong>intermediario que comercia con materias primas cotizadas</strong>, expresamente contemplado en la NIC 2, parrafo 3 literal b), y descrito en el parrafo 5: compra y vende por cuenta propia con el proposito de obtener ganancias por las fluctuaciones del precio o por el margen de intermediacion, sin transformar ni consumir el producto. Estas entidades quedan fuera de los requerimientos de medicion de la NIC 2 y miden sus inventarios al <strong>valor razonable menos los costos de venta, reconociendo los cambios de valor en el resultado del periodo</strong>. Por eso las opciones a y b, que aplican la regla general, no corresponden; y la opcion d confunde un precio contractual particular con una base de medicion."
+};
+
+function verificarCuestionario(){
+  var total = 10, sinResponder = 0, correctas = 0;
+  for(var i=1;i<=total;i++){
+    if(!document.querySelector("input[name=qi" + i + "]:checked")){ sinResponder++; }
+  }
+  var aviso = document.getElementById("avisoCu");
+  if(sinResponder > 0){ aviso.classList.add("visible"); aviso.scrollIntoView({behavior:"smooth", block:"center"}); return; }
+  aviso.classList.remove("visible");
+
+  for(var k=1;k<=total;k++){
+    var n = "qi" + k;
+    var sel = document.querySelector("input[name=" + n + "]:checked");
+    var val = sel.value;
+    var correcta = clavesCu[n];
+    var fb = document.getElementById("f" + n);
+    for(var L=0; L<4; L++){
+      var lab = document.getElementById(n + ["a","b","c","d"][L]);
+      lab.classList.remove("marcado-ok","marcado-mal");
+    }
+    document.getElementById(n + correcta).classList.add("marcado-ok");
+    if(val === correcta){
+      correctas++;
+      fb.className = "feedback ok visible";
+      fb.innerHTML = "&#10004; <strong>Correcto.</strong> " + feedCu[n];
+    } else {
+      document.getElementById(n + val).classList.add("marcado-mal");
+      fb.className = "feedback mal visible";
+      fb.innerHTML = "&#10008; <strong>Incorrecto.</strong> Usted marco la opcion " + val + "; la correcta es la " + correcta + ". " + feedCu[n];
+    }
+  }
+  mostrarResultado("Cu", correctas, total);
+}
+
+function reiniciarCuestionario(){
+  for(var i=1;i<=10;i++){
+    var n = "qi" + i;
+    var radios = document.getElementsByName(n);
+    for(var r=0;r<radios.length;r++){ radios[r].checked = false; }
+    var fb = document.getElementById("f" + n);
+    fb.className = "feedback"; fb.innerHTML = "";
+    for(var L=0; L<4; L++){
+      var lab = document.getElementById(n + ["a","b","c","d"][L]);
+      lab.classList.remove("marcado-ok","marcado-mal");
+    }
+  }
+  document.getElementById("avisoCu").classList.remove("visible");
+  document.getElementById("resCu").classList.remove("visible");
+  document.getElementById("barraCu").style.width = "0%";
+  document.getElementById("cuestionario").scrollIntoView({behavior:"smooth"});
+}
+
+/* ============================================================
+   5. RESULTADO COMPARTIDO (barra animada y emoji por rango)
+   ============================================================ */
+function mostrarResultado(suf, correctas, total){
+  var pct = Math.round((correctas / total) * 100);
+  var emoji, mensaje;
+  if(pct === 100){ emoji = "&#127942;"; mensaje = "Dominio completo. Puede avanzar con seguridad al Dia 9."; }
+  else if(pct >= 80){ emoji = "&#127919;"; mensaje = "Muy buen desempeno. Revise las explicaciones de los items fallados y quedara solido."; }
+  else if(pct >= 60){ emoji = "&#128216;"; mensaje = "Base aceptable. Vuelva a los Temas 2, 4 y 5 antes de continuar."; }
+  else if(pct >= 40){ emoji = "&#9888;&#65039;"; mensaje = "Hay vacios importantes. Relea el widget completo y repita el ejercicio antes del Dia 9."; }
+  else { emoji = "&#128214;"; mensaje = "Es necesario reestudiar la clase desde el Tema 1. No avance sin dominar la regla del menor entre costo y VNR."; }
+
+  document.getElementById("emoji" + suf).innerHTML = emoji;
+  document.getElementById("nota" + suf).innerHTML = correctas + " / " + total + " &nbsp;&middot;&nbsp; " + pct + "%";
+  document.getElementById("det" + suf).innerHTML = mensaje;
+  var res = document.getElementById("res" + suf);
+  res.classList.add("visible");
+  var barra = document.getElementById("barra" + suf);
+  barra.style.width = "0%";
+  setTimeout(function(){ barra.style.width = pct + "%"; }, 120);
+  res.scrollIntoView({behavior:"smooth", block:"center"});
+}
+</script>
+</body>
+</html>

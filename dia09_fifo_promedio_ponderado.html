@@ -1,0 +1,1747 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Día 9 — FIFO y Costo Promedio Ponderado | Contabilidad General</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============ BASE ============ */
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Source Sans 3',Arial,sans-serif;background:#eef2f6;color:#1c2833;line-height:1.75;font-size:17px}
+.contenedor{max-width:1180px;margin:0 auto;background:#fff;box-shadow:0 0 24px rgba(0,0,0,.12)}
+
+/* ============ ENCABEZADO ============ */
+.encabezado{background:#003366;color:#fff;padding:26px 24px}
+.encabezado .inst{font-size:14px;letter-spacing:.5px;color:#cfe3f5;text-transform:uppercase;font-weight:600}
+.encabezado h1{font-family:'Lora',Georgia,serif;font-size:30px;margin:10px 0 6px;color:#fff;line-height:1.25}
+.encabezado .sub{font-size:17px;color:#e6f1fb}
+.encabezado .meta{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px}
+.encabezado .meta span{background:#0a4d8c;color:#fff;padding:5px 12px;border-radius:14px;font-size:13.5px;font-weight:600;border:1px solid #2a6fb0}
+
+/* ============ MENU DE PESTAÑAS ============ */
+.menu-tabs{background:#87CEEB;display:flex;overflow-x:auto;white-space:nowrap;border-bottom:3px solid #003366}
+.menu-tabs::-webkit-scrollbar{height:7px}
+.menu-tabs::-webkit-scrollbar-thumb{background:#003366;border-radius:4px}
+.tab-btn{background:transparent;color:#000;border:none;padding:13px 17px;font-family:'Source Sans 3',sans-serif;font-size:15.5px;font-weight:600;cursor:pointer;flex:0 0 auto;border-right:1px solid #6fb8dd}
+.tab-btn:hover{background:#a8ddf2}
+.tab-btn.active{background:#fff;color:#003366;font-weight:700}
+
+/* ============ PANELES ============ */
+.panel{display:none;padding:28px 30px 46px}
+.panel.active{display:block}
+.titulo-seccion{font-family:'Lora',Georgia,serif;font-size:26px;color:#003366;border-bottom:3px solid #87CEEB;padding-bottom:9px;margin-bottom:20px}
+.subtitulo{font-family:'Lora',Georgia,serif;font-size:21px;color:#0a4d8c;margin:28px 0 12px}
+.subtitulo-3{font-family:'Lora',Georgia,serif;font-size:18.5px;color:#134a75;margin:22px 0 10px}
+.panel p{margin-bottom:14px;text-align:justify}
+.panel ul,.panel ol{margin:0 0 16px 26px}
+.panel li{margin-bottom:9px;text-align:justify}
+.destacado{background:#fff3cd;padding:2px 5px;border-radius:3px;font-weight:600}
+
+/* ============ CAJAS DE CONTENIDO ============ */
+.definicion{background:#eaf4fc;border-left:6px solid #003366;padding:16px 20px;margin:18px 0;border-radius:0 8px 8px 0}
+.definicion h4{font-family:'Lora',serif;color:#003366;font-size:17.5px;margin-bottom:8px}
+.ejemplo{background:#f4f0fa;border-left:6px solid #6a4c93;padding:16px 20px;margin:18px 0;border-radius:0 8px 8px 0}
+.ejemplo h4{font-family:'Lora',serif;color:#4b2e83;font-size:17.5px;margin-bottom:8px}
+.conclusion{background:#e7f6ec;border:2px solid #2e7d47;padding:16px 20px;margin:22px 0;border-radius:8px}
+.conclusion h4{font-family:'Lora',serif;color:#1d5c32;font-size:17.5px;margin-bottom:8px}
+.carrera-box{background:#e9f7ef;border:2px dashed #2e7d47;padding:17px 20px;margin:24px 0;border-radius:8px}
+.carrera-box h4{font-family:'Lora',serif;color:#1d5c32;font-size:17.5px;margin-bottom:10px}
+.carrera-box ul{margin-left:22px}
+.alerta{background:#fdecea;border-left:6px solid #c0392b;padding:15px 19px;margin:18px 0;border-radius:0 8px 8px 0}
+.alerta h4{font-family:'Lora',serif;color:#8e2418;font-size:17px;margin-bottom:7px}
+.futuro{background:#fff8e1;border:2px dotted #c9930a;padding:14px 18px;margin:18px 0;border-radius:8px;font-size:16px}
+.futuro h4{font-family:'Lora',serif;color:#8a6400;font-size:16.5px;margin-bottom:6px}
+.nota-lateral{background:#f2f4f6;border-left:5px solid #7d8a95;padding:13px 17px;margin:16px 0;font-size:16px;border-radius:0 6px 6px 0}
+.formula{background:#003366;color:#fff;padding:15px 18px;margin:18px 0;border-radius:8px;text-align:center;font-size:18px;font-family:'Source Sans 3',sans-serif;font-weight:600;line-height:1.9}
+.formula small{display:block;color:#bcd9f2;font-weight:400;font-size:14.5px;margin-top:6px}
+
+/* ============ TABLAS ============ */
+.tabla-wrap{overflow-x:auto;margin:18px 0}
+table.tabla{border-collapse:collapse;width:100%;min-width:640px;font-size:15.5px}
+table.tabla caption{caption-side:top;text-align:left;font-weight:700;color:#003366;padding-bottom:7px;font-size:16px}
+table.tabla th{background:#003366;color:#fff;padding:9px 10px;text-align:center;border:1px solid #0a4d8c;font-weight:600}
+table.tabla th.sub{background:#0a4d8c;font-size:14.5px}
+table.tabla td{padding:8px 10px;border:1px solid #c3cdd6;vertical-align:top}
+table.tabla tbody tr:nth-child(even){background:#f6f9fc}
+.num{text-align:right;font-family:'Courier New',monospace;white-space:nowrap}
+.cen{text-align:center}
+.tot{font-weight:700;background:#dce9f5 !important;border-top:2px solid #003366}
+.fila-venta{background:#fdf1f0 !important}
+.fila-compra{background:#eef7f1 !important}
+.fila-saldo{background:#fffbe8 !important}
+.capa{font-size:14.5px;color:#3b4a56;font-family:'Courier New',monospace}
+
+/* ============ ASIENTOS ============ */
+.asiento{margin:22px 0;border:1px solid #b9c6d2;border-radius:8px;overflow:hidden}
+.asiento-head{background:#003366;color:#fff;padding:9px 14px;font-weight:700;font-size:16px}
+table.tabla-asiento{border-collapse:collapse;width:100%;min-width:620px;font-size:15.5px}
+table.tabla-asiento th{background:#0a4d8c;color:#fff;padding:7px 9px;border:1px solid #17629f;font-weight:600;font-size:14.5px}
+table.tabla-asiento td{padding:6px 9px;border:1px solid #d2dae2}
+.cta-haber{padding-left:34px !important;font-style:normal}
+.suman td{border-top:3px double #003366 !important;font-weight:700;background:#e8f0f8}
+.glosa{font-style:italic;font-size:14.5px;color:#3b4a56;background:#f7f9fb;padding:9px 13px;border-top:1px solid #d2dae2}
+
+/* ============ ACORDEON ============ */
+.acordeon{margin-bottom:11px;border:1px solid #b9c6d2;border-radius:7px;overflow:hidden}
+.acordeon-btn{width:100%;text-align:left;background:#eaf4fc;border:none;padding:13px 16px;font-family:'Source Sans 3',sans-serif;font-size:16.5px;font-weight:600;color:#003366;cursor:pointer;display:flex;align-items:center;gap:11px}
+.acordeon-btn:hover{background:#d7eaf9}
+.acordeon-btn .flecha{font-size:13px;color:#0a4d8c}
+.acordeon-panel{display:none;padding:16px 20px;background:#fff;border-top:1px solid #cfdbe6}
+.acordeon-panel.abierto{display:block}
+
+/* ============ EJERCICIO Y CUESTIONARIO ============ */
+.item{border:1px solid #c3cdd6;border-radius:8px;padding:16px 19px;margin-bottom:16px;background:#fcfdfe}
+.item-enunciado{font-weight:600;margin-bottom:11px;display:block}
+.opciones{display:flex;flex-direction:column;gap:7px;margin-left:4px}
+.opciones label{cursor:pointer;padding:7px 11px;border:1px solid #d5dde5;border-radius:6px;background:#fff;font-size:16px}
+.opciones label:hover{background:#eaf4fc;border-color:#87CEEB}
+.opciones input{margin-right:9px}
+.feedback{display:none;margin-top:12px;padding:12px 15px;border-radius:7px;font-size:15.5px}
+.feedback.visible{display:block}
+.feedback.ok{background:#e7f6ec;border-left:5px solid #2e7d47;color:#14421f}
+.feedback.mal{background:#fdecea;border-left:5px solid #c0392b;color:#611a12}
+.badge{display:inline-block;font-size:12.5px;font-weight:700;padding:3px 10px;border-radius:11px;margin-right:9px;vertical-align:middle}
+.badge-teorica{background:#003366;color:#fff}
+.badge-caso{background:#c9930a;color:#fff}
+.btn{background:#003366;color:#fff;border:none;padding:12px 26px;border-radius:7px;font-family:'Source Sans 3',sans-serif;font-size:16.5px;font-weight:600;cursor:pointer;margin:6px 8px 6px 0}
+.btn:hover{background:#0a4d8c}
+.btn-secundario{background:#5c6b78}
+.btn-secundario:hover{background:#44515c}
+.resultado{display:none;margin:20px 0;padding:20px;border:2px solid #003366;border-radius:9px;background:#f2f8fd;text-align:center}
+.resultado.visible{display:block}
+.resultado .emoji{font-size:46px;display:block;margin-bottom:6px}
+.resultado .puntaje{font-family:'Lora',serif;font-size:25px;color:#003366;font-weight:700}
+.barra{width:100%;height:24px;background:#d7dee5;border-radius:12px;overflow:hidden;margin:14px 0 6px}
+.barra-relleno{height:100%;width:0;background:linear-gradient(90deg,#0a4d8c,#2e7d47);transition:width 1.1s ease;border-radius:12px}
+.aviso-js{display:none;background:#fdecea;border-left:5px solid #c0392b;color:#611a12;padding:12px 16px;border-radius:0 7px 7px 0;margin:14px 0;font-weight:600}
+.aviso-js.visible{display:block}
+
+/* ============ IA / REFLEXION / BIBLIOGRAFIA ============ */
+.prompt-box{background:#1c2833;color:#e8eef3;padding:18px 20px;border-radius:8px;font-family:'Courier New',monospace;font-size:15px;white-space:pre-wrap;line-height:1.65;margin:16px 0;border-left:6px solid #87CEEB}
+.criterio{background:#eaf4fc;border:1px solid #87CEEB;border-radius:8px;padding:15px 19px;margin:16px 0}
+.pregunta-ref{background:#fff;border:1px solid #c3cdd6;border-left:6px solid #6a4c93;border-radius:0 8px 8px 0;padding:15px 19px;margin-bottom:14px}
+.pregunta-ref strong{color:#4b2e83;display:block;margin-bottom:6px}
+.ref-card{background:#fcfdfe;border:1px solid #c3cdd6;border-left:6px solid #003366;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:13px}
+.ref-card p{margin:0;font-size:16px;text-align:left}
+.ref-card .tipo{display:inline-block;background:#003366;color:#fff;font-size:12px;font-weight:700;padding:2px 9px;border-radius:10px;margin-bottom:7px}
+.nota-pie{background:#f2f4f6;border-left:5px solid #7d8a95;padding:14px 18px;margin-top:20px;font-size:15.5px;border-radius:0 6px 6px 0}
+
+/* ============ RESPONSIVO ============ */
+@media (max-width:760px){
+  body{font-size:16px}
+  .panel{padding:20px 15px 40px}
+  .encabezado{padding:20px 15px}
+  .encabezado h1{font-size:23px}
+  .titulo-seccion{font-size:21px}
+  .subtitulo{font-size:19px}
+  .tab-btn{padding:11px 13px;font-size:14.5px}
+  .formula{font-size:16px}
+}
+</style>
+</head>
+<body>
+<div class="contenedor">
+
+<!-- ================= ENCABEZADO ================= -->
+<header class="encabezado">
+  <div class="inst">Universidad de Guayaquil · Facultad de Ciencias Administrativas · Negocios Internacionales</div>
+  <h1>Día 9 — Método FIFO (práctica extendida) y Costo Promedio Ponderado</h1>
+  <div class="sub">Contabilidad General (091601124) · Unidad 3: NIC 2 Inventarios y el proceso contable (II parte)</div>
+  <div class="meta">
+    <span>Viernes 21 de agosto de 2026</span>
+    <span>Duración: 5 horas</span>
+    <span>Clase autónoma</span>
+    <span>Unidad 3 · Día 3 de 7</span>
+  </div>
+</header>
+
+<!-- ================= MENU DE PESTAÑAS ================= -->
+<nav class="menu-tabs" id="menuTabs">
+  <button class="tab-btn active" onclick="showTab('repaso',this)">Repaso</button>
+  <button class="tab-btn" onclick="showTab('t1',this)">Tema 1</button>
+  <button class="tab-btn" onclick="showTab('t2',this)">Tema 2</button>
+  <button class="tab-btn" onclick="showTab('t3',this)">Tema 3</button>
+  <button class="tab-btn" onclick="showTab('t4',this)">Tema 4</button>
+  <button class="tab-btn" onclick="showTab('t5',this)">Tema 5</button>
+  <button class="tab-btn" onclick="showTab('t6',this)">Tema 6</button>
+  <button class="tab-btn" onclick="showTab('ejercicio',this)">Ejercicio Interactivo</button>
+  <button class="tab-btn" onclick="showTab('cuestionario',this)">Cuestionario</button>
+  <button class="tab-btn" onclick="showTab('ia',this)">Actividad con IA</button>
+  <button class="tab-btn" onclick="showTab('reflexion',this)">Reflexión</button>
+  <button class="tab-btn" onclick="showTab('biblio',this)">Bibliografía</button>
+</nav>
+
+<!-- ================= PESTAÑA: REPASO ================= -->
+<section class="panel active" id="repaso">
+  <h2 class="titulo-seccion">Repaso de los días anteriores</h2>
+  <p>Antes de entrar al trabajo de hoy, abra cada pestaña y confirme que domina lo anterior. El Día 9 <strong>no introduce conceptos nuevos de inventarios</strong>: profundiza y ejercita lo que se abrió el Día 8. Si algo del Día 7 o del Día 8 le queda difuso, léalo aquí antes de continuar, porque hoy se usa todo el tiempo.</p>
+
+  <div class="acordeon">
+    <button class="acordeon-btn" onclick="toggleAcordeon(this)"><span class="flecha">&#9654;</span> Día 1 (11 ago) — La contabilidad como sistema de información</button>
+    <div class="acordeon-panel">
+      <p>La contabilidad es un <strong>sistema de información</strong>: recoge hechos económicos, los mide en dinero, los ordena y los comunica a quien debe decidir. Su objetivo es suministrar información útil sobre la situación financiera, el rendimiento y los flujos de efectivo de una entidad.</p>
+      <p>Se distinguieron los <strong>usuarios internos</strong> (gerencia, dueños, empleados) y <strong>externos</strong> (bancos, proveedores, SRI, inversionistas), los <strong>tipos de contabilidad</strong> (financiera, de costos, gubernamental, tributaria) y la <strong>clasificación de las empresas</strong> por actividad (servicios, comercial, industrial), por origen del capital (privada, pública, mixta) y por forma jurídica (persona natural, S.A., Cía. Ltda.). También se revisaron los principios básicos de las normas contables: devengo, negocio en marcha, uniformidad, prudencia, esencia sobre forma.</p>
+    </div>
+  </div>
+
+  <div class="acordeon">
+    <button class="acordeon-btn" onclick="toggleAcordeon(this)"><span class="flecha">&#9654;</span> Día 2 (12 ago) — Ética, organismos de control, Marco Conceptual y NIC 1</button>
+    <div class="acordeon-panel">
+      <p>Se trabajaron los <strong>principios éticos</strong> del contador (integridad, objetividad, competencia profesional, confidencialidad, comportamiento profesional) y los <strong>organismos de control</strong> en Ecuador: el <strong>SRI</strong> (administración tributaria), la <strong>Superintendencia de Compañías, Valores y Seguros</strong> (sociedades mercantiles), la Superintendencia de Bancos y el Ministerio del Trabajo.</p>
+      <p>El <strong>Marco Conceptual de las NIIF</strong> definió los elementos de los estados financieros (activo, pasivo, patrimonio, ingreso, gasto), las características cualitativas de la información útil (relevancia y representación fiel como fundamentales; comparabilidad, verificabilidad, oportunidad y comprensibilidad como de mejora) y los criterios de reconocimiento y medición. La <strong>NIC 1</strong> fijó el juego completo de estados financieros y sus requisitos de presentación.</p>
+      <p class="nota-lateral">Guarde esta idea: <strong>comparabilidad</strong>. Hoy explica por qué la NIC 2 no permite que cada empresa invente su propia forma de valorar el inventario.</p>
+    </div>
+  </div>
+
+  <div class="acordeon">
+    <button class="acordeon-btn" onclick="toggleAcordeon(this)"><span class="flecha">&#9654;</span> Día 3 (13 ago) — Cuenta contable, partida doble y ecuación contable</button>
+    <div class="acordeon-panel">
+      <p>Se estudió la estructura del <strong>Estado de Situación Financiera</strong> y del <strong>Estado de Resultados</strong>; la <strong>cuenta contable</strong> y su naturaleza (activos y gastos se debitan para aumentar; pasivos, patrimonio e ingresos se acreditan para aumentar); el <strong>plan de cuentas</strong> con su codificación jerárquica; la <strong>partida doble</strong> (todo débito tiene un crédito de igual valor) y la <strong>ecuación contable</strong>: Activo = Pasivo + Patrimonio.</p>
+      <p>Se practicaron los tipos de asientos: simples (una cuenta deudora y una acreedora) y compuestos (varias cuentas en uno o ambos lados). Con esto se cerró la Unidad 1.</p>
+    </div>
+  </div>
+
+  <div class="acordeon">
+    <button class="acordeon-btn" onclick="toggleAcordeon(this)"><span class="flecha">&#9654;</span> Día 4 (14 ago) — IVA y retenciones</button>
+    <div class="acordeon-panel">
+      <p>Inicio de la Unidad 2. Se diferenciaron los bienes y servicios gravados con <strong>tarifa 0%</strong> y con <strong>tarifa 15%</strong> de IVA, y se aprendió a reconocer cuál aplica. Se trabajó el <strong>IVA en compras</strong> (crédito tributario, cuenta de activo) y el <strong>IVA en ventas</strong> (obligación con el Estado, cuenta de pasivo).</p>
+      <p>Se practicaron las <strong>retenciones de IVA</strong> y las <strong>retenciones en la fuente del Impuesto a la Renta</strong>, con sus porcentajes según el tipo de transacción: 2% en la compra de bienes, 3% residual en servicios en general, 5% en servicios profesionales prestados por sociedades, 10% en arriendo de inmuebles. Se insistió en que el agente de retención no paga ese valor al proveedor: lo retiene y lo entrega al SRI.</p>
+    </div>
+  </div>
+
+  <div class="acordeon">
+    <button class="acordeon-btn" onclick="toggleAcordeon(this)"><span class="flecha">&#9654;</span> Día 5 (17 ago) — Jornalización, mayorización y balance de comprobación</button>
+    <div class="acordeon-panel">
+      <p>Se recorrieron los primeros pasos del <strong>proceso contable</strong>: (1) análisis y reconocimiento de la transacción a partir del documento fuente; (2) <strong>jornalización</strong> o registro en el Libro Diario, con fecha, código, detalle, parcial, debe, haber y glosa explicativa; (3) <strong>mayorización</strong> o traslado al Libro Mayor para obtener el saldo de cada cuenta; (4) <strong>balance de comprobación preliminar</strong>, que verifica la igualdad entre sumas deudoras y acreedoras.</p>
+      <p>Quedó claro que el balance de comprobación demuestra <em>igualdad aritmética</em>, no <em>corrección contable</em>: puede cuadrar y aun así contener errores de cuenta o de clasificación.</p>
+    </div>
+  </div>
+
+  <div class="acordeon">
+    <button class="acordeon-btn" onclick="toggleAcordeon(this)"><span class="flecha">&#9654;</span> Día 6 (18 ago) — Ejercicio integrador de empresa de servicios</button>
+    <div class="acordeon-panel">
+      <p>Con el caso <em>Ruta Pacífico Servicios Logísticos Cía. Ltda.</em> se recorrieron doce transacciones completas desde el documento fuente hasta el balance de comprobación preliminar, integrando IVA, retenciones, nómina y gastos operativos. Con eso se cerró la Unidad 2.</p>
+      <p class="nota-lateral">Diferencia clave que se resaltó allí: una empresa de <strong>servicios</strong> no tiene inventario de mercaderías ni costo de ventas de mercadería; una empresa <strong>comercial</strong> sí. Ese es justamente el terreno de la Unidad 3.</p>
+    </div>
+  </div>
+
+  <div class="acordeon">
+    <button class="acordeon-btn" onclick="toggleAcordeon(this)"><span class="flecha">&#9654;</span> Día 7 (19 ago) — NIC 2: fundamentos y sistemas de contabilización</button>
+    <div class="acordeon-panel">
+      <p>Inicio de la Unidad 3. Se definió <strong>inventario</strong> como el activo que la empresa mantiene para vender en el curso normal del negocio, o que está en proceso de producción para esa venta, o que se consume en el proceso productivo. Se distinguió el inventario de una comercial (mercadería lista para revender) del de una industrial (materia prima, productos en proceso, productos terminados).</p>
+      <p>Se estudió que el <strong>costo del inventario</strong> incluye el precio de compra más aranceles, transporte, seguros, manipulación y todo desembolso necesario para dejar la mercadería lista para vender, menos descuentos y rebajas; y que el IVA en crédito tributario <strong>no</strong> forma parte del costo, porque se recupera. Se aplicó a un caso completo de importación.</p>
+      <p>Se compararon los dos <strong>sistemas de contabilización</strong>: el <strong>sistema permanente o perpetuo</strong> (cuenta Inventario de Mercaderías siempre actualizada; en cada venta se registra el costo de ventas) y el <strong>sistema periódico</strong> (cuenta Compras; el costo de ventas se determina al final del período mediante inventario físico). Esta distinción es indispensable hoy.</p>
+    </div>
+  </div>
+
+  <div class="acordeon">
+    <button class="acordeon-btn" onclick="toggleAcordeon(this)"><span class="flecha">&#9654;</span> Día 8 (20 ago) — Costo, VR, VNR e introducción al FIFO</button>
+    <div class="acordeon-panel">
+      <p>Ayer se diferenciaron tres magnitudes que suelen confundirse:</p>
+      <ul>
+        <li><strong>Costo:</strong> lo que costó adquirir o producir la mercadería y dejarla lista para vender.</li>
+        <li><strong>Valor razonable (VR):</strong> el precio que se recibiría por vender el activo en una transacción ordenada entre participantes del mercado; es una medida <em>de mercado</em>, no propia de la entidad.</li>
+        <li><strong>Valor neto realizable (VNR):</strong> el precio estimado de venta en el curso normal del negocio, menos los costos estimados para terminar la producción y los necesarios para realizar la venta; es una medida <em>específica de la entidad</em>.</li>
+      </ul>
+      <p>La NIC 2 establece que el inventario se mide al <strong>menor</strong> entre el costo y el valor neto realizable. Si el VNR cae por debajo del costo, se reconoce una pérdida por deterioro y el inventario se rebaja.</p>
+      <p>Al final del día se abrió el <strong>FIFO</strong> (primeras entradas, primeras salidas): la mercadería que entró primero se considera vendida primero. Hoy se lo practica de forma extendida y se lo compara con el <strong>costo promedio ponderado</strong>.</p>
+    </div>
+  </div>
+
+  <div class="conclusion">
+    <h4>Puente hacia el Día 9</h4>
+    <p>El Día 7 respondió <em>cuánto costó</em> la mercadería y <em>con qué sistema</em> se la controla. El Día 8 respondió <em>a qué valor</em> se la mide al cierre. Hoy responde una pregunta distinta y muy concreta: cuando la misma mercadería se compró varias veces a <strong>precios diferentes</strong>, ¿qué costo unitario se asigna a lo que se vendió y qué costo unitario queda en lo que no se vendió? Esa es la función de las <strong>fórmulas de cálculo del costo</strong>.</p>
+  </div>
+</section>
+
+<!-- ================= TEMA 1 ================= -->
+<section class="panel" id="t1">
+  <h2 class="titulo-seccion">Tema 1 — El problema del costo unitario y las fórmulas de cálculo del costo</h2>
+
+  <h3 class="subtitulo">1.1 Un problema que aparece solo cuando los precios cambian</h3>
+  <p>Imagine que usted vende arroz en un local del sur de Guayaquil. Todos los quintales son idénticos: mismo grano, mismo empaque, misma calidad. En enero compró 10 quintales a 42 dólares cada uno. En marzo, después de una mala cosecha, compró otros 10 quintales del mismo arroz a 48 dólares. Los veinte quintales están apilados juntos en la bodega y son físicamente indistinguibles.</p>
+  <p>Llega un cliente y le compra un quintal. Usted se lo entrega. Ahora responda: <strong>¿cuánto le costó a usted ese quintal que acaba de salir: 42 o 48 dólares?</strong></p>
+  <p>La pregunta parece capciosa, pero no lo es. De la respuesta dependen tres cosas muy concretas: el <strong>costo de ventas</strong> que usted va a registrar (y por tanto su utilidad del período), el <strong>valor del inventario</strong> que le queda en la bodega (y por tanto el activo que muestra su Estado de Situación Financiera) y, en consecuencia, el <strong>impuesto</strong> que va a pagar. Y observe algo decisivo: <em>no hay forma de saberlo mirando el quintal</em>. El grano no lleva etiqueta con su precio de compra.</p>
+  <p>Note también que el problema <strong>desaparece</strong> si todas las compras se hicieron al mismo precio. Si los veinte quintales costaron 42 dólares cada uno, el costo del quintal vendido es 42 y no hay discusión. El problema nace exactamente cuando se cumplen dos condiciones a la vez: (1) los bienes son <strong>intercambiables entre sí</strong> y (2) fueron adquiridos a <strong>precios distintos</strong>. En una economía con inflación, con tipo de cambio variable o con aranceles que se modifican, esas dos condiciones se cumplen casi siempre.</p>
+
+  <div class="definicion">
+    <h4>Definición: fórmula de cálculo del costo</h4>
+    <p>Una <strong>fórmula de cálculo del costo</strong> es el criterio técnico, previamente definido y aplicado de manera uniforme, mediante el cual la empresa asigna un costo unitario a las unidades que salen del inventario (costo de ventas) y a las que permanecen en él (inventario final), cuando esas unidades fueron adquiridas a precios diferentes.</p>
+    <p>Dos precisiones esenciales sobre la palabra <em>fórmula</em>. Primera: es una <strong>convención de valoración</strong>, no una descripción obligatoria de cómo se mueve físicamente la mercadería en la bodega. Segunda: es una decisión de <strong>política contable</strong> de la entidad, no una elección libre de quien hace el asiento; una vez adoptada, se aplica de forma consistente.</p>
+  </div>
+
+  <div class="nota-lateral">
+    <p><strong>Sobre la terminología.</strong> En la NIC 2 el nombre técnico es <em>fórmulas de cálculo del costo</em>. En los textos de práctica profesional en Ecuador y América Latina se las llama también <em>métodos de valuación de inventarios</em> o <em>métodos de valoración</em>. El sílabo de esta asignatura usa la expresión <em>métodos de valuación</em>. Son la misma cosa; en este widget se usan indistintamente y usted debe reconocer las dos.</p>
+  </div>
+
+  <h3 class="subtitulo">1.2 El primer caso: cuando sí se sabe qué unidad salió</h3>
+  <p>Antes de estudiar las fórmulas, hay que descartar el caso en que el problema simplemente no existe porque cada unidad es identificable. Si usted vende automóviles, cada vehículo tiene un número de chasis y un costo propio: cuando vende el chasis X, el costo que sale es exactamente el de ese chasis. Lo mismo ocurre con obras de arte, con maquinaria industrial fabricada por encargo o con lotes de mercadería que se segregan para un proyecto específico.</p>
+
+  <div class="definicion">
+    <h4>Definición: identificación específica de sus costos individuales</h4>
+    <p>Es el procedimiento por el cual <strong>a cada unidad de inventario se le asigna el costo que efectivamente se incurrió por ella</strong>, porque la unidad es individualmente identificable y rastreable. Dentro del contenido de la NIC 2 se especifica que este tratamiento debe aplicarse a los inventarios que <strong>no son habitualmente intercambiables entre sí</strong>, así como a los bienes y servicios producidos y segregados para proyectos específicos.</p>
+  </div>
+
+  <p>Repare en que la NIC 2 no lo presenta como una opción atractiva sino como una <strong>obligación en ese supuesto</strong>: si las unidades no son intercambiables, no se puede recurrir a un promedio ni a un supuesto de flujo. Y a la inversa, la misma norma advierte que la identificación específica <strong>no es apropiada</strong> cuando existen grandes cantidades de partidas de inventario que sí son habitualmente intercambiables, porque en ese escenario la empresa podría escoger deliberadamente qué unidades declara vendidas y así manipular el resultado del período. Esa advertencia es una de las razones de fondo por las que las fórmulas de costo existen.</p>
+
+  <div class="ejemplo">
+    <h4>Ejemplo aplicado — dos negocios, dos tratamientos</h4>
+    <p><strong>Caso A.</strong> Una concesionaria de vehículos importados en la av. Juan Tanca Marengo tiene en patio quince camionetas. Cada una entró con su propio VIN, su propia liquidación aduanera y su propio costo (una pagó más flete porque llegó en un contenedor distinto). Cuando vende la unidad con VIN terminado en 447, el costo de ventas es el costo de esa unidad. <strong>Identificación específica.</strong></p>
+    <p><strong>Caso B.</strong> Una distribuidora de tornillos de acero galvanizado de 3/8 tiene 84.000 unidades en bodega, provenientes de once importaciones distintas hechas a lo largo de dos años, todas mezcladas en los mismos cajones. Nadie puede saber de qué embarque proviene el tornillo que se despacha, ni tendría sentido intentar averiguarlo. <strong>Fórmula de cálculo del costo: FIFO o promedio ponderado.</strong></p>
+  </div>
+
+  <h3 class="subtitulo">1.3 Las fórmulas admitidas por la NIC 2</h3>
+  <p>Para los inventarios que sí son habitualmente intercambiables, la NIC 2 admite <strong>dos</strong> fórmulas de cálculo del costo, y solamente dos:</p>
+  <ul>
+    <li><strong>Primera entrada, primera salida (FIFO / PEPS):</strong> se supone que las unidades adquiridas primero se venden primero, de modo que las unidades que permanecen en el inventario final son las compradas o producidas más recientemente.</li>
+    <li><strong>Costo promedio ponderado:</strong> el costo de cada unidad se determina a partir del promedio ponderado del costo de las unidades al inicio del período y del costo de las adquiridas o producidas durante el período.</li>
+  </ul>
+  <p>La sigla <strong>FIFO</strong> viene del inglés <em>First In, First Out</em>; en español se la conoce como <strong>PEPS</strong> (Primeras Entradas, Primeras Salidas). Son exactamente el mismo método y en este widget se usan las dos siglas de forma alternada, porque en la vida profesional ecuatoriana usted encontrará ambas.</p>
+
+  <div class="alerta">
+    <h4>Lo que la NIC 2 no admite</h4>
+    <p>La lista anterior es <strong>cerrada</strong>: no existe una tercera fórmula permitida. En particular, el método <strong>UEPS / LIFO</strong> (últimas entradas, primeras salidas) <strong>no está permitido</strong> bajo NIIF. Fue eliminado de la norma y hoy no puede utilizarse para preparar estados financieros bajo NIIF. Como es un método que usted encontrará mencionado en textos antiguos, en literatura estadounidense y en conversaciones profesionales, el <strong>Tema 5</strong> de este widget lo explica completo: en qué consistía, en qué situaciones se lo recomendaba y por qué se lo retiró.</p>
+  </div>
+
+  <h3 class="subtitulo">1.4 La regla de uniformidad: no se elige método transacción por transacción</h3>
+  <p>Una empresa no puede aplicar FIFO en enero, promedio en febrero y otra vez FIFO en marzo según le convenga al resultado. Dentro del contenido de la NIC 2 se establece que la entidad debe utilizar <strong>la misma fórmula de cálculo del costo para todos los inventarios que tengan una naturaleza y un uso similares</strong> dentro de la entidad. Para inventarios con naturaleza o uso diferentes, puede justificarse la utilización de fórmulas distintas.</p>
+  <p>Traducido a un caso ecuatoriano: una empresa que comercializa electrodomésticos y además tiene un taller de repuestos podría, con justificación, aplicar una fórmula al inventario de electrodomésticos y otra al de repuestos, porque su naturaleza y su uso difieren. Lo que <strong>no</strong> puede hacer es aplicar FIFO a unas refrigeradoras y promedio a otras refrigeradoras del mismo modelo.</p>
+  <p>Detrás de esta regla está una característica cualitativa que usted ya estudió el Día 2: la <strong>comparabilidad</strong>. Si cada empresa —o peor, la misma empresa en distintos meses— pudiera cambiar de criterio a voluntad, las cifras de inventario y de utilidad dejarían de ser comparables entre entidades y entre períodos, y la información perdería utilidad para decidir. Además, un cambio de política contable no es imposible, pero exige justificación y tratamiento normativo específico; no es una decisión de oficina.</p>
+
+  <h3 class="subtitulo">1.5 La identidad que ninguna fórmula puede violar</h3>
+  <p>Antes de calcular nada, fije esta relación. Toda la mercadería que la empresa tuvo disponible para vender durante el período o se vendió, o se quedó. No hay tercera posibilidad.</p>
+
+  <div class="formula">
+    Inventario inicial + Compras netas = Mercadería disponible para la venta<br>
+    Mercadería disponible = Costo de ventas + Inventario final
+    <small>La fórmula de costo no cambia el total disponible: solo decide cómo se reparte ese total entre lo vendido y lo que queda.</small>
+  </div>
+
+  <p>Esta es la comprobación más poderosa que usted tiene y la va a usar en cada ejercicio de hoy. Si al calcular con FIFO obtiene un costo de ventas de 20.660,00 y un inventario final de 2.415,00, la suma debe dar exactamente el costo total disponible. Si no da, hay un error aritmético, sin excepción. Y si luego calcula con promedio ponderado y obtiene 20.810,00 de costo de ventas, el inventario final tiene que ser 2.265,00, porque el total disponible es el mismo bajo cualquier fórmula.</p>
+
+  <div class="nota-lateral">
+    <p><strong>Consecuencia lógica que conviene anticipar:</strong> si el total es fijo, entonces <em>todo dólar de más que una fórmula asigna al costo de ventas es un dólar de menos que deja en el inventario final</em>, y viceversa. Por eso el método que produce mayor utilidad es siempre, necesariamente, el que produce mayor inventario final. No son dos efectos: es el mismo efecto visto desde los dos estados financieros.</p>
+  </div>
+
+  <h3 class="subtitulo">1.6 El caso que se trabaja hoy</h3>
+  <p>Todo el desarrollo de los Temas 2, 3, 4 y 6 se hace sobre un solo caso, para que usted pueda comparar métodos sobre datos idénticos. Memorice esta tabla: se repite en cada pestaña.</p>
+
+  <div class="tabla-wrap">
+    <table class="tabla">
+      <caption>Comercial El Astillero S.A. — Movimiento del artículo INV-4501 “Ventilador de techo VT-16”, agosto 2026</caption>
+      <thead>
+        <tr><th>Fecha</th><th>Concepto</th><th>Documento fuente</th><th>Unidades</th><th>Costo unitario</th><th>Costo total</th></tr>
+      </thead>
+      <tbody>
+        <tr class="fila-saldo"><td>01/08</td><td>Inventario inicial</td><td>Saldo según libros al cierre de julio</td><td class="num">100</td><td class="num">30,00</td><td class="num">3.000,00</td></tr>
+        <tr class="fila-compra"><td>05/08</td><td>Compra</td><td>Factura 001-002-000018742</td><td class="num">300</td><td class="num">34,00</td><td class="num">10.200,00</td></tr>
+        <tr class="fila-venta"><td>09/08</td><td>Venta</td><td>Factura 001-001-000003310</td><td class="num">(150)</td><td class="cen">—</td><td class="cen">—</td></tr>
+        <tr class="fila-compra"><td>14/08</td><td>Compra</td><td>Factura 001-002-000019055</td><td class="num">150</td><td class="num">39,00</td><td class="num">5.850,00</td></tr>
+        <tr class="fila-venta"><td>18/08</td><td>Venta</td><td>Factura 001-001-000003368</td><td class="num">(300)</td><td class="cen">—</td><td class="cen">—</td></tr>
+        <tr class="fila-compra"><td>23/08</td><td>Compra</td><td>Factura 001-002-000019310</td><td class="num">100</td><td class="num">40,25</td><td class="num">4.025,00</td></tr>
+        <tr class="fila-venta"><td>28/08</td><td>Venta</td><td>Factura 001-001-000003401</td><td class="num">(140)</td><td class="cen">—</td><td class="cen">—</td></tr>
+        <tr class="tot"><td colspan="3">Mercadería disponible para la venta (inicial + compras)</td><td class="num">650</td><td class="cen">—</td><td class="num">23.075,00</td></tr>
+        <tr class="tot"><td colspan="3">Unidades vendidas en el mes</td><td class="num">590</td><td class="cen">—</td><td class="cen">a calcular</td></tr>
+        <tr class="tot"><td colspan="3">Unidades en existencia al 31/08</td><td class="num">60</td><td class="cen">—</td><td class="cen">a calcular</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Lea la tabla con atención antes de seguir. Los costos unitarios de compra <strong>suben</strong> a lo largo del mes: 30,00 → 34,00 → 39,00 → 40,25. Este dato no es decorativo; es la variable que explica todo lo que va a ocurrir en los Temas 2, 3 y 4. Los costos unitarios de las ventas aparecen como “a calcular” justamente porque <em>dependen de la fórmula que se elija</em>: ese es el asunto de la clase de hoy.</p>
+  <p>Un detalle técnico sobre el que conviene ser explícito: las tres columnas de costo se refieren al <strong>costo de adquisición</strong> tal como usted lo aprendió el Día 7, es decir, precio de compra más los costos necesarios para dejar la mercadería lista para la venta, sin incluir el IVA que constituye crédito tributario. No estamos valorando al precio de venta ni al valor razonable.</p>
+
+  <div class="futuro">
+    <h4>Contenido que llega después (no se adelanta aquí)</h4>
+    <p><strong>Día 10:</strong> el registro formal de estos movimientos en la <strong>tarjeta Kardex</strong>, con sus columnas de entradas, salidas y saldos, para los dos métodos. Hoy se calcula el costo; mañana se lo asienta en el documento de control auxiliar.<br>
+    <strong>Días 11 y 12:</strong> asientos de ajuste y balance de comprobación ajustado, donde se incorporan, entre otros, los ajustes por diferencias de inventario y por deterioro al valor neto realizable.<br>
+    <strong>Día 13:</strong> ejercicio integrador de compañía comercial hasta saldos ajustados.</p>
+  </div>
+
+  <div class="carrera-box">
+    <h4>Vínculo con las cuatro áreas de Negocios Internacionales</h4>
+    <ul>
+      <li><strong>Comercio exterior:</strong> un importador ecuatoriano recibe embarques del mismo producto con costos distintos por variación del flete internacional, del seguro, del arancel o del tipo de cambio de la moneda de origen. La fórmula de costo es el instrumento que le permite decir cuánto costó realmente lo que despachó de bodega esta semana.</li>
+      <li><strong>Finanzas internacionales:</strong> el inventario es, en muchas comercializadoras, la partida más grande del activo corriente. Su valoración altera los indicadores de liquidez y rotación que un banco o un fondo extranjero examina antes de otorgar financiamiento.</li>
+      <li><strong>Marketing y negociación internacional:</strong> quien negocia un precio de exportación sin saber con qué fórmula se valora su inventario puede estar defendiendo un margen que no existe. El piso de la negociación es el costo, y el costo depende del método.</li>
+      <li><strong>Marco legal y normativo:</strong> la restricción a dos fórmulas y la exigencia de uniformidad no son costumbre profesional: provienen de la NIC 2, de cumplimiento obligatorio en Ecuador para las sociedades sujetas al control de la Superintendencia de Compañías, Valores y Seguros.</li>
+    </ul>
+  </div>
+
+  <div class="conclusion">
+    <h4>Idea clave del Tema 1</h4>
+    <p>Cuando la mercadería es intercambiable y se compró a precios distintos, el costo unitario de lo vendido <strong>no se observa: se asigna</strong>, mediante una fórmula previamente definida y aplicada con uniformidad. La NIC 2 solo admite dos fórmulas —FIFO y costo promedio ponderado— y reserva la identificación específica para los bienes no intercambiables. Ninguna fórmula altera el costo total disponible; todas se limitan a repartirlo entre el costo de ventas y el inventario final.</p>
+  </div>
+</section>
+
+<!-- ================= TEMA 2 ================= -->
+<section class="panel" id="t2">
+  <h2 class="titulo-seccion">Tema 2 — FIFO / PEPS: práctica extendida</h2>
+
+  <h3 class="subtitulo">2.1 El supuesto, dicho con precisión</h3>
+  <div class="definicion">
+    <h4>Definición: primera entrada, primera salida (FIFO / PEPS)</h4>
+    <p>Fórmula de cálculo del costo según la cual <strong>se supone que las unidades de inventario adquiridas o producidas en primer lugar son las que se venden en primer lugar</strong>. En consecuencia, las unidades que permanecen en el inventario final son, por construcción, las adquiridas o producidas <strong>más recientemente</strong>.</p>
+  </div>
+
+  <p>Preste atención a una palabra de esa definición: <strong>se supone</strong>. FIFO no exige que la bodega despache físicamente los bultos más viejos primero, aunque en la práctica muchas empresas lo hagan por razones operativas (para que no se venza el producto, para que no se deteriore, para rotar el stock). FIFO es un <em>supuesto de asignación de costos</em>. Una empresa puede despachar cualquier unidad y aun así valorar la salida con FIFO, porque las unidades son intercambiables entre sí y no hay diferencia real entre una y otra.</p>
+  <p>Ahora bien, ese supuesto no es arbitrario: coincide con el flujo físico razonable de la enorme mayoría de los negocios. Nadie que venda medicinas, alimentos, cosméticos o electrónica quiere que las unidades antiguas se queden fondeadas en la bodega. Esa coherencia entre el supuesto contable y la realidad operativa es una de las razones por las que FIFO es la fórmula más difundida.</p>
+
+  <h3 class="subtitulo">2.2 La técnica de las capas</h3>
+  <p>La manera más segura de aplicar FIFO —y la que se le pide dominar hoy— es la <strong>técnica de las capas</strong> (también llamada de lotes o de estratos). El inventario no se piensa como un montón único con un costo promedio, sino como una <strong>pila ordenada</strong> de lotes, cada uno con su fecha y su costo unitario propio, apilados en el orden en que entraron.</p>
+  <ul>
+    <li>Cada <strong>compra</strong> agrega una capa nueva <em>al fondo de la fila</em>, con su propio costo unitario. Nunca se mezcla con las anteriores.</li>
+    <li>Cada <strong>venta</strong> consume unidades <em>desde la capa más antigua</em>. Si la venta es mayor que esa capa, se agota por completo y se continúa con la siguiente, y así sucesivamente hasta cubrir las unidades vendidas.</li>
+    <li>El <strong>inventario final</strong> es lo que sobrevive: siempre las capas más recientes.</li>
+  </ul>
+
+  <div class="nota-lateral">
+    <p><strong>Analogía útil.</strong> Piense en la fila de una ventanilla del Banco del Pacífico. Quien llegó primero es atendido primero y sale de la fila; los que quedan esperando son siempre los que llegaron después. FIFO trata a los lotes de mercadería exactamente igual: los lotes viejos se van (al costo de ventas) y los lotes nuevos se quedan (en el inventario final).</p>
+  </div>
+
+  <h3 class="subtitulo">2.3 Desarrollo completo del caso, movimiento por movimiento</h3>
+  <p>Se aplica FIFO en <strong>sistema permanente</strong>, es decir, valorando cada venta en el momento en que ocurre. Siga cada paso con lápiz y papel; no basta con leerlo.</p>
+
+  <h4 class="subtitulo-3">Movimiento 1 — 01/08: inventario inicial</h4>
+  <p>La empresa arranca agosto con una sola capa, heredada del cierre de julio.</p>
+  <div class="tabla-wrap">
+    <table class="tabla">
+      <thead><tr><th>Capa</th><th>Origen</th><th>Unidades</th><th>Costo unitario</th><th>Costo total</th></tr></thead>
+      <tbody>
+        <tr><td>Capa 1</td><td>Inventario inicial</td><td class="num">100</td><td class="num">30,00</td><td class="num">3.000,00</td></tr>
+        <tr class="tot"><td colspan="2">Saldo en existencia</td><td class="num">100</td><td class="cen">—</td><td class="num">3.000,00</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4 class="subtitulo-3">Movimiento 2 — 05/08: compra de 300 unidades a 34,00</h4>
+  <p>La compra <strong>no</strong> se promedia con la capa anterior: se apila detrás de ella conservando su propio costo unitario. Esa es la diferencia esencial con el método que se verá en el Tema 3.</p>
+  <div class="tabla-wrap">
+    <table class="tabla">
+      <thead><tr><th>Capa</th><th>Origen</th><th>Unidades</th><th>Costo unitario</th><th>Costo total</th></tr></thead>
+      <tbody>
+        <tr><td>Capa 1</td><td>Inventario inicial</td><td class="num">100</td><td class="num">30,00</td><td class="num">3.000,00</td></tr>
+        <tr><td>Capa 2</td><td>Compra 05/08</td><td class="num">300</td><td class="num">34,00</td><td class="num">10.200,00</td></tr>
+        <tr class="tot"><td colspan="2">Saldo en existencia</td><td class="num">400</td><td class="cen">—</td><td class="num">13.200,00</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4 class="subtitulo-3">Movimiento 3 — 09/08: venta de 150 unidades</h4>
+  <p>Se consumen las capas desde la más antigua. La capa 1 tiene solo 100 unidades: se agota entera y faltan 50, que se toman de la capa 2.</p>
+  <div class="tabla-wrap">
+    <table class="tabla">
+      <thead><tr><th>Se toma de</th><th>Unidades</th><th>Costo unitario</th><th>Costo asignado</th></tr></thead>
+      <tbody>
+        <tr class="fila-venta"><td>Capa 1 (01/08) — se agota</td><td class="num">100</td><td class="num">30,00</td><td class="num">3.000,00</td></tr>
+        <tr class="fila-venta"><td>Capa 2 (05/08) — parcial</td><td class="num">50</td><td class="num">34,00</td><td class="num">1.700,00</td></tr>
+        <tr class="tot"><td>Costo de ventas del 09/08</td><td class="num">150</td><td class="cen">—</td><td class="num">4.700,00</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>El costo unitario promedio implícito de esta venta fue 4.700,00 ÷ 150 = 31,3333, pero <strong>ese número no se usa para nada</strong>: bajo FIFO no se trabaja con promedios, se trabaja con capas. Se lo menciona solo para que usted note que la salida se compone de dos costos distintos.</p>
+  <div class="tabla-wrap">
+    <table class="tabla">
+      <thead><tr><th>Capa</th><th>Origen</th><th>Unidades</th><th>Costo unitario</th><th>Costo total</th></tr></thead>
+      <tbody>
+        <tr><td>Capa 2</td><td>Compra 05/08 (queda el remanente)</td><td class="num">250</td><td class="num">34,00</td><td class="num">8.500,00</td></tr>
+        <tr class="tot"><td colspan="2">Saldo en existencia</td><td class="num">250</td><td class="cen">—</td><td class="num">8.500,00</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4 class="subtitulo-3">Movimiento 4 — 14/08: compra de 150 unidades a 39,00</h4>
+  <div class="tabla-wrap">
+    <table class="tabla">
+      <thead><tr><th>Capa</th><th>Origen</th><th>Unidades</th><th>Costo unitario</th><th>Costo total</th></tr></thead>
+      <tbody>
+        <tr><td>Capa 2</td><td>Compra 05/08 (remanente)</td><td class="num">250</td><td class="num">34,00</td><td class="num">8.500,00</td></tr>
+        <tr><td>Capa 3</td><td>Compra 14/08</td><td class="num">150</td><td class="num">39,00</td><td class="num">5.850,00</td></tr>
+        <tr class="tot"><td colspan="2">Saldo en existencia</td><td class="num">400</td><td class="cen">—</td><td class="num">14.350,00</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4 class="subtitulo-3">Movimiento 5 — 18/08: venta de 300 unidades</h4>
+  <p>La venta más grande del mes. Se agota íntegramente el remanente de la capa 2 (250 unidades) y se toman 50 de la capa 3.</p>
+  <div class="tabla-wrap">
+    <table class="tabla">
+      <thead><tr><th>Se toma de</th><th>Unidades</th><th>Costo unitario</th><th>Costo asignado</th></tr></thead>
+      <tbody>
+        <tr class="fila-venta"><td>Capa 2 (05/08) — se agota</td><td class="num">250</td><td class="num">34,00</td><td class="num">8.500,00</td></tr>
+        <tr class="fila-venta"><td>Capa 3 (14/08) — parcial</td><td class="num">50</td><td class="num">39,00</td><td class="num">1.950,00</td></tr>
+        <tr class="tot"><td>Costo de ventas del 18/08</td><td class="num">300</td><td class="cen">—</td><td class="num">10.450,00</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tabla-wrap">
+    <table class="tabla">
+      <thead><tr><th>Capa</th><th>Origen</th><th>Unidades</th><th>Costo unitario</th><th>Costo total</th></tr></thead>
+      <tbody>
+        <tr><td>Capa 3</td><td>Compra 14/08 (remanente)</td><td class="num">100</td><td class="num">39,00</td><td class="num">3.900,00</td></tr>
+        <tr class="tot"><td colspan="2">Saldo en existencia</td><td class="num">100</td><td class="cen">—</td><td class="num">3.900,00</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4 class="subtitulo-3">Movimiento 6 — 23/08: compra de 100 unidades a 40,25</h4>
+  <div class="tabla-wrap">
+    <table class="tabla">
+      <thead><tr><th>Capa</th><th>Origen</th><th>Unidades</th><th>Costo unitario</th><th>Costo total</th></tr></thead>
+      <tbody>
+        <tr><td>Capa 3</td><td>Compra 14/08 (remanente)</td><td class="num">100</td><td class="num">39,00</td><td class="num">3.900,00</td></tr>
+        <tr><td>Capa 4</td><td>Compra 23/08</td><td class="num">100</td><td class="num">40,25</td><td class="num">4.025,00</td></tr>
+        <tr class="tot"><td colspan="2">Saldo en existencia</td><td class="num">200</td><td class="cen">—</td><td class="num">7.925,00</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4 class="subtitulo-3">Movimiento 7 — 28/08: venta de 140 unidades</h4>
+  <div class="tabla-wrap">
+    <table class="tabla">
+      <thead><tr><th>Se toma de</th><th>Unidades</th><th>Costo unitario</th><th>Costo asignado</th></tr></thead>
+      <tbody>
+        <tr class="fila-venta"><td>Capa 3 (14/08) — se agota</td><td class="num">100</td><td class="num">39,00</td><td class="num">3.900,00</td></tr>
+        <tr class="fila-venta"><td>Capa 4 (23/08) — parcial</td><td class="num">40</td><td class="num">40,25</td><td class="num">1.610,00</td></tr>
+        <tr class="tot"><td>Costo de ventas del 28/08</td><td class="num">140</td><td class="cen">—</td><td class="num">5.510,00</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="subtitulo">2.4 Resultado consolidado del mes bajo FIFO</h3>
+  <div class="tabla-wrap">
+    <table class="tabla">
+      <caption>Comercial El Astillero S.A. — Resumen FIFO, artículo INV-4501, agosto 2026</caption>
+      <thead><tr><th>Concepto</th><th>Unidades</th><th>Valor</th><th>Composición</th></tr></thead>
+      <tbody>
+        <tr><td>Costo de ventas del 09/08</td><td class="num">150</td><td class="num">4.700,00</td><td class="capa">100 × 30,00 + 50 × 34,00</td></tr>
+        <tr><td>Costo de ventas del 18/08</td><td class="num">300</td><td class="num">10.450,00</td><td class="capa">250 × 34,00 + 50 × 39,00</td></tr>
+        <tr><td>Costo de ventas del 28/08</td><td class="num">140</td><td class="num">5.510,00</td><td class="capa">100 × 39,00 + 40 × 40,25</td></tr>
+        <tr class="tot"><td>COSTO DE VENTAS DEL MES</td><td class="num">590</td><td class="num">20.660,00</td><td class="cen">—</td></tr>
+        <tr class="fila-saldo"><td>Inventario final al 31/08</td><td class="num">60</td><td class="num">2.415,00</td><td class="capa">60 × 40,25 (capa 4, remanente)</td></tr>
+        <tr class="tot"><td>COMPROBACIÓN: costo de ventas + inventario final</td><td class="num">650</td><td class="num">23.075,00</td><td class="cen">= disponible ✔</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>La comprobación cuadra: 20.660,00 + 2.415,00 = 23.075,00, que es exactamente la mercadería disponible para la venta calculada en el Tema 1. <strong>Nunca entregue un ejercicio de FIFO sin hacer esta suma.</strong></p>
+  <p>Observe además el inventario final: 60 unidades valoradas a 40,25, que es el <strong>costo más reciente</strong> del mes. Eso no es casualidad ni suerte del ejercicio: es la consecuencia matemática inevitable del supuesto FIFO. Si lo viejo sale primero, lo que queda es siempre lo nuevo.</p>
+
+  <h3 class="subtitulo">2.5 FIFO en sistema periódico: el mismo resultado por otro camino</h3>
+  <p>Usted estudió el Día 7 que en el <strong>sistema periódico</strong> la empresa no registra el costo en cada venta, sino que determina el costo de ventas al cierre del período, después de contar físicamente lo que queda. ¿Cambia eso el resultado bajo FIFO? Hagamos el ejercicio.</p>
+  <p>Al 31 de agosto el conteo físico arroja <strong>60 unidades</strong>. Bajo FIFO, esas 60 unidades tienen que ser, por definición, las últimas que entraron. Se recorre la lista de compras <strong>de la más reciente hacia atrás</strong> hasta completar 60 unidades:</p>
+  <div class="tabla-wrap">
+    <table class="tabla">
+      <thead><tr><th>Se valora con</th><th>Unidades</th><th>Costo unitario</th><th>Valor</th></tr></thead>
+      <tbody>
+        <tr><td>Compra del 23/08 (la más reciente, tenía 100 u; alcanzan las 60)</td><td class="num">60</td><td class="num">40,25</td><td class="num">2.415,00</td></tr>
+        <tr class="tot"><td>Inventario final</td><td class="num">60</td><td class="cen">—</td><td class="num">2.415,00</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="formula">
+    23.075,00 − 2.415,00 = 20.660,00
+    <small>Disponible − inventario final = costo de ventas del período (sistema periódico)</small>
+  </div>
+  <p>El resultado es <strong>idéntico</strong> al obtenido movimiento por movimiento en sistema permanente: costo de ventas 20.660,00 e inventario final 2.415,00.</p>
+
+  <div class="conclusion">
+    <h4>Propiedad importante de FIFO que debe recordar</h4>
+    <p>Bajo FIFO, el sistema permanente y el sistema periódico conducen <strong>siempre al mismo costo de ventas y al mismo inventario final</strong>. La razón es lógica: sin importar en qué momento del mes se hagan los cálculos, las unidades que quedan al final son las últimas que entraron, y las que salieron son las primeras. El orden de consumo de las capas no depende del momento en que se lo mida. <em>Guarde esta conclusión: en el Tema 3 comprobará que el promedio ponderado</em> <strong>no</strong> <em>tiene esta propiedad, y en el Tema 4 se explicará por qué.</em></p>
+  </div>
+
+  <div class="ejemplo">
+    <h4>Ejemplo aplicado — por qué a un importador guayaquileño le importa esto</h4>
+    <p>Una importadora de línea blanca en el puerto de Guayaquil trae contenedores cada seis semanas. Entre el embarque de mayo y el de agosto, el flete internacional subió y el arancel se mantuvo, de modo que el costo unitario nacionalizado pasó de 218,40 a 247,90 dólares por refrigeradora. Si valora con FIFO, las refrigeradoras que quedan en bodega al cierre están registradas a 247,90, es decir, a un valor <strong>cercano al costo de reposición actual</strong>: si mañana tuviera que volver a comprar, pagaría algo parecido.</p>
+    <p>Ese es el gran atributo de FIFO: <strong>el inventario del Estado de Situación Financiera queda medido a costos recientes y por tanto realistas</strong>. En contrapartida —y esto se desarrolla en el Tema 4— el costo de ventas queda medido con costos antiguos, más bajos, lo que en época de precios crecientes eleva la utilidad reportada.</p>
+  </div>
+
+  <div class="carrera-box">
+    <h4>Vínculo con las cuatro áreas de Negocios Internacionales</h4>
+    <ul>
+      <li><strong>Comercio exterior:</strong> cada embarque llega con una liquidación aduanera propia; la técnica de capas de FIFO reproduce con exactitud esa realidad, porque conserva el costo de cada importación sin diluirlo.</li>
+      <li><strong>Finanzas internacionales:</strong> un inventario valorado a costos recientes hace que el capital de trabajo mostrado sea más cercano al valor económico real, lo que mejora la lectura del analista financiero externo.</li>
+      <li><strong>Marketing y negociación internacional:</strong> saber que la mercadería en bodega está costeada al valor del último embarque permite fijar precios de lista sin destruir margen cuando los costos de importación han subido.</li>
+      <li><strong>Marco legal y normativo:</strong> FIFO es una de las dos fórmulas expresamente admitidas por la NIC 2, aplicable a inventarios habitualmente intercambiables entre sí.</li>
+    </ul>
+  </div>
+
+  <div class="conclusion">
+    <h4>Idea clave del Tema 2</h4>
+    <p>FIFO supone que lo primero que entró es lo primero que sale. Se aplica con la técnica de capas: cada compra crea un lote con su costo propio y cada venta consume desde el lote más antiguo. Su consecuencia estructural es que <strong>el inventario final queda valorado a los costos más recientes</strong> y el costo de ventas a los más antiguos. En el caso trabajado: costo de ventas 20.660,00 e inventario final 2.415,00, iguales bajo sistema permanente y periódico.</p>
+  </div>
+</section>
+
+<!-- ================= TEMA 3 ================= -->
+<section class="panel" id="t3">
+  <h2 class="titulo-seccion">Tema 3 — Costo promedio ponderado</h2>
+
+  <h3 class="subtitulo">3.1 Otra respuesta al mismo problema</h3>
+  <p>FIFO resuelve la pregunta “¿cuánto costó el quintal que salió?” eligiendo un orden: primero lo viejo. El costo promedio ponderado la resuelve de manera radicalmente distinta: <strong>se niega a elegir</strong>. Como las unidades son intercambiables y nadie puede distinguirlas, este método sostiene que tampoco tiene sentido distinguir sus costos: todas las unidades disponibles se consideran <strong>homogéneas también en costo</strong>, y a cada una se le asigna el mismo valor promedio.</p>
+
+  <div class="definicion">
+    <h4>Definición: costo promedio ponderado</h4>
+    <p>Fórmula de cálculo del costo según la cual <strong>el costo de cada unidad de inventario se determina a partir del promedio ponderado del costo de las unidades existentes al principio del período y del costo de las unidades compradas o producidas durante el período</strong>. Dentro del contenido de la NIC 2 se aclara que el promedio puede calcularse periódicamente o después de recibir cada envío adicional, dependiendo de las circunstancias de la entidad.</p>
+  </div>
+
+  <p>Esa última frase de la definición es la que da origen a las <strong>dos variantes</strong> que se estudian hoy, y que en la práctica ecuatoriana reciben nombres distintos:</p>
+  <ul>
+    <li><strong>Promedio ponderado móvil</strong> (o promedio móvil): el promedio se recalcula <em>después de cada compra</em>. Es la variante propia del <strong>sistema permanente</strong>, porque exige tener el saldo actualizado en todo momento.</li>
+    <li><strong>Promedio ponderado del período</strong> (o promedio simple del período): se calcula <em>un único promedio al cierre</em>, con todo lo disponible del período. Es la variante propia del <strong>sistema periódico</strong>.</li>
+  </ul>
+
+  <h3 class="subtitulo">3.2 Por qué “ponderado” y no simplemente “promedio”</h3>
+  <p>Este es el error más frecuente de los estudiantes que recién empiezan, y conviene desarmarlo antes de calcular nada. Un estudiante apurado mira la tabla del caso y hace esto:</p>
+  <div class="alerta">
+    <h4>Cálculo INCORRECTO — promedio aritmético simple</h4>
+    <p>(30,00 + 34,00 + 39,00 + 40,25) ÷ 4 = 143,25 ÷ 4 = <strong>35,8125</strong></p>
+    <p>Este número está mal y no debe usarse jamás. Trata las cuatro compras como si todas hubieran sido del mismo tamaño, cuando en realidad una fue de 100 unidades, otra de 300, otra de 150 y otra de 100. Le da a las 100 unidades de 40,25 el mismo peso que a las 300 unidades de 34,00, lo que distorsiona el resultado.</p>
+  </div>
+  <p><strong>Ponderar</strong> significa precisamente dar a cada precio la importancia que le corresponde según la cantidad de unidades que se compraron a ese precio. Por eso la fórmula no divide entre el número de compras, sino entre el número de unidades:</p>
+
+  <div class="formula">
+    Costo unitario promedio ponderado = Costo total de las unidades disponibles ÷ Número de unidades disponibles
+    <small>Nunca: suma de precios unitarios ÷ número de compras</small>
+  </div>
+
+  <p>Aplicado al mes completo del caso: 23.075,00 ÷ 650 = <strong>35,50</strong>. Compare con el 35,8125 del cálculo incorrecto. La diferencia de 0,3125 por unidad parece pequeña, pero multiplicada por 650 unidades son 203,13 dólares mal asignados en un solo artículo y en un solo mes. En una empresa con dos mil artículos, el error se vuelve material.</p>
+
+  <h3 class="subtitulo">3.3 Variante A: promedio ponderado móvil (sistema permanente)</h3>
+  <p>Regla de operación, memorícela porque es breve y no admite excepciones:</p>
+  <ul>
+    <li><strong>Cuando entra una compra:</strong> se suman unidades con unidades y dólares con dólares, y se recalcula el costo unitario dividiendo el nuevo saldo en dólares entre el nuevo saldo en unidades. <em>El promedio se mueve.</em></li>
+    <li><strong>Cuando sale una venta:</strong> las unidades vendidas se valoran al costo unitario promedio <strong>vigente en ese momento</strong>. <em>El promedio no cambia por una venta</em>, porque salen unidades y salen dólares en la misma proporción.</li>
+  </ul>
+  <div class="nota-lateral">
+    <p><strong>Comprobación mental rápida:</strong> si después de registrar una venta el costo unitario promedio le cambió, usted se equivocó. Una venta nunca altera el promedio.</p>
+  </div>
+
+  <div class="tabla-wrap">
+    <table class="tabla">
+      <caption>Comercial El Astillero S.A. — Promedio ponderado móvil, artículo INV-4501, agosto 2026</caption>
+      <thead>
+        <tr><th rowspan="2">Fecha</th><th rowspan="2">Concepto</th><th colspan="3" class="sub">Movimiento</th><th colspan="3" class="sub">Saldo</th></tr>
+        <tr><th class="sub">Unid.</th><th class="sub">C. unit.</th><th class="sub">Valor</th><th class="sub">Unid.</th><th class="sub">Valor</th><th class="sub">C. unit. promedio</th></tr>
+      </thead>
+      <tbody>
+        <tr class="fila-saldo"><td>01/08</td><td>Inventario inicial</td><td class="num">100</td><td class="num">30,00</td><td class="num">3.000,00</td><td class="num">100</td><td class="num">3.000,00</td><td class="num">30,00</td></tr>
+        <tr class="fila-compra"><td>05/08</td><td>Compra</td><td class="num">300</td><td class="num">34,00</td><td class="num">10.200,00</td><td class="num">400</td><td class="num">13.200,00</td><td class="num">33,00</td></tr>
+        <tr class="fila-venta"><td>09/08</td><td>Venta</td><td class="num">(150)</td><td class="num">33,00</td><td class="num">(4.950,00)</td><td class="num">250</td><td class="num">8.250,00</td><td class="num">33,00</td></tr>
+        <tr class="fila-compra"><td>14/08</td><td>Compra</td><td class="num">150</td><td class="num">39,00</td><td class="num">5.850,00</td><td class="num">400</td><td class="num">14.100,00</td><td class="num">35,25</td></tr>
+        <tr class="fila-venta"><td>18/08</td><td>Venta</td><td class="num">(300)</td><td class="num">35,25</td><td class="num">(10.575,00)</td><td class="num">100</td><td class="num">3.525,00</td><td class="num">35,25</td></tr>
+        <tr class="fila-compra"><td>23/08</td><td>Compra</td><td class="num">100</td><td class="num">40,25</td><td class="num">4.025,00</td><td class="num">200</td><td class="num">7.550,00</td><td class="num">37,75</td></tr>
+        <tr class="fila-venta"><td>28/08</td><td>Venta</td><td class="num">(140)</td><td class="num">37,75</td><td class="num">(5.285,00)</td><td class="num">60</td><td class="num">2.265,00</td><td class="num">37,75</td></tr>
+        <tr class="tot"><td colspan="2">Costo de ventas del mes (4.950 + 10.575 + 5.285)</td><td class="num">590</td><td class="cen">—</td><td class="num">20.810,00</td><td class="cen">—</td><td class="cen">—</td><td class="cen">—</td></tr>
+        <tr class="tot"><td colspan="2">Inventario final al 31/08</td><td class="num">60</td><td class="num">37,75</td><td class="num">2.265,00</td><td class="cen">—</td><td class="cen">—</td><td class="cen">—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4 class="subtitulo-3">Cómo se obtuvo cada costo unitario promedio</h4>
+  <ul>
+    <li><strong>05/08:</strong> (3.000,00 + 10.200,00) ÷ (100 + 300) = 13.200,00 ÷ 400 = <strong>33,00</strong></li>
+    <li><strong>09/08 (venta):</strong> el promedio sigue en 33,00. Salen 150 × 33,00 = 4.950,00 y el saldo queda en 250 × 33,00 = 8.250,00. El promedio no se toca.</li>
+    <li><strong>14/08:</strong> (8.250,00 + 5.850,00) ÷ (250 + 150) = 14.100,00 ÷ 400 = <strong>35,25</strong></li>
+    <li><strong>18/08 (venta):</strong> 300 × 35,25 = 10.575,00. Saldo: 100 × 35,25 = 3.525,00.</li>
+    <li><strong>23/08:</strong> (3.525,00 + 4.025,00) ÷ (100 + 100) = 7.550,00 ÷ 200 = <strong>37,75</strong></li>
+    <li><strong>28/08 (venta):</strong> 140 × 37,75 = 5.285,00. Saldo final: 60 × 37,75 = 2.265,00.</li>
+  </ul>
+  <p><strong>Comprobación obligatoria:</strong> 20.810,00 + 2.265,00 = 23.075,00. Coincide con la mercadería disponible. ✔</p>
+
+  <h3 class="subtitulo">3.4 Variante B: promedio ponderado del período (sistema periódico)</h3>
+  <p>Aquí no se recalcula nada durante el mes. Se espera al cierre, se toma <strong>todo</strong> lo disponible del período y se obtiene un solo costo unitario, que se aplica por igual a todas las unidades vendidas y a todas las que quedan.</p>
+  <div class="tabla-wrap">
+    <table class="tabla">
+      <thead><tr><th>Concepto</th><th>Unidades</th><th>Costo unitario</th><th>Valor</th></tr></thead>
+      <tbody>
+        <tr><td>Inventario inicial 01/08</td><td class="num">100</td><td class="num">30,00</td><td class="num">3.000,00</td></tr>
+        <tr><td>Compra 05/08</td><td class="num">300</td><td class="num">34,00</td><td class="num">10.200,00</td></tr>
+        <tr><td>Compra 14/08</td><td class="num">150</td><td class="num">39,00</td><td class="num">5.850,00</td></tr>
+        <tr><td>Compra 23/08</td><td class="num">100</td><td class="num">40,25</td><td class="num">4.025,00</td></tr>
+        <tr class="tot"><td>Mercadería disponible para la venta</td><td class="num">650</td><td class="num">35,50</td><td class="num">23.075,00</td></tr>
+        <tr class="fila-venta"><td>Costo de ventas (590 unidades × 35,50)</td><td class="num">590</td><td class="num">35,50</td><td class="num">20.945,00</td></tr>
+        <tr class="fila-saldo"><td>Inventario final (60 unidades × 35,50)</td><td class="num">60</td><td class="num">35,50</td><td class="num">2.130,00</td></tr>
+        <tr class="tot"><td>COMPROBACIÓN</td><td class="num">650</td><td class="cen">—</td><td class="num">23.075,00 ✔</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="subtitulo">3.5 Un hallazgo que hay que entender, no memorizar</h3>
+  <p>Compare las dos variantes del <em>mismo</em> método sobre los <em>mismos</em> datos:</p>
+  <div class="tabla-wrap">
+    <table class="tabla">
+      <thead><tr><th>Variante del promedio ponderado</th><th>Costo de ventas</th><th>Inventario final</th><th>Suma</th></tr></thead>
+      <tbody>
+        <tr><td>Móvil (sistema permanente)</td><td class="num">20.810,00</td><td class="num">2.265,00</td><td class="num">23.075,00</td></tr>
+        <tr><td>Del período (sistema periódico)</td><td class="num">20.945,00</td><td class="num">2.130,00</td><td class="num">23.075,00</td></tr>
+        <tr class="tot"><td>Diferencia</td><td class="num">135,00</td><td class="num">(135,00)</td><td class="num">0,00</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Es el mismo método, los mismos datos, y sin embargo los resultados difieren en 135,00 dólares. <strong>¿Por qué?</strong> Porque el momento del cálculo cambia la información disponible. La venta del 09/08 se valoró en el promedio móvil a 33,00, un promedio que solo conocía las compras hechas <em>hasta esa fecha</em>. El promedio del período, en cambio, valoró esa misma venta a 35,50, un costo que ya incorpora las compras del 14 y del 23 de agosto, hechas <em>después</em> de que la venta ocurriera y a precios más altos.</p>
+  <p>Como los precios venían subiendo, el promedio del período es mayor que los promedios móviles vigentes al inicio del mes; por eso arroja un costo de ventas mayor y un inventario final menor. Y note el contraste con el Tema 2: <strong>FIFO no presenta esta diferencia entre sistemas, el promedio ponderado sí.</strong> Esa es una de las razones por las que, al aplicar promedio, es imprescindible declarar cuál variante se usa.</p>
+
+  <div class="nota-lateral">
+    <p><strong>Sobre los decimales.</strong> La NIC 2 no fija cuántos decimales debe tener el costo unitario promedio. En este caso todos los promedios dieron exactos a dos decimales, lo que es excepcional y se hizo a propósito para que usted se concentre en el método. En la práctica es habitual obtener valores como 24,1250 o 17,836667. La recomendación profesional es trabajar el costo unitario con <strong>cuatro decimales</strong> y ajustar la diferencia de redondeo residual —normalmente de centavos— contra el saldo final del artículo, para que la comprobación siga cuadrando. Lo que no es aceptable es redondear a dos decimales en cada movimiento y luego dejar que la diferencia se acumule sin explicación.</p>
+  </div>
+
+  <div class="ejemplo">
+    <h4>Ejemplo aplicado — a qué tipo de negocio le sirve el promedio</h4>
+    <p>Una empresa ecuatoriana que comercializa <strong>combustible, aceite a granel, cemento, harina o resina plástica</strong> enfrenta un hecho físico incómodo para FIFO: la mercadería nueva se <em>mezcla materialmente</em> con la anterior en el mismo tanque o silo. Cuando llega un despacho de 20.000 litros a un tanque que ya tenía 8.000, no queda ninguna capa: queda un solo líquido. Sostener que “primero salen los litros de la compra anterior” sería una ficción sin sustento físico.</p>
+    <p>En ese contexto, el promedio ponderado <strong>describe la realidad mejor que FIFO</strong>. Lo mismo ocurre en comercializadoras de miles de repuestos pequeños de bajo valor unitario, donde llevar capas por lote sería administrativamente desproporcionado frente al beneficio de la información obtenida.</p>
+  </div>
+
+  <div class="carrera-box">
+    <h4>Vínculo con las cuatro áreas de Negocios Internacionales</h4>
+    <ul>
+      <li><strong>Comercio exterior:</strong> un importador de <em>commodities</em> —granos, aceites, insumos químicos— casi siempre valora con promedio ponderado, porque los embarques se mezclan físicamente y no existen lotes separables.</li>
+      <li><strong>Finanzas internacionales:</strong> el promedio suaviza el efecto de la volatilidad de precios internacionales sobre el margen reportado, lo que produce series de resultados más estables y más fáciles de proyectar para un inversionista o un banco.</li>
+      <li><strong>Marketing y negociación internacional:</strong> cuando se cotiza un producto cuyo costo internacional oscila mes a mes, el costo promedio ponderado es la referencia que evita fijar precios sobre el costo excepcionalmente bajo o excepcionalmente alto de un solo embarque.</li>
+      <li><strong>Marco legal y normativo:</strong> el promedio ponderado es la segunda —y última— fórmula admitida por la NIC 2, y la propia norma reconoce expresamente que el promedio puede calcularse de forma periódica o después de cada nueva entrada.</li>
+    </ul>
+  </div>
+
+  <div class="conclusion">
+    <h4>Idea clave del Tema 3</h4>
+    <p>El costo promedio ponderado asigna a cada unidad el mismo costo, obtenido dividiendo el <strong>costo total disponible entre las unidades disponibles</strong> —nunca dividiendo precios entre número de compras—. En su variante <strong>móvil</strong> el promedio se recalcula después de cada compra y nunca por una venta; en su variante <strong>del período</strong> se calcula un solo promedio al cierre. En el caso trabajado: móvil, costo de ventas 20.810,00 e inventario final 2.265,00; del período, 20.945,00 y 2.130,00. A diferencia de FIFO, aquí la variante escogida <strong>sí</strong> cambia el resultado.</p>
+  </div>
+</section>
+
+<!-- ================= TEMA 4 ================= -->
+<section class="panel" id="t4">
+  <h2 class="titulo-seccion">Tema 4 — Comparación entre métodos y su efecto en los estados financieros</h2>
+
+  <h3 class="subtitulo">4.1 Los mismos hechos, tres cifras distintas</h3>
+  <p>Este es el momento de la clase en que conviene detenerse. Comercial El Astillero S.A. compró exactamente la misma mercadería, la vendió exactamente a los mismos clientes en las mismas fechas y cobró exactamente lo mismo. No hubo ni un hecho económico distinto. Y sin embargo:</p>
+
+  <div class="tabla-wrap">
+    <table class="tabla">
+      <caption>Comercial El Astillero S.A. — Artículo INV-4501, agosto 2026: resultados según fórmula de costo</caption>
+      <thead><tr><th>Concepto</th><th>FIFO</th><th>Promedio móvil</th><th>Promedio del período</th></tr></thead>
+      <tbody>
+        <tr><td>Mercadería disponible para la venta</td><td class="num">23.075,00</td><td class="num">23.075,00</td><td class="num">23.075,00</td></tr>
+        <tr class="fila-venta"><td><strong>Costo de ventas</strong> (590 unidades)</td><td class="num">20.660,00</td><td class="num">20.810,00</td><td class="num">20.945,00</td></tr>
+        <tr class="fila-saldo"><td><strong>Inventario final</strong> (60 unidades)</td><td class="num">2.415,00</td><td class="num">2.265,00</td><td class="num">2.130,00</td></tr>
+        <tr class="tot"><td>Comprobación (costo de ventas + inventario final)</td><td class="num">23.075,00</td><td class="num">23.075,00</td><td class="num">23.075,00</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Tres cifras de costo de ventas y tres cifras de inventario final, todas técnicamente correctas y todas conformes a la NIC 2 (las dos primeras) o a su variante periódica (la tercera). Esto no es un defecto de la contabilidad ni un vacío normativo: es la consecuencia inevitable de que <strong>el costo unitario de un bien intercambiable no es un dato observable, sino un valor asignado</strong>. Lo que la norma sí garantiza es que la asignación sea razonable, esté declarada y se mantenga en el tiempo.</p>
+
+  <h3 class="subtitulo">4.2 El efecto que llega al Estado de Resultados</h3>
+  <p>Suponga que las 590 unidades se vendieron a 52,00 dólares cada una, sin descuentos. Los ingresos por ventas del artículo fueron entonces 590 × 52,00 = <strong>30.680,00</strong>, cifra idéntica bajo los tres métodos, porque el precio de venta no tiene nada que ver con la fórmula de costo. Lo que cambia es lo que se resta:</p>
+
+  <div class="tabla-wrap">
+    <table class="tabla">
+      <thead><tr><th>Estado de Resultados (parcial, solo este artículo)</th><th>FIFO</th><th>Promedio móvil</th><th>Promedio del período</th></tr></thead>
+      <tbody>
+        <tr><td>Ingresos por ventas</td><td class="num">30.680,00</td><td class="num">30.680,00</td><td class="num">30.680,00</td></tr>
+        <tr><td>(−) Costo de ventas</td><td class="num">(20.660,00)</td><td class="num">(20.810,00)</td><td class="num">(20.945,00)</td></tr>
+        <tr class="tot"><td>= Utilidad bruta en ventas</td><td class="num">10.020,00</td><td class="num">9.870,00</td><td class="num">9.735,00</td></tr>
+        <tr><td>Margen bruto sobre ventas</td><td class="num">32,66 %</td><td class="num">32,17 %</td><td class="num">31,73 %</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>La diferencia entre el mejor y el peor resultado es de 285,00 dólares en un solo artículo, en un solo mes. Multiplique mentalmente por un catálogo de mil artículos y por doce meses: la elección de la fórmula de costo deja de ser un detalle técnico y se convierte en una <strong>decisión de política contable con efecto material</strong> sobre la utilidad reportada, sobre la base imponible del impuesto a la renta y sobre la utilidad que se distribuye a trabajadores y socios.</p>
+
+  <h3 class="subtitulo">4.3 La regla general (y su condición)</h3>
+  <div class="definicion">
+    <h4>Regla en un contexto de precios de compra crecientes</h4>
+    <p>Cuando los costos de adquisición <strong>suben</strong> a lo largo del período:</p>
+    <ul>
+      <li><strong>FIFO</strong> asigna al costo de ventas los costos <em>más antiguos</em>, que son los más bajos → costo de ventas <strong>menor</strong> → utilidad <strong>mayor</strong> → inventario final <strong>mayor</strong> (valorado a costos recientes).</li>
+      <li><strong>Promedio ponderado</strong> asigna un costo intermedio → costo de ventas <strong>mayor</strong> que con FIFO → utilidad <strong>menor</strong> → inventario final <strong>menor</strong>.</li>
+    </ul>
+  </div>
+
+  <div class="alerta">
+    <h4>Advertencia: la regla se invierte si los precios bajan</h4>
+    <p>Muchos estudiantes memorizan “FIFO da más utilidad” y lo repiten como si fuera una ley universal. No lo es: <strong>depende de la dirección en que se muevan los costos.</strong></p>
+    <p>Verifíquelo con este mini-caso de precios decrecientes: inventario inicial de 100 unidades a 20,00 (2.000,00) y compra de 100 unidades a 16,00 (1.600,00); disponible 200 unidades por 3.600,00; se venden 120 unidades.</p>
+    <ul>
+      <li><strong>FIFO:</strong> costo de ventas = 100 × 20,00 + 20 × 16,00 = <strong>2.320,00</strong>; inventario final = 80 × 16,00 = <strong>1.280,00</strong>.</li>
+      <li><strong>Promedio ponderado:</strong> costo unitario = 3.600,00 ÷ 200 = 18,00; costo de ventas = 120 × 18,00 = <strong>2.160,00</strong>; inventario final = 80 × 18,00 = <strong>1.440,00</strong>.</li>
+    </ul>
+    <p>Aquí FIFO produce el costo de ventas <strong>mayor</strong> y la utilidad <strong>menor</strong>, exactamente al revés que en el caso principal. La regla correcta, la única que siempre se cumple, es esta: <strong>FIFO lleva al costo de ventas los costos antiguos y al inventario final los recientes</strong>. Si los antiguos son más baratos, la utilidad sube; si son más caros, baja.</p>
+  </div>
+
+  <h3 class="subtitulo">4.4 Qué mira cada estado financiero</h3>
+  <p>Hay una forma elegante de entender la diferencia entre los dos métodos, y vale la pena guardarla:</p>
+  <ul>
+    <li><strong>FIFO privilegia el Estado de Situación Financiera.</strong> Deja el inventario medido a costos recientes, próximos al valor de reposición; el activo es realista. El precio que paga es un costo de ventas construido con costos antiguos, que puede estar desactualizado.</li>
+    <li><strong>El promedio ponderado reparte el desfase entre los dos estados.</strong> Ni el costo de ventas ni el inventario quedan en el extremo: ambos toman un valor intermedio. Gana en estabilidad y en simplicidad operativa; pierde en precisión respecto de los costos corrientes.</li>
+  </ul>
+
+  <h3 class="subtitulo">4.5 Efectos prácticos que no aparecen en la tabla</h3>
+  <div class="tabla-wrap">
+    <table class="tabla">
+      <thead><tr><th>Aspecto</th><th>FIFO / PEPS</th><th>Costo promedio ponderado</th></tr></thead>
+      <tbody>
+        <tr><td>Coincidencia con el flujo físico</td><td>Alta en la mayoría de negocios (rotación de lo más antiguo)</td><td>Alta en graneles y mercadería que se mezcla materialmente</td></tr>
+        <tr><td>Carga administrativa</td><td>Mayor: exige controlar capas por lote y fecha</td><td>Menor: un solo costo unitario vigente por artículo</td></tr>
+        <tr><td>Valoración del inventario en el ESF</td><td>Cercana al costo de reposición</td><td>Intermedia, rezagada frente al costo corriente</td></tr>
+        <tr><td>Estabilidad del margen entre períodos</td><td>Menor: el margen fluctúa con los saltos de costo</td><td>Mayor: suaviza la volatilidad de los precios</td></tr>
+        <tr><td>Coincidencia entre sistema permanente y periódico</td><td>Sí, siempre da el mismo resultado</td><td>No: móvil y del período difieren</td></tr>
+        <tr><td>Riesgo de manipulación del resultado</td><td>Bajo: el orden de consumo es automático</td><td>Bajo: el promedio es una operación aritmética</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="nota-lateral">
+    <p><strong>Sobre la última fila.</strong> Que ambos métodos tengan bajo riesgo de manipulación no es un detalle menor: es precisamente el criterio que la NIC 2 aplicó para dejar solo estos dos y descartar tanto la identificación específica en bienes intercambiables como el método UEPS. En los dos métodos admitidos, una vez definida la política, el contador <em>no elige</em> qué costo asignar: lo determina un procedimiento.</p>
+  </div>
+
+  <h3 class="subtitulo">4.6 Cómo se decide en la práctica y cómo se lo comunica</h3>
+  <p>La empresa elige su fórmula de costo considerando la naturaleza física del inventario, el flujo real de la mercadería, la capacidad de su sistema informático y la comparabilidad con las empresas de su sector. Una vez elegida, la NIC 2 obliga a aplicarla con uniformidad a todos los inventarios de naturaleza y uso similares, y la NIC 1 —que usted estudió el Día 2— exige que las políticas contables significativas se revelen en las <strong>notas a los estados financieros</strong>.</p>
+  <p>Por eso, cuando usted abra los estados financieros auditados de cualquier compañía ecuatoriana en el portal de la Superintendencia de Compañías, Valores y Seguros, encontrará en las notas una redacción parecida a esta: <em>“Los inventarios se miden al menor entre el costo y el valor neto realizable. El costo se determina utilizando el método de costo promedio ponderado.”</em> No es una frase de relleno: es la información que permite al lector externo comparar esa empresa con otra.</p>
+
+  <div class="ejemplo">
+    <h4>Ejemplo aplicado — la lectura del analista</h4>
+    <p>Dos distribuidoras guayaquileñas del mismo producto reportan una utilidad bruta de 9,8 % y 10,4 % respectivamente. Un analista superficial concluye que la segunda es más eficiente. Un analista competente revisa primero las notas y descubre que la primera valora con promedio ponderado y la segunda con FIFO, en un año de costos de importación crecientes. Buena parte de esa diferencia de 0,6 puntos <strong>no proviene de la gestión, sino de la política contable</strong>. Sin leer las notas, la comparación es simplemente inválida.</p>
+  </div>
+
+  <div class="carrera-box">
+    <h4>Vínculo con las cuatro áreas de Negocios Internacionales</h4>
+    <ul>
+      <li><strong>Comercio exterior:</strong> en años de alza de fletes o de aranceles, la fórmula elegida determina si el encarecimiento aparece rápido en el costo de ventas (promedio) o queda retenido en el inventario (FIFO).</li>
+      <li><strong>Finanzas internacionales:</strong> los indicadores de rotación de inventario, prueba ácida y margen bruto que usa la banca internacional dependen de estas cifras; comparar empresas con distinta fórmula sin ajustar es un error de análisis.</li>
+      <li><strong>Marketing y negociación internacional:</strong> el costo que sustenta una lista de precios de exportación proviene de esta asignación; negociar sobre un costo mal entendido erosiona el margen real.</li>
+      <li><strong>Marco legal y normativo:</strong> la exigencia de uniformidad de la NIC 2 y la de revelación en notas de la NIC 1 son las dos piezas que hacen la información comparable entre empresas y entre países.</li>
+    </ul>
+  </div>
+
+  <div class="conclusion">
+    <h4>Idea clave del Tema 4</h4>
+    <p>Sobre hechos económicos idénticos, FIFO y promedio ponderado producen cifras distintas de costo de ventas, utilidad e inventario final, sin que ninguna sea incorrecta. La diferencia depende de la <strong>dirección</strong> del movimiento de los costos, no de una supuesta superioridad de un método. Lo que la normativa exige no es acertar con “el mejor” método, sino <strong>elegir con criterio, aplicar con uniformidad y revelar en notas</strong>.</p>
+  </div>
+</section>
+
+<!-- ================= TEMA 5 ================= -->
+<section class="panel" id="t5">
+  <h2 class="titulo-seccion">Tema 5 — UEPS / LIFO: un método que ya no se aplica (conocimiento general)</h2>
+
+  <div class="alerta">
+    <h4>Advertencia previa — léala antes de seguir</h4>
+    <p>Todo lo que se explica en este tema corresponde a un método que <strong>NO puede utilizarse</strong> para preparar estados financieros bajo Normas Internacionales de Información Financiera y, por tanto, <strong>no es aplicable en Ecuador</strong> para las entidades obligadas a aplicar NIIF. Este tema se incluye por tres razones legítimas: (1) usted lo encontrará mencionado en textos de contabilidad anteriores a 2005 y en literatura contable estadounidense; (2) le permite entender <em>por qué</em> la NIC 2 admite exactamente dos fórmulas y no tres; y (3) al ver un método descartado y las razones de su descarte, se comprende mejor el criterio de fondo de la normativa. <strong>No lo use en ningún ejercicio, examen o trabajo de esta asignatura como método válido de valoración.</strong></p>
+  </div>
+
+  <h3 class="subtitulo">5.1 En qué consistía</h3>
+  <div class="definicion">
+    <h4>Definición: última entrada, primera salida (UEPS / LIFO)</h4>
+    <p>Fórmula de cálculo del costo según la cual se suponía que <strong>las unidades adquiridas o producidas más recientemente son las primeras en venderse</strong>. En consecuencia, el costo de ventas quedaba compuesto por los costos <em>más recientes</em>, y las unidades que permanecían en el inventario final se valoraban con los costos <em>más antiguos</em>. Su sigla en inglés es <strong>LIFO</strong> (<em>Last In, First Out</em>) y en español <strong>UEPS</strong> (Últimas Entradas, Primeras Salidas).</p>
+  </div>
+  <p>Es exactamente la imagen especular del FIFO. Si FIFO es la fila del banco —el primero que llega es el primero que sale—, UEPS es una <strong>pila de sacos apilados en una bodega estrecha</strong>: el saco que se coloca encima al final es el primero que se puede retirar, y los sacos del fondo pueden quedarse ahí durante años. La técnica de cálculo es la misma técnica de capas del Tema 2, con una sola diferencia: las ventas se descuentan <strong>desde la capa más reciente hacia atrás</strong>, en lugar de desde la más antigua hacia adelante.</p>
+
+  <h3 class="subtitulo">5.2 El mismo caso, resuelto con UEPS (solo con fines ilustrativos)</h3>
+  <p>Para que la comparación sea completa, se aplica UEPS a los datos de Comercial El Astillero S.A. <strong>Este cálculo no sería aceptable en estados financieros bajo NIIF</strong>; se presenta únicamente para que usted vea el efecto.</p>
+  <div class="tabla-wrap">
+    <table class="tabla">
+      <caption>Cálculo ilustrativo con UEPS — método NO admitido bajo NIIF</caption>
+      <thead><tr><th>Fecha</th><th>Movimiento</th><th>Capas consumidas (de la más reciente hacia atrás)</th><th>Costo asignado</th><th>Saldo en existencia</th></tr></thead>
+      <tbody>
+        <tr class="fila-venta"><td>09/08</td><td>Venta de 150 u</td><td class="capa">150 × 34,00 (compra del 05/08)</td><td class="num">5.100,00</td><td class="capa">100 @ 30,00 + 150 @ 34,00 = 8.100,00</td></tr>
+        <tr class="fila-venta"><td>18/08</td><td>Venta de 300 u</td><td class="capa">150 × 39,00 (14/08) + 150 × 34,00 (05/08)</td><td class="num">10.950,00</td><td class="capa">100 @ 30,00 = 3.000,00</td></tr>
+        <tr class="fila-venta"><td>28/08</td><td>Venta de 140 u</td><td class="capa">100 × 40,25 (23/08) + 40 × 30,00 (inventario inicial)</td><td class="num">5.225,00</td><td class="capa">60 @ 30,00 = 1.800,00</td></tr>
+        <tr class="tot"><td colspan="2">Costo de ventas del mes</td><td class="cen">—</td><td class="num">21.275,00</td><td class="cen">—</td></tr>
+        <tr class="tot"><td colspan="2">Inventario final (60 u a costo del inventario inicial)</td><td class="cen">—</td><td class="num">1.800,00</td><td class="cen">21.275 + 1.800 = 23.075 ✔</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tabla-wrap">
+    <table class="tabla">
+      <caption>Los tres métodos frente a frente (UEPS solo como referencia histórica)</caption>
+      <thead><tr><th>Concepto</th><th>FIFO</th><th>Promedio móvil</th><th>UEPS (no admitido)</th></tr></thead>
+      <tbody>
+        <tr><td>Costo de ventas</td><td class="num">20.660,00</td><td class="num">20.810,00</td><td class="num">21.275,00</td></tr>
+        <tr><td>Utilidad bruta (ventas 30.680,00)</td><td class="num">10.020,00</td><td class="num">9.870,00</td><td class="num">9.405,00</td></tr>
+        <tr class="fila-saldo"><td>Inventario final en el ESF</td><td class="num">2.415,00</td><td class="num">2.265,00</td><td class="num">1.800,00</td></tr>
+        <tr><td>Costo unitario implícito del inventario final</td><td class="num">40,25</td><td class="num">37,75</td><td class="num">30,00</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Mire la última fila con detenimiento, porque ahí está el núcleo del problema. Al 31 de agosto de 2026 la empresa tendría en bodega 60 ventiladores que, si los comprara hoy, le costarían alrededor de <strong>40,25</strong> dólares cada uno. Bajo UEPS, su Estado de Situación Financiera los mostraría a <strong>30,00</strong>: el costo de julio, un costo que ya no existe en el mercado. Y si la empresa mantuviera niveles de inventario estables durante diez años, ese costo de 30,00 podría permanecer congelado en el balance <strong>durante toda una década</strong>.</p>
+
+  <h3 class="subtitulo">5.3 Cuál era el criterio a favor y en qué situaciones se lo recomendaba</h3>
+  <p>Sería injusto presentar UEPS como una ocurrencia sin fundamento. Tuvo un argumento técnico serio, y hay que conocerlo para entender el debate.</p>
+
+  <div class="definicion">
+    <h4>El argumento central: correlación entre ingresos y costos corrientes</h4>
+    <p>El Estado de Resultados enfrenta ingresos de <em>hoy</em> con costos de <em>hoy</em>. Si una empresa vende hoy a precios actuales pero registra como costo el de una compra de hace ocho meses, la utilidad resultante incluye un componente que no proviene de la gestión comercial sino simplemente del hecho de haber tenido mercadería almacenada mientras los precios subían. En la literatura contable ese componente se denominó <strong>utilidad por tenencia</strong> o, más crudamente, <strong>utilidad ficticia o inflacionaria</strong>. UEPS pretendía eliminarlo llevando al costo de ventas los precios más recientes, es decir, los más cercanos al costo de reposición.</p>
+  </div>
+
+  <p>De ese argumento se derivaban las situaciones en que la literatura lo recomendaba:</p>
+  <ul>
+    <li><strong>Economías con inflación alta y sostenida.</strong> Era su terreno natural. Cuanto más rápido subían los precios, más grande era la utilidad por tenencia que UEPS eliminaba y más “realista” resultaba la utilidad reportada.</li>
+    <li><strong>Empresas que necesitaban preservar su capacidad de reposición.</strong> El razonamiento era de prudencia financiera: si la empresa reparte como utilidad un margen calculado con costos antiguos, se descapitaliza, porque el dinero repartido no alcanza para reponer el inventario a los precios nuevos. Al mostrar una utilidad menor, UEPS actuaba como freno al reparto excesivo de dividendos.</li>
+    <li><strong>Inventarios cuyo flujo físico realmente era el último en entrar, primero en salir.</strong> Existen: montones de carbón, pilas de arena o de grava, apilamientos de mineral, silos de descarga superior. Se retira siempre de la parte de arriba, y el material del fondo puede no moverse nunca.</li>
+    <li><strong>Empresas de Estados Unidos, por motivos tributarios.</strong> Un costo de ventas mayor significa una base imponible menor y, por tanto, un <strong>diferimiento del pago del impuesto</strong>. La legislación tributaria estadounidense condiciona ese beneficio a que la empresa use también UEPS en su contabilidad financiera, lo que explica por qué el método sigue vivo allí.</li>
+  </ul>
+
+  <h3 class="subtitulo">5.4 Por qué el IASB lo eliminó</h3>
+  <p>El método fue retirado de la NIC 2 en la revisión de la norma emitida en <strong>2003</strong>, con vigencia obligatoria para los períodos anuales iniciados a partir del <strong>1 de enero de 2005</strong>. En los <strong>Fundamentos de las Conclusiones</strong> que acompañan a la NIC 2, el IASB expone las razones de esa decisión. Los argumentos que allí se desarrollan son, en síntesis, los siguientes:</p>
+  <ul>
+    <li><strong>No representa fielmente el flujo de los inventarios.</strong> En la enorme mayoría de los negocios, la mercadería antigua no se queda indefinidamente en bodega. UEPS describe un comportamiento que casi nunca ocurre en la realidad, y la representación fiel es una de las características cualitativas fundamentales de la información financiera útil.</li>
+    <li><strong>Distorsiona el Estado de Situación Financiera.</strong> Al dejar el inventario valorado con costos muy antiguos, la cifra del activo puede alejarse tanto de la realidad económica que pierde utilidad para el usuario, como se vio en la tabla anterior con los 30,00 frente a los 40,25.</li>
+    <li><strong>Reduce la comparabilidad.</strong> Permitir tres fórmulas en lugar de dos multiplicaba las combinaciones posibles y dificultaba comparar entidades. La eliminación de alternativas contables sin fundamento suficiente fue un objetivo explícito del proyecto de mejoras que dio origen a la revisión de 2003.</li>
+    <li><strong>Las consideraciones tributarias no son base conceptual suficiente.</strong> El IASB señaló que el hecho de que un método produzca ventajas fiscales en cierta jurisdicción no constituye un argumento válido para admitirlo en normas de información financiera, cuyo objetivo es la utilidad de la información para los usuarios, no la determinación del impuesto.</li>
+  </ul>
+  <p>A estas razones normativas, la literatura contable añade dos críticas técnicas que conviene que usted conozca:</p>
+  <ul>
+    <li><strong>Posibilidad de manipular el resultado con el momento de las compras.</strong> Bajo UEPS, una compra realizada en los últimos días del ejercicio entra inmediatamente al costo de ventas. Comprar fuerte a fin de año reduce la utilidad; no comprar la aumenta. La cifra de resultados queda parcialmente en manos de una decisión de calendario.</li>
+    <li><strong>Liquidación de capas antiguas.</strong> Si en algún ejercicio el nivel de inventario disminuye lo suficiente, se empiezan a consumir capas muy viejas y muy baratas. El costo de ventas cae de golpe y aparece una utilidad extraordinaria que no corresponde a ninguna mejora del negocio, sino al simple hecho de haber vaciado la bodega.</li>
+  </ul>
+
+  <h3 class="subtitulo">5.5 Situación actual y su relevancia para Negocios Internacionales</h3>
+  <div class="tabla-wrap">
+    <table class="tabla">
+      <thead><tr><th>Marco normativo</th><th>¿Admite UEPS / LIFO?</th><th>Observación</th></tr></thead>
+      <tbody>
+        <tr><td>NIIF — NIC 2 (IASB)</td><td><strong>No</strong></td><td>Eliminado en la revisión de 2003, vigente desde 2005. Solo se admiten FIFO y promedio ponderado.</td></tr>
+        <tr><td>Ecuador — sociedades bajo control de la Superintendencia de Compañías, Valores y Seguros</td><td><strong>No</strong></td><td>Las NIIF son de aplicación obligatoria conforme al cronograma establecido por la Superintendencia mediante la Resolución No. 08.G.DSC.010 de 2008; en consecuencia, UEPS no es aplicable.</td></tr>
+        <tr><td>Estados Unidos — US GAAP (Codificación de Normas Contables, Tema 330 “Inventory”)</td><td><strong>Sí</strong></td><td>Continúa admitido, y numerosas compañías estadounidenses lo utilizan, en buena medida por el diferimiento tributario que permite.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>La última fila de esa tabla es la que más le va a servir profesionalmente. Cuando usted analice los estados financieros de una compañía estadounidense —un proveedor, un competidor, un socio en una alianza, una empresa objeto de adquisición— y los compare con los de una compañía ecuatoriana, puede estar comparando cifras construidas con fórmulas de costo <strong>estructuralmente distintas</strong>. Por eso las compañías que usan UEPS bajo US GAAP están obligadas a revelar la denominada <em>reserva LIFO</em>, es decir, la diferencia entre su inventario valorado con ese método y el valor que tendría bajo un método de costos corrientes, precisamente para que un analista externo pueda hacer el ajuste y comparar.</p>
+
+  <div class="carrera-box">
+    <h4>Vínculo con las cuatro áreas de Negocios Internacionales</h4>
+    <ul>
+      <li><strong>Comercio exterior:</strong> al evaluar la solidez de un proveedor o distribuidor extranjero, saber con qué método valora su inventario evita leer mal su margen y su capacidad de abastecimiento.</li>
+      <li><strong>Finanzas internacionales:</strong> la comparación de estados financieros entre jurisdicciones con marcos normativos distintos exige ajustes; la reserva LIFO es un ejemplo concreto de dato que existe justamente para hacer posible esa comparación.</li>
+      <li><strong>Marketing y negociación internacional:</strong> en una negociación con una contraparte estadounidense, un costo de ventas construido con criterios distintos puede explicar por qué sus cifras de margen no se parecen a las suyas, sin que ninguna de las dos esté equivocada.</li>
+      <li><strong>Marco legal y normativo:</strong> este tema muestra que las normas contables no son un catálogo de opciones neutrales: el IASB retiró un método por razones de representación fiel y comparabilidad, y lo dejó documentado en los Fundamentos de las Conclusiones de la NIC 2.</li>
+    </ul>
+  </div>
+
+  <div class="conclusion">
+    <h4>Idea clave del Tema 5</h4>
+    <p>UEPS suponía que lo último que entra es lo primero que sale, con el propósito legítimo de enfrentar ingresos corrientes con costos corrientes y evitar utilidades ficticias en contextos inflacionarios. Se lo recomendaba en economías con inflación alta, en empresas preocupadas por su capacidad de reposición, en inventarios apilados cuyo flujo físico realmente era de arriba hacia abajo, y en Estados Unidos por el diferimiento tributario. El IASB lo eliminó de la NIC 2 en 2003 por no representar fielmente el flujo real de los inventarios, distorsionar el valor del activo en el balance y reducir la comparabilidad, dejando establecido que las ventajas tributarias no son fundamento suficiente para una norma contable. <strong>Hoy es conocimiento de cultura profesional, no una herramienta de trabajo.</strong></p>
+  </div>
+</section>
+
+<!-- ================= TEMA 6 ================= -->
+<section class="panel" id="t6">
+  <h2 class="titulo-seccion">Tema 6 — Del cálculo al asiento: cómo entra la fórmula de costo al Libro Diario</h2>
+
+  <p>Hasta aquí usted calculó números en tablas. Pero una tabla no es contabilidad: la contabilidad ocurre cuando ese número entra al Libro Diario con su cuenta, su código, su valor y su glosa. Este tema cierra el círculo y muestra <strong>exactamente en qué línea del asiento aparece el resultado de la fórmula de costo</strong>.</p>
+
+  <div class="nota-lateral">
+    <p><strong>Supuestos del caso, declarados para que no queden dudas.</strong> Comercial El Astillero S.A. es una sociedad obligada a llevar contabilidad, aplica el <strong>sistema permanente</strong> de inventarios, es <strong>agente de retención designado por el Servicio de Rentas Internas</strong>, y su cliente del 18/08 también lo es. El artículo INV-4501 está gravado con tarifa <strong>15 %</strong> de IVA. Estos supuestos son los que hacen aplicables las retenciones que verá en los asientos; si la empresa no fuera agente de retención, esas líneas no existirían. Todo lo relativo a IVA y retenciones proviene del Día 4 y no se vuelve a explicar aquí.</p>
+  </div>
+
+  <h3 class="subtitulo">6.1 El asiento de compra: aquí nace la capa</h3>
+  <p>Compra del 14 de agosto: 150 unidades a 39,00 dólares cada una, factura 001-002-000019055, a crédito 30 días. En el sistema permanente la compra <strong>no</strong> va a una cuenta de gasto ni a una cuenta “Compras”: va directamente al activo <em>Inventario de Mercaderías</em>. Ese débito de 5.850,00 es, en términos del Tema 2, el nacimiento de la <strong>capa 3</strong>.</p>
+
+  <div class="asiento">
+    <div class="asiento-head">Asiento N.º 1 — 14/08/2026</div>
+    <div class="tabla-wrap">
+      <table class="tabla-asiento">
+        <thead><tr><th>Fecha</th><th>Código</th><th>Detalle</th><th>Parcial</th><th>Debe</th><th>Haber</th></tr></thead>
+        <tbody>
+          <tr><td>14/08/2026</td><td>1.1.05.01</td><td>Inventario de Mercaderías</td><td class="num">5.850,00</td><td class="num">5.850,00</td><td></td></tr>
+          <tr><td></td><td>1.1.06.01</td><td>IVA en Compras (crédito tributario)</td><td class="num">877,50</td><td class="num">877,50</td><td></td></tr>
+          <tr><td></td><td>2.1.04.02</td><td class="cta-haber">a) Retención en la Fuente de IR por Pagar</td><td class="num">117,00</td><td></td><td class="num">117,00</td></tr>
+          <tr><td></td><td>2.1.04.03</td><td class="cta-haber">a) Retención de IVA por Pagar</td><td class="num">263,25</td><td></td><td class="num">263,25</td></tr>
+          <tr><td></td><td>2.1.03.01</td><td class="cta-haber">a) Cuentas por Pagar Proveedores</td><td class="num">6.347,25</td><td></td><td class="num">6.347,25</td></tr>
+          <tr class="suman"><td colspan="4">SUMAN</td><td class="num">6.727,50</td><td class="num">6.727,50</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="glosa">P/R la compra de 150 unidades del artículo INV-4501 a 39,00 cada una, según factura 001-002-000019055. El costo de adquisición se incorpora al inventario conforme al tratamiento de medición inicial previsto en la NIC 2; el IVA pagado no forma parte del costo por constituir crédito tributario recuperable. Retención del 2 % en la fuente de impuesto a la renta por adquisición de bienes, conforme a la Resolución NAC-DGERCGC26-00000009 del SRI, y retención del 30 % del IVA en la adquisición de bienes, conforme a la Resolución NAC-DGERCGC20-00000061.</div>
+  </div>
+
+  <p>Verifique el cálculo de cada línea: base 150 × 39,00 = 5.850,00; IVA 5.850,00 × 15 % = 877,50; retención de renta 5.850,00 × 2 % = 117,00; retención de IVA 877,50 × 30 % = 263,25; saldo a pagar al proveedor 5.850,00 + 877,50 − 117,00 − 263,25 = 6.347,25. Observe que las retenciones <strong>no reducen el costo del inventario</strong>: reducen lo que se le paga al proveedor, porque ese valor se le entrega al Estado en su nombre.</p>
+
+  <h3 class="subtitulo">6.2 El asiento de venta, primera parte: el ingreso</h3>
+  <p>Venta del 18 de agosto: 300 unidades a 52,00 dólares cada una, factura 001-001-000003368, a crédito. Esta parte del registro <strong>no depende en absoluto de la fórmula de costo</strong>: el ingreso se mide por lo que se cobra al cliente, no por lo que costó la mercadería.</p>
+
+  <div class="asiento">
+    <div class="asiento-head">Asiento N.º 2 — 18/08/2026 (registro del ingreso)</div>
+    <div class="tabla-wrap">
+      <table class="tabla-asiento">
+        <thead><tr><th>Fecha</th><th>Código</th><th>Detalle</th><th>Parcial</th><th>Debe</th><th>Haber</th></tr></thead>
+        <tbody>
+          <tr><td>18/08/2026</td><td>1.1.03.01</td><td>Cuentas por Cobrar Clientes</td><td class="num">16.926,00</td><td class="num">16.926,00</td><td></td></tr>
+          <tr><td></td><td>1.1.06.02</td><td>Anticipo de IR — Retenciones que nos efectuaron</td><td class="num">312,00</td><td class="num">312,00</td><td></td></tr>
+          <tr><td></td><td>1.1.06.03</td><td>Crédito Tributario por Retenciones de IVA</td><td class="num">702,00</td><td class="num">702,00</td><td></td></tr>
+          <tr><td></td><td>4.1.01.01</td><td class="cta-haber">a) Ventas de Mercaderías</td><td class="num">15.600,00</td><td></td><td class="num">15.600,00</td></tr>
+          <tr><td></td><td>2.1.04.01</td><td class="cta-haber">a) IVA en Ventas</td><td class="num">2.340,00</td><td></td><td class="num">2.340,00</td></tr>
+          <tr class="suman"><td colspan="4">SUMAN</td><td class="num">17.940,00</td><td class="num">17.940,00</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="glosa">P/R la venta de 300 unidades del artículo INV-4501 a 52,00 cada una, según factura 001-001-000003368. El ingreso se reconoce por el valor de la contraprestación acordada; el IVA cobrado constituye una obligación con la administración tributaria y no un ingreso de la entidad, conforme a lo previsto en la Ley de Régimen Tributario Interno. El cliente, en su condición de agente de retención, efectuó retención del 2 % de impuesto a la renta sobre la base imponible y del 30 % del IVA facturado.</div>
+  </div>
+
+  <h3 class="subtitulo">6.3 El asiento de venta, segunda parte: aquí sí entra la fórmula de costo</h3>
+  <p>En el sistema permanente, toda venta exige un <strong>segundo asiento</strong>: el que da de baja la mercadería del activo y reconoce el gasto correspondiente. Y este asiento <strong>sí</strong> depende por completo de la fórmula de costo, porque su valor es exactamente el que usted calculó en los Temas 2 y 3.</p>
+
+  <div class="asiento">
+    <div class="asiento-head">Asiento N.º 3 — 18/08/2026 (costo de ventas) · Alternativa A: la empresa aplica FIFO</div>
+    <div class="tabla-wrap">
+      <table class="tabla-asiento">
+        <thead><tr><th>Fecha</th><th>Código</th><th>Detalle</th><th>Parcial</th><th>Debe</th><th>Haber</th></tr></thead>
+        <tbody>
+          <tr><td>18/08/2026</td><td>5.1.01.01</td><td>Costo de Ventas</td><td class="num">10.450,00</td><td class="num">10.450,00</td><td></td></tr>
+          <tr><td></td><td>1.1.05.01</td><td class="cta-haber">a) Inventario de Mercaderías</td><td class="num">10.450,00</td><td></td><td class="num">10.450,00</td></tr>
+          <tr class="suman"><td colspan="4">SUMAN</td><td class="num">10.450,00</td><td class="num">10.450,00</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="glosa">P/R el costo de las 300 unidades vendidas según factura 001-001-000003368, valoradas con la fórmula primera entrada, primera salida: 250 unidades a 34,00 correspondientes al remanente de la compra del 05/08 y 50 unidades a 39,00 de la compra del 14/08. La NIC 2 dispone que el importe en libros de los inventarios vendidos se reconozca como gasto del período en que se reconocen los ingresos correspondientes.</div>
+  </div>
+
+  <div class="asiento">
+    <div class="asiento-head">Asiento N.º 3 — 18/08/2026 (costo de ventas) · Alternativa B: la empresa aplica promedio ponderado móvil</div>
+    <div class="tabla-wrap">
+      <table class="tabla-asiento">
+        <thead><tr><th>Fecha</th><th>Código</th><th>Detalle</th><th>Parcial</th><th>Debe</th><th>Haber</th></tr></thead>
+        <tbody>
+          <tr><td>18/08/2026</td><td>5.1.01.01</td><td>Costo de Ventas</td><td class="num">10.575,00</td><td class="num">10.575,00</td><td></td></tr>
+          <tr><td></td><td>1.1.05.01</td><td class="cta-haber">a) Inventario de Mercaderías</td><td class="num">10.575,00</td><td></td><td class="num">10.575,00</td></tr>
+          <tr class="suman"><td colspan="4">SUMAN</td><td class="num">10.575,00</td><td class="num">10.575,00</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="glosa">P/R el costo de las 300 unidades vendidas según factura 001-001-000003368, valoradas al costo promedio ponderado vigente a la fecha de la operación, de 35,25 por unidad, resultante de dividir el saldo de 14.100,00 entre las 400 unidades en existencia luego de la compra del 14/08. La NIC 2 admite que el promedio se calcule después de recibir cada envío adicional.</div>
+  </div>
+
+  <div class="alerta">
+    <h4>Advertencia — no son dos asientos, son dos alternativas excluyentes</h4>
+    <p>Una empresa registra <strong>uno u otro</strong>, jamás los dos. Se los presenta juntos únicamente para que usted vea, sobre la misma transacción, que la fórmula de costo elegida se traduce en una cifra distinta en el Libro Diario. Si en un ejercicio usted registra los dos, está duplicando el costo de ventas y descuadrando el inventario.</p>
+  </div>
+
+  <h3 class="subtitulo">6.4 El efecto, visto sobre una sola transacción</h3>
+  <div class="tabla-wrap">
+    <table class="tabla">
+      <caption>Venta del 18/08/2026 — resultado según la fórmula aplicada</caption>
+      <thead><tr><th>Concepto</th><th>Con FIFO</th><th>Con promedio móvil</th><th>Diferencia</th></tr></thead>
+      <tbody>
+        <tr><td>Ingreso por ventas (300 × 52,00)</td><td class="num">15.600,00</td><td class="num">15.600,00</td><td class="num">0,00</td></tr>
+        <tr><td>(−) Costo de ventas</td><td class="num">(10.450,00)</td><td class="num">(10.575,00)</td><td class="num">125,00</td></tr>
+        <tr class="tot"><td>= Utilidad bruta de la operación</td><td class="num">5.150,00</td><td class="num">5.025,00</td><td class="num">125,00</td></tr>
+        <tr><td>Saldo del Inventario de Mercaderías después del asiento</td><td class="num">3.900,00</td><td class="num">3.525,00</td><td class="num">375,00</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Una sola venta, dos utilidades brutas distintas, dos saldos de inventario distintos. Y ambos asientos son técnicamente correctos: lo que los separa es la política contable declarada por la entidad.</p>
+
+  <h3 class="subtitulo">6.5 ¿Y si la empresa usara el sistema periódico?</h3>
+  <p>En ese caso el Asiento N.º 3 <strong>no existiría</strong>. Durante el mes solo se registrarían las ventas (Asiento N.º 2) y las compras irían a la cuenta <em>Compras</em> en lugar de <em>Inventario de Mercaderías</em>. El costo de ventas se determinaría una sola vez al cierre, con la fórmula del Tema 1 y a partir del inventario físico contado, y se registraría mediante un asiento de regularización al final del período.</p>
+
+  <div class="futuro">
+    <h4>Contenido que llega después (no se adelanta aquí)</h4>
+    <p><strong>Día 10:</strong> el registro de estos mismos movimientos en la tarjeta <strong>Kardex</strong>, que es el libro auxiliar donde se controla artículo por artículo lo que aquí se registró de forma agregada en el Libro Diario.<br>
+    <strong>Día 11:</strong> los <strong>asientos de ajuste</strong>, incluido el asiento de regularización del inventario en sistema periódico y el ajuste por deterioro cuando el valor neto realizable resulta menor que el costo.<br>
+    <strong>Día 15:</strong> los asientos de <strong>cierre</strong>, donde el saldo de la cuenta Costo de Ventas se cancela contra la cuenta de resultados.</p>
+  </div>
+
+  <div class="carrera-box">
+    <h4>Vínculo con las cuatro áreas de Negocios Internacionales</h4>
+    <ul>
+      <li><strong>Comercio exterior:</strong> el asiento de compra es donde se consolida el costo nacionalizado del embarque; si allí se registra mal, todo el margen del producto importado queda distorsionado hacia adelante.</li>
+      <li><strong>Finanzas internacionales:</strong> el segundo asiento de la venta es el que traslada valor del activo corriente al resultado; de él dependen la rotación de inventarios y el margen que evalúa cualquier financiador externo.</li>
+      <li><strong>Marketing y negociación internacional:</strong> la utilidad bruta por operación —5.150,00 o 5.025,00 según el método— es el dato real con el que se debe negociar un descuento por volumen, no el precio de lista.</li>
+      <li><strong>Marco legal y normativo:</strong> el asiento integra en una sola pieza la medición del inventario según la NIC 2 y las obligaciones tributarias de IVA y retenciones de la normativa ecuatoriana.</li>
+    </ul>
+  </div>
+
+  <div class="conclusion">
+    <h4>Idea clave del Tema 6</h4>
+    <p>La fórmula de costo no se queda en la hoja de cálculo: aterriza en una línea concreta del Libro Diario, el <strong>débito a Costo de Ventas con crédito a Inventario de Mercaderías</strong> que acompaña a cada venta en el sistema permanente. El asiento de ingreso es idéntico bajo cualquier fórmula; el asiento de costo es el que cambia. Registrar ambas alternativas en un mismo ejercicio es un error grave: son excluyentes.</p>
+  </div>
+</section>
+
+<!-- ================= EJERCICIO INTERACTIVO ================= -->
+<section class="panel" id="ejercicio">
+  <h2 class="titulo-seccion">Ejercicio Interactivo — Resuelva el caso y verifique</h2>
+
+  <p>Antes de contestar, <strong>resuelva el caso completo en papel</strong> con las dos fórmulas. Las opciones están diseñadas para que un cálculo mal hecho encuentre siempre una alternativa que lo confirme: si adivina, es muy probable que acierte poco. Responda los ocho ítems y recién entonces presione <em>Verificar respuestas</em>.</p>
+
+  <div class="ejemplo">
+    <h4>Caso — Importadora Vía Marítima S.A.</h4>
+    <p>Empresa guayaquileña importadora de artículos de ferretería, obligada a llevar contabilidad y sujeta a NIIF. Aplica el <strong>sistema permanente</strong> de inventarios. El artículo <strong>FE-2208 “Juego de herramientas manuales”</strong> registró el siguiente movimiento en septiembre de 2026. Las unidades son habitualmente intercambiables entre sí.</p>
+  </div>
+
+  <div class="tabla-wrap">
+    <table class="tabla">
+      <caption>Importadora Vía Marítima S.A. — Artículo FE-2208, septiembre 2026</caption>
+      <thead><tr><th>Fecha</th><th>Concepto</th><th>Unidades</th><th>Costo unitario</th><th>Costo total</th></tr></thead>
+      <tbody>
+        <tr class="fila-saldo"><td>01/09</td><td>Inventario inicial</td><td class="num">50</td><td class="num">20,00</td><td class="num">1.000,00</td></tr>
+        <tr class="fila-compra"><td>06/09</td><td>Compra</td><td class="num">150</td><td class="num">24,00</td><td class="num">3.600,00</td></tr>
+        <tr class="fila-venta"><td>11/09</td><td>Venta</td><td class="num">(120)</td><td class="cen">—</td><td class="cen">a calcular</td></tr>
+        <tr class="fila-compra"><td>17/09</td><td>Compra</td><td class="num">120</td><td class="num">26,00</td><td class="num">3.120,00</td></tr>
+        <tr class="fila-venta"><td>24/09</td><td>Venta</td><td class="num">(100)</td><td class="cen">—</td><td class="cen">a calcular</td></tr>
+        <tr class="tot"><td colspan="2">Mercadería disponible para la venta</td><td class="num">320</td><td class="cen">—</td><td class="num">7.720,00</td></tr>
+        <tr class="tot"><td colspan="2">Unidades vendidas / en existencia al 30/09</td><td class="num">220 / 100</td><td class="cen">—</td><td class="cen">—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ítem 1 -->
+  <div class="item">
+    <span class="item-enunciado">1. Aplicando <strong>FIFO</strong>, ¿cuál es el costo de ventas de la operación del <strong>11/09</strong> (120 unidades)?</span>
+    <div class="opciones">
+      <label><input type="radio" name="ei1" value="a"> a) 2.400,00</label>
+      <label><input type="radio" name="ei1" value="b"> b) 2.680,00</label>
+      <label><input type="radio" name="ei1" value="c"> c) 2.760,00</label>
+      <label><input type="radio" name="ei1" value="d"> d) 2.880,00</label>
+    </div>
+    <div class="feedback" id="fb-ei1"></div>
+  </div>
+
+  <!-- ítem 2 -->
+  <div class="item">
+    <span class="item-enunciado">2. Aplicando <strong>FIFO</strong>, ¿cuál es el <strong>valor del saldo en existencia inmediatamente después</strong> de la venta del 11/09?</span>
+    <div class="opciones">
+      <label><input type="radio" name="ei2" value="a"> a) 1.840,00</label>
+      <label><input type="radio" name="ei2" value="b"> b) 2.000,00</label>
+      <label><input type="radio" name="ei2" value="c"> c) 1.920,00</label>
+      <label><input type="radio" name="ei2" value="d"> d) 1.600,00</label>
+    </div>
+    <div class="feedback" id="fb-ei2"></div>
+  </div>
+
+  <!-- ítem 3 -->
+  <div class="item">
+    <span class="item-enunciado">3. Aplicando <strong>FIFO</strong>, ¿cuál es el costo de ventas de la operación del <strong>24/09</strong> (100 unidades)?</span>
+    <div class="opciones">
+      <label><input type="radio" name="ei3" value="a"> a) 2.440,00</label>
+      <label><input type="radio" name="ei3" value="b"> b) 2.480,00</label>
+      <label><input type="radio" name="ei3" value="c"> c) 2.600,00</label>
+      <label><input type="radio" name="ei3" value="d"> d) 2.400,00</label>
+    </div>
+    <div class="feedback" id="fb-ei3"></div>
+  </div>
+
+  <!-- ítem 4 -->
+  <div class="item">
+    <span class="item-enunciado">4. Aplicando <strong>FIFO</strong>, ¿cuál es el valor del <strong>inventario final al 30/09</strong> (100 unidades)?</span>
+    <div class="opciones">
+      <label><input type="radio" name="ei4" value="a"> a) 2.400,00</label>
+      <label><input type="radio" name="ei4" value="b"> b) 2.480,00</label>
+      <label><input type="radio" name="ei4" value="c"> c) 2.412,50</label>
+      <label><input type="radio" name="ei4" value="d"> d) 2.600,00</label>
+    </div>
+    <div class="feedback" id="fb-ei4"></div>
+  </div>
+
+  <!-- ítem 5 -->
+  <div class="item">
+    <span class="item-enunciado">5. Aplicando <strong>promedio ponderado móvil</strong>, ¿cuál es el costo unitario promedio vigente inmediatamente después de la compra del <strong>06/09</strong>?</span>
+    <div class="opciones">
+      <label><input type="radio" name="ei5" value="a"> a) 23,00</label>
+      <label><input type="radio" name="ei5" value="b"> b) 22,00</label>
+      <label><input type="radio" name="ei5" value="c"> c) 24,80</label>
+      <label><input type="radio" name="ei5" value="d"> d) 24,1250</label>
+    </div>
+    <div class="feedback" id="fb-ei5"></div>
+  </div>
+
+  <!-- ítem 6 -->
+  <div class="item">
+    <span class="item-enunciado">6. Aplicando <strong>promedio ponderado móvil</strong>, ¿cuál es el costo unitario promedio vigente inmediatamente después de la compra del <strong>17/09</strong>?</span>
+    <div class="opciones">
+      <label><input type="radio" name="ei6" value="a"> a) 25,00</label>
+      <label><input type="radio" name="ei6" value="b"> b) 24,1250</label>
+      <label><input type="radio" name="ei6" value="c"> c) 24,80</label>
+      <label><input type="radio" name="ei6" value="d"> d) 23,00</label>
+    </div>
+    <div class="feedback" id="fb-ei6"></div>
+  </div>
+
+  <!-- ítem 7 -->
+  <div class="item">
+    <span class="item-enunciado">7. Aplicando <strong>promedio ponderado móvil</strong>, ¿cuál es el <strong>costo de ventas total</strong> de septiembre (las dos ventas sumadas)?</span>
+    <div class="opciones">
+      <label><input type="radio" name="ei7" value="a"> a) 5.120,00</label>
+      <label><input type="radio" name="ei7" value="b"> b) 5.307,50</label>
+      <label><input type="radio" name="ei7" value="c"> c) 5.000,00</label>
+      <label><input type="radio" name="ei7" value="d"> d) 5.240,00</label>
+    </div>
+    <div class="feedback" id="fb-ei7"></div>
+  </div>
+
+  <!-- ítem 8 -->
+  <div class="item">
+    <span class="item-enunciado">8. Comparando los dos métodos en este caso, ¿cuál dejó el <strong>inventario final más alto</strong> y por qué razón?</span>
+    <div class="opciones">
+      <label><input type="radio" name="ei8" value="a"> a) El promedio ponderado, porque suaviza las variaciones de precio y por eso siempre valora más alto.</label>
+      <label><input type="radio" name="ei8" value="b"> b) FIFO, porque deja en existencia las unidades adquiridas más recientemente y los costos de compra subieron durante el mes.</label>
+      <label><input type="radio" name="ei8" value="c"> c) Ninguno: ambos métodos dan siempre el mismo inventario final, porque el total disponible es el mismo.</label>
+      <label><input type="radio" name="ei8" value="d"> d) El método UEPS, que es el que la NIC 2 recomienda cuando los precios suben.</label>
+    </div>
+    <div class="feedback" id="fb-ei8"></div>
+  </div>
+
+  <div class="aviso-js" id="avisoEjercicio">Debe responder los 8 ítems antes de verificar. Revise cuáles quedaron en blanco.</div>
+
+  <button class="btn" onclick="verificarEjercicio()">Verificar respuestas</button>
+  <button class="btn btn-secundario" onclick="reiniciarEjercicio()">Reiniciar</button>
+
+  <div class="resultado" id="resultadoEjercicio">
+    <span class="emoji" id="emojiEjercicio"></span>
+    <div class="puntaje" id="puntajeEjercicio"></div>
+    <div class="barra"><div class="barra-relleno" id="barraEjercicio"></div></div>
+    <div id="mensajeEjercicio"></div>
+  </div>
+
+  <div class="conclusion">
+    <h4>Solución completa del caso, para que contraste su hoja de trabajo</h4>
+    <p><strong>FIFO:</strong> venta del 11/09 = 50 × 20,00 + 70 × 24,00 = 2.680,00; saldo 80 × 24,00 = 1.920,00. Venta del 24/09 = 80 × 24,00 + 20 × 26,00 = 2.440,00. Costo de ventas del mes 5.120,00; inventario final 100 × 26,00 = 2.600,00. Comprobación: 5.120,00 + 2.600,00 = 7.720,00 ✔</p>
+    <p><strong>Promedio ponderado móvil:</strong> tras la compra del 06/09, 4.600,00 ÷ 200 = 23,00; venta del 11/09 = 120 × 23,00 = 2.760,00; saldo 80 × 23,00 = 1.840,00. Tras la compra del 17/09, (1.840,00 + 3.120,00) ÷ 200 = 24,80; venta del 24/09 = 100 × 24,80 = 2.480,00. Costo de ventas del mes 5.240,00; inventario final 100 × 24,80 = 2.480,00. Comprobación: 5.240,00 + 2.480,00 = 7.720,00 ✔</p>
+    <p><strong>Dato adicional para su análisis:</strong> si la empresa aplicara el promedio ponderado <em>del período</em> (sistema periódico), el costo unitario sería 7.720,00 ÷ 320 = 24,1250; costo de ventas 220 × 24,1250 = 5.307,50 e inventario final 100 × 24,1250 = 2.412,50. Es el mismo método del ítem 7, calculado en otro momento, y da un resultado distinto: es exactamente el fenómeno explicado en el Tema 3.</p>
+  </div>
+</section>
+
+<!-- ================= CUESTIONARIO ================= -->
+<section class="panel" id="cuestionario">
+  <h2 class="titulo-seccion">Cuestionario de evaluación</h2>
+  <p>Diez preguntas de opción múltiple: <strong>siete teóricas</strong>, que se responden con el contenido de este widget, y <strong>tres de análisis de caso</strong>, que traen sus propios datos y exigen que usted resuelva por su cuenta. Conteste las diez y luego presione <em>Verificar respuestas</em>. Cada pregunta le devolverá una explicación completa, acierte o no.</p>
+
+  <!-- q1 -->
+  <div class="item">
+    <span class="item-enunciado"><span class="badge badge-teorica">Teórica</span> 1. Para los inventarios que son habitualmente intercambiables entre sí, ¿qué fórmulas de cálculo del costo admite la NIC 2?</span>
+    <div class="opciones">
+      <label><input type="radio" name="qi1" value="a"> a) FIFO, promedio ponderado y UEPS, a elección de la entidad.</label>
+      <label><input type="radio" name="qi1" value="b"> b) Únicamente la identificación específica de sus costos individuales.</label>
+      <label><input type="radio" name="qi1" value="c"> c) Únicamente FIFO y costo promedio ponderado.</label>
+      <label><input type="radio" name="qi1" value="d"> d) Cualquier método, siempre que se lo revele en las notas.</label>
+    </div>
+    <div class="feedback" id="fb-qi1"></div>
+  </div>
+
+  <!-- q2 -->
+  <div class="item">
+    <span class="item-enunciado"><span class="badge badge-teorica">Teórica</span> 2. ¿En qué supuesto corresponde aplicar la <strong>identificación específica de sus costos individuales</strong>?</span>
+    <div class="opciones">
+      <label><input type="radio" name="qi2" value="a"> a) Cuando la entidad maneja grandes cantidades de partidas intercambiables y desea mayor precisión.</label>
+      <label><input type="radio" name="qi2" value="b"> b) Cuando los inventarios no son habitualmente intercambiables entre sí, o se trata de bienes y servicios producidos y segregados para proyectos específicos.</label>
+      <label><input type="radio" name="qi2" value="c"> c) Cuando los precios de compra permanecen constantes durante todo el período.</label>
+      <label><input type="radio" name="qi2" value="d"> d) Cuando la entidad aplica el sistema periódico de inventarios.</label>
+    </div>
+    <div class="feedback" id="fb-qi2"></div>
+  </div>
+
+  <!-- q3 -->
+  <div class="item">
+    <span class="item-enunciado"><span class="badge badge-teorica">Teórica</span> 3. Bajo la fórmula FIFO, ¿con qué costos queda valorado el <strong>inventario final</strong>?</span>
+    <div class="opciones">
+      <label><input type="radio" name="qi3" value="a"> a) Con los costos de las adquisiciones más recientes.</label>
+      <label><input type="radio" name="qi3" value="b"> b) Con los costos de las adquisiciones más antiguas.</label>
+      <label><input type="radio" name="qi3" value="c"> c) Con un costo unitario promedio de todas las adquisiciones del período.</label>
+      <label><input type="radio" name="qi3" value="d"> d) Con el valor neto realizable estimado a la fecha de cierre.</label>
+    </div>
+    <div class="feedback" id="fb-qi3"></div>
+  </div>
+
+  <!-- q4 -->
+  <div class="item">
+    <span class="item-enunciado"><span class="badge badge-teorica">Teórica</span> 4. En el promedio ponderado <strong>móvil</strong>, ¿en qué momento se recalcula el costo unitario promedio?</span>
+    <div class="opciones">
+      <label><input type="radio" name="qi4" value="a"> a) Después de cada venta, porque cambia el número de unidades en existencia.</label>
+      <label><input type="radio" name="qi4" value="b"> b) Una sola vez al cierre del período, con todo lo disponible.</label>
+      <label><input type="radio" name="qi4" value="c"> c) Después de cada compra y también después de cada venta.</label>
+      <label><input type="radio" name="qi4" value="d"> d) Después de cada compra; una venta no modifica el costo unitario promedio vigente.</label>
+    </div>
+    <div class="feedback" id="fb-qi4"></div>
+  </div>
+
+  <!-- q5 -->
+  <div class="item">
+    <span class="item-enunciado"><span class="badge badge-teorica">Teórica</span> 5. Respecto de la relación entre la fórmula de costo y el sistema de contabilización de inventarios, ¿cuál afirmación es correcta?</span>
+    <div class="opciones">
+      <label><input type="radio" name="qi5" value="a"> a) Tanto FIFO como el promedio ponderado arrojan siempre el mismo resultado en sistema permanente y en sistema periódico.</label>
+      <label><input type="radio" name="qi5" value="b"> b) FIFO arroja el mismo resultado en ambos sistemas; el promedio ponderado arroja resultados distintos según se calcule de forma móvil o al cierre del período.</label>
+      <label><input type="radio" name="qi5" value="c"> c) El promedio ponderado arroja siempre el mismo resultado en ambos sistemas; FIFO no.</label>
+      <label><input type="radio" name="qi5" value="d"> d) La fórmula de costo solo puede aplicarse en sistema periódico.</label>
+    </div>
+    <div class="feedback" id="fb-qi5"></div>
+  </div>
+
+  <!-- q6 -->
+  <div class="item">
+    <span class="item-enunciado"><span class="badge badge-teorica">Teórica</span> 6. ¿Cuál fue una de las razones expuestas por el IASB para eliminar el método UEPS de la NIC 2?</span>
+    <div class="opciones">
+      <label><input type="radio" name="qi6" value="a"> a) Que producía un cálculo aritméticamente incorrecto del costo de ventas.</label>
+      <label><input type="radio" name="qi6" value="b"> b) Que exigía una carga administrativa imposible de sostener con sistemas informáticos.</label>
+      <label><input type="radio" name="qi6" value="c"> c) Que no representa fielmente el flujo real de los inventarios y deja el inventario del balance medido con costos muy antiguos, además de reducir la comparabilidad.</label>
+      <label><input type="radio" name="qi6" value="d"> d) Que ningún país del mundo lo aceptaba ya en su normativa contable.</label>
+    </div>
+    <div class="feedback" id="fb-qi6"></div>
+  </div>
+
+  <!-- q7 -->
+  <div class="item">
+    <span class="item-enunciado"><span class="badge badge-teorica">Teórica</span> 7. ¿Qué exige la regla de <strong>uniformidad</strong> de la NIC 2 respecto de la fórmula de cálculo del costo?</span>
+    <div class="opciones">
+      <label><input type="radio" name="qi7" value="a"> a) Utilizar la misma fórmula para todos los inventarios que tengan naturaleza y uso similares dentro de la entidad; para inventarios de naturaleza o uso diferentes puede justificarse una fórmula distinta.</label>
+      <label><input type="radio" name="qi7" value="b"> b) Utilizar obligatoriamente una sola fórmula para absolutamente todos los inventarios, sin excepción posible.</label>
+      <label><input type="radio" name="qi7" value="c"> c) Cambiar de fórmula cada ejercicio para verificar cuál refleja mejor el resultado.</label>
+      <label><input type="radio" name="qi7" value="d"> d) Elegir la fórmula en cada transacción según el comportamiento de los precios de ese mes.</label>
+    </div>
+    <div class="feedback" id="fb-qi7"></div>
+  </div>
+
+  <!-- q8 -->
+  <div class="item">
+    <span class="item-enunciado"><span class="badge badge-caso">Análisis de caso</span> 8. Una comercializadora inicia el período con 200 unidades a 5,00 cada una y compra durante el mes 300 unidades a 6,00 cada una. Vende 400 unidades. Aplicando <strong>FIFO</strong>, ¿cuál es el costo de ventas del período?</span>
+    <div class="opciones">
+      <label><input type="radio" name="qi8" value="a"> a) 2.400,00</label>
+      <label><input type="radio" name="qi8" value="b"> b) 2.000,00</label>
+      <label><input type="radio" name="qi8" value="c"> c) 2.240,00</label>
+      <label><input type="radio" name="qi8" value="d"> d) 2.200,00</label>
+    </div>
+    <div class="feedback" id="fb-qi8"></div>
+  </div>
+
+  <!-- q9 -->
+  <div class="item">
+    <span class="item-enunciado"><span class="badge badge-caso">Análisis de caso</span> 9. Con exactamente los mismos datos de la pregunta anterior (200 unidades a 5,00 de inventario inicial, compra de 300 unidades a 6,00, venta de 400 unidades), aplicando <strong>costo promedio ponderado</strong>, ¿cuál es el valor del <strong>inventario final</strong>?</span>
+    <div class="opciones">
+      <label><input type="radio" name="qi9" value="a"> a) 600,00</label>
+      <label><input type="radio" name="qi9" value="b"> b) 500,00</label>
+      <label><input type="radio" name="qi9" value="c"> c) 560,00</label>
+      <label><input type="radio" name="qi9" value="d"> d) 550,00</label>
+    </div>
+    <div class="feedback" id="fb-qi9"></div>
+  </div>
+
+  <!-- q10 -->
+  <div class="item">
+    <span class="item-enunciado"><span class="badge badge-caso">Análisis de caso</span> 10. Una empresa que aplica costo promedio ponderado desde hace cuatro años ve que los precios de importación han subido con fuerza. En noviembre, el gerente financiero propone cambiar a FIFO solo por este ejercicio, porque así el resultado anual mejorará y la empresa cumplirá la meta comprometida con el banco. ¿Cuál es la respuesta técnicamente correcta?</span>
+    <div class="opciones">
+      <label><input type="radio" name="qi10" value="a"> a) Es correcto, porque ambas fórmulas están admitidas por la NIC 2 y la empresa puede escoger la que prefiera en cualquier momento.</label>
+      <label><input type="radio" name="qi10" value="b"> b) No procede: el cambio se propone para obtener un resultado deseado, no por una razón técnica válida; vulnera la uniformidad y la comparabilidad que exige la normativa, y un cambio de política contable requiere justificación y tratamiento normativo específico, además de revelación.</label>
+      <label><input type="radio" name="qi10" value="c"> c) Es correcto siempre que se lo comunique verbalmente al banco antes del cierre.</label>
+      <label><input type="radio" name="qi10" value="d"> d) No procede, porque FIFO está prohibido en Ecuador y solo se admite el promedio ponderado.</label>
+    </div>
+    <div class="feedback" id="fb-qi10"></div>
+  </div>
+
+  <div class="aviso-js" id="avisoCuestionario">Debe responder las 10 preguntas antes de verificar. Revise cuáles quedaron en blanco.</div>
+
+  <button class="btn" onclick="verificarCuestionario()">Verificar respuestas</button>
+  <button class="btn btn-secundario" onclick="reiniciarCuestionario()">Reiniciar</button>
+
+  <div class="resultado" id="resultadoCuestionario">
+    <span class="emoji" id="emojiCuestionario"></span>
+    <div class="puntaje" id="puntajeCuestionario"></div>
+    <div class="barra"><div class="barra-relleno" id="barraCuestionario"></div></div>
+    <div id="mensajeCuestionario"></div>
+  </div>
+</section>
+
+<!-- ================= ACTIVIDAD CON IA ================= -->
+<section class="panel" id="ia">
+  <h2 class="titulo-seccion">Actividad con Inteligencia Artificial</h2>
+
+  <p>Esta actividad se realiza en <strong>Claude</strong>, disponible de forma gratuita en <strong>claude.ai</strong>. Cree una cuenta con su correo institucional; la versión gratuita es suficiente para todo lo que se pide aquí.</p>
+
+  <div class="alerta">
+    <h4>Lea esto antes de abrir la IA</h4>
+    <p>Usted <strong>no</strong> va a pedirle a la inteligencia artificial que le resuelva el ejercicio. Va a hacer algo bastante más exigente: <strong>va a auditarla</strong>. El objetivo de la actividad es que usted detecte, con norma en mano, dónde una respuesta que <em>suena</em> impecable puede estar equivocada. Para eso, el orden de trabajo es obligatorio: <strong>primero resuelve usted, después consulta a la IA, y al final compara</strong>. Si invierte el orden, la actividad pierde todo su sentido y se nota de inmediato en el entregable.</p>
+  </div>
+
+  <h3 class="subtitulo">Fase 1 — Resuelva usted primero (sin IA, 40 minutos)</h3>
+  <p>Caso: <strong>Distribuidora Andina del Pacífico S.A.</strong>, artículo CB-770 “Rollo de cable eléctrico 100 m”, octubre de 2026. Sistema permanente.</p>
+  <div class="tabla-wrap">
+    <table class="tabla">
+      <thead><tr><th>Fecha</th><th>Concepto</th><th>Unidades</th><th>Costo unitario</th></tr></thead>
+      <tbody>
+        <tr class="fila-saldo"><td>01/10</td><td>Inventario inicial</td><td class="num">80</td><td class="num">45,00</td></tr>
+        <tr class="fila-compra"><td>05/10</td><td>Compra</td><td class="num">120</td><td class="num">50,00</td></tr>
+        <tr class="fila-venta"><td>09/10</td><td>Venta</td><td class="num">(150)</td><td class="cen">—</td></tr>
+        <tr class="fila-compra"><td>15/10</td><td>Compra</td><td class="num">150</td><td class="num">52,00</td></tr>
+        <tr class="fila-venta"><td>22/10</td><td>Venta</td><td class="num">(120)</td><td class="cen">—</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Calcule a mano, en una hoja: costo de ventas e inventario final con <strong>FIFO</strong> y con <strong>promedio ponderado móvil</strong>, y verifique en ambos casos que costo de ventas + inventario final = mercadería disponible. Guarde esa hoja: es parte del entregable.</p>
+
+  <h3 class="subtitulo">Fase 2 — Consulte a la IA (prompt 1)</h3>
+  <p>Copie este texto tal cual en claude.ai:</p>
+  <div class="prompt-box">Actúa como contador general de una empresa comercial ecuatoriana que aplica NIIF y sistema permanente de inventarios.
+
+Datos del artículo CB-770 en octubre de 2026:
+- 01/10 inventario inicial: 80 unidades a 45,00 cada una
+- 05/10 compra: 120 unidades a 50,00 cada una
+- 09/10 venta: 150 unidades
+- 15/10 compra: 150 unidades a 52,00 cada una
+- 22/10 venta: 120 unidades
+
+Resuelve el ejercicio con dos fórmulas de cálculo del costo: primera entrada primera salida, y costo promedio ponderado móvil. Presenta para cada una una tabla movimiento por movimiento con unidades, costo unitario y saldo, e indica al final el costo de ventas del mes y el inventario final.
+
+Al terminar, explica en qué se diferencian los dos resultados y por qué, y señala qué fórmulas de cálculo del costo admite la NIC 2 y cuáles no.</div>
+
+  <h3 class="subtitulo">Fase 3 — Ponga a prueba a la IA (prompt 2)</h3>
+  <p>Ahora envíe este segundo mensaje <strong>en la misma conversación</strong>. Contiene <strong>errores deliberados</strong>. Antes de enviarlo, escriba en su hoja cuáles cree que son y por qué. La gracia está en comparar su lista con la de la IA.</p>
+  <div class="prompt-box">Mi jefe me dio estas instrucciones para el cierre. Evalúalas una por una y dime si son correctas o incorrectas, con el sustento normativo:
+
+1. "Vamos a valorar el inventario con el método UEPS, porque los precios están subiendo y así el costo de ventas refleja los precios actuales."
+2. "El costo promedio se saca sumando los precios unitarios 45 + 50 + 52 y dividiendo para 3, o sea 49,00 por unidad."
+3. "Cada trimestre revisamos cuál método nos deja mejor utilidad y usamos ese."
+4. "El IVA pagado en las compras súmalo al costo del inventario, total es plata que salió."
+5. "Como todos los rollos de cable son iguales, mejor usemos identificación específica y le asignamos a cada venta el costo que más nos convenga."
+
+No me des la razón por cortesía: si algo está mal, dilo y explica por qué.</div>
+
+  <h3 class="subtitulo">Fase 4 — Entregable: informe de auditoría de la respuesta de la IA</h3>
+  <p>Documento de dos a tres páginas con esta estructura obligatoria:</p>
+  <ol>
+    <li><strong>Su solución manual</strong> (foto o transcripción de la hoja de la Fase 1), con la comprobación de la identidad en ambos métodos.</li>
+    <li><strong>Tabla de contraste</strong> de la respuesta al prompt 1, con cuatro columnas: <em>cifra o afirmación de la IA / su propio resultado / ¿coinciden? / evidencia normativa o aritmética</em>. Como mínimo debe contrastar: costo de ventas FIFO, inventario final FIFO, costo de ventas promedio móvil, inventario final promedio móvil, y la afirmación sobre qué fórmulas admite la NIC 2.</li>
+    <li><strong>Las cinco instrucciones del prompt 2</strong>, con su veredicto propio (correcta / incorrecta) redactado <em>antes</em> de leer a la IA, seguido del veredicto de la IA y su comentario sobre las diferencias.</li>
+    <li><strong>Sección obligatoria “Dónde no estuve de acuerdo”:</strong> al menos un punto en el que usted corrigió, matizó o completó lo que dijo la IA, con el argumento técnico. Si la IA acertó en todo, explique entonces qué le faltó decir o qué dijo de manera incompleta o ambigua.</li>
+    <li><strong>Cierre personal (un párrafo):</strong> ¿en qué momento de esta actividad estuvo a punto de aceptar como buena una respuesta que no había verificado? Describa esa sensación con honestidad.</li>
+  </ol>
+
+  <div class="criterio">
+    <h4>Cómo se distingue el pensamiento crítico de la copia simple</h4>
+    <p><strong>Evidencia de pensamiento crítico:</strong> la hoja manual existe y es anterior; las cifras se contrastan una por una; los veredictos del prompt 2 están redactados con vocabulario propio y sustento normativo; la sección “Dónde no estuve de acuerdo” contiene un argumento real y verificable; el cierre personal es concreto.</p>
+    <p><strong>Evidencia de copia simple:</strong> el informe reproduce el texto de la IA con mínimos cambios; no hay hoja manual o sus cifras coinciden sospechosamente en los errores con las de la IA; la sección “Dónde no estuve de acuerdo” dice “estuve de acuerdo en todo” sin agregar nada; los veredictos del prompt 2 aparecen sin justificación o con una justificación genérica.</p>
+    <p><strong>Nota:</strong> equivocarse en la hoja manual <em>no</em> baja la calificación si usted detecta el error al contrastar y lo documenta. Lo que se evalúa es la capacidad de verificar, no la infalibilidad.</p>
+  </div>
+
+  <div class="carrera-box">
+    <h4>Por qué esto importa en Negocios Internacionales</h4>
+    <ul>
+      <li><strong>Comercio exterior:</strong> las herramientas de IA ya se usan para clasificar mercancías, estimar costos de nacionalización y redactar documentación; una cifra aceptada sin verificar puede convertirse en una declaración aduanera equivocada.</li>
+      <li><strong>Finanzas internacionales:</strong> un modelo financiero construido sobre un costo de ventas mal calculado produce proyecciones que parecen sólidas y no lo son.</li>
+      <li><strong>Marketing y negociación internacional:</strong> quien llega a una mesa con datos que no verificó, negocia sin piso; la contraparte lo detecta en la primera pregunta incómoda.</li>
+      <li><strong>Marco legal y normativo:</strong> la responsabilidad profesional por una cifra publicada en estados financieros es de la persona que firma, nunca de la herramienta que la calculó.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================= REFLEXIÓN ================= -->
+<section class="panel" id="reflexion">
+  <h2 class="titulo-seccion">Reflexión</h2>
+
+  <p>Antes de responder, tenga presente algo que conviene repetir en cada clase: <strong>Negocios Internacionales es mucho más amplio que “negociar”</strong>. Negociar es apenas una de las cosas que hará un profesional de esta carrera. También analizará costos, leerá estados financieros de empresas extranjeras, diseñará cadenas de abastecimiento, evaluará riesgos cambiarios, interpretará normativa aduanera y tributaria, sustentará decisiones ante un directorio y responderá por cifras que otras personas usarán para decidir. La contabilidad no es una materia que “hay que pasar” para llegar a lo interesante: es una de las lenguas en que se piensa el comercio internacional.</p>
+  <p>Las preguntas que siguen <strong>no tienen respuesta correcta</strong>. No se califican por acierto sino por honestidad y profundidad. Escríbalas para usted, aunque luego las comparta.</p>
+
+  <div class="pregunta-ref">
+    <strong>1. De un objeto a una cadena de decisiones</strong>
+    <p>Elija un objeto que tenga a la mano ahora mismo: el celular, un audífono, una botella, un cuaderno. Ese objeto pasó por manos de un fabricante, un exportador, un transportista, un agente de aduana, un importador, un distribuidor y el local donde usted lo compró. En cada una de esas manos, alguien tuvo que responder la pregunta que estudiamos hoy: <em>¿cuánto me costó a mí esta unidad?</em> Recorra mentalmente esa cadena y descríbala. ¿En qué eslabón cree que la respuesta fue más difícil de dar, y por qué?</p>
+  </div>
+
+  <div class="pregunta-ref">
+    <strong>2. Del costo a la confianza</strong>
+    <p>Si cada uno de esos actores hubiera calculado su costo con un criterio distinto e inventado sobre la marcha, ¿qué le habría pasado al precio que usted pagó? Y una pregunta más incómoda: ¿qué le pasa a la <strong>confianza</strong> entre empresas de países distintos cuando cada una mide sus costos con reglas propias? Escriba en sus palabras por qué cree que existe una norma internacional que reduce a dos las fórmulas admitidas, en lugar de dejar a cada empresa decidir libremente.</p>
+  </div>
+
+  <div class="pregunta-ref">
+    <strong>3. Cuando el resultado depende del criterio</strong>
+    <p>Hoy vio que los mismos hechos producen utilidades distintas según la fórmula elegida, y que las dos son correctas. Al principio esa idea suele producir incomodidad: uno espera que la contabilidad dé <em>una</em> respuesta. ¿Qué sintió usted al descubrirlo? ¿Le pareció una debilidad de la disciplina o una muestra de honestidad de la disciplina? Piense en otras áreas de su vida donde dos personas honestas pueden llegar a conclusiones distintas partiendo de los mismos hechos.</p>
+  </div>
+
+  <div class="pregunta-ref">
+    <strong>4. La presión sobre la cifra (inteligencia emocional)</strong>
+    <p>La pregunta 10 del cuestionario planteaba un caso real y frecuente: un superior pide cambiar un método para que el resultado alcance una meta. Imagine que usted es quien debe responder, que necesita ese trabajo y que quien se lo pide es su jefe directo. ¿Qué emociones aparecen primero: miedo, incomodidad, deseo de agradar, rabia? Escríbalas sin filtrarlas. Después escriba, en dos o tres frases, <strong>cómo diría usted que no</strong> sin ser agresivo ni sumiso. Redáctelo literalmente, como si fuera a decirlo mañana.</p>
+  </div>
+
+  <div class="pregunta-ref">
+    <strong>5. Autoconocimiento: cómo se comporta usted frente a un cálculo largo</strong>
+    <p>Los ejercicios de hoy son largos y repetitivos; un error en el primer movimiento arrastra todo lo demás. Observe cómo reaccionó: ¿verificó al final con la identidad de comprobación o entregó confiando en que estaba bien? ¿Se apuró para terminar? ¿Se frustró y abandonó? Esa reacción suya dice bastante sobre cómo trabajará con hojas de cálculo, liquidaciones aduaneras y modelos financieros. ¿Qué le gustaría cambiar de ese comportamiento, y cuál es el primer paso concreto para lograrlo?</p>
+  </div>
+
+  <div class="pregunta-ref">
+    <strong>6. Exploración vocacional</strong>
+    <p>Dentro de Negocios Internacionales hay perfiles muy distintos: quien vive de los números y los sistemas de información, quien vive del trato con personas y culturas, quien vive de la norma y el cumplimiento legal, quien vive de la logística y la operación. Después de este día de clase, ¿a cuál de esos perfiles se sintió más cercano, y a cuál más lejano? Sea específico: ¿qué momento exacto de hoy le confirmó esa cercanía o esa distancia? Y una última: si el perfil que le queda lejano fuera indispensable para el trabajo que sueña, ¿qué haría al respecto?</p>
+  </div>
+</section>
+
+<!-- ================= BIBLIOGRAFÍA ================= -->
+<section class="panel" id="biblio">
+  <h2 class="titulo-seccion">Bibliografía</h2>
+  <p>Referencias en formato APA, 7.ª edición. Se recomienda consultar las normas siempre en su versión vigente y las fuentes tributarias en el portal oficial del Servicio de Rentas Internas.</p>
+
+  <div class="ref-card">
+    <span class="tipo">Norma internacional</span>
+    <p>Consejo de Normas Internacionales de Contabilidad. (2023). <em>Norma Internacional de Contabilidad 2: Inventarios</em>. IFRS Foundation. https://www.ifrs.org</p>
+  </div>
+
+  <div class="ref-card">
+    <span class="tipo">Norma internacional</span>
+    <p>Consejo de Normas Internacionales de Contabilidad. (2023). <em>Norma Internacional de Contabilidad 1: Presentación de estados financieros</em>. IFRS Foundation. https://www.ifrs.org</p>
+  </div>
+
+  <div class="ref-card">
+    <span class="tipo">Texto básico</span>
+    <p>Zapata Sánchez, P. (2011). <em>Contabilidad general</em> (7.ª ed.). McGraw-Hill Interamericana.</p>
+  </div>
+
+  <div class="ref-card">
+    <span class="tipo">Texto básico</span>
+    <p>Zapata Sánchez, P. (2017). <em>Contabilidad general: con base en Normas Internacionales de Información Financiera</em> (8.ª ed.). Alfaomega.</p>
+  </div>
+
+  <div class="ref-card">
+    <span class="tipo">Texto complementario</span>
+    <p>Vite Rangel, V. T. (2017). <em>Contabilidad general</em>. Editorial Digital UNID. https://elibro.net/es/ereader/uguayaquil/41179</p>
+  </div>
+
+  <div class="ref-card">
+    <span class="tipo">Texto complementario</span>
+    <p>Moreno Fernández, J. A. (2014). <em>Contabilidad básica</em> (4.ª ed.). Grupo Editorial Patria. https://elibro.net/es/ereader/uguayaquil/39416</p>
+  </div>
+
+  <div class="ref-card">
+    <span class="tipo">Texto complementario</span>
+    <p>Guajardo Cantú, G., &amp; Andrade de Guajardo, N. E. (2014). <em>Contabilidad financiera</em> (6.ª ed.). McGraw-Hill Interamericana.</p>
+  </div>
+
+  <div class="ref-card">
+    <span class="tipo">Normativa ecuatoriana</span>
+    <p>Congreso Nacional del Ecuador. (2004). <em>Ley de Régimen Tributario Interno</em> (Registro Oficial Suplemento 463, de 17 de noviembre de 2004, y reformas posteriores). https://www.sri.gob.ec</p>
+  </div>
+
+  <div class="ref-card">
+    <span class="tipo">Normativa ecuatoriana</span>
+    <p>Servicio de Rentas Internas. (2020). <em>Resolución NAC-DGERCGC20-00000061</em>. Servicio de Rentas Internas. https://www.sri.gob.ec</p>
+  </div>
+
+  <div class="ref-card">
+    <span class="tipo">Normativa ecuatoriana</span>
+    <p>Servicio de Rentas Internas. (2026). <em>Resolución NAC-DGERCGC26-00000009</em>. Servicio de Rentas Internas. https://www.sri.gob.ec</p>
+  </div>
+
+  <div class="ref-card">
+    <span class="tipo">Normativa ecuatoriana</span>
+    <p>Superintendencia de Compañías, Valores y Seguros. (2008). <em>Resolución No. 08.G.DSC.010: Cronograma de aplicación obligatoria de las Normas Internacionales de Información Financiera</em>. Registro Oficial No. 498. https://www.supercias.gob.ec</p>
+  </div>
+
+  <div class="nota-pie">
+    <p><strong>Nota de verificación.</strong> Antes de citar cualquiera de estas fuentes en un trabajo, confirme la vigencia y los datos de edición en <em>Google Scholar</em>, en el repositorio digital de la Universidad de Guayaquil o en el portal oficial del organismo emisor. Las resoluciones del Servicio de Rentas Internas se reforman con frecuencia: verifique siempre la última versión publicada. Los textos de Zapata Sánchez, Vite Rangel y Moreno Fernández constan en la bibliografía oficial del sílabo de la asignatura.</p>
+  </div>
+</section>
+
+</div><!-- fin .contenedor -->
+
+<script>
+/* =========================================================
+   DÍA 9 — FIFO Y COSTO PROMEDIO PONDERADO
+   Lógica de pestañas, acordeón, ejercicio y cuestionario
+   ========================================================= */
+
+/* ---------- 1. NAVEGACIÓN POR PESTAÑAS ---------- */
+/* El CSS oculta los paneles con .panel{display:none} y los muestra
+   con .panel.active{display:block}. Se revierte por classList. */
+function showTab(id, boton){
+  var paneles = document.querySelectorAll('.panel');
+  for (var i=0; i<paneles.length; i++){ paneles[i].classList.remove('active'); }
+  var destino = document.getElementById(id);
+  if (destino){ destino.classList.add('active'); }
+  var botones = document.querySelectorAll('.tab-btn');
+  for (var j=0; j<botones.length; j++){ botones[j].classList.remove('active'); }
+  if (boton){ boton.classList.add('active'); }
+  window.scrollTo(0,0);
+}
+
+/* ---------- 2. ACORDEÓN DEL REPASO ---------- */
+/* El CSS oculta con .acordeon-panel{display:none} y muestra con
+   .acordeon-panel.abierto{display:block}. Se revierte por classList. */
+function toggleAcordeon(boton){
+  var panel = boton.nextElementSibling;
+  var flecha = boton.querySelector('.flecha');
+  var abierto = panel.classList.contains('abierto');
+  if (abierto){
+    panel.classList.remove('abierto');
+    flecha.innerHTML = '&#9654;';
+  } else {
+    panel.classList.add('abierto');
+    flecha.innerHTML = '&#9660;';
+  }
+}
+
+/* ---------- 3. UTILITARIOS COMPARTIDOS ---------- */
+function respuestaMarcada(nombre){
+  var opciones = document.getElementsByName(nombre);
+  for (var i=0; i<opciones.length; i++){
+    if (opciones[i].checked){ return opciones[i].value; }
+  }
+  return null;
+}
+
+function emojiPorPorcentaje(p){
+  if (p === 100) return '🏆';
+  if (p >= 80)  return '🎯';
+  if (p >= 60)  return '📘';
+  if (p >= 40)  return '⚠️';
+  return '📖';
+}
+
+function mensajePorPorcentaje(p){
+  if (p === 100) return 'Excelente. Dominio completo del cálculo y del criterio normativo. Está listo para el Kardex del Día 10.';
+  if (p >= 80)  return 'Muy buen desempeño. Revise la retroalimentación de los ítems fallados: casi siempre el error está en un solo movimiento que arrastra los siguientes.';
+  if (p >= 60)  return 'Base aceptable, pero insuficiente para lo que viene. Rehaga el caso completo en papel antes de pasar al Día 10.';
+  if (p >= 40)  return 'Hay confusión entre los métodos. Vuelva a los Temas 2 y 3, resuelva de nuevo cada movimiento y verifique con la identidad de comprobación.';
+  return 'Es necesario retomar desde el Tema 1. No avance al Día 10 sin haber rehecho el caso principal con las dos fórmulas.';
+}
+
+/* ---------- 4. EJERCICIO INTERACTIVO (8 ítems) ---------- */
+var respuestasEjercicio = {
+  ei1:'b', ei2:'c', ei3:'a', ei4:'d',
+  ei5:'a', ei6:'c', ei7:'d', ei8:'b'
+};
+
+var feedbackEjercicio = {
+  ei1: 'La respuesta correcta es la <strong>b) 2.680,00</strong>. Con FIFO se consume desde la capa más antigua: se agotan las 50 unidades del inventario inicial a 20,00 (1.000,00) y las 70 restantes se toman de la compra del 06/09 a 24,00 (1.680,00). Total: 2.680,00. La opción a) 2.400,00 resulta de valorar las 120 unidades a 20,00, como si el inventario inicial hubiera alcanzado. La opción c) 2.760,00 es el resultado del promedio ponderado móvil, no de FIFO. La opción d) 2.880,00 valora todo a 24,00, ignorando el inventario inicial.',
+  ei2: 'La respuesta correcta es la <strong>c) 1.920,00</strong>. Después de la venta quedan 80 unidades, todas provenientes de la compra del 06/09 a 24,00: 80 × 24,00 = 1.920,00. Compruebe: 2.680,00 de costo de ventas más 1.920,00 de saldo suman 4.600,00, que es exactamente el disponible hasta ese momento (1.000,00 + 3.600,00). La opción a) 1.840,00 corresponde al saldo bajo promedio móvil (80 × 23,00). La b) y la d) no se corresponden con ninguna capa existente.',
+  ei3: 'La respuesta correcta es la <strong>a) 2.440,00</strong>. Al 24/09 las capas vigentes son 80 unidades a 24,00 y 120 unidades a 26,00. Se agotan las 80 a 24,00 (1.920,00) y se toman 20 a 26,00 (520,00): total 2.440,00. La opción b) 2.480,00 es el costo de esa misma venta bajo promedio móvil (100 × 24,80). La c) 2.600,00 valora las 100 unidades a 26,00, saltándose la capa antigua, que es justamente lo contrario de FIFO. La d) 2.400,00 valora todo a 24,00.',
+  ei4: 'La respuesta correcta es la <strong>d) 2.600,00</strong>. Quedan 100 unidades y bajo FIFO son necesariamente las más recientes, es decir, de la compra del 17/09 a 26,00: 100 × 26,00 = 2.600,00. Comprobación obligatoria: 5.120,00 de costo de ventas más 2.600,00 de inventario final suman 7.720,00, el disponible del período. La opción b) 2.480,00 es el inventario final bajo promedio móvil y la c) 2.412,50 bajo promedio del período: ambos son valores reales, pero de otro método.',
+  ei5: 'La respuesta correcta es la <strong>a) 23,00</strong>. Se suman valores y unidades: (1.000,00 + 3.600,00) ÷ (50 + 150) = 4.600,00 ÷ 200 = 23,00. La opción b) 22,00 es el promedio aritmético simple de los precios unitarios (20,00 + 24,00) ÷ 2, que es el error clásico explicado en el Tema 3: no pondera por cantidades. La c) 24,80 es el promedio vigente pero después de la compra del 17/09, todavía no. La d) 24,1250 es el promedio del período completo, propio del sistema periódico.',
+  ei6: 'La respuesta correcta es la <strong>c) 24,80</strong>. Antes de la compra el saldo era de 80 unidades por 1.840,00 (80 × 23,00). Al ingresar 120 unidades por 3.120,00, el nuevo saldo es de 200 unidades por 4.960,00, y 4.960,00 ÷ 200 = 24,80. Note que se parte del <strong>saldo</strong> vigente, no del costo original del inventario inicial. La opción b) 24,1250 corresponde al promedio del período. La d) 23,00 es el promedio anterior, que la compra ya modificó.',
+  ei7: 'La respuesta correcta es la <strong>d) 5.240,00</strong>. Suma de las dos ventas valoradas al promedio vigente en cada fecha: 120 × 23,00 = 2.760,00 más 100 × 24,80 = 2.480,00, total 5.240,00. Comprobación: 5.240,00 más 2.480,00 de inventario final igual a 7.720,00. La opción a) 5.120,00 es el costo de ventas bajo FIFO. La b) 5.307,50 es el costo de ventas bajo promedio ponderado <em>del período</em>: mismo método, otro momento de cálculo, otro resultado, tal como se explicó en el Tema 3.',
+  ei8: 'La respuesta correcta es la <strong>b)</strong>. FIFO dejó 2.600,00 frente a 2.480,00 del promedio móvil, porque bajo FIFO las unidades que permanecen son las adquiridas más recientemente, y en este caso los costos subieron de 20,00 a 24,00 y luego a 26,00. La opción a) es falsa: el promedio no valora siempre más alto, depende de la dirección de los precios, y si estos bajaran la relación se invertiría. La c) es falsa: lo que es igual bajo ambos métodos es el <em>total disponible</em>, no su reparto entre costo de ventas e inventario final. La d) es doblemente falsa: UEPS no está admitido por la NIC 2 y además habría dejado el inventario final aún más bajo.'
+};
+
+function verificarEjercicio(){
+  var claves = Object.keys(respuestasEjercicio);
+  var faltantes = 0;
+  for (var i=0; i<claves.length; i++){
+    if (respuestaMarcada(claves[i]) === null){ faltantes++; }
+  }
+  var aviso = document.getElementById('avisoEjercicio');
+  if (faltantes > 0){
+    aviso.innerHTML = 'Debe responder los 8 ítems antes de verificar. Quedan ' + faltantes + ' sin responder.';
+    aviso.classList.add('visible');
+    aviso.scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
+  aviso.classList.remove('visible');
+
+  var aciertos = 0;
+  for (var j=0; j<claves.length; j++){
+    var clave = claves[j];
+    var marcada = respuestaMarcada(clave);
+    var caja = document.getElementById('fb-' + clave);
+    caja.classList.remove('ok','mal');
+    if (marcada === respuestasEjercicio[clave]){
+      aciertos++;
+      caja.innerHTML = '<strong>Correcto.</strong> ' + feedbackEjercicio[clave];
+      caja.classList.add('ok');
+    } else {
+      caja.innerHTML = '<strong>Incorrecto.</strong> ' + feedbackEjercicio[clave];
+      caja.classList.add('mal');
+    }
+    caja.classList.add('visible');
+  }
+
+  var porcentaje = Math.round((aciertos / claves.length) * 100);
+  document.getElementById('emojiEjercicio').innerHTML = emojiPorPorcentaje(porcentaje);
+  document.getElementById('puntajeEjercicio').innerHTML = aciertos + ' de 8 correctas (' + porcentaje + ' %)';
+  document.getElementById('mensajeEjercicio').innerHTML = mensajePorPorcentaje(porcentaje);
+  var caja2 = document.getElementById('resultadoEjercicio');
+  caja2.classList.add('visible');
+  var barra = document.getElementById('barraEjercicio');
+  barra.style.width = '0%';
+  setTimeout(function(){ barra.style.width = porcentaje + '%'; }, 120);
+  caja2.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+function reiniciarEjercicio(){
+  var claves = Object.keys(respuestasEjercicio);
+  for (var i=0; i<claves.length; i++){
+    var opciones = document.getElementsByName(claves[i]);
+    for (var k=0; k<opciones.length; k++){ opciones[k].checked = false; }
+    var caja = document.getElementById('fb-' + claves[i]);
+    caja.classList.remove('visible','ok','mal');
+    caja.innerHTML = '';
+  }
+  document.getElementById('resultadoEjercicio').classList.remove('visible');
+  document.getElementById('barraEjercicio').style.width = '0%';
+  document.getElementById('avisoEjercicio').classList.remove('visible');
+  document.getElementById('ejercicio').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+/* ---------- 5. CUESTIONARIO (10 preguntas) ---------- */
+var respuestasCuestionario = {
+  qi1:'c', qi2:'b', qi3:'a', qi4:'d', qi5:'b',
+  qi6:'c', qi7:'a', qi8:'d', qi9:'c', qi10:'b'
+};
+
+var feedbackCuestionario = {
+  qi1: 'La respuesta correcta es la <strong>c)</strong>. Para inventarios habitualmente intercambiables, la NIC 2 admite exactamente dos fórmulas: primera entrada primera salida y costo promedio ponderado. La opción a) incluye UEPS, que fue eliminado de la norma en la revisión de 2003. La b) confunde el supuesto: la identificación específica corresponde a inventarios que <em>no</em> son intercambiables. La d) es falsa porque la revelación en notas es un requisito adicional, no una autorización para usar cualquier método.',
+  qi2: 'La respuesta correcta es la <strong>b)</strong>. Dentro del contenido de la NIC 2 se especifica que la identificación específica de sus costos individuales corresponde a los inventarios que no son habitualmente intercambiables entre sí y a los bienes y servicios producidos y segregados para proyectos específicos. La opción a) describe justamente el caso en que la norma advierte que ese tratamiento <em>no</em> es apropiado, porque permitiría escoger qué unidades se declaran vendidas y manipular el resultado. Las opciones c) y d) confunden el criterio con la estabilidad de precios o con el sistema de contabilización, que son cuestiones distintas.',
+  qi3: 'La respuesta correcta es la <strong>a)</strong>. Si se supone que lo primero que entró es lo primero que salió, entonces lo que permanece en existencia es necesariamente lo último que entró. Por eso FIFO deja el inventario del Estado de Situación Financiera medido a costos recientes, cercanos al costo de reposición. La opción b) describe el efecto del UEPS. La c) describe el promedio ponderado. La d) confunde la fórmula de costo con la medición posterior al menor entre costo y valor neto realizable, que es un asunto distinto, estudiado el Día 8.',
+  qi4: 'La respuesta correcta es la <strong>d)</strong>. El promedio se recalcula únicamente cuando ingresa una compra, porque entran unidades con un costo unitario distinto al vigente. En una venta salen unidades y salen dólares en la misma proporción, de modo que el costo unitario promedio permanece intacto: es la comprobación rápida del Tema 3. La opción b) describe la variante del período, no la móvil. Las opciones a) y c) incurren en el error de recalcular tras una venta.',
+  qi5: 'La respuesta correcta es la <strong>b)</strong>. Bajo FIFO el orden de consumo de las capas no depende del momento en que se lo mida, de modo que el sistema permanente y el periódico conducen al mismo costo de ventas y al mismo inventario final. En cambio, el promedio ponderado sí depende del momento del cálculo: el promedio móvil valora las ventas tempranas con información que no incluye las compras posteriores, mientras que el promedio del período las incorpora. En el caso trabajado, esa diferencia fue de 135,00 dólares.',
+  qi6: 'La respuesta correcta es la <strong>c)</strong>. En los Fundamentos de las Conclusiones que acompañan a la NIC 2, el IASB expone que el método no refleja fielmente el flujo real de los inventarios, que puede dejar el inventario del balance medido con costos muy antiguos y alejados de la realidad económica, y que su permanencia reducía la comparabilidad; añade que las ventajas tributarias en determinada jurisdicción no constituyen fundamento conceptual suficiente. La opción a) es falsa: el cálculo del UEPS es aritméticamente correcto, el problema es de representación. La b) no fue la razón invocada. La d) es falsa: la normativa contable de Estados Unidos sigue admitiéndolo.',
+  qi7: 'La respuesta correcta es la <strong>a)</strong>. La NIC 2 exige aplicar la misma fórmula a todos los inventarios de naturaleza y uso similares dentro de la entidad, y admite que, para inventarios de naturaleza o uso diferentes, pueda justificarse el empleo de fórmulas distintas. La opción b) es demasiado rígida y no corresponde a la norma. Las opciones c) y d) describen exactamente lo que la uniformidad busca impedir, porque destruirían la comparabilidad entre períodos y abrirían la puerta a manipular el resultado.',
+  qi8: 'La respuesta correcta es la <strong>d) 2.200,00</strong>. Con FIFO se agotan primero las 200 unidades del inventario inicial a 5,00 (1.000,00) y las 200 restantes se toman de la compra a 6,00 (1.200,00): total 2.200,00. Comprobación: el disponible fue 1.000,00 más 1.800,00 igual a 2.800,00; el inventario final es de 100 unidades a 6,00, es decir 600,00; y 2.200,00 más 600,00 da 2.800,00. La opción a) 2.400,00 valora todo a 6,00. La b) 2.000,00 valora todo a 5,00. La c) 2.240,00 es el costo de ventas bajo promedio ponderado.',
+  qi9: 'La respuesta correcta es la <strong>c) 560,00</strong>. El costo unitario promedio ponderado es 2.800,00 ÷ 500 = 5,60. Como quedan 100 unidades, el inventario final es 100 × 5,60 = 560,00. Comprobación: costo de ventas 400 × 5,60 = 2.240,00, y 2.240,00 más 560,00 da 2.800,00. La opción a) 600,00 es el inventario final bajo FIFO. La b) 500,00 valora las unidades restantes a 5,00. La d) 550,00 surge de aplicar el promedio aritmético simple (5,00 + 6,00) ÷ 2 = 5,50, que es el error de no ponderar por cantidades.',
+  qi10: 'La respuesta correcta es la <strong>b)</strong>. El problema no es que FIFO sea inválido, sino el <em>motivo</em> del cambio: se propone para alcanzar una cifra deseada, no por una razón técnica que mejore la representación de los hechos. Eso vulnera la uniformidad exigida por la NIC 2 y la comparabilidad entre períodos, y además un cambio de política contable requiere justificación, tratamiento normativo específico y revelación en notas. La opción a) confunde la existencia de dos fórmulas admitidas con la libertad de alternarlas a conveniencia. La c) sustituye una obligación normativa por un aviso informal. La d) es falsa: FIFO está plenamente admitido en Ecuador. Este caso, además, es un asunto ético antes que técnico: la información financiera existe para representar la realidad, no para producir el número que alguien necesita.'
+};
+
+function verificarCuestionario(){
+  var claves = Object.keys(respuestasCuestionario);
+  var faltantes = 0;
+  for (var i=0; i<claves.length; i++){
+    if (respuestaMarcada(claves[i]) === null){ faltantes++; }
+  }
+  var aviso = document.getElementById('avisoCuestionario');
+  if (faltantes > 0){
+    aviso.innerHTML = 'Debe responder las 10 preguntas antes de verificar. Quedan ' + faltantes + ' sin responder.';
+    aviso.classList.add('visible');
+    aviso.scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
+  aviso.classList.remove('visible');
+
+  var aciertos = 0;
+  for (var j=0; j<claves.length; j++){
+    var clave = claves[j];
+    var marcada = respuestaMarcada(clave);
+    var caja = document.getElementById('fb-' + clave);
+    caja.classList.remove('ok','mal');
+    if (marcada === respuestasCuestionario[clave]){
+      aciertos++;
+      caja.innerHTML = '<strong>Correcto.</strong> ' + feedbackCuestionario[clave];
+      caja.classList.add('ok');
+    } else {
+      caja.innerHTML = '<strong>Incorrecto.</strong> ' + feedbackCuestionario[clave];
+      caja.classList.add('mal');
+    }
+    caja.classList.add('visible');
+  }
+
+  var porcentaje = aciertos * 10;
+  document.getElementById('emojiCuestionario').innerHTML = emojiPorPorcentaje(porcentaje);
+  document.getElementById('puntajeCuestionario').innerHTML = 'Calificación: ' + aciertos + ' / 10 (' + porcentaje + ' %)';
+  document.getElementById('mensajeCuestionario').innerHTML = mensajePorPorcentaje(porcentaje);
+  var caja2 = document.getElementById('resultadoCuestionario');
+  caja2.classList.add('visible');
+  var barra = document.getElementById('barraCuestionario');
+  barra.style.width = '0%';
+  setTimeout(function(){ barra.style.width = porcentaje + '%'; }, 120);
+  caja2.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+function reiniciarCuestionario(){
+  var claves = Object.keys(respuestasCuestionario);
+  for (var i=0; i<claves.length; i++){
+    var opciones = document.getElementsByName(claves[i]);
+    for (var k=0; k<opciones.length; k++){ opciones[k].checked = false; }
+    var caja = document.getElementById('fb-' + claves[i]);
+    caja.classList.remove('visible','ok','mal');
+    caja.innerHTML = '';
+  }
+  document.getElementById('resultadoCuestionario').classList.remove('visible');
+  document.getElementById('barraCuestionario').style.width = '0%';
+  document.getElementById('avisoCuestionario').classList.remove('visible');
+  document.getElementById('cuestionario').scrollIntoView({behavior:'smooth', block:'start'});
+}
+</script>
+</body>
+</html>

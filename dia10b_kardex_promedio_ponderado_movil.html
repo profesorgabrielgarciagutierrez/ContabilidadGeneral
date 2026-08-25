@@ -1,0 +1,1571 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Día 10B · Kardex por Promedio Ponderado Móvil y Comparativo de Métodos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+/* ============ BASE ============ */
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Source Sans 3',sans-serif;background:#eef2f6;color:#1c2733;line-height:1.7;font-size:16px}
+.wrap{max-width:1180px;margin:0 auto;background:#fff;box-shadow:0 0 26px rgba(0,0,0,.13)}
+h1,h2,h3,h4{font-family:'Lora',serif;line-height:1.3}
+p{margin:0 0 14px}
+ul,ol{margin:0 0 14px 22px}
+li{margin-bottom:7px}
+strong{font-weight:700;color:#00264d}
+
+/* ============ ENCABEZADO ============ */
+header{background:#003366;color:#fff;padding:26px 30px 22px}
+header h1{font-size:1.72rem;color:#fff;margin-bottom:8px}
+header .sub{font-size:1.02rem;color:#dbe9f7;font-weight:600}
+header .meta{margin-top:14px;font-size:.9rem;color:#c5dcf2;border-top:1px solid #2b5185;padding-top:11px}
+header .meta span{display:inline-block;margin-right:20px}
+
+/* ============ PESTAÑAS ============ */
+.tabs{background:#87CEEB;display:flex;overflow-x:auto;white-space:nowrap;border-bottom:3px solid #003366}
+.tab-btn{background:transparent;border:none;color:#000;font-family:'Source Sans 3',sans-serif;font-size:.94rem;font-weight:600;padding:13px 17px;cursor:pointer;flex:0 0 auto;border-right:1px solid #6cb6d6}
+.tab-btn:hover{background:#a3dcf0}
+.tab-btn.active{background:#fff;color:#003366;font-weight:700}
+.panel{display:none;padding:30px}
+.panel.active{display:block}
+.panel h2{color:#003366;font-size:1.5rem;margin-bottom:6px;border-bottom:3px solid #87CEEB;padding-bottom:8px}
+.panel h3{color:#004b8d;font-size:1.19rem;margin:26px 0 10px}
+.panel h4{color:#005ba6;font-size:1.04rem;margin:18px 0 8px}
+
+/* ============ RECUADROS ============ */
+.definicion{background:#eaf4fd;border-left:6px solid #003366;padding:15px 18px;margin:16px 0;border-radius:0 7px 7px 0}
+.definicion h4{margin-top:0;color:#003366}
+.ejemplo{background:#fff8e8;border-left:6px solid #d99a00;padding:15px 18px;margin:16px 0;border-radius:0 7px 7px 0}
+.ejemplo h4{margin-top:0;color:#8a6300}
+.alerta{background:#fdecea;border-left:6px solid #c0392b;padding:15px 18px;margin:16px 0;border-radius:0 7px 7px 0}
+.alerta h4{margin-top:0;color:#96271b}
+.conclusion{background:#e8f1ea;border:2px solid #2e7d4f;padding:16px 19px;margin:22px 0 8px;border-radius:8px}
+.conclusion h4{margin-top:0;color:#1d5c37}
+.nota-lateral{background:#f3f1fa;border-left:6px solid #6b4fa8;padding:14px 17px;margin:16px 0;border-radius:0 7px 7px 0;font-size:.96rem}
+.nota-lateral h4{margin-top:0;color:#503a80}
+.formula{background:#00264d;color:#fff;padding:16px 18px;margin:16px 0;border-radius:7px;font-family:'Courier New',monospace;font-size:.98rem;text-align:center;letter-spacing:.4px}
+.formula strong{color:#87CEEB}
+.futuro{background:#f0f4f8;border:2px dashed #5a7ea3;padding:15px 18px;margin:18px 0;border-radius:8px;font-size:.96rem}
+.futuro h4{margin-top:0;color:#3c5a75}
+.carrera-box{background:#eaf6ec;border:2px dashed #2e7d4f;padding:16px 19px;margin:22px 0;border-radius:8px}
+.carrera-box h4{margin-top:0;color:#1d5c37}
+.carrera-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(238px,1fr));gap:11px;margin-top:11px}
+.carrera-item{background:#fff;border:1px solid #a8d4b6;border-radius:6px;padding:11px 13px;font-size:.93rem}
+.carrera-item strong{display:block;color:#1d5c37;margin-bottom:4px;font-size:.95rem}
+.tip{background:#e6f7f4;border-left:6px solid #10897a;padding:14px 17px;margin:16px 0;border-radius:0 7px 7px 0;font-size:.96rem}
+.tip h4{margin-top:0;color:#0b6459}
+
+/* ============ TABLAS ============ */
+.tabla-simple{width:100%;border-collapse:collapse;margin:16px 0;font-size:.93rem}
+.tabla-simple th{background:#003366;color:#fff;padding:9px 10px;text-align:left;font-weight:600}
+.tabla-simple td{border:1px solid #cdd8e3;padding:8px 10px;vertical-align:top}
+.tabla-simple tr:nth-child(even) td{background:#f6f9fc}
+.scroll-x{overflow-x:auto;margin:16px 0}
+
+/* ============ KARDEX ============ */
+.kardex{width:100%;border-collapse:collapse;font-size:.85rem;min-width:830px}
+.kardex th{background:#003366;color:#fff;padding:7px 6px;text-align:center;font-weight:600;border:1px solid #17416e;font-size:.82rem}
+.kardex td{border:1px solid #c3d0dd;padding:6px;text-align:center}
+.kardex .num{text-align:right;font-family:'Courier New',monospace}
+.fila-ent td{background:#eefaf1}
+.fila-sal td{background:#fff4f2}
+.fila-ini td{background:#f2f6fb}
+.fila-total td{background:#dce8f3;font-weight:700;border-top:2px solid #003366}
+
+/* ============ ASIENTOS ============ */
+.asiento{border:2px solid #003366;border-radius:7px;overflow:hidden;margin:18px 0}
+.asiento-head{background:#003366;color:#fff;padding:9px 13px;font-weight:700;display:flex;justify-content:space-between;flex-wrap:wrap;font-size:.95rem}
+.asiento table{width:100%;border-collapse:collapse;font-size:.9rem}
+.asiento th{background:#dce8f3;color:#003366;padding:7px 8px;border:1px solid #b8c9db;font-weight:700;font-size:.85rem}
+.asiento td{border:1px solid #dde5ee;padding:6px 8px}
+.cuenta-deudora{padding-left:8px!important;font-weight:600}
+.cuenta-acreedora{padding-left:38px!important}
+.mono{font-family:'Courier New',monospace;text-align:right;white-space:nowrap}
+.suman td{border-top:3px double #003366!important;font-weight:700;background:#f2f6fb}
+.glosa{font-style:italic;color:#41535f;font-size:.87rem;background:#fafbfc}
+
+/* ============ COMPARATIVO ============ */
+.comparativo{width:100%;border-collapse:collapse;margin:16px 0;font-size:.92rem;min-width:640px}
+.comparativo th{background:#003366;color:#fff;padding:9px;border:1px solid #17416e;text-align:center}
+.comparativo td{border:1px solid #c3d0dd;padding:8px 9px;text-align:center}
+.comparativo td:first-child{text-align:left;font-weight:600;background:#f2f6fb}
+.comparativo .destacado{background:#eefaf1;font-weight:700}
+
+/* ============ ACORDEÓN ============ */
+.acordeon{margin:16px 0}
+.acc-item{border:1px solid #b9cbdd;border-radius:7px;margin-bottom:9px;overflow:hidden}
+.acc-btn{width:100%;background:#e9f1f8;border:none;padding:13px 15px;text-align:left;cursor:pointer;font-family:'Source Sans 3',sans-serif;font-weight:700;color:#003366;font-size:1rem;display:flex;align-items:center;gap:10px}
+.acc-btn:hover{background:#d8e7f4}
+.acc-btn .flecha{color:#005ba6;font-size:.85rem;flex:0 0 auto}
+.acc-panel{display:none;padding:16px 18px;background:#fff;border-top:1px solid #dbe6f0;font-size:.96rem}
+.acc-panel.abierto{display:block}
+.puente{background:#003366;color:#fff;padding:18px 21px;border-radius:8px;margin-top:22px}
+.puente h4{color:#87CEEB;margin:0 0 8px}
+.puente p{margin-bottom:0}
+
+/* ============ INTERACTIVOS ============ */
+.ej-item{background:#f7fafd;border:1px solid #cfdcea;border-radius:8px;padding:16px 18px;margin-bottom:15px}
+.ej-item .enunciado{font-weight:600;color:#00264d;margin-bottom:11px;display:block}
+.opciones{display:flex;flex-direction:column;gap:7px;margin-top:8px}
+.opcion{display:flex;align-items:flex-start;gap:9px;background:#fff;border:1px solid #d6e1ec;border-radius:6px;padding:9px 12px;cursor:pointer;font-size:.95rem}
+.opcion:hover{background:#eef5fb;border-color:#87CEEB}
+.opcion input{margin-top:5px;flex:0 0 auto}
+.feedback{display:none;margin-top:11px;padding:11px 14px;border-radius:6px;font-size:.93rem}
+.feedback.visible{display:block}
+.feedback.ok{background:#e8f6ec;border-left:5px solid #2e7d4f;color:#1d5c37}
+.feedback.mal{background:#fdecea;border-left:5px solid #c0392b;color:#8e2b20}
+.badge{display:inline-block;font-size:.72rem;font-weight:700;padding:3px 9px;border-radius:11px;margin-right:8px;vertical-align:middle;letter-spacing:.4px}
+.badge-teo{background:#dce8f3;color:#003366}
+.badge-caso{background:#ffe9c7;color:#8a5b00}
+.btn{background:#003366;color:#fff;border:none;padding:12px 26px;border-radius:6px;font-family:'Source Sans 3',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;margin:8px 8px 8px 0}
+.btn:hover{background:#00478f}
+.btn-sec{background:#6b7d8d}
+.btn-sec:hover{background:#516170}
+.resultado{display:none;margin-top:20px;padding:20px;background:#f2f6fb;border:2px solid #003366;border-radius:9px;text-align:center}
+.resultado.visible{display:block}
+.resultado h3{margin-top:0;color:#003366}
+.puntaje{font-size:2.1rem;font-weight:700;color:#003366;font-family:'Lora',serif}
+.emoji{font-size:2.6rem;display:block;margin-bottom:6px}
+.barra-cont{background:#dce8f3;border-radius:11px;height:22px;overflow:hidden;margin:14px 0;border:1px solid #b8c9db}
+.barra{height:100%;width:0;background:linear-gradient(90deg,#005ba6,#2e7d4f);transition:width 1.1s ease;border-radius:11px}
+.solucion{background:#fffdf5;border:2px solid #d99a00;border-radius:8px;padding:18px 20px;margin-top:26px}
+.solucion h3{margin-top:0;color:#8a6300}
+
+/* ============ BIBLIOGRAFÍA / IA / REFLEXIÓN ============ */
+.biblio-card{background:#f7fafd;border-left:6px solid #003366;border-radius:0 7px 7px 0;padding:14px 17px;margin-bottom:13px;font-size:.95rem}
+.biblio-card .tipo{display:inline-block;font-size:.72rem;font-weight:700;background:#003366;color:#fff;padding:2px 9px;border-radius:10px;margin-bottom:7px;letter-spacing:.4px}
+.prompt-box{background:#1c2733;color:#e8eef4;padding:17px 19px;border-radius:8px;font-family:'Courier New',monospace;font-size:.9rem;white-space:pre-wrap;margin:14px 0;line-height:1.6;overflow-x:auto}
+.paso{background:#f7fafd;border:1px solid #cfdcea;border-left:6px solid #005ba6;border-radius:0 7px 7px 0;padding:14px 17px;margin-bottom:13px}
+.paso h4{margin-top:0;color:#005ba6}
+.pregunta-ref{background:#f7fafd;border:1px solid #cfdcea;border-radius:8px;padding:15px 18px;margin-bottom:13px}
+.pregunta-ref .etq{display:inline-block;font-size:.73rem;font-weight:700;background:#87CEEB;color:#003366;padding:2px 10px;border-radius:10px;margin-bottom:8px;letter-spacing:.4px}
+footer{background:#003366;color:#c5dcf2;padding:20px 30px;font-size:.87rem;text-align:center}
+@media(max-width:640px){
+ .panel{padding:20px 15px}
+ header{padding:20px 16px}
+ header h1{font-size:1.32rem}
+ .tab-btn{padding:11px 13px;font-size:.87rem}
+ .carrera-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Día 10B · Kardex por Promedio Ponderado Móvil y Comparativo entre Métodos de Valuación</h1>
+  <div class="sub">Universidad de Guayaquil · Facultad de Ciencias Administrativas · Carrera de Negocios Internacionales</div>
+  <div class="meta">
+    <span><strong style="color:#87CEEB">Asignatura:</strong> Contabilidad General (091601124)</span>
+    <span><strong style="color:#87CEEB">Unidad 3:</strong> NIC 2 Inventarios y proceso contable (II parte)</span>
+    <span><strong style="color:#87CEEB">Fecha:</strong> Miércoles 26 de agosto de 2026</span>
+    <span><strong style="color:#87CEEB">Duración:</strong> 5 horas</span>
+  </div>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('rep',this)">Repaso</button>
+  <button class="tab-btn" onclick="showTab('t1',this)">Tema 1</button>
+  <button class="tab-btn" onclick="showTab('t2',this)">Tema 2</button>
+  <button class="tab-btn" onclick="showTab('t3',this)">Tema 3</button>
+  <button class="tab-btn" onclick="showTab('t4',this)">Tema 4</button>
+  <button class="tab-btn" onclick="showTab('t5',this)">Tema 5</button>
+  <button class="tab-btn" onclick="showTab('t6',this)">Tema 6</button>
+  <button class="tab-btn" onclick="showTab('ej',this)">Ejercicio Interactivo</button>
+  <button class="tab-btn" onclick="showTab('cu',this)">Cuestionario</button>
+  <button class="tab-btn" onclick="showTab('ia',this)">Actividad con IA</button>
+  <button class="tab-btn" onclick="showTab('ref',this)">Reflexión</button>
+  <button class="tab-btn" onclick="showTab('bib',this)">Bibliografía</button>
+</div>
+
+<!-- ================= REPASO ================= -->
+<div class="panel active" id="rep">
+  <h2>Repaso de las clases anteriores</h2>
+  <p>Antes de abrir la tarjeta de promedio ponderado móvil, conviene recuperar el camino recorrido. Cada entrada se abre con un clic. Léelas todas: hoy vas a usar cifras, conceptos y reglas que vienen de días anteriores, y si alguno de ellos quedó flojo, el Kardex de hoy se te va a volver un laberinto.</p>
+
+  <div class="acordeon">
+
+    <div class="acc-item">
+      <button class="acc-btn" onclick="toggleAcc(this)"><span class="flecha">&#9654;</span> Días 1 a 3 · Unidad 1 — Los cimientos: la contabilidad como sistema de información</button>
+      <div class="acc-panel">
+        <p><strong>Día 1.</strong> La contabilidad se definió como un <strong>sistema de información</strong>: capta hechos económicos, los clasifica, los mide, los registra y los comunica a quienes deben tomar decisiones. No es "llevar cuentas": es producir información útil. Se estudiaron los usuarios internos (gerencia, socios, empleados) y externos (SRI, bancos, proveedores, inversionistas, aduana), la clasificación de las empresas por actividad (comercial, industrial, de servicios), por origen del capital (pública, privada, mixta) y por forma jurídica (persona natural, sociedad anónima, compañía limitada). También los principios básicos que ordenan el reconocimiento y la medición bajo NIIF: devengo, negocio en marcha, uniformidad, importancia relativa, esencia sobre forma.</p>
+        <p><strong>Día 2.</strong> Principios éticos de la profesión contable —integridad, objetividad, competencia profesional, confidencialidad y comportamiento profesional— y los organismos que controlan la información financiera en el Ecuador: el <strong>Servicio de Rentas Internas (SRI)</strong> en el ámbito tributario y la <strong>Superintendencia de Compañías, Valores y Seguros</strong> en el societario. Se estudió el Marco Conceptual de las NIIF (objetivo de la información financiera, características cualitativas fundamentales y de mejora, elementos de los estados financieros) y la NIC 1 sobre presentación de estados financieros.</p>
+        <p><strong>Día 3.</strong> Cierre de la Unidad 1: estructura del Estado de Situación Financiera y del Estado de Resultados; la <strong>cuenta contable</strong> y su naturaleza deudora o acreedora; el plan de cuentas; la <strong>partida doble</strong> (todo hecho económico afecta al menos dos cuentas y la suma de los débitos siempre iguala la suma de los créditos); la ecuación contable <em>Activo = Pasivo + Patrimonio</em>; y los tipos de asientos (simples, compuestos, mixtos).</p>
+      </div>
+    </div>
+
+    <div class="acc-item">
+      <button class="acc-btn" onclick="toggleAcc(this)"><span class="flecha">&#9654;</span> Días 4 a 6 · Unidad 2 — Normativa tributaria y proceso contable (I parte)</button>
+      <div class="acc-panel">
+        <p><strong>Día 4.</strong> El IVA en el Ecuador con tarifa general del <strong>15 %</strong> y tarifa <strong>0 %</strong> para bienes y servicios expresamente señalados en la Ley de Régimen Tributario Interno. Se aprendió a reconocer la tarifa aplicable antes de contabilizar, las <strong>retenciones de IVA</strong> conforme a la Resolución NAC-DGERCGC20-00000061 (30 % en la adquisición de bienes) y la <strong>retención en la fuente del Impuesto a la Renta</strong> conforme a la Resolución NAC-DGERCGC26-00000009, vigente desde el 1 de marzo de 2026: 2 % en bienes, 3 % residual, 10 % en arriendo de inmuebles y 5 % en servicios profesionales prestados por sociedades. Quedó instalada la trampa didáctica de la energía eléctrica de CNEL EP: 0 % de IVA y sin retención de Impuesto a la Renta por la exención de las empresas públicas.</p>
+        <p><strong>Día 5.</strong> Pasos del proceso contable: análisis y reconocimiento de la transacción, <strong>jornalización</strong> en el Libro Diario, <strong>mayorización</strong> en el Libro Mayor y <strong>balance de comprobación preliminar</strong>, sobre el caso de AduanaPro Cía. Ltda.</p>
+        <p><strong>Día 6.</strong> Ejercicio integrador de una empresa de servicios —Ruta Pacífico Servicios Logísticos Cía. Ltda.— con doce transacciones completas desde el análisis hasta el balance de comprobación. Cierre de la Unidad 2.</p>
+      </div>
+    </div>
+
+    <div class="acc-item">
+      <button class="acc-btn" onclick="toggleAcc(this)"><span class="flecha">&#9654;</span> Día 7 · Fundamentos de inventarios, NIC 2 y sistemas de contabilización</button>
+      <div class="acc-panel">
+        <p>Inicio de la Unidad 3. Se estudió qué son los inventarios dentro del contenido de la NIC 2: los bienes que la empresa posee para vender en el curso ordinario del negocio, los que están en proceso de producción para esa venta, y los materiales o suministros que se consumirán en el proceso productivo o en la prestación de servicios. Se recorrió la cadena de valor a través de cuatro empresas distintas —desde la materia prima hasta el consumidor final— para ver cómo un mismo bien físico cambia de clasificación contable según quién lo tenga.</p>
+        <p>Se contrastaron los dos <strong>sistemas de contabilización</strong>: el <strong>sistema permanente o de inventario perpetuo</strong>, en el que cada compra y cada venta actualiza inmediatamente la cuenta Inventario de Mercaderías y el costo de ventas se reconoce en el momento mismo de vender; y el <strong>sistema periódico</strong>, en el que la cuenta Inventario permanece congelada durante todo el ejercicio y el costo de ventas se determina recién al final, mediante conteo físico. Se cerró con un caso de importación en el que se identificaron los costos que se incorporan al valor del inventario.</p>
+      </div>
+    </div>
+
+    <div class="acc-item">
+      <button class="acc-btn" onclick="toggleAcc(this)"><span class="flecha">&#9654;</span> Día 8 · Costo, Valor Razonable y Valor Neto Realizable</button>
+      <div class="acc-panel">
+        <p>Sobre el Caso A —Comercial El Astillero S.A. y su importación de licuadoras— se distinguieron tres magnitudes que los estudiantes suelen confundir: el <strong>costo</strong> (todo lo que costó traer el bien hasta su ubicación y condición actuales: precio de compra, aranceles, transporte, seguro, manipulación), el <strong>valor razonable</strong> (el precio que se recibiría por vender el activo en una transacción ordenada entre participantes del mercado, una magnitud de mercado que no depende de la empresa) y el <strong>valor neto realizable o VNR</strong> (el precio estimado de venta en el curso ordinario del negocio menos los costos estimados para terminarlo y venderlo, una magnitud que sí es específica de la entidad).</p>
+        <p>Quedó establecida la regla de medición que la NIC 2 exige: los inventarios se miden al <strong>menor entre el costo y el valor neto realizable</strong>. Cuando el VNR cae por debajo del costo, la diferencia debe reconocerse como una rebaja del valor del inventario. El <em>concepto</em> quedó completo ese día; lo que quedó pendiente es únicamente su <em>registro contable</em>. También se introdujo el criterio FIFO como fórmula de costo.</p>
+      </div>
+    </div>
+
+    <div class="acc-item">
+      <button class="acc-btn" onclick="toggleAcc(this)"><span class="flecha">&#9654;</span> Día 9 · FIFO y promedio ponderado — el cálculo</button>
+      <div class="acc-panel">
+        <p>Práctica extendida de FIFO y presentación del promedio ponderado sobre el artículo <strong>INV-4501 "Ventilador de techo VT-16"</strong> del Caso A, con siete movimientos de agosto de 2026 y una mercadería disponible para la venta de <strong>650 unidades por USD 23.075,00</strong>. Los resultados quedaron cerrados: FIFO arrojó un costo de ventas de <strong>20.660,00</strong> y un inventario final de <strong>2.415,00</strong>; el promedio móvil, <strong>20.810,00</strong> y <strong>2.265,00</strong>; el promedio del período, <strong>20.945,00</strong> y <strong>2.130,00</strong>.</p>
+        <p>Ese día se explicó además, de manera completa, el método <strong>UEPS</strong> (últimas entradas, primeras salidas): su criterio, las situaciones en que llegó a recomendarse, las razones por las cuales el IASB lo eliminó de las fórmulas de costo admitidas, y su situación actual bajo NIIF, en el Ecuador y bajo los US GAAP. Hoy solo lo referenciaremos: no se vuelve a desarrollar.</p>
+      </div>
+    </div>
+
+    <div class="acc-item">
+      <button class="acc-btn" onclick="toggleAcc(this)"><span class="flecha">&#9654;</span> Día 10A · El Kardex formal por FIFO (esta misma mañana)</button>
+      <div class="acc-panel">
+        <p>Se construyó la <strong>tarjeta Kardex</strong> propiamente dicha para el artículo INV-4501 bajo FIFO, en sistema permanente. Se estudió el origen del término, la distinción entre lo que la NIC 2 sí regula (medición, fórmulas de costo admitidas, uniformidad en su aplicación y revelaciones) y lo que no prescribe (el formato del registro), y el marco legal ecuatoriano que sí exige llevar y conservar el registro: el Código de Comercio, la Ley de Régimen Tributario Interno y su reglamento, el Reglamento de Comprobantes de Venta, Retención y Documentos Complementarios, y las disposiciones de la Superintendencia de Compañías.</p>
+        <p>Se recorrió el encabezado y el cuerpo de la tarjeta campo por campo, la evolución del formato, las variantes según la naturaleza del bien, la diferencia entre el Kardex de bodega y el Kardex contable, los cinco errores típicos de llenado, la correspondencia entre cada fila del Kardex y su asiento, el tratamiento de la devolución en venta (reingresa al costo con que salió) y la conciliación del Kardex con el Libro Mayor movimiento por movimiento.</p>
+        <p><strong>Resultado del Kardex FIFO cerrado:</strong> entradas 550 u por 20.075,00 · salidas 590 u por <strong>20.660,00</strong> · existencia final 60 u a 40,25 = <strong>2.415,00</strong> · prueba de cuadre 23.075,00 = 23.075,00. Se construyeron los asientos de la compra del 14/08 (base 5.850,00 · IVA 877,50 · retención de IR 2 % 117,00 · retención de IVA 30 % 263,25 · neto a pagar 6.347,25) y de la venta del 18/08 en asiento dual: el ingreso (base 15.600,00 · IVA 2.340,00 · retenciones recibidas 312,00 y 702,00 · cuentas por cobrar 16.926,00) y el costo FIFO de <strong>10.450,00</strong> contra Inventario de Mercaderías. Se calcularon también los indicadores de gestión: rotación 7,63 veces en el mes, 3,93 días de inventario, 3,05 días de cobertura, margen bruto 32,66 % y costo unitario promedio de ventas 35,02.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="puente">
+    <h4>Puente hacia la clase de hoy</h4>
+    <p>Esta mañana llenaste la tarjeta con FIFO y viste que la existencia final quedó valorada en 2.415,00 porque las 60 unidades sobrevivientes eran, por construcción, las últimas que entraron: las de 40,25. Esa tarjeta te decía la edad de cada unidad. Ahora vamos a llenar <strong>la misma tarjeta, con los mismos siete movimientos, con el mismo artículo</strong>, pero con la otra fórmula de costo que la NIC 2 admite: el <strong>promedio ponderado</strong>. Vas a ver que la mecánica de la tarjeta no cambia —columnas de entradas, salidas y existencias, prueba de cuadre— pero sí cambia radicalmente la lógica de la columna de existencias: ya no hay capas apiladas por antigüedad, sino un único costo unitario que se recalcula cada vez que entra mercadería. Y al final, cuando pongamos los tres resultados uno al lado del otro, vas a descubrir algo incómodo y fundamental: <strong>la utilidad de la empresa cambia según la fórmula que se escoja, aunque no se haya vendido ni un ventilador más ni uno menos</strong>.</p>
+  </div>
+</div>
+
+<!-- ================= TEMA 1 ================= -->
+<div class="panel" id="t1">
+  <h2>Tema 1 · La lógica del promedio ponderado móvil</h2>
+
+  <h3>Un problema que no es contable, sino físico</h3>
+  <p>Imagina una bodega en el kilómetro 8 y medio de la vía a Daule. Hay 400 ventiladores de techo apilados en el mismo estante. Cien de ellos llegaron el primero de agosto y costaron 30 dólares cada uno. Trescientos llegaron el cinco de agosto y costaron 34. Son idénticos: mismo modelo, mismo empaque, mismo código, misma etiqueta. El bodeguero los apiló donde había espacio.</p>
+  <p>El nueve de agosto llega una orden de despacho por 150 unidades. El estibador toma las 150 que están más a la mano. <strong>¿Cuáles salieron?</strong> Nadie lo sabe, y en rigor la pregunta no tiene respuesta: no hay forma física de distinguir un ventilador de 30 de uno de 34, porque el precio no está impreso en el producto.</p>
+  <p>Aquí es donde aparece una decisión que la contabilidad debe tomar. FIFO responde: <em>"supongamos que salieron las más antiguas"</em>. Es un supuesto de flujo de costos, no un hecho verificado; ya lo discutimos. El promedio ponderado responde de otra manera, y su respuesta es en cierto sentido más honesta con la realidad física: <em>"si son indistinguibles, entonces no tiene sentido decir cuáles salieron; digamos que todas valen lo mismo, y que ese valor es el promedio de lo que costó el lote entero"</em>.</p>
+
+  <div class="definicion">
+    <h4>Definición · Promedio ponderado</h4>
+    <p>El <strong>promedio ponderado</strong> es una fórmula de costo que determina el valor de cada unidad del inventario dividiendo el costo total de la mercadería disponible para la venta entre el número total de unidades disponibles, de modo que todas las unidades del mismo artículo quedan valoradas a un mismo costo unitario.</p>
+    <p style="margin-bottom:0">Se llama <strong>ponderado</strong> —y no simplemente "promedio"— porque no se promedian los precios entre sí, sino que cada precio pesa en proporción al número de unidades compradas a ese precio. Un lote de 300 unidades a 34 dólares influye tres veces más en el resultado que un lote de 100 unidades a 30.</p>
+  </div>
+
+  <div class="alerta">
+    <h4>El error número uno de los estudiantes que empiezan</h4>
+    <p style="margin-bottom:0">Con las cifras del ejemplo, el promedio <em>simple</em> de los precios sería (30 + 34) ÷ 2 = <strong>32,00</strong>. El promedio <em>ponderado</em> es (3.000 + 10.200) ÷ 400 = <strong>33,00</strong>. Son distintos, y el que sirve es el segundo. Si promedias precios en lugar de dividir dólares totales entre unidades totales, todo el Kardex sale mal desde la primera fila y el error se arrastra hasta el Estado de Resultados. Nunca promedies precios: <strong>divide plata entre unidades</strong>.</p>
+  </div>
+
+  <div class="formula">
+    Costo unitario promedio = <strong>Valor total del saldo (USD)</strong> ÷ <strong>Unidades del saldo</strong>
+  </div>
+
+  <h3>De dónde viene la palabra "móvil"</h3>
+  <p>El promedio ponderado tiene dos presentaciones, y la diferencia entre ellas no es un detalle técnico: es el sistema de contabilización de inventarios que la empresa usa.</p>
+  <p>El <strong>promedio ponderado móvil</strong> —también llamado promedio móvil o promedio continuo— recalcula el costo unitario <strong>cada vez que ingresa mercadería nueva</strong>. Se llama móvil porque el costo unitario se mueve a lo largo del mes: hoy es 33,00, después de la próxima compra será 35,25, después de la siguiente 37,75. Cada venta sale al costo unitario vigente <em>en ese momento</em>. Esto solo es posible en <strong>sistema permanente</strong>, porque solo ahí la tarjeta está viva y sabe cuál es el saldo en cualquier fecha.</p>
+  <p>El <strong>promedio ponderado del período</strong> —o promedio simple del período, o promedio único— calcula un solo costo unitario para todo el mes, al final, dividiendo el total disponible entre las unidades disponibles. Se estudiará en el Tema 3.</p>
+
+  <div class="nota-lateral">
+    <h4>Lo que dice la norma y lo que no dice</h4>
+    <p style="margin-bottom:0">Dentro del contenido de la NIC 2 se admiten dos fórmulas de costo para los inventarios que no son partidas identificables individualmente: <strong>primera entrada, primera salida (FIFO)</strong> y <strong>costo promedio ponderado</strong>. La norma exige aplicar la misma fórmula a todos los inventarios de naturaleza y uso similar dentro de la entidad, y admite expresamente que el promedio se calcule periódicamente o después de recibir cada envío adicional, dependiendo de las circunstancias de la entidad. Es decir: la norma <em>autoriza</em> ambas presentaciones del promedio, y deja la elección al sistema y a las circunstancias. Lo que no admite es cambiar de fórmula de un mes a otro según convenga al resultado; eso rompe la uniformidad y, si llegara a hacerse, exige el tratamiento y la revelación de un cambio de política contable.</p>
+  </div>
+
+  <h3>La regla de oro: solo las ENTRADAS recalculan</h3>
+  <p>Esta es la regla que más se equivoca al llenar la tarjeta, y por eso conviene decirla de forma tajante:</p>
+
+  <div class="definicion">
+    <h4>Regla operativa del promedio móvil</h4>
+    <p><strong>El costo unitario se recalcula únicamente después de una ENTRADA de mercadería.</strong></p>
+    <p style="margin-bottom:0">Después de una <strong>salida</strong>, el costo unitario <strong>no cambia</strong>. Cambian las unidades del saldo y cambia el valor del saldo, pero el costo unitario se mantiene idéntico al que estaba vigente antes de la salida.</p>
+  </div>
+
+  <p>¿Por qué? Porque una salida se valora exactamente al costo unitario vigente. Si el saldo era de 400 unidades a 33,00 (13.200,00) y salen 150 a 33,00 (4.950,00), lo que queda son 250 unidades y 8.250,00. Divide: 8.250 ÷ 250 = <strong>33,00</strong>. El mismo número. La salida no puede alterar el promedio porque sale justamente al promedio. Recalcular después de una salida no es un error de resultado —da lo mismo— pero es un error de procedimiento que revela que no se entendió la lógica, y en cuanto haya redondeo intermedio empieza a producir diferencias reales de centavos que descuadran la tarjeta.</p>
+
+  <div class="ejemplo">
+    <h4>Ejemplo de comprobación</h4>
+    <p>Saldo antes de la venta: 400 u · 14.100,00 · CU 35,25.<br>
+    Sale 300 u × 35,25 = 10.575,00.<br>
+    Saldo después: 400 − 300 = 100 u · 14.100,00 − 10.575,00 = 3.525,00.<br>
+    Verificación: 3.525,00 ÷ 100 = <strong>35,25</strong>. Idéntico. La salida no movió el promedio.</p>
+    <p style="margin-bottom:0">Ahora entra una compra: 100 u a 40,25 = 4.025,00.<br>
+    Saldo: 100 + 100 = 200 u · 3.525,00 + 4.025,00 = 7.550,00.<br>
+    Nuevo CU: 7.550,00 ÷ 200 = <strong>37,75</strong>. Aquí sí se movió, porque entró mercadería a un costo distinto.</p>
+  </div>
+
+  <h3>La política de redondeo: una decisión que hay que declarar</h3>
+  <p>En el caso del ventilador VT-16 el promedio da siempre cifras exactas de dos decimales: 30,00 · 33,00 · 35,25 · 37,75. Eso es una comodidad didáctica y no es lo normal. En la realidad, dividir 6.940,00 entre 280 unidades da 24,785714285… y ahí hay que tomar una decisión que <strong>no es opcional ni trivial</strong>: ¿a cuántos decimales se trabaja el costo unitario, y qué se hace con la diferencia que el redondeo produce?</p>
+
+  <div class="definicion">
+    <h4>Política de redondeo declarada para este curso</h4>
+    <ul style="margin-bottom:0">
+      <li>El <strong>costo unitario promedio</strong> se calcula y se registra en la tarjeta con <strong>cuatro decimales</strong>, redondeando el último por el método de la mitad hacia arriba.</li>
+      <li>Los <strong>valores monetarios</strong> de cada fila (entradas, salidas, saldo) se expresan con <strong>dos decimales</strong>.</li>
+      <li>Cuando el redondeo del costo unitario produce una diferencia de centavos, esa diferencia se absorbe en la <strong>existencia final</strong>, que se determina por diferencia: <em>valor del saldo anterior más entradas menos salidas</em>. Nunca al revés.</li>
+      <li>La prueba de cuadre <strong>siempre debe cerrar exactamente</strong>: disponible = salidas + existencia final. Si no cierra al centavo, la tarjeta está mal.</li>
+    </ul>
+  </div>
+
+  <div class="alerta">
+    <h4>Por qué no basta con "redondear a dos decimales y ya"</h4>
+    <p style="margin-bottom:0">Un artículo de alta rotación puede tener miles de unidades. Una diferencia de una milésima de dólar en el costo unitario, multiplicada por 40.000 unidades vendidas en el mes, son 40 dólares que aparecen de la nada o se evaporan del inventario. En un artículo se nota poco; en un catálogo de 3.000 ítems, la diferencia acumulada descuadra el Mayor contra la bodega y obliga a un ajuste que nadie sabe explicar. Por eso el criterio de redondeo <strong>se declara por escrito en las políticas contables de la empresa y se aplica igual todos los meses</strong>. Es una decisión de política contable, no una preferencia del asistente que llena la tarjeta.</p>
+  </div>
+
+  <h3>Qué gana y qué pierde la empresa al escoger promedio</h3>
+  <table class="tabla-simple">
+    <tr><th style="width:50%">Lo que gana</th><th>Lo que pierde</th></tr>
+    <tr>
+      <td>Suaviza el efecto de las variaciones bruscas de precio. Una compra puntual muy cara no dispara el costo de las ventas siguientes: se diluye entre todas las unidades.</td>
+      <td>Pierde la trazabilidad por capas. El saldo deja de saber qué unidades son viejas y cuáles nuevas: todo es una masa homogénea de un solo costo.</td>
+    </tr>
+    <tr>
+      <td>Es sencillo de automatizar y menos propenso a error humano: una sola división por entrada, en vez de rastrear capas.</td>
+      <td>No se puede emitir un <strong>informe de antigüedad del inventario por capas</strong>, herramienta que sí ofrece FIFO y que se usa para detectar mercadería próxima a vencer u obsoleta.</td>
+    </tr>
+    <tr>
+      <td>Trata de forma consistente bienes que son físicamente indistinguibles, que es exactamente la situación de la mayoría de mercaderías de comercio.</td>
+      <td>En economías con inflación sostenida, deja el inventario final valorado por debajo del costo de reposición real, y por lo tanto muestra un activo más bajo.</td>
+    </tr>
+  </table>
+
+  <div class="carrera-box">
+    <h4>Este tema en las cuatro áreas de Negocios Internacionales</h4>
+    <div class="carrera-grid">
+      <div class="carrera-item"><strong>Comercio exterior</strong>El importador compra en lotes grandes, separados por semanas de tránsito y a tipos de cambio distintos. El promedio móvil es la fórmula que mejor absorbe esa irregularidad: un embarque encarecido por un flete extraordinario no distorsiona el costo de las ventas inmediatamente siguientes, sino que se reparte entre todo lo disponible.</div>
+      <div class="carrera-item"><strong>Finanzas internacionales</strong>El costo unitario promedio es el insumo directo del margen bruto que verá el analista financiero. Al negociar una línea de crédito o un factoring sobre inventarios, el banco pedirá saber qué fórmula de costo se usa, porque de ella depende cuánto vale el activo que se está ofreciendo como respaldo.</div>
+      <div class="carrera-item"><strong>Marketing y negociación internacional</strong>Fijar un precio de lista o conceder un descuento por volumen sin conocer el costo unitario vigente es negociar a ciegas. El promedio móvil entrega un número único y actualizado, fácil de llevar a la mesa: hoy cada unidad me cuesta 37,75 y por debajo de ese piso pierdo.</div>
+      <div class="carrera-item"><strong>Marco legal y normativo</strong>La NIC 2 admite el promedio ponderado como fórmula de costo, y el Ecuador la aplica de forma obligatoria para las empresas bajo control de la Superintendencia de Compañías. La elección debe revelarse en las políticas contables y mantenerse uniforme; cambiarla a conveniencia tiene consecuencias societarias y tributarias.</div>
+    </div>
+  </div>
+
+  <div class="conclusion">
+    <h4>Idea clave del Tema 1</h4>
+    <p style="margin-bottom:0">El promedio ponderado móvil parte de reconocer que unidades idénticas no pueden distinguirse por su costo, y les asigna a todas un mismo valor: el cociente entre los dólares del saldo y las unidades del saldo. Ese cociente <strong>se recalcula únicamente cuando entra mercadería</strong> y permanece intacto cuando sale. Es aplicable solo en sistema permanente, exige declarar por escrito una política de redondeo, y a cambio de su sencillez sacrifica la información de antigüedad por capas que FIFO sí conserva.</p>
+  </div>
+</div>
+
+<!-- ================= TEMA 2 ================= -->
+<div class="panel" id="t2">
+  <h2>Tema 2 · El Kardex por promedio ponderado móvil, fila por fila</h2>
+
+  <p>Vamos a llenar la tarjeta del mismo artículo que usaste esta mañana. Mismo emisor, mismos siete movimientos, mismo sistema permanente. Lo único que cambia es la fórmula de costo. Compara mentalmente cada fila con la que llenaste bajo FIFO: es el mejor ejercicio de comprensión que puedes hacer hoy.</p>
+
+  <div class="definicion">
+    <h4>Encabezado de la tarjeta</h4>
+    <p style="margin-bottom:0"><strong>Empresa:</strong> Comercial El Astillero S.A. (Guayaquil) · <strong>Artículo:</strong> INV-4501 — Ventilador de techo VT-16 · <strong>Unidad de medida:</strong> unidad · <strong>Período:</strong> agosto de 2026 · <strong>Sistema de contabilización:</strong> permanente · <strong>Fórmula de costo:</strong> promedio ponderado móvil · <strong>Existencia mínima:</strong> 40 u · <strong>Existencia máxima:</strong> 500 u · <strong>Precio de venta unitario:</strong> 52,00 · <strong>Política de redondeo:</strong> costo unitario a cuatro decimales, valores a dos, diferencia por redondeo absorbida en la existencia final.</p>
+  </div>
+
+  <h3>El desarrollo movimiento por movimiento</h3>
+
+  <div class="paso">
+    <h4>01/08 · Inventario inicial — 100 unidades a 30,00</h4>
+    <p style="margin-bottom:0">No hay nada que promediar todavía: hay un solo costo. Valor del saldo: 100 × 30,00 = <strong>3.000,00</strong>. Costo unitario vigente: 3.000,00 ÷ 100 = <strong>30,00</strong>.</p>
+  </div>
+
+  <div class="paso">
+    <h4>05/08 · Compra de 300 unidades a 34,00 <span style="font-weight:400;font-size:.9rem">(primera ENTRADA: se recalcula)</span></h4>
+    <p>Valor de la entrada: 300 × 34,00 = 10.200,00.</p>
+    <p>Unidades del nuevo saldo: 100 + 300 = <strong>400 u</strong>.<br>
+    Valor del nuevo saldo: 3.000,00 + 10.200,00 = <strong>13.200,00</strong>.</p>
+    <p style="margin-bottom:0">Nuevo costo unitario promedio: 13.200,00 ÷ 400 = <strong>33,0000</strong>. Fíjate: no es 32,00 (que sería el promedio simple de 30 y 34), porque las unidades de 34 son tres veces más numerosas y por eso pesan más.</p>
+  </div>
+
+  <div class="paso">
+    <h4>09/08 · Venta de 150 unidades <span style="font-weight:400;font-size:.9rem">(SALIDA: no se recalcula)</span></h4>
+    <p>Costo de la salida: 150 × 33,00 = <strong>4.950,00</strong>. <em>(Bajo FIFO esta misma salida costó 4.700,00, porque tomó primero las 100 unidades baratas de 30,00.)</em></p>
+    <p style="margin-bottom:0">Saldo: 400 − 150 = <strong>250 u</strong> · 13.200,00 − 4.950,00 = <strong>8.250,00</strong> · costo unitario 8.250,00 ÷ 250 = <strong>33,0000</strong>, exactamente el mismo de antes. La salida no mueve el promedio.</p>
+  </div>
+
+  <div class="paso">
+    <h4>14/08 · Compra de 150 unidades a 39,00 <span style="font-weight:400;font-size:.9rem">(ENTRADA: se recalcula)</span></h4>
+    <p>Valor de la entrada: 150 × 39,00 = 5.850,00.</p>
+    <p>Unidades: 250 + 150 = <strong>400 u</strong> · Valor: 8.250,00 + 5.850,00 = <strong>14.100,00</strong>.</p>
+    <p style="margin-bottom:0">Nuevo costo unitario: 14.100,00 ÷ 400 = <strong>35,2500</strong>.</p>
+  </div>
+
+  <div class="paso">
+    <h4>18/08 · Venta de 300 unidades <span style="font-weight:400;font-size:.9rem">(SALIDA: no se recalcula)</span></h4>
+    <p>Costo de la salida: 300 × 35,25 = <strong>10.575,00</strong>. <em>(Bajo FIFO fue 10.450,00. La diferencia de 125,00 es la que veremos convertida en asiento contable en el Tema 5.)</em></p>
+    <p style="margin-bottom:0">Saldo: 400 − 300 = <strong>100 u</strong> · 14.100,00 − 10.575,00 = <strong>3.525,00</strong> · costo unitario 35,2500, sin cambio.</p>
+  </div>
+
+  <div class="paso">
+    <h4>23/08 · Compra de 100 unidades a 40,25 <span style="font-weight:400;font-size:.9rem">(ENTRADA: se recalcula)</span></h4>
+    <p>Valor de la entrada: 100 × 40,25 = 4.025,00.</p>
+    <p>Unidades: 100 + 100 = <strong>200 u</strong> · Valor: 3.525,00 + 4.025,00 = <strong>7.550,00</strong>.</p>
+    <p style="margin-bottom:0">Nuevo costo unitario: 7.550,00 ÷ 200 = <strong>37,7500</strong>. Observa que este promedio está exactamente a mitad de camino entre 35,25 y 40,25, porque las cantidades entrantes y las existentes eran iguales: 100 y 100.</p>
+  </div>
+
+  <div class="paso">
+    <h4>28/08 · Venta de 140 unidades <span style="font-weight:400;font-size:.9rem">(SALIDA: no se recalcula)</span></h4>
+    <p>Costo de la salida: 140 × 37,75 = <strong>5.285,00</strong>. <em>(Bajo FIFO fue 5.510,00.)</em></p>
+    <p style="margin-bottom:0">Existencia final: 200 − 140 = <strong>60 u</strong> · 7.550,00 − 5.285,00 = <strong>2.265,00</strong> · costo unitario 37,7500.</p>
+  </div>
+
+  <h3>La tarjeta completa</h3>
+  <div class="scroll-x">
+  <table class="kardex">
+    <thead>
+      <tr>
+        <th rowspan="2" style="width:62px">Fecha</th>
+        <th rowspan="2" style="width:180px">Detalle / documento</th>
+        <th colspan="3">ENTRADAS</th>
+        <th colspan="3">SALIDAS</th>
+        <th colspan="3">EXISTENCIAS</th>
+      </tr>
+      <tr>
+        <th>Cant.</th><th>C. Unit.</th><th>Total</th>
+        <th>Cant.</th><th>C. Unit.</th><th>Total</th>
+        <th>Cant.</th><th>C. Unit.</th><th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="fila-ini">
+        <td>01/08</td><td style="text-align:left">Inventario inicial</td>
+        <td>100</td><td class="num">30,0000</td><td class="num">3.000,00</td>
+        <td>&mdash;</td><td>&mdash;</td><td>&mdash;</td>
+        <td>100</td><td class="num">30,0000</td><td class="num">3.000,00</td>
+      </tr>
+      <tr class="fila-ent">
+        <td>05/08</td><td style="text-align:left">Compra s/factura de proveedor</td>
+        <td>300</td><td class="num">34,0000</td><td class="num">10.200,00</td>
+        <td>&mdash;</td><td>&mdash;</td><td>&mdash;</td>
+        <td>400</td><td class="num">33,0000</td><td class="num">13.200,00</td>
+      </tr>
+      <tr class="fila-sal">
+        <td>09/08</td><td style="text-align:left">Venta s/factura emitida</td>
+        <td>&mdash;</td><td>&mdash;</td><td>&mdash;</td>
+        <td>150</td><td class="num">33,0000</td><td class="num">4.950,00</td>
+        <td>250</td><td class="num">33,0000</td><td class="num">8.250,00</td>
+      </tr>
+      <tr class="fila-ent">
+        <td>14/08</td><td style="text-align:left">Compra s/factura de proveedor</td>
+        <td>150</td><td class="num">39,0000</td><td class="num">5.850,00</td>
+        <td>&mdash;</td><td>&mdash;</td><td>&mdash;</td>
+        <td>400</td><td class="num">35,2500</td><td class="num">14.100,00</td>
+      </tr>
+      <tr class="fila-sal">
+        <td>18/08</td><td style="text-align:left">Venta s/factura emitida</td>
+        <td>&mdash;</td><td>&mdash;</td><td>&mdash;</td>
+        <td>300</td><td class="num">35,2500</td><td class="num">10.575,00</td>
+        <td>100</td><td class="num">35,2500</td><td class="num">3.525,00</td>
+      </tr>
+      <tr class="fila-ent">
+        <td>23/08</td><td style="text-align:left">Compra s/factura de proveedor</td>
+        <td>100</td><td class="num">40,2500</td><td class="num">4.025,00</td>
+        <td>&mdash;</td><td>&mdash;</td><td>&mdash;</td>
+        <td>200</td><td class="num">37,7500</td><td class="num">7.550,00</td>
+      </tr>
+      <tr class="fila-sal">
+        <td>28/08</td><td style="text-align:left">Venta s/factura emitida</td>
+        <td>&mdash;</td><td>&mdash;</td><td>&mdash;</td>
+        <td>140</td><td class="num">37,7500</td><td class="num">5.285,00</td>
+        <td>60</td><td class="num">37,7500</td><td class="num">2.265,00</td>
+      </tr>
+      <tr class="fila-total">
+        <td colspan="2" style="text-align:left">TOTALES DEL PERÍODO (sin inventario inicial)</td>
+        <td>550</td><td>&mdash;</td><td class="num">20.075,00</td>
+        <td>590</td><td>&mdash;</td><td class="num">20.810,00</td>
+        <td>60</td><td class="num">37,7500</td><td class="num">2.265,00</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Prueba de cuadre</h3>
+  <p>Ninguna tarjeta se da por terminada sin esta comprobación. Es la misma prueba que hiciste bajo FIFO y debe cerrar exactamente al centavo, sin importar la fórmula de costo:</p>
+
+  <div class="formula">
+    Inventario inicial + Compras = Costo de ventas + Existencia final<br>
+    3.000,00 + 20.075,00 = 20.810,00 + 2.265,00<br>
+    <strong>23.075,00 = 23.075,00</strong> &#10004;
+  </div>
+
+  <p>Fíjate en un detalle que no es casual: la <strong>mercadería disponible para la venta</strong> es 23.075,00 tanto bajo FIFO como bajo promedio, y las unidades son las mismas 650. La fórmula de costo <strong>no crea ni destruye valor</strong>: solamente decide cómo repartir esos 23.075,00 entre la parte que se fue al Estado de Resultados como costo de ventas y la parte que se queda en el Estado de Situación Financiera como inventario. Es un problema de reparto, no de valoración total.</p>
+
+  <div class="ejemplo">
+    <h4>Ejemplo de lectura gerencial de la tarjeta</h4>
+    <p style="margin-bottom:0">El gerente de Comercial El Astillero S.A. mira la última fila y ve que su costo unitario vigente al 31 de agosto es 37,75, mientras que a inicios de mes era 30,00. En 28 días su costo subió un 25,83 %. Si mantiene el precio de venta de 52,00, su margen unitario cayó de 22,00 a 14,25. Esa lectura —que se obtiene con solo mirar la columna de costo unitario del saldo— es la razón práctica por la que el promedio móvil le gusta a la gerencia comercial: un solo número, siempre actualizado, que dice cuánto cuesta hoy cada unidad que tengo en bodega.</p>
+  </div>
+
+  <div class="alerta">
+    <h4>Errores que descuadran esta tarjeta</h4>
+    <ul style="margin-bottom:0">
+      <li>Recalcular el costo unitario después de una salida. No cambia el resultado si no hay redondeo, pero delata que no se entendió la regla y produce diferencias en cuanto haya decimales.</li>
+      <li>Valorar una salida al costo del último lote comprado en lugar del promedio vigente. Eso sería un método distinto, y además uno no admitido.</li>
+      <li>Sumar el inventario inicial dentro de la columna de totales de entradas. Las entradas del período son 550 unidades por 20.075,00; el inicial va aparte, en la prueba de cuadre.</li>
+      <li>Redondear el costo unitario a dos decimales en la tarjeta y luego calcular la existencia final multiplicando unidades por ese costo redondeado, en vez de obtenerla por diferencia. Ahí nacen los descuadres de centavos.</li>
+    </ul>
+  </div>
+
+  <div class="carrera-box">
+    <h4>Este tema en las cuatro áreas de Negocios Internacionales</h4>
+    <div class="carrera-grid">
+      <div class="carrera-item"><strong>Comercio exterior</strong>Cuando el mismo artículo llega de dos orígenes —un embarque de Shenzhen y otro de Callao con costos distintos— el promedio móvil los funde en un solo costo unitario. Es útil para la operación diaria, pero el analista de compras debe conservar aparte el detalle por embarque, porque el Kardex ya no se lo dirá.</div>
+      <div class="carrera-item"><strong>Finanzas internacionales</strong>La columna de costo unitario del saldo es una serie temporal: 30,00 → 33,00 → 35,25 → 37,75. Graficada mes a mes, mide la presión de costos que enfrenta la empresa y anticipa la necesidad de renegociar precios o coberturas cambiarias antes de que el margen se comprima.</div>
+      <div class="carrera-item"><strong>Marketing y negociación internacional</strong>Un descuento del 20 % sobre 52,00 deja 41,60. Con costo de 30,00 era negocio; con costo de 37,75 el margen se reduce a 3,85 por unidad. La tarjeta es la que permite decir en la mesa de negociación hasta dónde se puede ceder sin vender a pérdida.</div>
+      <div class="carrera-item"><strong>Marco legal y normativo</strong>La tarjeta es el respaldo documental del costo de ventas declarado al SRI y del inventario reportado a la Superintendencia de Compañías. En una fiscalización, la prueba de cuadre y la coherencia entre Kardex, Libro Mayor y facturas es lo primero que se revisa.</div>
+    </div>
+  </div>
+
+  <div class="conclusion">
+    <h4>Idea clave del Tema 2</h4>
+    <p style="margin-bottom:0">La tarjeta bajo promedio móvil tiene la misma estructura que bajo FIFO, pero su columna de existencias lleva un solo costo unitario que se actualiza en cada entrada y permanece quieto en cada salida. Con los mismos siete movimientos, el costo de ventas fue de <strong>20.810,00</strong> y la existencia final de <strong>2.265,00</strong>, contra 20.660,00 y 2.415,00 bajo FIFO. La mercadería disponible es idéntica en ambos casos —23.075,00— porque la fórmula de costo solo decide cómo se reparte ese total.</p>
+  </div>
+</div>
+
+<!-- ================= TEMA 3 ================= -->
+<div class="panel" id="t3">
+  <h2>Tema 3 · El promedio ponderado del período</h2>
+
+  <p>El promedio móvil que acabas de calcular necesitó siete recálculos y una tarjeta viva que supiera, en cualquier fecha, cuántas unidades y cuántos dólares había en bodega. Existe una versión mucho más simple del mismo criterio, y su simplicidad tiene una contrapartida importante: solo funciona si se renuncia a saber el costo durante el mes.</p>
+
+  <div class="definicion">
+    <h4>Definición · Promedio ponderado del período</h4>
+    <p style="margin-bottom:0">El <strong>promedio ponderado del período</strong> determina un <strong>único costo unitario para todo el ejercicio</strong>, calculado al cierre, dividiendo el costo total de la mercadería disponible para la venta entre el total de unidades disponibles. Ese único costo se aplica por igual a todas las unidades vendidas y a todas las que quedan en existencia.</p>
+  </div>
+
+  <h3>El cálculo sobre el mismo artículo INV-4501</h3>
+  <p>No importa el orden en que ocurrieron los movimientos ni en qué fecha se vendió: aquí solo importa el total del mes.</p>
+
+  <table class="tabla-simple">
+    <tr><th>Concepto</th><th style="text-align:right">Unidades</th><th style="text-align:right">Costo unitario</th><th style="text-align:right">Valor USD</th></tr>
+    <tr><td>Inventario inicial (01/08)</td><td style="text-align:right">100</td><td style="text-align:right">30,00</td><td style="text-align:right">3.000,00</td></tr>
+    <tr><td>Compra del 05/08</td><td style="text-align:right">300</td><td style="text-align:right">34,00</td><td style="text-align:right">10.200,00</td></tr>
+    <tr><td>Compra del 14/08</td><td style="text-align:right">150</td><td style="text-align:right">39,00</td><td style="text-align:right">5.850,00</td></tr>
+    <tr><td>Compra del 23/08</td><td style="text-align:right">100</td><td style="text-align:right">40,25</td><td style="text-align:right">4.025,00</td></tr>
+    <tr><td><strong>Mercadería disponible para la venta</strong></td><td style="text-align:right"><strong>650</strong></td><td style="text-align:right">&mdash;</td><td style="text-align:right"><strong>23.075,00</strong></td></tr>
+  </table>
+
+  <div class="formula">
+    Costo unitario del período = 23.075,00 ÷ 650 = <strong>35,5000</strong>
+  </div>
+
+  <p><strong>Aplicación del costo único:</strong></p>
+  <ul>
+    <li>Unidades vendidas en el mes: 150 + 300 + 140 = <strong>590 u</strong> → costo de ventas = 590 × 35,50 = <strong>20.945,00</strong></li>
+    <li>Unidades en existencia al 31/08: <strong>60 u</strong> → inventario final = 60 × 35,50 = <strong>2.130,00</strong></li>
+  </ul>
+
+  <div class="formula">
+    Prueba de cuadre: 20.945,00 + 2.130,00 = <strong>23.075,00</strong> &#10004;
+  </div>
+
+  <h3>Por qué esta fórmula solo cabe en el sistema periódico</h3>
+  <p>Detente en el cálculo que acabas de hacer. Para obtener el 35,50 necesitaste la compra del 23 de agosto. Ahora responde: <strong>¿qué costo unitario habrías registrado el 9 de agosto, cuando ocurrió la primera venta?</strong></p>
+  <p>La respuesta es que no habrías podido registrar ninguno. El 9 de agosto todavía no existían las compras del 14 y del 23; el denominador del promedio del período aún no estaba completo. El costo unitario de 35,50 solo se conoce el 31 de agosto, cuando el mes ya cerró.</p>
+  <p>Esa imposibilidad tiene una consecuencia directa sobre el registro contable. Recuerda del Día 7 la diferencia entre los dos sistemas de contabilización:</p>
+
+  <table class="tabla-simple">
+    <tr><th style="width:50%">Sistema permanente</th><th>Sistema periódico</th></tr>
+    <tr>
+      <td>Cada venta genera <strong>dos asientos</strong>: uno por el ingreso y otro por el costo, que descarga la cuenta Inventario de Mercaderías.</td>
+      <td>Cada venta genera <strong>un solo asiento</strong>, el del ingreso. No se registra el costo en el momento de vender, porque no se conoce.</td>
+    </tr>
+    <tr>
+      <td>La cuenta Inventario de Mercaderías refleja en todo momento el saldo real.</td>
+      <td>La cuenta Inventario permanece congelada con el saldo inicial durante todo el ejercicio; las compras van a una cuenta transitoria de Compras.</td>
+    </tr>
+    <tr>
+      <td>El costo de ventas es el acumulado de los asientos de costo.</td>
+      <td>El costo de ventas se determina al cierre por la fórmula: <strong>inventario inicial + compras &minus; inventario final</strong>, tras el conteo físico.</td>
+    </tr>
+    <tr>
+      <td>Admite promedio ponderado <strong>móvil</strong> y también FIFO.</td>
+      <td>Admite promedio ponderado <strong>del período</strong> y también FIFO calculado al cierre.</td>
+    </tr>
+  </table>
+
+  <div class="alerta">
+    <h4>Combinación imposible</h4>
+    <p style="margin-bottom:0">Un error frecuente en exámenes es pedir "el asiento de costo de la venta del 9 de agosto bajo promedio del período". <strong>Ese asiento no existe.</strong> En sistema periódico no hay asiento de costo por cada venta; el costo aparece una sola vez, al cierre. Y a la inversa: usar promedio del período dentro de un Kardex permanente es contradictorio, porque el Kardex exige un costo en cada fila de salida y el promedio del período no lo tiene sino hasta el 31.</p>
+  </div>
+
+  <div class="ejemplo">
+    <h4>Ejemplo aplicado · una tienda de barrio en Durán</h4>
+    <p style="margin-bottom:0">Una tienda que vende arroz, fideos y aceite en fundas hace 200 ventas diarias de valores pequeños. Llevar un Kardex permanente por cada uno de sus 600 productos sería inviable sin un sistema informático. Esa tienda razonablemente opera con sistema periódico: registra sus compras en la cuenta Compras, no calcula costo en cada venta y, al 31 de diciembre, cuenta físicamente todo lo que tiene, lo valora al promedio del período y determina el costo de ventas por diferencia. Es legítimo y es lo que hacen miles de negocios ecuatorianos. Lo que pierde es control: si le roban tres quintales de arroz, el sistema periódico no se lo dirá nunca &mdash; el faltante se confundirá dentro del costo de ventas.</p>
+  </div>
+
+  <div class="carrera-box">
+    <h4>Este tema en las cuatro áreas de Negocios Internacionales</h4>
+    <div class="carrera-grid">
+      <div class="carrera-item"><strong>Comercio exterior</strong>Un exportador con embarques concentrados en pocas fechas y ventas también concentradas puede operar razonablemente con promedio del período. Un importador con reposición continua y despachos diarios, no: necesita saber su costo antes de cotizar el siguiente pedido.</div>
+      <div class="carrera-item"><strong>Finanzas internacionales</strong>Bajo sistema periódico no hay estados financieros mensuales confiables: el costo de ventas de enero solo se sabe si se hace conteo físico en enero. Un banco extranjero que exige reportes trimestrales obliga en la práctica a migrar a sistema permanente.</div>
+      <div class="carrera-item"><strong>Marketing y negociación internacional</strong>Fijar precios con un costo que solo se conocerá al cierre del año es fijar precios a ciegas durante once meses. Las empresas que compiten por margen —no por volumen— necesitan el costo vigente que solo el sistema permanente entrega.</div>
+      <div class="carrera-item"><strong>Marco legal y normativo</strong>La Ley de Régimen Tributario Interno y su reglamento obligan a llevar registros de inventarios a los contribuyentes que comercializan bienes y superan los umbrales establecidos. La elección del sistema no es libre para todos: para el obligado a llevar contabilidad bajo control societario, el sistema permanente es la práctica exigida.</div>
+    </div>
+  </div>
+
+  <div class="conclusion">
+    <h4>Idea clave del Tema 3</h4>
+    <p style="margin-bottom:0">El promedio del período reparte los 23.075,00 disponibles usando un solo costo unitario de <strong>35,50</strong>, y arroja un costo de ventas de <strong>20.945,00</strong> y un inventario final de <strong>2.130,00</strong>. Es más simple, pero ese costo unitario solo se conoce cuando el período ya cerró, y por eso es incompatible con el registro diario del sistema permanente: pertenece al sistema periódico y a las empresas que aceptan renunciar al control en tiempo real de su bodega.</p>
+  </div>
+</div>
+
+<!-- ================= TEMA 4 ================= -->
+<div class="panel" id="t4">
+  <h2>Tema 4 · Comparativo de los tres métodos: la misma empresa, tres utilidades distintas</h2>
+
+  <p>Ahora viene el momento más importante del día. Vamos a poner los tres resultados uno al lado del otro. Antes de mirar la tabla, fija bien esto en la cabeza: durante agosto, Comercial El Astillero S.A. <strong>compró exactamente lo mismo, vendió exactamente lo mismo y cobró exactamente lo mismo</strong> en los tres escenarios. No hay una sola unidad de diferencia, ni un solo dólar de venta de diferencia. Lo único que cambia es la fórmula de costo escogida.</p>
+
+  <h3>El cuadro comparativo</h3>
+  <div class="scroll-x">
+  <table class="comparativo">
+    <tr>
+      <th style="text-align:left">Concepto</th>
+      <th>FIFO</th>
+      <th>Promedio móvil</th>
+      <th>Promedio del período</th>
+    </tr>
+    <tr><td>Unidades vendidas</td><td>590</td><td>590</td><td>590</td></tr>
+    <tr><td>Ventas (590 × 52,00)</td><td>30.680,00</td><td>30.680,00</td><td>30.680,00</td></tr>
+    <tr><td>Mercadería disponible</td><td>23.075,00</td><td>23.075,00</td><td>23.075,00</td></tr>
+    <tr><td><strong>Costo de ventas</strong></td><td class="destacado">20.660,00</td><td>20.810,00</td><td>20.945,00</td></tr>
+    <tr><td><strong>Inventario final (60 u)</strong></td><td class="destacado">2.415,00</td><td>2.265,00</td><td>2.130,00</td></tr>
+    <tr><td><strong>Utilidad bruta</strong></td><td class="destacado">10.020,00</td><td>9.870,00</td><td>9.735,00</td></tr>
+    <tr><td>Margen bruto sobre ventas</td><td class="destacado">32,66 %</td><td>32,17 %</td><td>31,73 %</td></tr>
+    <tr><td>Costo unitario de la existencia final</td><td>40,25</td><td>37,75</td><td>35,50</td></tr>
+    <tr><td>Informe de antigüedad por capas</td><td class="destacado">Sí</td><td>No</td><td>No</td></tr>
+    <tr><td>Sistema que lo admite</td><td>Permanente y periódico</td><td>Solo permanente</td><td>Solo periódico</td></tr>
+  </table>
+  </div>
+
+  <div class="alerta">
+    <h4>Tres utilidades distintas para la misma realidad económica</h4>
+    <p style="margin-bottom:0">Entre el escenario más favorable (FIFO, 10.020,00) y el menos favorable (promedio del período, 9.735,00) hay una diferencia de <strong>285,00 dólares de utilidad bruta</strong>. No es un error de nadie: los tres cálculos están perfectamente correctos y los tres cuadran contra los mismos 23.075,00. Esta es una de las lecciones más incómodas y más importantes de toda la contabilidad: <strong>la utilidad de una empresa no es un dato objetivo que se descubre, sino en parte el resultado de decisiones de política contable que alguien tomó</strong>. Por eso las NIIF exigen revelar cuál fórmula se usó y aplicarla de manera uniforme; sin esa revelación, comparar dos empresas por su margen bruto puede ser comparar peras con manzanas.</p>
+  </div>
+
+  <h3>Por qué FIFO dio la utilidad más alta en este caso</h3>
+  <p>La explicación no es una regla mágica, es aritmética con una condición: durante agosto <strong>los precios de compra subieron sostenidamente</strong> (30,00 → 34,00 → 39,00 → 40,25).</p>
+  <p>Bajo FIFO, las unidades que salen son las <strong>más antiguas</strong>, que en un contexto de precios al alza son también las <strong>más baratas</strong>. Costo de ventas bajo → utilidad alta. Y como las unidades que sobreviven en bodega son las últimas compradas, el inventario final queda valorado al precio más caro y más cercano al costo de reposición actual: 40,25.</p>
+  <p>Bajo promedio, las unidades baratas del inicio se mezclan con las caras del final, así que el costo de ventas queda en un punto intermedio y la utilidad también. El promedio del período lleva la mezcla al extremo: reparte todo el mes con un solo número, y como las compras más grandes fueron caras, ese único número es alto.</p>
+
+  <div class="tip">
+    <h4>La regla para no confundirse nunca</h4>
+    <p style="margin-bottom:0">Con <strong>precios al alza</strong>: FIFO → costo de ventas menor, utilidad mayor, inventario final mayor.<br>
+    Con <strong>precios a la baja</strong>: se invierte todo. FIFO → costo de ventas mayor, utilidad menor, inventario final menor.<br>
+    El promedio <strong>siempre queda en medio</strong> en cualquiera de los dos escenarios, porque por construcción es una mezcla. Esa es su virtud: amortigua.</p>
+  </div>
+
+  <div class="nota-lateral">
+    <h4>Sobre el UEPS</h4>
+    <p style="margin-bottom:0">El método de últimas entradas, primeras salidas quedó completamente explicado en el Día 9 —su criterio, las situaciones en que llegó a recomendarse, las razones por las que el IASB lo retiró de las fórmulas admitidas y su situación actual bajo NIIF, en el Ecuador y bajo los US GAAP&mdash;. Se lo menciona aquí únicamente para completar el panorama: <strong>no es una alternativa disponible</strong> para una empresa ecuatoriana bajo NIIF, y por eso no aparece en el cuadro comparativo como opción de decisión.</p>
+  </div>
+
+  <h3>Efecto sobre el Estado de Situación Financiera</h3>
+  <p>El comparativo no termina en la utilidad. Mira la fila del inventario final: 2.415,00 con FIFO, 2.265,00 con promedio móvil, 2.130,00 con promedio del período. Son <strong>las mismas 60 unidades físicas</strong>, en el mismo estante de la misma bodega, valoradas de tres maneras distintas.</p>
+  <p>Ese número es un activo corriente que aparecerá en el Estado de Situación Financiera y que se usará para calcular indicadores que terceros van a leer: el capital de trabajo, la razón corriente, la rotación de inventarios. Una empresa que negocia un crédito ofreciendo su inventario como respaldo no da lo mismo si su bodega figura en 2.415,00 o en 2.130,00. En un catálogo de mil artículos, esa diferencia porcentual se convierte en decenas de miles de dólares de activo declarado.</p>
+
+  <h3>Efecto sobre la base imponible</h3>
+  <p>Una utilidad bruta mayor conduce, todo lo demás igual, a una base de tributación mayor. En este caso la diferencia entre el escenario FIFO y el del promedio del período es de 285,00 dólares de utilidad; si sobre ese excedente se aplicara la tarifa general del impuesto a la renta para sociedades, el efecto en el impuesto sería del orden de unas pocas decenas de dólares. Multiplica eso por un catálogo completo y por doce meses y deja de ser trivial.</p>
+
+  <div class="alerta">
+    <h4>Lo que un profesional no puede hacer</h4>
+    <p style="margin-bottom:0">Sabiendo que la fórmula de costo mueve la utilidad, la tentación evidente es escoger cada año la que más convenga al resultado tributario. <strong>Eso no está permitido.</strong> La NIC 2 exige que la entidad utilice la misma fórmula de costo para todos los inventarios de naturaleza y uso similar, y el principio de uniformidad exige mantenerla en el tiempo. Cambiarla constituye un cambio de política contable, que solo procede si produce información más fiable y relevante, y que obliga a revelarlo y a reexpresar la información comparativa. Escoger la fórmula por conveniencia tributaria y sin revelarlo no es una decisión técnica: es una falta al deber de integridad y objetividad que estudiaste en el Día 2, y en sede tributaria puede configurar una infracción.</p>
+  </div>
+
+  <h3>Lo que se pierde al escoger promedio: el informe de antigüedad por capas</h3>
+  <p>Esta mañana, en el Kardex FIFO, la existencia final de 60 unidades no era simplemente "60 unidades a 40,25": era, de manera identificable, <strong>el remanente de la compra del 23 de agosto</strong>. La tarjeta FIFO conserva las capas y por lo tanto puede responder a la pregunta: <em>de lo que tengo en bodega, ¿cuánto lleva más de 90 días sin moverse?</em></p>
+  <p>Bajo promedio, esa pregunta no tiene respuesta desde la tarjeta. Las 60 unidades valen 37,75 cada una, y ese 37,75 es un promedio que arrastra pedacitos de las compras de agosto, de las de julio y de las de junio. No hay capas. No hay edad.</p>
+  <p>La consecuencia práctica es que la empresa que usa promedio <strong>debe montar un control paralelo de antigüedad y de fechas de vencimiento por lote</strong>, fuera del Kardex de costos, si maneja bienes perecibles, con fecha de caducidad, o expuestos a obsolescencia tecnológica. Ese control es indispensable para detectar a tiempo cuándo el valor neto realizable de un artículo ha caído por debajo de su costo &mdash;el criterio de medición que estudiaste en el Día 8&mdash; y hay que reconocer la rebaja correspondiente.</p>
+
+  <div class="futuro">
+    <h4>Contenido diferido</h4>
+    <p style="margin-bottom:0">El <strong>registro contable</strong> de esa rebaja al valor neto realizable —el asiento de ajuste propiamente dicho— se estudiará en el <strong>Día 11 (jueves 27 de agosto), Unidad 3</strong>, junto con los ajustes por faltantes y sobrantes detectados en el conteo físico. El concepto de VNR ya lo tienes desde el Día 8; lo que falta es el asiento.</p>
+  </div>
+
+  <h3>Cómo se decide en la práctica</h3>
+  <table class="tabla-simple">
+    <tr><th style="width:34%">Situación de la empresa</th><th>Fórmula que suele convenir y por qué</th></tr>
+    <tr><td>Bienes perecibles, con fecha de caducidad o de rápida obsolescencia (alimentos, fármacos, electrónica)</td><td><strong>FIFO.</strong> El flujo de costos coincide con el flujo físico real que la bodega está obligada a seguir, y la tarjeta entrega directamente la información de antigüedad que el control de vencimientos necesita.</td></tr>
+    <tr><td>Bienes homogéneos, no perecibles, de alta rotación y muchas referencias (ferretería, insumos, materia prima a granel)</td><td><strong>Promedio móvil.</strong> Las unidades son indistinguibles, el rastreo por capas no aporta información útil y el cálculo automatizado es más simple y menos propenso a error.</td></tr>
+    <tr><td>Contexto de precios muy volátiles con necesidad de márgenes estables para cotizar</td><td><strong>Promedio móvil.</strong> Amortigua los saltos de precio y evita que dos cotizaciones emitidas la misma semana tengan costos radicalmente distintos.</td></tr>
+    <tr><td>Negocio pequeño, sin sistema informático, con conteo físico anual</td><td><strong>Promedio del período</strong> en sistema periódico. Es lo único operativamente viable, a costa de perder el control en tiempo real.</td></tr>
+    <tr><td>Bienes únicos e identificables individualmente (maquinaria por número de serie, obras de arte, vehículos)</td><td>Ninguna de las tres: corresponde la <strong>identificación específica</strong> de sus costos individuales, que la NIC 2 exige precisamente para esos casos.</td></tr>
+  </table>
+
+  <div class="carrera-box">
+    <h4>Este tema en las cuatro áreas de Negocios Internacionales</h4>
+    <div class="carrera-grid">
+      <div class="carrera-item"><strong>Comercio exterior</strong>Al evaluar si conviene un embarque grande con descuento por volumen o varios pequeños, el efecto sobre el costo de ventas depende de la fórmula usada. Bajo FIFO, un embarque barato hoy abaratará las ventas de los próximos meses; bajo promedio, se diluye de inmediato.</div>
+      <div class="carrera-item"><strong>Finanzas internacionales</strong>Al comparar los estados financieros de un proveedor chino, uno peruano y uno ecuatoriano, el margen bruto no es comparable si no se lee primero la nota de políticas contables sobre inventarios. Ese es el primer trabajo del analista, y por eso la NIC 2 obliga a revelarla.</div>
+      <div class="carrera-item"><strong>Marketing y negociación internacional</strong>El piso de precio que se puede sostener en una negociación depende del costo unitario que arroje la fórmula vigente. Negociar con el costo de la fórmula equivocada puede llevar a aceptar una orden que en libros resulta perdedora.</div>
+      <div class="carrera-item"><strong>Marco legal y normativo</strong>La uniformidad de la fórmula de costo y su revelación son obligaciones normativas, no recomendaciones. Su incumplimiento afecta la razonabilidad de los estados financieros presentados a la Superintendencia de Compañías y la consistencia de la información declarada al SRI.</div>
+    </div>
+  </div>
+
+  <div class="conclusion">
+    <h4>Idea clave del Tema 4</h4>
+    <p style="margin-bottom:0">Con idénticas compras y ventas, FIFO arrojó una utilidad bruta de <strong>10.020,00</strong>, el promedio móvil <strong>9.870,00</strong> y el promedio del período <strong>9.735,00</strong>: hasta 285,00 dólares de diferencia sin que cambie un solo hecho económico. En precios al alza, FIFO produce el menor costo de ventas y el mayor inventario final; el promedio siempre queda en el medio. La fórmula debe escogerse por la naturaleza del bien y del negocio, no por conveniencia del resultado, aplicarse con uniformidad y revelarse. Escoger promedio implica renunciar al informe de antigüedad por capas y montar un control paralelo de vencimientos.</p>
+  </div>
+</div>
+
+<!-- ================= TEMA 5 ================= -->
+<div class="panel" id="t5">
+  <h2>Tema 5 · La contabilización de la venta del 18/08 bajo promedio móvil</h2>
+
+  <p>Esta mañana registraste esta misma venta con el costo FIFO de 10.450,00. Ahora vamos a registrarla con el costo que arrojó el promedio móvil: 10.575,00. Antes de escribir el asiento, la pregunta que hay que responder es cuál de las dos partes del registro cambia y cuál no.</p>
+
+  <div class="definicion">
+    <h4>Regla que ordena todo este tema</h4>
+    <p style="margin-bottom:0">En el sistema permanente, una venta a crédito genera un <strong>asiento dual</strong>: el asiento del <strong>ingreso</strong> y el asiento del <strong>costo</strong>. El asiento del ingreso se construye con datos externos y verificables —el precio pactado, la tarifa de IVA, los porcentajes de retención—, ninguno de los cuales depende de la fórmula de costo. El asiento del costo se construye con un dato interno —el costo de la mercadería que salió— que <strong>sí depende íntegramente de la fórmula escogida</strong>. Por lo tanto: <strong>el asiento del ingreso no cambia; solo cambia el asiento del costo.</strong></p>
+  </div>
+
+  <h3>Desglose completo del cálculo</h3>
+  <p>Datos de la operación: venta de 300 unidades del artículo INV-4501 a un cliente que es sociedad, agente de retención, con factura emitida el 18 de agosto de 2026 y precio de venta unitario de 52,00. Comercial El Astillero S.A. recibe del cliente el comprobante de retención correspondiente.</p>
+
+  <table class="tabla-simple">
+    <tr><th style="width:44%">Concepto</th><th>Cálculo</th><th style="text-align:right">USD</th></tr>
+    <tr><td>Base imponible (valor de la venta)</td><td>300 u × 52,00</td><td style="text-align:right">15.600,00</td></tr>
+    <tr><td>IVA en ventas, tarifa 15 %</td><td>15.600,00 × 15 %</td><td style="text-align:right">2.340,00</td></tr>
+    <tr><td><strong>Total de la factura</strong></td><td>15.600,00 + 2.340,00</td><td style="text-align:right"><strong>17.940,00</strong></td></tr>
+    <tr><td>(&minus;) Retención en la fuente de IR, 2 % en bienes</td><td>15.600,00 × 2 %</td><td style="text-align:right">(312,00)</td></tr>
+    <tr><td>(&minus;) Retención de IVA, 30 % en bienes</td><td>2.340,00 × 30 %</td><td style="text-align:right">(702,00)</td></tr>
+    <tr><td><strong>Valor neto a cobrar al cliente</strong></td><td>17.940,00 &minus; 312,00 &minus; 702,00</td><td style="text-align:right"><strong>16.926,00</strong></td></tr>
+    <tr><td colspan="3" style="background:#eaf4fd"><strong>Costo de la mercadería vendida bajo promedio móvil</strong></td></tr>
+    <tr><td>Costo unitario promedio vigente al 18/08</td><td>14.100,00 ÷ 400 u</td><td style="text-align:right">35,25</td></tr>
+    <tr><td><strong>Costo de ventas de la operación</strong></td><td>300 u × 35,25</td><td style="text-align:right"><strong>10.575,00</strong></td></tr>
+  </table>
+
+  <div class="nota-lateral">
+    <h4>Por qué la retención en la fuente es un activo y no un gasto</h4>
+    <p style="margin-bottom:0">Los 312,00 y los 702,00 que el cliente retiene no son una pérdida para El Astillero: son pagos anticipados que la empresa podrá compensar contra el impuesto a la renta del ejercicio y contra el IVA por pagar, respectivamente. Por eso van al <strong>debe</strong>, como derechos frente al Estado. Este criterio se estudió en el Día 4 y sigue vigente en todas las operaciones del curso.</p>
+  </div>
+
+  <h3>Los asientos</h3>
+
+  <div class="asiento">
+    <div class="asiento-head"><span>&minus;1&minus;</span><span>18 de agosto de 2026</span><span>Asiento del ingreso</span></div>
+    <table>
+      <tr><th style="width:74px">Fecha</th><th style="width:88px">Código</th><th>Detalle</th><th style="width:96px">Parcial</th><th style="width:104px">Debe</th><th style="width:104px">Haber</th></tr>
+      <tr><td>18/08/2026</td><td>1.1.02.01</td><td class="cuenta-deudora">Cuentas por Cobrar Comerciales</td><td class="mono"></td><td class="mono">16.926,00</td><td class="mono"></td></tr>
+      <tr><td></td><td>1.1.05.01</td><td class="cuenta-deudora">Anticipo de Impuesto a la Renta &ndash; Retenciones en la Fuente</td><td class="mono"></td><td class="mono">312,00</td><td class="mono"></td></tr>
+      <tr><td></td><td>1.1.05.02</td><td class="cuenta-deudora">Crédito Tributario por Retenciones de IVA</td><td class="mono"></td><td class="mono">702,00</td><td class="mono"></td></tr>
+      <tr><td></td><td>4.1.01.01</td><td class="cuenta-acreedora">a) Ventas de Mercaderías</td><td class="mono"></td><td class="mono"></td><td class="mono">15.600,00</td></tr>
+      <tr><td></td><td>2.1.03.01</td><td class="cuenta-acreedora">a) IVA en Ventas</td><td class="mono"></td><td class="mono"></td><td class="mono">2.340,00</td></tr>
+      <tr class="suman"><td colspan="3" style="text-align:right"><strong>SUMAN</strong></td><td class="mono"></td><td class="mono">17.940,00</td><td class="mono">17.940,00</td></tr>
+      <tr><td colspan="6" class="glosa">P/R Venta de 300 unidades del artículo INV-4501 "Ventilador de techo VT-16" a 52,00 cada una, según factura de venta emitida el 18 de agosto de 2026 y comprobante de retención recibido del cliente. Retención en la fuente de Impuesto a la Renta del 2 % en la adquisición de bienes y retención del 30 % del IVA, conforme a las resoluciones del Servicio de Rentas Internas vigentes (NAC-DGERCGC26-00000009 y NAC-DGERCGC20-00000061).</td></tr>
+    </table>
+  </div>
+
+  <div class="asiento">
+    <div class="asiento-head"><span>&minus;2&minus;</span><span>18 de agosto de 2026</span><span>Asiento del costo &mdash; promedio ponderado móvil</span></div>
+    <table>
+      <tr><th style="width:74px">Fecha</th><th style="width:88px">Código</th><th>Detalle</th><th style="width:96px">Parcial</th><th style="width:104px">Debe</th><th style="width:104px">Haber</th></tr>
+      <tr><td>18/08/2026</td><td>5.1.01.01</td><td class="cuenta-deudora">Costo de Ventas</td><td class="mono"></td><td class="mono">10.575,00</td><td class="mono"></td></tr>
+      <tr><td></td><td>1.1.03.01</td><td class="cuenta-acreedora">a) Inventario de Mercaderías</td><td class="mono">10.575,00</td><td class="mono"></td><td class="mono">10.575,00</td></tr>
+      <tr class="suman"><td colspan="3" style="text-align:right"><strong>SUMAN</strong></td><td class="mono"></td><td class="mono">10.575,00</td><td class="mono">10.575,00</td></tr>
+      <tr><td colspan="6" class="glosa">P/R Costo de las 300 unidades del artículo INV-4501 despachadas según la factura del 18 de agosto de 2026, valoradas al costo unitario promedio ponderado móvil vigente de 35,25, según tarjeta Kardex del artículo. Sistema de inventario permanente; fórmula de costo promedio ponderado admitida dentro del contenido de la NIC 2.</td></tr>
+    </table>
+  </div>
+
+  <h3>Contraste con el asiento del Día 10A</h3>
+  <p>Pon los dos asientos del costo uno junto al otro. Es la misma venta, el mismo día, las mismas 300 unidades físicas saliendo por la misma puerta de la misma bodega:</p>
+
+  <div class="scroll-x">
+  <table class="comparativo">
+    <tr><th style="text-align:left">Elemento del registro</th><th>Día 10A &mdash; FIFO</th><th>Día 10B &mdash; Promedio móvil</th><th>¿Cambia?</th></tr>
+    <tr><td>Cuentas por Cobrar Comerciales</td><td>16.926,00</td><td>16.926,00</td><td>No</td></tr>
+    <tr><td>Ventas de Mercaderías</td><td>15.600,00</td><td>15.600,00</td><td>No</td></tr>
+    <tr><td>IVA en Ventas</td><td>2.340,00</td><td>2.340,00</td><td>No</td></tr>
+    <tr><td>Retenciones recibidas</td><td>312,00 y 702,00</td><td>312,00 y 702,00</td><td>No</td></tr>
+    <tr><td><strong>Costo de Ventas</strong></td><td>10.450,00</td><td class="destacado">10.575,00</td><td><strong>Sí (+125,00)</strong></td></tr>
+    <tr><td><strong>Crédito a Inventario de Mercaderías</strong></td><td>10.450,00</td><td class="destacado">10.575,00</td><td><strong>Sí (+125,00)</strong></td></tr>
+    <tr><td>Utilidad bruta de esta operación</td><td>5.150,00</td><td>5.025,00</td><td><strong>Sí (&minus;125,00)</strong></td></tr>
+  </table>
+  </div>
+
+  <div class="ejemplo">
+    <h4>De dónde salen exactamente los 125,00</h4>
+    <p>Bajo <strong>FIFO</strong>, al 18 de agosto el saldo estaba formado por dos capas: 250 unidades de la compra del 05/08 a 34,00 y 150 unidades de la compra del 14/08 a 39,00. Las 300 unidades despachadas se tomaron en ese orden:</p>
+    <p>250 u × 34,00 = 8.500,00<br>
+    &nbsp;&nbsp;50 u × 39,00 = 1.950,00<br>
+    <strong>Total FIFO = 10.450,00</strong></p>
+    <p style="margin-bottom:0">Bajo <strong>promedio móvil</strong>, en cambio, la compra del 14/08 a 39,00 ya se había repartido entre las 400 unidades del saldo, elevando el costo de <em>todas</em> ellas a 35,25. Por eso las 300 unidades salieron a 300 × 35,25 = <strong>10.575,00</strong>. FIFO todavía disponía de unidades baratas de 34,00 sin contaminar; el promedio ya no. Diferencia: 10.575,00 &minus; 10.450,00 = <strong>125,00</strong>. Ese mismo importe reaparece, con signo contrario, en el inventario final y en la utilidad.</p>
+  </div>
+
+  <div class="alerta">
+    <h4>Advertencia sobre lo que estamos haciendo</h4>
+    <p style="margin-bottom:0">Los dos asientos del costo son <strong>alternativos y excluyentes</strong>: se registra uno o se registra el otro, jamás los dos. Aquí los mostramos juntos con fines didácticos, para que veas el efecto de la decisión de política contable. Una empresa real tiene una sola fórmula de costo declarada en sus políticas, y la aplica a todos sus inventarios de naturaleza y uso similar durante todo el ejercicio.</p>
+  </div>
+
+  <div class="carrera-box">
+    <h4>Este tema en las cuatro áreas de Negocios Internacionales</h4>
+    <div class="carrera-grid">
+      <div class="carrera-item"><strong>Comercio exterior</strong>Al liquidar una operación de venta local de mercadería importada, el registro del ingreso responde a la factura y a la normativa tributaria; el del costo responde a la tarjeta de inventarios que acumuló todos los costos de importación. Son dos mundos documentales distintos que se encuentran en el mismo día.</div>
+      <div class="carrera-item"><strong>Finanzas internacionales</strong>Los 125,00 de diferencia no afectan el flujo de caja: la empresa cobra 16.926,00 en los dos escenarios. Distinguir entre resultado contable y flujo de efectivo es la primera lección de todo análisis financiero, y este asiento la muestra en estado puro.</div>
+      <div class="carrera-item"><strong>Marketing y negociación internacional</strong>La utilidad bruta de esta operación es 5.150,00 o 5.025,00 según la fórmula. Si el vendedor cobra comisión sobre margen, la fórmula de costo determina literalmente cuánto gana. Alinear incentivos comerciales con la política contable evita conflictos internos.</div>
+      <div class="carrera-item"><strong>Marco legal y normativo</strong>El asiento del ingreso debe sustentarse en factura y comprobante de retención válidos conforme al Reglamento de Comprobantes de Venta, Retención y Documentos Complementarios; el del costo, en la tarjeta Kardex. Ambos respaldos deben conservarse por el plazo que exige la normativa tributaria.</div>
+    </div>
+  </div>
+
+  <div class="conclusion">
+    <h4>Idea clave del Tema 5</h4>
+    <p style="margin-bottom:0">En la venta del 18 de agosto, el asiento del ingreso es idéntico bajo cualquier fórmula de costo, porque se construye con datos externos: base 15.600,00, IVA 2.340,00, retenciones de 312,00 y 702,00 y cuentas por cobrar de 16.926,00, con SUMAN de 17.940,00. Lo único que cambia es el asiento del costo: <strong>10.575,00</strong> bajo promedio móvil frente a 10.450,00 bajo FIFO. Esos 125,00 de diferencia viajan simultáneamente al Estado de Resultados, reduciendo la utilidad, y al Estado de Situación Financiera, reduciendo el inventario.</p>
+  </div>
+</div>
+
+<!-- ================= TEMA 6 ================= -->
+<div class="panel" id="t6">
+  <h2>Tema 6 · Errores frecuentes y control interno del Kardex</h2>
+
+  <p>Una tarjeta puede estar aritméticamente perfecta y aun así no servir para nada, si la información que entra en ella no es confiable. En el Día 10A revisaste los errores de <em>llenado</em> de la tarjeta. Ahora vamos a mirar un nivel más arriba: los errores que nacen de la fórmula de costo escogida, y sobre todo el sistema de controles que hace que el Kardex sea creíble frente a un auditor, frente al SRI y frente a la propia gerencia.</p>
+
+  <h3>Errores específicos del promedio ponderado</h3>
+  <table class="tabla-simple">
+    <tr><th style="width:32%">Error</th><th>Por qué ocurre y cómo se detecta</th></tr>
+    <tr><td>Promediar precios en lugar de dividir dólares entre unidades</td><td>Nace de leer "promedio" como promedio aritmético simple. Se detecta comparando el costo unitario con el rango de precios de compra: si el resultado no está desplazado hacia el precio del lote más grande, hay error.</td></tr>
+    <tr><td>Recalcular el costo unitario después de una salida</td><td>Nace de aplicar mecánicamente la división en cada fila. Se detecta porque el costo unitario cambia en una fila donde no hubo entrada.</td></tr>
+    <tr><td>Cambiar de fórmula a mitad de período</td><td>Ocurre cuando distintas personas llenan la tarjeta o cuando se migra de sistema informático sin definir política. Se detecta porque la prueba de cuadre sigue cerrando pero el costo unitario da saltos inexplicables.</td></tr>
+    <tr><td>Aplicar promedio del período dentro de una tarjeta permanente</td><td>Confusión entre las dos versiones del promedio. Se detecta porque todas las salidas del mes aparecen al mismo costo unitario, incluidas las anteriores a la última compra.</td></tr>
+    <tr><td>Calcular la existencia final multiplicando en lugar de obtenerla por diferencia</td><td>Aparece cuando el costo unitario tiene decimales periódicos. Se detecta porque la prueba de cuadre falla por centavos.</td></tr>
+    <tr><td>Registrar la entrada por el valor de la factura en lugar del costo</td><td>Se incluye el IVA, o se omiten flete, seguro y aranceles. Se detecta conciliando el valor total de entradas del Kardex contra el débito a Inventario de Mercaderías en el Libro Mayor.</td></tr>
+  </table>
+
+  <h3>El control interno que sostiene la tarjeta</h3>
+  <p>El control interno es el conjunto de políticas y procedimientos que una empresa establece para proteger sus activos, asegurar la confiabilidad de su información y promover el cumplimiento de la normativa. Aplicado a inventarios, se organiza en cinco frentes.</p>
+
+  <div class="paso">
+    <h4>1. Segregación de funciones</h4>
+    <p style="margin-bottom:0">Quien <strong>custodia</strong> físicamente la mercadería (el bodeguero) no debe ser la misma persona que <strong>registra</strong> el Kardex contable, ni quien <strong>autoriza</strong> compras, ni quien <strong>concilia</strong> el conteo físico contra libros. Si una sola persona hace todo, un faltante puede ocultarse simplemente ajustando la tarjeta. Esta es la razón de fondo por la que existen el Kardex de bodega y el Kardex contable como registros separados que deben coincidir.</p>
+  </div>
+
+  <div class="paso">
+    <h4>2. Documentación soporte y numeración correlativa</h4>
+    <p style="margin-bottom:0">Ninguna fila del Kardex debe existir sin un documento que la respalde: factura de compra, guía de remisión, nota de ingreso a bodega, orden de despacho, factura de venta, nota de crédito. Los documentos internos deben tener numeración correlativa preimpresa o generada por sistema, de modo que un salto en la secuencia sea visible de inmediato.</p>
+  </div>
+
+  <div class="paso">
+    <h4>3. Conteo físico y toma de inventarios</h4>
+    <p style="margin-bottom:0">El conteo físico es la única prueba independiente de que lo que dice la tarjeta existe realmente. Puede ser <strong>integral</strong> —toda la bodega, generalmente al cierre del ejercicio, con la operación detenida— o <strong>cíclico</strong>, contando cada semana un grupo rotativo de artículos, priorizando los de mayor valor o mayor rotación. El conteo cíclico es preferible porque detecta las diferencias cerca del momento en que se produjeron, cuando todavía es posible investigar la causa.</p>
+  </div>
+
+  <div class="paso">
+    <h4>4. Autorización de ajustes y control de accesos</h4>
+    <p style="margin-bottom:0">Toda diferencia entre el conteo y la tarjeta genera un ajuste, y todo ajuste debe estar <strong>autorizado por escrito</strong> por alguien distinto de quien lo propone, con explicación de la causa. En sistemas informáticos, los permisos para modificar cantidades o costos deben estar restringidos y toda modificación debe quedar en una bitácora que registre usuario, fecha y valor anterior.</p>
+  </div>
+
+  <div class="paso">
+    <h4>5. Control de mermas, obsolescencia y vencimientos</h4>
+    <p style="margin-bottom:0">Un producto puede estar físicamente presente y contablemente registrado, y sin embargo haber perdido valor: se dañó, venció, pasó de moda o el precio de mercado cayó. Aquí es donde reaparece el <strong>valor neto realizable</strong> que estudiaste en el Día 8: cuando el VNR cae por debajo del costo, la existencia debe medirse al menor de los dos. El control interno debe generar la señal de alerta —informes de antigüedad, reportes de vencimiento, seguimiento de precios de mercado— para que ese hecho no pase inadvertido. Y como viste en el Tema 4, la empresa que usa promedio necesita ese informe de antigüedad <strong>fuera</strong> del Kardex, porque su tarjeta ya no distingue capas.</p>
+  </div>
+
+  <div class="alerta">
+    <h4>La diferencia entre un descuadre y un faltante</h4>
+    <p style="margin-bottom:0">No son lo mismo y confundirlos lleva a decisiones equivocadas. Un <strong>descuadre</strong> es una diferencia dentro de la propia tarjeta: la prueba de cuadre no cierra, lo cual siempre significa un error de cálculo o de registro y se corrige rehaciendo el cálculo. Un <strong>faltante</strong> es una diferencia entre la tarjeta (que cuadra perfectamente) y el conteo físico: la tarjeta dice 60 unidades y en el estante hay 57. Eso no es un error aritmético, es un hecho económico —robo, merma, daño, despacho no registrado— y debe investigarse y reconocerse contablemente. Un <strong>sobrante</strong> es el caso inverso y, aunque parezca una buena noticia, también es una señal de descontrol.</p>
+  </div>
+
+  <div class="futuro">
+    <h4>Contenido diferido &mdash; lo que viene después de esta clase</h4>
+    <ul style="margin-bottom:0">
+      <li><strong>Día 11 (jueves 27 de agosto de 2026, Unidad 3) &mdash; Asientos de ajuste:</strong> el registro contable de la rebaja del inventario a su valor neto realizable, y el registro de los <strong>faltantes y sobrantes</strong> detectados en el conteo físico. Hoy identificamos las situaciones; el jueves las convertimos en asientos.</li>
+      <li><strong>Día 12 (viernes 28 de agosto de 2026, Unidad 3) &mdash; Balance de comprobación ajustado:</strong> cómo quedan los saldos de Inventario de Mercaderías y Costo de Ventas una vez incorporados todos los ajustes.</li>
+      <li><strong>Unidad 4 (a partir del Día 14, martes 1 de septiembre de 2026) &mdash; Estados financieros:</strong> cómo el inventario final llega al Estado de Situación Financiera y el costo de ventas al Estado de Resultado Integral, y los asientos de cierre que hacen posible ese tránsito.</li>
+    </ul>
+  </div>
+
+  <div class="carrera-box">
+    <h4>Este tema en las cuatro áreas de Negocios Internacionales</h4>
+    <div class="carrera-grid">
+      <div class="carrera-item"><strong>Comercio exterior</strong>La mercadería en tránsito, en depósito aduanero o en zona franca sigue siendo inventario de la empresa aunque no esté en su bodega. El control interno debe cubrir esos puntos de custodia de terceros, con conciliaciones periódicas contra los reportes del agente de aduana o del operador logístico.</div>
+      <div class="carrera-item"><strong>Finanzas internacionales</strong>Un inventario sin control interno confiable es un activo que el banco descuenta o directamente no acepta como garantía. La calidad del control interno tiene un precio medible en la tasa de interés y en el porcentaje de financiamiento que se obtiene.</div>
+      <div class="carrera-item"><strong>Marketing y negociación internacional</strong>Prometer una entrega que la bodega no puede cumplir destruye una relación comercial construida en años. La confiabilidad del Kardex es, literalmente, la confiabilidad de la promesa que el área comercial hace al cliente extranjero.</div>
+      <div class="carrera-item"><strong>Marco legal y normativo</strong>Las diferencias de inventario no sustentadas pueden ser consideradas por la administración tributaria como ventas no declaradas o como gastos no deducibles. La documentación del conteo físico y de sus ajustes es la defensa de la empresa en una determinación tributaria.</div>
+    </div>
+  </div>
+
+  <div class="conclusion">
+    <h4>Idea clave del Tema 6</h4>
+    <p style="margin-bottom:0">Los errores propios del promedio nacen casi siempre de dos confusiones: promediar precios en vez de dividir dólares entre unidades, y recalcular donde no corresponde. Pero la confiabilidad de la tarjeta no depende solo del cálculo: depende de la segregación de funciones, del respaldo documental, del conteo físico, de la autorización de los ajustes y del control de mermas y vencimientos. Un descuadre se corrige rehaciendo el cálculo; un faltante se investiga y se registra. La distinción entre ambos es la puerta de entrada a los asientos de ajuste del Día 11.</p>
+  </div>
+</div>
+
+<!-- ================= EJERCICIO INTERACTIVO ================= -->
+<div class="panel" id="ej">
+  <h2>Ejercicio Interactivo · Kardex por promedio ponderado móvil</h2>
+
+  <div class="definicion">
+    <h4>Caso · Comercializadora Isla Puná S.A.</h4>
+    <p>Empresa comercial domiciliada en Guayaquil, obligada a llevar contabilidad, que opera con <strong>sistema de inventario permanente</strong> y aplica la fórmula de costo <strong>promedio ponderado móvil</strong>. Movimientos del artículo <strong>HB-140 &mdash; Hidrolavadora doméstica</strong> durante agosto de 2026:</p>
+    <table class="tabla-simple" style="margin-bottom:0">
+      <tr><th>Fecha</th><th>Movimiento</th><th style="text-align:right">Unidades</th><th style="text-align:right">Costo unitario</th></tr>
+      <tr><td>03/08/2026</td><td>Inventario inicial</td><td style="text-align:right">60</td><td style="text-align:right">20,00</td></tr>
+      <tr><td>07/08/2026</td><td>Compra</td><td style="text-align:right">140</td><td style="text-align:right">25,00</td></tr>
+      <tr><td>12/08/2026</td><td>Venta</td><td style="text-align:right">80</td><td style="text-align:right">&mdash;</td></tr>
+      <tr><td>19/08/2026</td><td>Compra</td><td style="text-align:right">80</td><td style="text-align:right">28,00</td></tr>
+      <tr><td>24/08/2026</td><td>Venta</td><td style="text-align:right">150</td><td style="text-align:right">&mdash;</td></tr>
+    </table>
+  </div>
+
+  <p><strong>Instrucciones:</strong> resuelve el Kardex en tu cuaderno antes de responder. Contesta las nueve preguntas y solo al final presiona <em>Verificar respuestas</em>. Si dejas alguna sin responder, el sistema te lo advertirá.</p>
+
+  <div class="ej-item">
+    <span class="enunciado">1. ¿Cuál es el costo unitario promedio del saldo inmediatamente después de la compra del 07/08?</span>
+    <div class="opciones">
+      <label class="opcion"><input type="radio" name="ei1" value="a"><span>22,50</span></label>
+      <label class="opcion"><input type="radio" name="ei1" value="b"><span>23,50</span></label>
+      <label class="opcion"><input type="radio" name="ei1" value="c"><span>25,00</span></label>
+      <label class="opcion"><input type="radio" name="ei1" value="d"><span>24,00</span></label>
+    </div>
+    <div class="feedback" id="fei1"></div>
+  </div>
+
+  <div class="ej-item">
+    <span class="enunciado">2. ¿Por qué valor debe registrarse la salida del 12/08 (80 unidades)?</span>
+    <div class="opciones">
+      <label class="opcion"><input type="radio" name="ei2" value="a"><span>1.880,00</span></label>
+      <label class="opcion"><input type="radio" name="ei2" value="b"><span>2.000,00</span></label>
+      <label class="opcion"><input type="radio" name="ei2" value="c"><span>1.600,00</span></label>
+      <label class="opcion"><input type="radio" name="ei2" value="d"><span>1.700,00</span></label>
+    </div>
+    <div class="feedback" id="fei2"></div>
+  </div>
+
+  <div class="ej-item">
+    <span class="enunciado">3. Inmediatamente después de registrar la venta del 12/08, ¿qué ocurre con el costo unitario del saldo?</span>
+    <div class="opciones">
+      <label class="opcion"><input type="radio" name="ei3" value="a"><span>Cambia a 25,00, porque la última compra fue a ese precio</span></label>
+      <label class="opcion"><input type="radio" name="ei3" value="b"><span>Cambia a 23,00 por efecto de la salida</span></label>
+      <label class="opcion"><input type="radio" name="ei3" value="c"><span>Se mantiene en 23,50, porque las salidas no recalculan el promedio</span></label>
+      <label class="opcion"><input type="radio" name="ei3" value="d"><span>No puede determinarse hasta el cierre del mes</span></label>
+    </div>
+    <div class="feedback" id="fei3"></div>
+  </div>
+
+  <div class="ej-item">
+    <span class="enunciado">4. ¿Cuál es el nuevo costo unitario promedio después de la compra del 19/08?</span>
+    <div class="opciones">
+      <label class="opcion"><input type="radio" name="ei4" value="a"><span>24,00</span></label>
+      <label class="opcion"><input type="radio" name="ei4" value="b"><span>26,50</span></label>
+      <label class="opcion"><input type="radio" name="ei4" value="c"><span>25,75</span></label>
+      <label class="opcion"><input type="radio" name="ei4" value="d"><span>25,30</span></label>
+    </div>
+    <div class="feedback" id="fei4"></div>
+  </div>
+
+  <div class="ej-item">
+    <span class="enunciado">5. ¿Por qué valor debe registrarse la salida del 24/08 (150 unidades)?</span>
+    <div class="opciones">
+      <label class="opcion"><input type="radio" name="ei5" value="a"><span>4.200,00</span></label>
+      <label class="opcion"><input type="radio" name="ei5" value="b"><span>3.795,00</span></label>
+      <label class="opcion"><input type="radio" name="ei5" value="c"><span>3.525,00</span></label>
+      <label class="opcion"><input type="radio" name="ei5" value="d"><span>3.840,00</span></label>
+    </div>
+    <div class="feedback" id="fei5"></div>
+  </div>
+
+  <div class="ej-item">
+    <span class="enunciado">6. ¿Cuál es la existencia final del artículo HB-140 al 31/08 bajo promedio ponderado móvil?</span>
+    <div class="opciones">
+      <label class="opcion"><input type="radio" name="ei6" value="a"><span>50 unidades por 1.265,00</span></label>
+      <label class="opcion"><input type="radio" name="ei6" value="b"><span>50 unidades por 1.400,00</span></label>
+      <label class="opcion"><input type="radio" name="ei6" value="c"><span>50 unidades por 1.239,29</span></label>
+      <label class="opcion"><input type="radio" name="ei6" value="d"><span>50 unidades por 1.250,00</span></label>
+    </div>
+    <div class="feedback" id="fei6"></div>
+  </div>
+
+  <div class="ej-item">
+    <span class="enunciado">7. ¿Cuál es la prueba de cuadre correcta del Kardex bajo promedio ponderado móvil?</span>
+    <div class="opciones">
+      <label class="opcion"><input type="radio" name="ei7" value="a"><span>5.740,00 = 4.475,00 + 1.265,00</span></label>
+      <label class="opcion"><input type="radio" name="ei7" value="b"><span>6.940,00 = 5.540,00 + 1.400,00</span></label>
+      <label class="opcion"><input type="radio" name="ei7" value="c"><span>8.140,00 = 5.675,00 + 2.465,00</span></label>
+      <label class="opcion"><input type="radio" name="ei7" value="d"><span>6.940,00 = 5.675,00 + 1.265,00</span></label>
+    </div>
+    <div class="feedback" id="fei7"></div>
+  </div>
+
+  <div class="ej-item">
+    <span class="enunciado">8. Si Comercializadora Isla Puná S.A. hubiera aplicado FIFO en lugar de promedio móvil sobre estos mismos movimientos, ¿qué habría ocurrido?</span>
+    <div class="opciones">
+      <label class="opcion"><input type="radio" name="ei8" value="a"><span>El costo de ventas sería mayor y la existencia final menor</span></label>
+      <label class="opcion"><input type="radio" name="ei8" value="b"><span>El costo de ventas y la existencia final serían exactamente iguales</span></label>
+      <label class="opcion"><input type="radio" name="ei8" value="c"><span>El costo de ventas sería menor (5.540,00) y la existencia final mayor (1.400,00)</span></label>
+      <label class="opcion"><input type="radio" name="ei8" value="d"><span>Cambiaría también la mercadería disponible para la venta</span></label>
+    </div>
+    <div class="feedback" id="fei8"></div>
+  </div>
+
+  <div class="ej-item">
+    <span class="enunciado">9. Suponiendo que la empresa operara con sistema periódico y aplicara promedio del período, ¿cuál sería el resultado?</span>
+    <div class="opciones">
+      <label class="opcion"><input type="radio" name="ei9" value="a"><span>Costo unitario 24,00 y costo de ventas de 5.520,00</span></label>
+      <label class="opcion"><input type="radio" name="ei9" value="b"><span>Costo unitario 24,7857, costo de ventas 5.700,71 y existencia final 1.239,29 obtenida por diferencia</span></label>
+      <label class="opcion"><input type="radio" name="ei9" value="c"><span>Costo unitario 25,30 y costo de ventas de 5.819,00</span></label>
+      <label class="opcion"><input type="radio" name="ei9" value="d"><span>No podría aplicarse, porque hubo dos compras en el mes</span></label>
+    </div>
+    <div class="feedback" id="fei9"></div>
+  </div>
+
+  <button class="btn" onclick="verificarEj()">Verificar respuestas</button>
+  <button class="btn btn-sec" onclick="reiniciarEj()">Reiniciar</button>
+
+  <div class="resultado" id="resEj">
+    <span class="emoji" id="emojiEj"></span>
+    <h3>Resultado del ejercicio</h3>
+    <div class="puntaje" id="puntajeEj"></div>
+    <div class="barra-cont"><div class="barra" id="barraEj"></div></div>
+    <p id="mensajeEj"></p>
+  </div>
+
+  <div class="solucion">
+    <h3>Solución completa desarrollada</h3>
+    <p><strong>Paso 1 &mdash; Kardex por promedio ponderado móvil, artículo HB-140</strong></p>
+    <div class="scroll-x">
+    <table class="kardex">
+      <thead>
+        <tr><th rowspan="2" style="width:62px">Fecha</th><th rowspan="2" style="width:150px">Detalle</th>
+        <th colspan="3">ENTRADAS</th><th colspan="3">SALIDAS</th><th colspan="3">EXISTENCIAS</th></tr>
+        <tr><th>Cant.</th><th>C.Unit.</th><th>Total</th><th>Cant.</th><th>C.Unit.</th><th>Total</th><th>Cant.</th><th>C.Unit.</th><th>Total</th></tr>
+      </thead>
+      <tbody>
+        <tr class="fila-ini"><td>03/08</td><td style="text-align:left">Inventario inicial</td><td>60</td><td class="num">20,0000</td><td class="num">1.200,00</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>60</td><td class="num">20,0000</td><td class="num">1.200,00</td></tr>
+        <tr class="fila-ent"><td>07/08</td><td style="text-align:left">Compra</td><td>140</td><td class="num">25,0000</td><td class="num">3.500,00</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>200</td><td class="num">23,5000</td><td class="num">4.700,00</td></tr>
+        <tr class="fila-sal"><td>12/08</td><td style="text-align:left">Venta</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>80</td><td class="num">23,5000</td><td class="num">1.880,00</td><td>120</td><td class="num">23,5000</td><td class="num">2.820,00</td></tr>
+        <tr class="fila-ent"><td>19/08</td><td style="text-align:left">Compra</td><td>80</td><td class="num">28,0000</td><td class="num">2.240,00</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>200</td><td class="num">25,3000</td><td class="num">5.060,00</td></tr>
+        <tr class="fila-sal"><td>24/08</td><td style="text-align:left">Venta</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>150</td><td class="num">25,3000</td><td class="num">3.795,00</td><td>50</td><td class="num">25,3000</td><td class="num">1.265,00</td></tr>
+        <tr class="fila-total"><td colspan="2" style="text-align:left">TOTALES (sin inicial)</td><td>220</td><td>&mdash;</td><td class="num">5.740,00</td><td>230</td><td>&mdash;</td><td class="num">5.675,00</td><td>50</td><td class="num">25,3000</td><td class="num">1.265,00</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p><strong>Paso 2 &mdash; Recálculos, uno por uno</strong></p>
+    <ul>
+      <li><strong>07/08 (entrada):</strong> (1.200,00 + 3.500,00) ÷ (60 + 140) = 4.700,00 ÷ 200 = <strong>23,5000</strong>. El promedio simple habría dado 22,50 y es incorrecto.</li>
+      <li><strong>12/08 (salida):</strong> 80 × 23,50 = <strong>1.880,00</strong>. Saldo: 120 u y 2.820,00; 2.820,00 ÷ 120 = 23,5000, sin cambio.</li>
+      <li><strong>19/08 (entrada):</strong> (2.820,00 + 2.240,00) ÷ (120 + 80) = 5.060,00 ÷ 200 = <strong>25,3000</strong>. El promedio simple habría dado 25,75.</li>
+      <li><strong>24/08 (salida):</strong> 150 × 25,30 = <strong>3.795,00</strong>. Existencia final: 50 u y 1.265,00.</li>
+    </ul>
+    <p><strong>Paso 3 &mdash; Prueba de cuadre</strong><br>
+    Disponible: 1.200,00 + 3.500,00 + 2.240,00 = <strong>6.940,00</strong> (280 u).<br>
+    Salidas + existencia final: 5.675,00 + 1.265,00 = <strong>6.940,00</strong> &#10004;</p>
+    <p><strong>Paso 4 &mdash; Comparativo con las otras dos fórmulas</strong></p>
+    <div class="scroll-x">
+    <table class="comparativo">
+      <tr><th style="text-align:left">Concepto</th><th>FIFO</th><th>Promedio móvil</th><th>Promedio del período</th></tr>
+      <tr><td>Costo de ventas (230 u)</td><td class="destacado">5.540,00</td><td>5.675,00</td><td>5.700,71</td></tr>
+      <tr><td>Existencia final (50 u)</td><td class="destacado">1.400,00</td><td>1.265,00</td><td>1.239,29</td></tr>
+      <tr><td>Prueba de cuadre</td><td>6.940,00</td><td>6.940,00</td><td>6.940,00</td></tr>
+    </table>
+    </div>
+    <p style="margin-bottom:0">Detalle del FIFO: la salida del 12/08 tomó 60 u a 20,00 (1.200,00) más 20 u a 25,00 (500,00) = 1.700,00; la del 24/08 tomó 120 u a 25,00 (3.000,00) más 30 u a 28,00 (840,00) = 3.840,00. Total 5.540,00; quedan 50 u a 28,00 = 1.400,00.<br>
+    Detalle del promedio del período: 6.940,00 ÷ 280 u = 24,7857 (cuatro decimales, conforme a la política declarada). Costo de ventas: 230 × 24,7857 = 5.700,71. Existencia final <strong>por diferencia</strong>: 6.940,00 &minus; 5.700,71 = 1.239,29. Si en cambio se multiplicara 50 × 24,7857 = 1.239,29 el resultado coincide, pero en otros casos no lo hará y por eso la política manda obtenerla por diferencia.<br>
+    Como los precios subieron durante el mes (20,00 → 25,00 → 28,00), FIFO arroja el menor costo de ventas y la mayor existencia final, tal como se estudió en el Tema 4.</p>
+  </div>
+</div>
+
+<!-- ================= CUESTIONARIO ================= -->
+<div class="panel" id="cu">
+  <h2>Cuestionario de evaluación</h2>
+  <p>Diez preguntas de opción múltiple: siete teóricas, que se responden con el contenido de este widget, y tres de análisis de caso, con datos propios que debes resolver por tu cuenta. Responde todas y presiona <em>Verificar respuestas</em> al final.</p>
+
+  <div class="definicion">
+    <h4>Datos para las preguntas 8, 9 y 10 · Andes Pack Cía. Ltda.</h4>
+    <p>Empresa comercializadora de insumos de embalaje domiciliada en Guayaquil, con sistema de inventario <strong>permanente</strong> y fórmula de costo <strong>promedio ponderado móvil</strong>. Movimientos del artículo <strong>EM-330 &mdash; Film stretch industrial (rollo)</strong> durante agosto de 2026:</p>
+    <table class="tabla-simple" style="margin-bottom:0">
+      <tr><th>Fecha</th><th>Movimiento</th><th style="text-align:right">Unidades</th><th style="text-align:right">Costo unitario</th></tr>
+      <tr><td>02/08/2026</td><td>Inventario inicial</td><td style="text-align:right">200</td><td style="text-align:right">12,00</td></tr>
+      <tr><td>06/08/2026</td><td>Compra</td><td style="text-align:right">300</td><td style="text-align:right">15,00</td></tr>
+      <tr><td>13/08/2026</td><td>Venta</td><td style="text-align:right">400</td><td style="text-align:right">&mdash;</td></tr>
+      <tr><td>20/08/2026</td><td>Compra</td><td style="text-align:right">200</td><td style="text-align:right">18,00</td></tr>
+      <tr><td>27/08/2026</td><td>Venta</td><td style="text-align:right">250</td><td style="text-align:right">&mdash;</td></tr>
+    </table>
+  </div>
+
+  <div class="ej-item">
+    <span class="enunciado"><span class="badge badge-teo">Teórica</span>1. ¿Por qué esta fórmula de costo se denomina promedio <em>ponderado</em>?</span>
+    <div class="opciones">
+      <label class="opcion"><input type="radio" name="qi1" value="a"><span>Porque se promedian entre sí los precios de compra del período</span></label>
+      <label class="opcion"><input type="radio" name="qi1" value="b"><span>Porque pondera el precio de venta con el precio de compra</span></label>
+      <label class="opcion"><input type="radio" name="qi1" value="c"><span>Porque cada precio pesa en proporción al número de unidades adquiridas a ese precio</span></label>
+      <label class="opcion"><input type="radio" name="qi1" value="d"><span>Porque el resultado se pondera por la tarifa de IVA aplicable</span></label>
+    </div>
+    <div class="feedback" id="fqi1"></div>
+  </div>
+
+  <div class="ej-item">
+    <span class="enunciado"><span class="badge badge-teo">Teórica</span>2. Bajo promedio ponderado móvil, ¿en qué momento se recalcula el costo unitario del saldo?</span>
+    <div class="opciones">
+      <label class="opcion"><input type="radio" name="qi2" value="a"><span>Después de cada movimiento, sea entrada o salida</span></label>
+      <label class="opcion"><input type="radio" name="qi2" value="b"><span>Únicamente después de cada entrada de mercadería</span></label>
+      <label class="opcion"><input type="radio" name="qi2" value="c"><span>Únicamente después de cada salida de mercadería</span></label>
+      <label class="opcion"><input type="radio" name="qi2" value="d"><span>Solamente al cierre del mes, con todos los movimientos acumulados</span></label>
+    </div>
+    <div class="feedback" id="fqi2"></div>
+  </div>
+
+  <div class="ej-item">
+    <span class="enunciado"><span class="badge badge-teo">Teórica</span>3. Para inventarios que no son partidas identificables individualmente, ¿qué fórmulas de costo se admiten dentro del contenido de la NIC 2?</span>
+    <div class="opciones">
+      <label class="opcion"><input type="radio" name="qi3" value="a"><span>Primera entrada primera salida (FIFO) y costo promedio ponderado</span></label>
+      <label class="opcion"><input type="radio" name="qi3" value="b"><span>FIFO, costo promedio ponderado y UEPS</span></label>
+      <label class="opcion"><input type="radio" name="qi3" value="c"><span>Únicamente el costo promedio ponderado</span></label>
+      <label class="opcion"><input type="radio" name="qi3" value="d"><span>Cualquier fórmula, siempre que la empresa la declare en sus políticas contables</span></label>
+    </div>
+    <div class="feedback" id="fqi3"></div>
+  </div>
+
+  <div class="ej-item">
+    <span class="enunciado"><span class="badge badge-teo">Teórica</span>4. ¿Por qué el promedio ponderado del período solo cabe dentro del sistema de inventario periódico?</span>
+    <div class="opciones">
+      <label class="opcion"><input type="radio" name="qi4" value="a"><span>Porque la NIC 2 prohíbe expresamente su uso en el sistema permanente</span></label>
+      <label class="opcion"><input type="radio" name="qi4" value="b"><span>Porque siempre produce un costo de ventas mayor que las demás fórmulas</span></label>
+      <label class="opcion"><input type="radio" name="qi4" value="c"><span>Porque el sistema permanente no admite ninguna clase de promedio</span></label>
+      <label class="opcion"><input type="radio" name="qi4" value="d"><span>Porque su costo unitario solo se conoce al cierre, y el sistema permanente exige valorar cada salida en el momento en que ocurre</span></label>
+    </div>
+    <div class="feedback" id="fqi4"></div>
+  </div>
+
+  <div class="ej-item">
+    <span class="enunciado"><span class="badge badge-teo">Teórica</span>5. En un contexto de precios de compra al alza, ¿qué produce FIFO frente al promedio ponderado?</span>
+    <div class="opciones">
+      <label class="opcion"><input type="radio" name="qi5" value="a"><span>Mayor costo de ventas y menor utilidad bruta</span></label>
+      <label class="opcion"><input type="radio" name="qi5" value="b"><span>Menor costo de ventas, mayor utilidad bruta y mayor inventario final</span></label>
+      <label class="opcion"><input type="radio" name="qi5" value="c"><span>Idéntico costo de ventas, pero distinta utilidad bruta</span></label>
+      <label class="opcion"><input type="radio" name="qi5" value="d"><span>Una mercadería disponible para la venta más baja</span></label>
+    </div>
+    <div class="feedback" id="fqi5"></div>
+  </div>
+
+  <div class="ej-item">
+    <span class="enunciado"><span class="badge badge-teo">Teórica</span>6. ¿Qué información deja de estar disponible en la tarjeta cuando una empresa pasa de FIFO a promedio ponderado?</span>
+    <div class="opciones">
+      <label class="opcion"><input type="radio" name="qi6" value="a"><span>La prueba de cuadre del Kardex</span></label>
+      <label class="opcion"><input type="radio" name="qi6" value="b"><span>El registro de las entradas del período</span></label>
+      <label class="opcion"><input type="radio" name="qi6" value="c"><span>El informe de antigüedad del inventario por capas</span></label>
+      <label class="opcion"><input type="radio" name="qi6" value="d"><span>El costo unitario del saldo en existencia</span></label>
+    </div>
+    <div class="feedback" id="fqi6"></div>
+  </div>
+
+  <div class="ej-item">
+    <span class="enunciado"><span class="badge badge-teo">Teórica</span>7. El gerente de una empresa pide al contador cambiar de FIFO a promedio ponderado porque así "pagará menos impuesto este año". ¿Qué corresponde responder técnicamente?</span>
+    <div class="opciones">
+      <label class="opcion"><input type="radio" name="qi7" value="a"><span>La fórmula debe responder a la naturaleza del bien y del negocio, aplicarse con uniformidad y revelarse; cambiarla por conveniencia del resultado vulnera ese principio y compromete la integridad profesional</span></label>
+      <label class="opcion"><input type="radio" name="qi7" value="b"><span>Es correcto: la empresa puede escoger cada año la fórmula que más le convenga</span></label>
+      <label class="opcion"><input type="radio" name="qi7" value="c"><span>Es correcto siempre que el cambio no se revele en las notas a los estados financieros</span></label>
+      <label class="opcion"><input type="radio" name="qi7" value="d"><span>Es indiferente, porque ambas fórmulas producen exactamente el mismo resultado</span></label>
+    </div>
+    <div class="feedback" id="fqi7"></div>
+  </div>
+
+  <div class="ej-item">
+    <span class="enunciado"><span class="badge badge-caso">Análisis de caso</span>8. En Andes Pack Cía. Ltda., ¿cuál es el costo unitario promedio del saldo inmediatamente después de la compra del 06/08?</span>
+    <div class="opciones">
+      <label class="opcion"><input type="radio" name="qi8" value="a"><span>13,50</span></label>
+      <label class="opcion"><input type="radio" name="qi8" value="b"><span>15,00</span></label>
+      <label class="opcion"><input type="radio" name="qi8" value="c"><span>14,00</span></label>
+      <label class="opcion"><input type="radio" name="qi8" value="d"><span>13,80</span></label>
+    </div>
+    <div class="feedback" id="fqi8"></div>
+  </div>
+
+  <div class="ej-item">
+    <span class="enunciado"><span class="badge badge-caso">Análisis de caso</span>9. ¿Cuál es el costo de ventas total del artículo EM-330 en agosto bajo promedio ponderado móvil?</span>
+    <div class="opciones">
+      <label class="opcion"><input type="radio" name="qi9" value="a"><span>9.600,00</span></label>
+      <label class="opcion"><input type="radio" name="qi9" value="b"><span>9.750,00</span></label>
+      <label class="opcion"><input type="radio" name="qi9" value="c"><span>9.670,00</span></label>
+      <label class="opcion"><input type="radio" name="qi9" value="d"><span>10.500,00</span></label>
+    </div>
+    <div class="feedback" id="fqi9"></div>
+  </div>
+
+  <div class="ej-item">
+    <span class="enunciado"><span class="badge badge-caso">Análisis de caso</span>10. Si Andes Pack Cía. Ltda. operara con sistema periódico y aplicara promedio del período sobre los mismos movimientos, ¿qué ocurriría con su utilidad bruta frente al promedio móvil?</span>
+    <div class="opciones">
+      <label class="opcion"><input type="radio" name="qi10" value="a"><span>Sería mayor en 80,00</span></label>
+      <label class="opcion"><input type="radio" name="qi10" value="b"><span>Sería menor en 80,00</span></label>
+      <label class="opcion"><input type="radio" name="qi10" value="c"><span>Sería exactamente igual</span></label>
+      <label class="opcion"><input type="radio" name="qi10" value="d"><span>Sería menor en 150,00</span></label>
+    </div>
+    <div class="feedback" id="fqi10"></div>
+  </div>
+
+  <button class="btn" onclick="verificarCu()">Verificar respuestas</button>
+  <button class="btn btn-sec" onclick="reiniciarCu()">Reiniciar</button>
+
+  <div class="resultado" id="resCu">
+    <span class="emoji" id="emojiCu"></span>
+    <h3>Resultado del cuestionario</h3>
+    <div class="puntaje" id="puntajeCu"></div>
+    <div class="barra-cont"><div class="barra" id="barraCu"></div></div>
+    <p id="mensajeCu"></p>
+  </div>
+</div>
+
+<!-- ================= ACTIVIDAD CON IA ================= -->
+<div class="panel" id="ia">
+  <h2>Actividad con Inteligencia Artificial</h2>
+  <p>Esta actividad se realiza con <strong>Claude</strong>, disponible de forma gratuita en <strong>claude.ai</strong>. No necesitas pagar nada ni instalar nada. El objetivo no es que la IA te resuelva el ejercicio: es que <strong>tú audites a la IA</strong>. Al terminar deberías poder decir con seguridad en qué acertó y en qué se equivocó, y sostenerlo con cifras.</p>
+
+  <div class="definicion">
+    <h4>Caso de trabajo · Insumos del Pacífico Sur S.A.</h4>
+    <p>Importadora y distribuidora de equipos de bombeo, domiciliada en Guayaquil, con sistema de inventario <strong>permanente</strong>. Movimientos del artículo <strong>BM-12 &mdash; Bomba centrífuga de 1 HP</strong> durante agosto de 2026:</p>
+    <table class="tabla-simple" style="margin-bottom:0">
+      <tr><th>Fecha</th><th>Movimiento</th><th style="text-align:right">Unidades</th><th style="text-align:right">Costo unitario</th></tr>
+      <tr><td>01/08/2026</td><td>Inventario inicial</td><td style="text-align:right">50</td><td style="text-align:right">80,00</td></tr>
+      <tr><td>08/08/2026</td><td>Compra</td><td style="text-align:right">150</td><td style="text-align:right">90,00</td></tr>
+      <tr><td>15/08/2026</td><td>Venta</td><td style="text-align:right">120</td><td style="text-align:right">&mdash;</td></tr>
+      <tr><td>22/08/2026</td><td>Compra</td><td style="text-align:right">100</td><td style="text-align:right">100,00</td></tr>
+      <tr><td>29/08/2026</td><td>Venta</td><td style="text-align:right">150</td><td style="text-align:right">&mdash;</td></tr>
+    </table>
+  </div>
+
+  <div class="paso">
+    <h4>Fase 1 &mdash; Resuelve tú primero, a mano (no negociable)</h4>
+    <p style="margin-bottom:0">Antes de abrir claude.ai, arma el Kardex completo por promedio ponderado móvil en tu cuaderno, aplicando la <strong>política de redondeo de este curso</strong>: costo unitario a cuatro decimales, valores a dos, existencia final obtenida por diferencia. Anota los tres costos unitarios sucesivos, el valor de cada salida, la existencia final y la prueba de cuadre. Guarda esa hoja: es tu única defensa cuando la IA te diga algo distinto con mucha seguridad.</p>
+  </div>
+
+  <div class="paso">
+    <h4>Fase 2 &mdash; Encuentra los errores del prompt ANTES de enviarlo</h4>
+    <p>Abajo hay un prompt redactado por un estudiante del semestre pasado. Contiene <strong>cuatro errores conceptuales deliberados</strong>. Si lo envías tal como está, la IA arrastrará esos errores y te devolverá un resultado equivocado con tono de certeza.</p>
+    <p style="margin-bottom:0"><strong>Tu tarea:</strong> identifica los cuatro errores, escríbelos en tu cuaderno explicando por qué cada uno es un error, y <strong>corrige el prompt</strong> antes de enviarlo.</p>
+  </div>
+
+  <div class="prompt-box">PROMPT CON ERRORES DELIBERADOS &mdash; NO LO ENVÍES ASÍ
+
+Actúa como contador. Necesito el Kardex del artículo BM-12 de Insumos del
+Pacífico Sur S.A. de agosto de 2026, con estos movimientos:
+01/08 inicial 50 u a 80,00 · 08/08 compra 150 u a 90,00 · 15/08 venta 120 u ·
+22/08 compra 100 u a 100,00 · 29/08 venta 150 u.
+
+Usa las siguientes instrucciones:
+1. Aplica el método promedio ponderado, recalculando el costo unitario
+   después de CADA movimiento del mes, tanto entradas como salidas.
+2. Para obtener el costo unitario promedio, saca el promedio de los precios
+   de compra: (80 + 90 + 100) dividido para 3.
+3. Compara el resultado con el método UEPS, que la NIC 2 también admite como
+   fórmula de costo válida.
+4. Como la empresa lleva sistema permanente, valora todas las salidas del mes
+   al costo unitario único del período calculado al 31 de agosto.</div>
+
+  <div class="alerta">
+    <h4>Pista, sin darte la respuesta</h4>
+    <p style="margin-bottom:0">Uno de los errores está en <em>cuándo</em> se recalcula. Otro está en <em>cómo</em> se calcula el promedio. Otro afirma algo falso sobre lo que la norma admite. Y el cuarto combina dos cosas que son mutuamente incompatibles, tal como se explicó en el Tema 3. Todos están tratados en este widget: si alguno no te salta a la vista, vuelve al tema correspondiente antes de continuar.</p>
+  </div>
+
+  <div class="paso">
+    <h4>Fase 3 &mdash; Envía tu prompt corregido</h4>
+    <p style="margin-bottom:0">Redáctalo tú, con tus palabras. Debe pedir el Kardex por promedio ponderado <strong>móvil</strong>, declarar la política de redondeo, exigir la prueba de cuadre y pedir que muestre el cálculo de cada recálculo, no solo el resultado. Pide además el comparativo con FIFO, indicando cuál de los dos arroja mayor utilidad bruta y por qué.</p>
+  </div>
+
+  <div class="paso">
+    <h4>Fase 4 &mdash; Audita la respuesta contra tu hoja</h4>
+    <p>Compara cifra por cifra y responde por escrito:</p>
+    <ul style="margin-bottom:0">
+      <li>¿Los tres costos unitarios sucesivos coinciden con los tuyos? ¿La IA los expresó con cuántos decimales?</li>
+      <li>El tercer costo unitario no es un número redondo. ¿Qué hizo la IA con los decimales? ¿La prueba de cuadre le cerró exactamente, o le quedó una diferencia de centavos que no comentó?</li>
+      <li>¿Obtuvo la existencia final por diferencia o multiplicando unidades por el costo unitario redondeado? ¿Qué resultado da cada camino? Aquí está la trampa fina de este caso: <strong>los dos caminos no dan lo mismo</strong>.</li>
+      <li>¿Explicó por qué FIFO arroja mayor utilidad bruta, o solo lo afirmó?</li>
+      <li>Si detectaste un error, <strong>pídele a la IA que lo corrija señalándole exactamente dónde está</strong>. Registra si lo acepta, si lo defiende o si cambia de respuesta sin explicar.</li>
+    </ul>
+  </div>
+
+  <div class="tip">
+    <h4>Criterio de evaluación: cómo se distingue el pensamiento crítico de la copia</h4>
+    <table class="tabla-simple" style="margin-bottom:0">
+      <tr><th style="width:50%">Copia simple (no acredita la actividad)</th><th>Pensamiento crítico (lo que se evalúa)</th></tr>
+      <tr><td>Entrega la respuesta de la IA pegada, sin hoja de trabajo previa.</td><td>Entrega primero su Kardex hecho a mano y después el de la IA, con las diferencias señaladas.</td></tr>
+      <tr><td>No identifica ningún error en el prompt, o los nombra sin explicar por qué lo son.</td><td>Identifica los cuatro errores y fundamenta cada uno con el concepto correspondiente.</td></tr>
+      <tr><td>Acepta la cifra de la IA aunque no cuadre.</td><td>Verifica la prueba de cuadre y detecta la diferencia por redondeo, explicando cómo se resuelve.</td></tr>
+      <tr><td>Concluye "la IA lo hizo bien".</td><td>Concluye con un juicio propio, sostenido en cifras, sobre en qué la IA fue confiable y en qué no.</td></tr>
+    </table>
+  </div>
+
+  <div class="nota-lateral">
+    <h4>Producto que debes entregar</h4>
+    <p style="margin-bottom:0">Un documento de dos a tres páginas con: (1) tu Kardex hecho a mano, fotografiado o transcrito; (2) los cuatro errores del prompt, explicados; (3) tu prompt corregido; (4) la respuesta de la IA; (5) tu auditoría comparativa; y (6) una conclusión personal de cinco a diez líneas sobre qué tareas de este tipo delegarías a una IA y cuáles no, y por qué.</p>
+  </div>
+</div>
+
+<!-- ================= REFLEXIÓN ================= -->
+<div class="panel" id="ref">
+  <h2>Reflexión</h2>
+
+  <p style="background:#eaf4fd;border-left:6px solid #003366;padding:16px 19px;border-radius:0 7px 7px 0"><strong>Antes de empezar, algo que conviene recordar.</strong> Es muy común que quien estudia Negocios Internacionales piense que la carrera consiste en "negociar": sentarse en una mesa con un proveedor extranjero y conseguir un mejor precio. Negociar es una parte, y es una parte importante. Pero la carrera es mucho más amplia. Es analizar costos para saber si un negocio conviene. Es leer estados financieros de una empresa extranjera y entender qué dicen y qué esconden. Es diseñar y sostener cadenas de abastecimiento que cruzan océanos. Es medir y cubrir el riesgo cambiario. Es dominar la normativa aduanera y tributaria de dos países a la vez. Y es, sobre todo, <strong>sustentar decisiones frente a terceros con evidencia</strong>: frente a un banco, frente a un socio, frente a la administración tributaria, frente a un cliente que exige explicaciones. Todo lo que hiciste hoy —dividir dólares entre unidades, decidir un criterio de redondeo, explicar por qué dos utilidades distintas pueden ser ambas correctas— es exactamente eso.</p>
+
+  <div class="pregunta-ref">
+    <span class="etq">1 · Del objeto concreto</span>
+    <p style="margin-bottom:0">Piensa en un producto que compres seguido: una funda de arroz, un desodorante, una carga de gas. En la percha hay veinte iguales, del mismo lote aparente. <strong>¿Podrías tú distinguir cuál llegó primero a esa percha?</strong> Ahora imagina que eres el dueño del local y alguien te pregunta cuánto te costó exactamente <em>la que acaba de salir</em>. ¿Qué le responderías, y con qué criterio? Escribe tu respuesta antes de seguir leyendo, y compárala después con lo que hace el promedio ponderado.</p>
+  </div>
+
+  <div class="pregunta-ref">
+    <span class="etq">2 · De la cadena de actores</span>
+    <p style="margin-bottom:0">Esa funda de arroz pasó por un agricultor, una piladora, un distribuidor mayorista, un transportista y el local donde la compraste. En cada uno de esos eslabones alguien tuvo que registrar una entrada y una salida, y decidir a qué costo. <strong>¿Qué pasaría si uno de esos actores llevara mal su Kardex?</strong> ¿A quién afectaría primero: a él mismo, al siguiente de la cadena, al Estado, al consumidor? Ordena esos afectados de más inmediato a más lejano y justifica tu orden.</p>
+  </div>
+
+  <div class="pregunta-ref">
+    <span class="etq">3 · De la necesidad de información confiable</span>
+    <p style="margin-bottom:0">Hoy viste que la misma empresa, con las mismas compras y las mismas ventas, puede reportar 10.020,00 o 9.735,00 de utilidad según la fórmula que escoja. Nadie mintió y nadie se equivocó. <strong>¿Cómo le explicarías esto a alguien que no estudia contabilidad y que, al escucharlo, concluye que "los números se acomodan"?</strong> ¿Qué es lo que impide que efectivamente se acomoden a conveniencia?</p>
+  </div>
+
+  <div class="pregunta-ref">
+    <span class="etq">4 · Del negocio internacional</span>
+    <p style="margin-bottom:0">Estás evaluando a dos proveedores extranjeros del mismo producto. Uno reporta un margen bruto del 32,66 % y el otro del 31,73 %. Al leer las notas descubres que usan fórmulas de costo distintas. <strong>¿Qué preguntas harías antes de concluir que el primero es más eficiente?</strong> ¿Qué información adicional pedirías, y a quién?</p>
+  </div>
+
+  <div class="pregunta-ref">
+    <span class="etq">5 · Exploración vocacional</span>
+    <p style="margin-bottom:0">De las cuatro áreas de la carrera —<strong>comercio exterior</strong>, <strong>finanzas internacionales</strong>, <strong>marketing y negociación internacional</strong>, <strong>marco legal y normativo</strong>— piensa en cuál te imaginaste trabajando mientras resolvías el Kardex de hoy. ¿Fuiste la persona que quería saber de dónde venía cada embarque, la que quería entender el efecto en la utilidad, la que pensaba en el precio de venta, o la que se preguntaba qué exige la norma? <strong>Escribe cuál de las cuatro te llamó más y por qué</strong>, y anota también cuál te resultó más ajena. Guarda esta respuesta: al terminar la Unidad 4 volverás a leerla y quizá haya cambiado.</p>
+  </div>
+
+  <div class="pregunta-ref">
+    <span class="etq">6 · Inteligencia emocional</span>
+    <p style="margin-bottom:0">Hoy hubo un momento incómodo en la clase: descubrir que la utilidad no es un dato objetivo, sino que depende en parte de una decisión humana. Hay estudiantes a quienes eso les genera desconfianza, otros a quienes les genera curiosidad, y otros a quienes les da pereza. <strong>¿Qué sentiste tú?</strong> Y una pregunta más difícil: si mañana un jefe te pidiera cambiar la fórmula de costo "solo por este año", ¿qué crees que sentirías, y qué crees que harías? No respondas lo que suena correcto: responde lo que honestamente crees que te pasaría, y después piensa qué necesitarías tener —conocimiento, respaldo, argumentos, alguien a quién consultar— para sostener la respuesta que te gustaría dar.</p>
+  </div>
+
+  <div class="pregunta-ref">
+    <span class="etq">7 · De cierre</span>
+    <p style="margin-bottom:0">Explícale a alguien de tu casa, en no más de cinco oraciones y sin usar la palabra "Kardex", qué hiciste hoy en clase y para qué sirve. Si no logras que te entienda, todavía no lo dominas del todo: vuelve al Tema 1 y prueba otra vez.</p>
+  </div>
+</div>
+
+<!-- ================= BIBLIOGRAFÍA ================= -->
+<div class="panel" id="bib">
+  <h2>Bibliografía</h2>
+  <p>Referencias en formato APA 7.ª edición. Todas corresponden a obras y cuerpos normativos reales.</p>
+
+  <div class="biblio-card"><span class="tipo">TEXTO BÁSICO</span><br>
+  Zapata Sánchez, P. (2011). <em>Laboratorio de contabilidad general</em> (7.ª ed.). McGraw-Hill Interamericana.</div>
+
+  <div class="biblio-card"><span class="tipo">TEXTO BÁSICO</span><br>
+  Zapata Sánchez, P. (2017). <em>Contabilidad general: con base en Normas Internacionales de Información Financiera</em> (8.ª ed.). Alfaomega.</div>
+
+  <div class="biblio-card"><span class="tipo">TEXTO COMPLEMENTARIO</span><br>
+  Moreno Fernández, J. A. (2014). <em>Contabilidad básica</em> (4.ª ed.). Grupo Editorial Patria.</div>
+
+  <div class="biblio-card"><span class="tipo">TEXTO COMPLEMENTARIO</span><br>
+  Guajardo Cantú, G., &amp; Andrade de Guajardo, N. E. (2014). <em>Contabilidad financiera</em> (6.ª ed.). McGraw-Hill Interamericana.</div>
+
+  <div class="biblio-card"><span class="tipo">CONTROL INTERNO</span><br>
+  Estupiñán Gaitán, R. (2015). <em>Control interno y fraudes: análisis de informe COSO I, II y III con base en los ciclos transaccionales</em> (3.ª ed.). Ecoe Ediciones.</div>
+
+  <div class="biblio-card"><span class="tipo">NORMATIVA CONTABLE</span><br>
+  IFRS Foundation. (2023). <em>Norma Internacional de Contabilidad 2: Inventarios</em>. IFRS Foundation. https://www.ifrs.org</div>
+
+  <div class="biblio-card"><span class="tipo">NORMATIVA LEGAL</span><br>
+  Asamblea Nacional del Ecuador. (2019). <em>Código de Comercio</em>. Registro Oficial Suplemento 497 del 29 de mayo de 2019.</div>
+
+  <div class="biblio-card"><span class="tipo">NORMATIVA TRIBUTARIA</span><br>
+  Congreso Nacional del Ecuador. (2004). <em>Ley de Régimen Tributario Interno</em>. Registro Oficial Suplemento 463 del 17 de noviembre de 2004 (y sus reformas).</div>
+
+  <div class="biblio-card"><span class="tipo">NORMATIVA TRIBUTARIA</span><br>
+  Servicio de Rentas Internas. (2026). <em>Resolución NAC-DGERCGC26-00000009: porcentajes de retención en la fuente de impuesto a la renta</em>. Servicio de Rentas Internas del Ecuador. https://www.sri.gob.ec</div>
+
+  <div class="biblio-card"><span class="tipo">NORMATIVA TRIBUTARIA</span><br>
+  Servicio de Rentas Internas. (2020). <em>Resolución NAC-DGERCGC20-00000061: porcentajes de retención en la fuente de IVA</em>. Servicio de Rentas Internas del Ecuador. https://www.sri.gob.ec</div>
+
+  <div class="nota-lateral" style="margin-top:22px">
+    <h4>Nota sobre el uso de las fuentes</h4>
+    <p style="margin-bottom:0">Verifica siempre la disponibilidad y la edición vigente de cada obra en <strong>Google Scholar</strong>, en el <strong>repositorio institucional de la Universidad de Guayaquil</strong> o en la <strong>biblioteca virtual eLibro</strong> a la que la universidad da acceso. Para los cuerpos normativos, consulta siempre la versión vigente publicada en los portales oficiales del Servicio de Rentas Internas, de la Superintendencia de Compañías, Valores y Seguros, y de la Fundación IFRS: las resoluciones se reforman con frecuencia y una cita desactualizada puede llevarte a aplicar un porcentaje que ya no rige.</p>
+  </div>
+</div>
+
+<footer>
+  Universidad de Guayaquil · Facultad de Ciencias Administrativas · Carrera de Negocios Internacionales<br>
+  Contabilidad General (091601124) · Unidad 3 · Día 10B · Miércoles 26 de agosto de 2026<br>
+  Ing. Gabriel Francisco García Gutiérrez, Mgs.
+</footer>
+
+</div><!-- /.wrap -->
+
+<script>
+/* ============================================================
+   NAVEGACIÓN POR PESTAÑAS
+   ============================================================ */
+function showTab(id, btn){
+  var paneles = document.querySelectorAll('.panel');
+  for(var i=0;i<paneles.length;i++){ paneles[i].classList.remove('active'); }
+  var botones = document.querySelectorAll('.tab-btn');
+  for(var j=0;j<botones.length;j++){ botones[j].classList.remove('active'); }
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* ============================================================
+   ACORDEÓN DEL REPASO
+   ============================================================ */
+function toggleAcc(btn){
+  var panel = btn.nextElementSibling;
+  var flecha = btn.querySelector('.flecha');
+  if(panel.classList.contains('abierto')){
+    panel.classList.remove('abierto');
+    flecha.innerHTML = '&#9654;';
+  } else {
+    panel.classList.add('abierto');
+    flecha.innerHTML = '&#9660;';
+  }
+}
+
+/* ============================================================
+   EJERCICIO INTERACTIVO — claves y retroalimentación
+   ============================================================ */
+var clavesEj = {ei1:'b', ei2:'a', ei3:'c', ei4:'d', ei5:'b', ei6:'a', ei7:'d', ei8:'c', ei9:'b'};
+
+var retroEj = {
+ ei1:{ok:'Correcto. (1.200,00 + 3.500,00) &divide; (60 + 140) = 4.700,00 &divide; 200 = 23,5000. Nota que el promedio simple de 20,00 y 25,00 habría dado 22,50, que es incorrecto porque ignora que las unidades de 25,00 son más del doble.',
+      mal:'Incorrecto. La respuesta es <strong>23,50</strong>. Se obtiene dividiendo el valor total del saldo entre las unidades del saldo: (1.200,00 + 3.500,00) &divide; (60 + 140) = 4.700,00 &divide; 200 = 23,5000. Si escogiste 22,50 promediaste los precios entre sí, que es el error más frecuente; si escogiste 25,00 tomaste el precio de la última compra, que corresponde a otro método.'},
+ ei2:{ok:'Correcto. 80 u &times; 23,50 = 1.880,00. La salida se valora al costo unitario promedio vigente en ese momento.',
+      mal:'Incorrecto. La respuesta es <strong>1.880,00</strong> = 80 u &times; 23,50, el costo promedio vigente al 12/08. Los 2.000,00 corresponden a valorar al último precio de compra (80 &times; 25,00); los 1.600,00, al costo del inventario inicial (80 &times; 20,00); y los 1.700,00 son el valor que habría dado FIFO (60 u a 20,00 más 20 u a 25,00), que es correcto para esa otra fórmula pero no para promedio móvil.'},
+ ei3:{ok:'Correcto. Las salidas nunca recalculan el promedio. Comprobación: saldo 120 u y 2.820,00; 2.820,00 &divide; 120 = 23,5000, idéntico al anterior. La salida sale justamente al promedio, así que no puede moverlo.',
+      mal:'Incorrecto. El costo unitario <strong>se mantiene en 23,50</strong>. La regla operativa del promedio móvil es que solo las <em>entradas</em> recalculan. Compruébalo: después de la venta quedan 120 u y 2.820,00; 2.820,00 &divide; 120 = 23,5000, exactamente el mismo valor. Una salida valorada al promedio no puede alterar el promedio.'},
+ ei4:{ok:'Correcto. (2.820,00 + 2.240,00) &divide; (120 + 80) = 5.060,00 &divide; 200 = 25,3000.',
+      mal:'Incorrecto. La respuesta es <strong>25,30</strong>: (2.820,00 + 2.240,00) &divide; (120 + 80) = 5.060,00 &divide; 200 = 25,3000. Si escogiste 25,75 promediaste 23,50 y 28,00 entre sí, olvidando que las 120 unidades a 23,50 pesan más que las 80 a 28,00.'},
+ ei5:{ok:'Correcto. 150 u &times; 25,30 = 3.795,00, al costo promedio vigente tras la compra del 19/08.',
+      mal:'Incorrecto. La respuesta es <strong>3.795,00</strong> = 150 u &times; 25,30. Los 4.200,00 valoran al último precio de compra; los 3.525,00 usan el promedio anterior sin actualizar por la compra del 19/08; y los 3.840,00 son el resultado que da FIFO para esa salida (120 u a 25,00 más 30 u a 28,00), correcto para esa fórmula pero no para esta.'},
+ ei6:{ok:'Correcto. 50 u &times; 25,30 = 1.265,00, que coincide con 5.060,00 &minus; 3.795,00. La existencia final queda valorada al último promedio vigente.',
+      mal:'Incorrecto. La respuesta es <strong>50 unidades por 1.265,00</strong>. Los 1.400,00 corresponden al resultado bajo FIFO (50 u a 28,00) y los 1.239,29 al promedio del período. Cada fórmula deja una existencia final distinta, y ese es precisamente el punto del Tema 4.'},
+ ei7:{ok:'Correcto. Disponible 6.940,00 (1.200,00 + 3.500,00 + 2.240,00) = salidas 5.675,00 + existencia final 1.265,00. La prueba cierra al centavo.',
+      mal:'Incorrecto. La prueba correcta es <strong>6.940,00 = 5.675,00 + 1.265,00</strong>. La mercadería disponible es la suma del inventario inicial más todas las compras (1.200,00 + 3.500,00 + 2.240,00 = 6.940,00). La opción 6.940,00 = 5.540,00 + 1.400,00 también cuadra aritméticamente, pero corresponde a FIFO, no a promedio móvil, que es lo que la pregunta pedía.'},
+ ei8:{ok:'Correcto. Como los precios subieron (20,00 → 25,00 → 28,00), FIFO despacha primero las unidades más baratas: costo de ventas 5.540,00 e existencia final 1.400,00, valorada al precio más reciente de 28,00.',
+      mal:'Incorrecto. Bajo FIFO el <strong>costo de ventas sería menor (5.540,00) y la existencia final mayor (1.400,00)</strong>. Con precios al alza, FIFO despacha primero lo más barato y deja en bodega lo más caro. Ten presente que la mercadería disponible para la venta es la misma 6.940,00 en cualquier fórmula: la fórmula solo decide cómo se reparte ese total entre costo e inventario.'},
+ ei9:{ok:'Correcto. 6.940,00 &divide; 280 u = 24,7857 con cuatro decimales. Costo de ventas: 230 &times; 24,7857 = 5.700,71; existencia final por diferencia: 6.940,00 &minus; 5.700,71 = 1.239,29.',
+      mal:'Incorrecto. El costo unitario del período es <strong>24,7857</strong> (6.940,00 &divide; 280 u, a cuatro decimales según la política declarada), el costo de ventas 230 &times; 24,7857 = <strong>5.700,71</strong> y la existencia final se obtiene por diferencia: 6.940,00 &minus; 5.700,71 = <strong>1.239,29</strong>. La opción que dice que no podría aplicarse es falsa: el promedio del período es perfectamente aplicable con cualquier número de compras, siempre que el sistema sea periódico.'}
+};
+
+function verificarEj(){
+  var faltan = [];
+  for(var k in clavesEj){
+    if(!document.querySelector('input[name="'+k+'"]:checked')){ faltan.push(k.replace('ei','')); }
+  }
+  if(faltan.length > 0){
+    alert('Te faltan por responder las preguntas: ' + faltan.join(', ') + '.\nResponde todas antes de verificar.');
+    return;
+  }
+  var aciertos = 0, total = 0;
+  for(var key in clavesEj){
+    total++;
+    var sel = document.querySelector('input[name="'+key+'"]:checked').value;
+    var fb = document.getElementById('f'+key);
+    fb.classList.remove('ok','mal');
+    if(sel === clavesEj[key]){
+      aciertos++;
+      fb.classList.add('ok');
+      fb.innerHTML = '<strong>&#10004; Correcto.</strong> ' + retroEj[key].ok;
+    } else {
+      fb.classList.add('mal');
+      fb.innerHTML = '<strong>&#10008; Revisa.</strong> ' + retroEj[key].mal;
+    }
+    fb.classList.add('visible');
+  }
+  mostrarResultado(aciertos, total, 'resEj', 'puntajeEj', 'barraEj', 'emojiEj', 'mensajeEj');
+}
+
+function reiniciarEj(){
+  for(var k in clavesEj){
+    var opts = document.getElementsByName(k);
+    for(var i=0;i<opts.length;i++){ opts[i].checked = false; }
+    var fb = document.getElementById('f'+k);
+    fb.classList.remove('visible','ok','mal');
+    fb.innerHTML = '';
+  }
+  document.getElementById('resEj').classList.remove('visible');
+  document.getElementById('barraEj').style.width = '0';
+}
+
+/* ============================================================
+   CUESTIONARIO — claves y retroalimentación
+   ============================================================ */
+var clavesCu = {qi1:'c', qi2:'b', qi3:'a', qi4:'d', qi5:'b', qi6:'c', qi7:'a', qi8:'d', qi9:'c', qi10:'b'};
+
+var retroCu = {
+ qi1:{ok:'Correcto. Cada precio pesa según cuántas unidades se compraron a ese precio. Por eso se divide el valor total del saldo entre las unidades del saldo, y no se promedian los precios entre sí.',
+      mal:'Incorrecto. Se llama ponderado porque <strong>cada precio pesa en proporción al número de unidades adquiridas a ese precio</strong>. Un lote de 300 unidades influye tres veces más que uno de 100. Por eso la fórmula es valor total del saldo dividido para unidades del saldo, nunca el promedio aritmético de los precios.'},
+ qi2:{ok:'Correcto. Solo las entradas recalculan. Una salida valorada al promedio vigente no puede alterar ese promedio, como se comprueba dividiendo el nuevo saldo entre las nuevas unidades.',
+      mal:'Incorrecto. El costo unitario se recalcula <strong>únicamente después de cada entrada de mercadería</strong>. Después de una salida cambian las unidades y el valor del saldo, pero el cociente entre ambos permanece idéntico, porque la salida se valoró justamente a ese cociente. Recalcular en cada movimiento es uno de los errores más frecuentes al llenar la tarjeta.'},
+ qi3:{ok:'Correcto. Para inventarios no identificables individualmente, la NIC 2 admite FIFO y costo promedio ponderado, y exige aplicar la misma fórmula a todos los inventarios de naturaleza y uso similar.',
+      mal:'Incorrecto. Las fórmulas admitidas son <strong>FIFO y costo promedio ponderado</strong>. El UEPS no está entre ellas: fue retirado por el IASB, tal como se explicó en el Día 9. Y no es cierto que baste con declarar cualquier fórmula en las políticas contables: la norma restringe las opciones y además exige uniformidad para inventarios de naturaleza y uso similar.'},
+ qi4:{ok:'Correcto. El costo unitario del período requiere conocer todas las compras del mes, y por lo tanto solo existe al cierre. El sistema permanente, en cambio, exige valorar cada salida en el momento en que ocurre.',
+      mal:'Incorrecto. La razón es que <strong>su costo unitario solo se conoce al cierre del período</strong>, cuando ya están todas las compras, mientras que el sistema permanente exige un costo para cada salida en el momento en que ocurre. No se trata de una prohibición expresa de la norma ni de que el sistema permanente rechace los promedios: el promedio móvil es precisamente un promedio y funciona perfectamente en sistema permanente.'},
+ qi5:{ok:'Correcto. Con precios al alza, FIFO despacha primero lo más barato: costo de ventas menor, utilidad mayor, e inventario final valorado a los precios más recientes y altos.',
+      mal:'Incorrecto. Con precios al alza, FIFO produce <strong>menor costo de ventas, mayor utilidad bruta y mayor inventario final</strong>. En el caso del artículo INV-4501 esto se vio con claridad: FIFO 20.660,00 de costo y 2.415,00 de inventario, frente a 20.810,00 y 2.265,00 del promedio móvil. La mercadería disponible, en cambio, es idéntica en todas las fórmulas: 23.075,00.'},
+ qi6:{ok:'Correcto. Al fundir todas las unidades en un solo costo, el promedio elimina las capas y con ellas la posibilidad de saber qué parte del saldo es antigua. Ese control debe montarse por fuera de la tarjeta.',
+      mal:'Incorrecto. Lo que se pierde es el <strong>informe de antigüedad del inventario por capas</strong>. La prueba de cuadre, el registro de entradas y el costo unitario del saldo siguen existiendo en ambas fórmulas; de hecho el costo unitario del saldo es la información estrella del promedio. La consecuencia práctica es que una empresa con bienes perecibles o de rápida obsolescencia que use promedio debe llevar un control paralelo de antigüedad y vencimientos.'},
+ qi7:{ok:'Correcto. La elección responde a la naturaleza del bien y del negocio, debe aplicarse con uniformidad y revelarse. Un cambio motivado por conveniencia del resultado vulnera la uniformidad y compromete los deberes de integridad y objetividad del profesional contable.',
+      mal:'Incorrecto. La respuesta correcta es que <strong>la fórmula debe responder a la naturaleza del bien y del negocio, aplicarse con uniformidad y revelarse</strong>. Cambiarla por conveniencia tributaria constituye un cambio de política contable que solo procede si produce información más fiable y relevante, y que obliga a revelarlo y a reexpresar la información comparativa. Ocultarlo, además, contradice los principios éticos estudiados en el Día 2 y puede tener consecuencias en sede tributaria.'},
+ qi8:{ok:'Correcto. (2.400,00 + 4.500,00) &divide; (200 + 300) = 6.900,00 &divide; 500 = 13,8000.',
+      mal:'Incorrecto. La respuesta es <strong>13,80</strong>: (2.400,00 + 4.500,00) &divide; (200 + 300) = 6.900,00 &divide; 500 = 13,8000. Si escogiste 13,50 promediaste los precios 12,00 y 15,00 entre sí; si escogiste 15,00 tomaste el precio de la última compra.'},
+ qi9:{ok:'Correcto. Salida del 13/08: 400 &times; 13,80 = 5.520,00. Tras la compra del 20/08 el promedio sube a 16,60 (4.980,00 &divide; 300). Salida del 27/08: 250 &times; 16,60 = 4.150,00. Total 9.670,00, y la existencia final es 50 u por 830,00, que cuadra contra los 10.500,00 disponibles.',
+      mal:'Incorrecto. El costo de ventas es <strong>9.670,00</strong>. Se compone de la salida del 13/08 (400 &times; 13,80 = 5.520,00) y la del 27/08 (250 &times; 16,60 = 4.150,00), donde 16,60 resulta de (1.380,00 + 3.600,00) &divide; 300. Los 9.600,00 corresponden a FIFO, los 9.750,00 al promedio del período y los 10.500,00 son la mercadería disponible completa, no el costo de ventas.'},
+ qi10:{ok:'Correcto. El promedio del período da un costo unitario único de 15,00 (10.500,00 &divide; 700), un costo de ventas de 650 &times; 15,00 = 9.750,00, que es 80,00 mayor que los 9.670,00 del móvil. Mayor costo significa menor utilidad bruta, en exactamente 80,00.',
+       mal:'Incorrecto. La utilidad bruta sería <strong>menor en 80,00</strong>. El promedio del período arroja un costo unitario único de 15,00 (10.500,00 &divide; 700 u) y un costo de ventas de 650 &times; 15,00 = 9.750,00, frente a los 9.670,00 del promedio móvil. La diferencia de 80,00 en el costo se traslada íntegra, con signo contrario, a la utilidad bruta. Ese mismo importe reaparece en la existencia final: 750,00 contra 830,00.'}
+};
+
+function verificarCu(){
+  var faltan = [];
+  for(var k in clavesCu){
+    if(!document.querySelector('input[name="'+k+'"]:checked')){ faltan.push(k.replace('qi','')); }
+  }
+  if(faltan.length > 0){
+    alert('Te faltan por responder las preguntas: ' + faltan.join(', ') + '.\nResponde todas antes de verificar.');
+    return;
+  }
+  var aciertos = 0, total = 0;
+  for(var key in clavesCu){
+    total++;
+    var sel = document.querySelector('input[name="'+key+'"]:checked').value;
+    var fb = document.getElementById('f'+key);
+    fb.classList.remove('ok','mal');
+    if(sel === clavesCu[key]){
+      aciertos++;
+      fb.classList.add('ok');
+      fb.innerHTML = '<strong>&#10004; Correcto.</strong> ' + retroCu[key].ok;
+    } else {
+      fb.classList.add('mal');
+      fb.innerHTML = '<strong>&#10008; Revisa.</strong> ' + retroCu[key].mal;
+    }
+    fb.classList.add('visible');
+  }
+  mostrarResultado(aciertos, total, 'resCu', 'puntajeCu', 'barraCu', 'emojiCu', 'mensajeCu');
+}
+
+function reiniciarCu(){
+  for(var k in clavesCu){
+    var opts = document.getElementsByName(k);
+    for(var i=0;i<opts.length;i++){ opts[i].checked = false; }
+    var fb = document.getElementById('f'+k);
+    fb.classList.remove('visible','ok','mal');
+    fb.innerHTML = '';
+  }
+  document.getElementById('resCu').classList.remove('visible');
+  document.getElementById('barraCu').style.width = '0';
+}
+
+/* ============================================================
+   RESULTADO CON BARRA ANIMADA Y EMOJI
+   ============================================================ */
+function mostrarResultado(aciertos, total, idRes, idPunt, idBarra, idEmoji, idMsg){
+  var pct = Math.round((aciertos / total) * 1000) / 10;
+  var emoji, msg;
+  if(pct === 100){ emoji = '&#127942;'; msg = 'Excelente. Dominas el promedio ponderado móvil y el comparativo entre fórmulas de costo. Estás listo para los asientos de ajuste del Día 11.'; }
+  else if(pct >= 80){ emoji = '&#127919;'; msg = 'Muy bien. Tienes el criterio bien construido. Revisa la retroalimentación de los ítems fallados y vuelve a intentarlo para consolidar.'; }
+  else if(pct >= 60){ emoji = '&#128218;'; msg = 'Vas por buen camino, pero hay conceptos que todavía se te escapan. Relee los Temas 1 y 2 con atención a la regla de cuándo se recalcula el costo unitario, y vuelve a intentarlo.'; }
+  else if(pct >= 40){ emoji = '&#9888;'; msg = 'Necesitas repasar. Vuelve al Tema 1 (lógica del promedio) y al Tema 2 (la tarjeta fila por fila), rehaz el Kardex en tu cuaderno y luego intenta de nuevo.'; }
+  else { emoji = '&#128214;'; msg = 'Vuelve al inicio del widget y trabaja los temas en orden, resolviendo cada cálculo a mano. No avances al ejercicio hasta que puedas explicar por qué las salidas no recalculan el promedio.'; }
+
+  document.getElementById(idEmoji).innerHTML = emoji;
+  document.getElementById(idPunt).innerHTML = aciertos + ' / ' + total + ' &nbsp;&middot;&nbsp; ' + pct + ' %';
+  document.getElementById(idMsg).innerHTML = msg;
+  var res = document.getElementById(idRes);
+  res.classList.add('visible');
+  var barra = document.getElementById(idBarra);
+  barra.style.width = '0';
+  setTimeout(function(){ barra.style.width = pct + '%'; }, 100);
+  res.scrollIntoView({behavior:'smooth', block:'center'});
+}
+</script>
+</body>
+</html>

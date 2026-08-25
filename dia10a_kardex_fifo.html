@@ -1,0 +1,1761 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Día 10A · Registro en el Kardex — Método FIFO | Contabilidad General</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+/* ================= BASE ================= */
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Source Sans 3',sans-serif;background:#eef2f6;color:#1c2733;line-height:1.75;font-size:17px}
+.wrap{max-width:1180px;margin:0 auto;background:#fff;box-shadow:0 0 28px rgba(0,0,0,.12)}
+
+/* ================= ENCABEZADO ================= */
+header{background:#003366;color:#fff;padding:30px 26px 26px}
+header .inst{font-size:.82rem;letter-spacing:2px;text-transform:uppercase;color:#cfe4f5;margin-bottom:10px}
+header h1{font-family:'Lora',serif;font-size:2rem;line-height:1.25;color:#fff;margin-bottom:8px}
+header h2{font-family:'Lora',serif;font-size:1.12rem;font-weight:400;color:#ffd98a;margin-bottom:14px}
+header .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+header .meta span{background:rgba(255,255,255,.16);color:#fff;padding:5px 13px;border-radius:16px;font-size:.83rem;border:1px solid rgba(255,255,255,.3)}
+header .doc{margin-top:14px;font-size:.88rem;color:#cfe4f5;font-style:italic}
+
+/* ================= PESTAÑAS ================= */
+nav.tabs{background:#87CEEB;display:flex;overflow-x:auto;white-space:nowrap;border-bottom:3px solid #003366}
+nav.tabs button{background:transparent;border:none;color:#000;font-family:'Source Sans 3',sans-serif;font-size:.94rem;font-weight:600;padding:14px 17px;cursor:pointer;border-right:1px solid rgba(0,51,102,.22);transition:background .18s}
+nav.tabs button:hover{background:rgba(255,255,255,.5)}
+nav.tabs button.active{background:#fff;color:#003366;font-weight:700}
+.panel{display:none;padding:34px 30px 46px}
+.panel.active{display:block}
+
+/* ================= TIPOGRAFÍA ================= */
+h3{font-family:'Lora',serif;color:#003366;font-size:1.55rem;margin:0 0 6px;line-height:1.3}
+h4{font-family:'Lora',serif;color:#0a4a80;font-size:1.22rem;margin:30px 0 10px;padding-bottom:6px;border-bottom:2px solid #d7e5f2}
+h5{font-family:'Lora',serif;color:#0a4a80;font-size:1.05rem;margin:20px 0 8px}
+p{margin-bottom:14px;text-align:justify}
+ul,ol{margin:0 0 16px 26px}
+li{margin-bottom:9px;text-align:justify}
+.sub{color:#5d6f80;font-style:italic;margin-bottom:22px;font-size:1.02rem}
+strong{color:#00294f}
+code{background:#eef2f6;padding:1px 6px;border-radius:3px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.92em;color:#8a2f2f}
+
+/* ================= RECUADROS ================= */
+.definicion{background:#eaf3fb;border-left:6px solid #003366;padding:17px 20px;margin:18px 0;border-radius:0 7px 7px 0}
+.definicion .rot{display:block;font-size:.76rem;letter-spacing:1.6px;text-transform:uppercase;color:#003366;font-weight:700;margin-bottom:7px}
+.ejemplo{background:#f2f8f2;border-left:6px solid #2e7d32;padding:17px 20px;margin:18px 0;border-radius:0 7px 7px 0}
+.ejemplo .rot{display:block;font-size:.76rem;letter-spacing:1.6px;text-transform:uppercase;color:#2e7d32;font-weight:700;margin-bottom:7px}
+.alerta{background:#fff6e6;border-left:6px solid #e08a00;padding:17px 20px;margin:18px 0;border-radius:0 7px 7px 0}
+.alerta .rot{display:block;font-size:.76rem;letter-spacing:1.6px;text-transform:uppercase;color:#a35f00;font-weight:700;margin-bottom:7px}
+.conclusion{background:#003366;color:#fff;padding:20px 24px;margin:26px 0 8px;border-radius:8px}
+.conclusion .rot{display:block;font-size:.76rem;letter-spacing:1.8px;text-transform:uppercase;color:#ffd98a;font-weight:700;margin-bottom:8px}
+.conclusion p{color:#eaf3fb;margin-bottom:0}
+.conclusion strong{color:#ffd98a}
+.futuro{background:#f4eefc;border:2px dashed #6a3fa0;padding:16px 20px;margin:18px 0;border-radius:8px}
+.futuro .rot{display:block;font-size:.76rem;letter-spacing:1.6px;text-transform:uppercase;color:#6a3fa0;font-weight:700;margin-bottom:7px}
+.carrera-box{background:#eefaf0;border:2px dashed #2e7d32;padding:18px 21px;margin:26px 0;border-radius:8px}
+.carrera-box .rot{display:block;font-family:'Lora',serif;font-size:1.02rem;color:#1b5e20;font-weight:700;margin-bottom:11px}
+.carrera-box ul{margin-left:20px;margin-bottom:0}
+.carrera-box li{margin-bottom:8px;font-size:.97rem}
+.nota-lateral{background:#f7f7f9;border:1px solid #ccd4dd;border-left:5px solid #7a8b9c;padding:14px 18px;margin:18px 0;border-radius:0 6px 6px 0;font-size:.95rem}
+.nota-lateral .rot{display:block;font-size:.74rem;letter-spacing:1.5px;text-transform:uppercase;color:#5d6f80;font-weight:700;margin-bottom:6px}
+.formula{background:#00294f;color:#fff;padding:18px 22px;margin:18px 0;border-radius:8px;text-align:center;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.05rem;line-height:2}
+.formula .fx{display:block;color:#ffd98a;font-weight:700}
+.formula .nota{display:block;font-family:'Source Sans 3',sans-serif;font-size:.88rem;color:#bcd6ec;font-style:italic;margin-top:8px}
+.norma{background:#fdf3f3;border-left:6px solid #a83232;padding:16px 20px;margin:18px 0;border-radius:0 7px 7px 0}
+.norma .rot{display:block;font-size:.76rem;letter-spacing:1.6px;text-transform:uppercase;color:#a83232;font-weight:700;margin-bottom:7px}
+
+/* ================= TABLAS ================= */
+.tabla-wrap{overflow-x:auto;margin:18px 0}
+table{border-collapse:collapse;width:100%;font-size:.93rem;background:#fff}
+th{background:#003366;color:#fff;padding:10px 9px;text-align:left;font-weight:600;font-size:.87rem}
+td{padding:9px;border-bottom:1px solid #dde5ee;vertical-align:top}
+tr:nth-child(even) td{background:#f6f9fc}
+.num{text-align:right;font-family:ui-monospace,Menlo,Consolas,monospace;white-space:nowrap}
+.ctr{text-align:center}
+.tot td{font-weight:700;background:#e5eef7 !important;border-top:2px solid #003366}
+
+/* Kardex */
+.kardex th{font-size:.8rem;padding:7px 6px;text-align:center}
+.kardex td{font-size:.87rem;padding:6px}
+.kardex .g-ent{background:#1b5e20}
+.kardex .g-sal{background:#8a2f2f}
+.kardex .g-exi{background:#00294f}
+.kardex .c-ent{background:#f2f8f2}
+.kardex .c-sal{background:#fdf3f3}
+.kardex .c-exi{background:#eaf3fb}
+.kardex tr:nth-child(even) td{background:inherit}
+.kardex .fila-act td{box-shadow:inset 0 0 0 9999px rgba(255,217,138,.35);font-weight:700}
+.kardex .cierre td{font-weight:700;border-top:2px solid #003366;background:#e5eef7 !important}
+
+/* Capas FIFO */
+.capas{display:flex;flex-wrap:wrap;gap:9px;margin:14px 0}
+.capa{border:2px solid #003366;border-radius:7px;padding:9px 13px;background:#eaf3fb;font-size:.9rem;min-width:130px}
+.capa .t{display:block;font-size:.72rem;letter-spacing:1.2px;text-transform:uppercase;color:#003366;font-weight:700}
+.capa .u{display:block;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.02rem;color:#00294f;font-weight:700}
+.capa.consumida{border-color:#a83232;background:#fdf3f3;opacity:.72}
+.capa.consumida .t{color:#a83232}
+.capa.nueva{border-color:#2e7d32;background:#f2f8f2}
+.capa.nueva .t{color:#2e7d32}
+
+/* ================= ASIENTOS ================= */
+.asiento{border:2px solid #003366;border-radius:8px;overflow:hidden;margin:22px 0}
+.asiento .cab{background:#003366;color:#fff;padding:10px 15px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:.92rem;font-weight:600}
+.asiento table{margin:0;font-size:.9rem}
+.asiento th{background:#e5eef7;color:#003366;border-bottom:2px solid #003366;font-size:.8rem;padding:8px}
+.asiento td{border-bottom:1px solid #e4ebf2;padding:7px 9px}
+.asiento tr:nth-child(even) td{background:#fff}
+.asiento .acr{padding-left:38px}
+.asiento .suman td{font-weight:700;border-top:3px double #003366;background:#f0f5fa !important}
+.glosa{background:#f7f7f9;padding:10px 15px;font-style:italic;font-size:.9rem;color:#3d4c5a;border-top:1px solid #dde5ee}
+.desglose{background:#f2f8f2;border:1px solid #bcd9bd;border-radius:7px;padding:14px 18px;margin:16px 0}
+.desglose .rot{display:block;font-size:.76rem;letter-spacing:1.6px;text-transform:uppercase;color:#2e7d32;font-weight:700;margin-bottom:9px}
+.desglose table{font-size:.9rem}
+.desglose th{background:#2e7d32;font-size:.8rem}
+
+/* ================= ACORDEÓN ================= */
+.acc{border:1px solid #ccd7e3;border-radius:7px;margin-bottom:11px;overflow:hidden}
+.acc-h{background:#eaf3fb;padding:13px 17px;cursor:pointer;font-weight:600;color:#003366;display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:.98rem}
+.acc-h:hover{background:#dce9f6}
+.acc-h .fl{color:#0a4a80;font-size:.85rem;flex-shrink:0}
+.acc-c{display:none;padding:17px 20px;border-top:1px solid #ccd7e3;background:#fff}
+.acc-c.abierto{display:block}
+.puente{background:#003366;color:#fff;padding:20px 24px;border-radius:8px;margin-top:24px}
+.puente .rot{display:block;font-size:.76rem;letter-spacing:1.8px;text-transform:uppercase;color:#ffd98a;font-weight:700;margin-bottom:8px}
+.puente p{color:#eaf3fb;margin-bottom:0}
+.puente strong{color:#ffd98a}
+
+/* ================= INTERACTIVOS ================= */
+.item{background:#f8fafc;border:1px solid #dde5ee;border-left:5px solid #87CEEB;border-radius:0 7px 7px 0;padding:17px 20px;margin-bottom:16px}
+.item .q{font-weight:600;color:#00294f;margin-bottom:11px}
+.badge{display:inline-block;font-size:.68rem;letter-spacing:1.2px;text-transform:uppercase;padding:3px 9px;border-radius:11px;font-weight:700;margin-right:8px;vertical-align:middle}
+.b-teo{background:#003366;color:#fff}
+.b-caso{background:#2e7d32;color:#fff}
+.ops label{display:block;padding:9px 13px;margin-bottom:6px;border:1px solid #dde5ee;border-radius:6px;cursor:pointer;background:#fff;transition:background .15s,border-color .15s;font-size:.96rem}
+.ops label:hover{background:#eaf3fb;border-color:#87CEEB}
+.ops input{margin-right:9px}
+.fb{display:none;margin-top:11px;padding:13px 16px;border-radius:6px;font-size:.94rem}
+.fb.visible{display:block}
+.fb.ok{background:#eaf7ea;border-left:5px solid #2e7d32;color:#1b5e20}
+.fb.mal{background:#fdecec;border-left:5px solid #a83232;color:#7a1f1f}
+.btn{background:#003366;color:#fff;border:none;padding:12px 26px;border-radius:6px;font-family:'Source Sans 3',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;margin:6px 8px 6px 0;transition:background .18s}
+.btn:hover{background:#0a4a80}
+.btn.sec{background:#7a8b9c}
+.btn.sec:hover{background:#5d6f80}
+.aviso{display:none;background:#fff6e6;border-left:5px solid #e08a00;padding:13px 17px;border-radius:0 6px 6px 0;margin:14px 0;color:#a35f00;font-weight:600}
+.aviso.visible{display:block}
+.result{display:none;background:#fff;border:2px solid #003366;border-radius:8px;padding:22px;margin:20px 0}
+.result.visible{display:block}
+.result .pt{font-family:'Lora',serif;font-size:1.9rem;color:#003366;text-align:center;margin-bottom:6px}
+.result .em{font-size:2.6rem;text-align:center;display:block;margin-bottom:8px}
+.result .msg{text-align:center;color:#3d4c5a;margin-bottom:14px}
+.barra{background:#e4ebf2;border-radius:11px;height:22px;overflow:hidden;margin-top:10px}
+.barra .fill{background:linear-gradient(90deg,#003366,#87CEEB);height:100%;width:0;transition:width 1.1s ease;border-radius:11px}
+.solucion{background:#f2f8f2;border:2px solid #2e7d32;border-radius:8px;padding:20px 24px;margin-top:26px}
+.solucion .rot{display:block;font-family:'Lora',serif;font-size:1.08rem;color:#1b5e20;font-weight:700;margin-bottom:11px}
+
+/* ================= IA / REFLEXIÓN / BIBLIO ================= */
+.prompt{background:#00294f;color:#eaf3fb;padding:18px 21px;border-radius:8px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.87rem;line-height:1.7;white-space:pre-wrap;margin:14px 0;border:1px solid #0a4a80}
+.paso{background:#f8fafc;border:1px solid #dde5ee;border-left:5px solid #003366;padding:16px 20px;margin-bottom:14px;border-radius:0 7px 7px 0}
+.paso .n{display:inline-block;background:#003366;color:#fff;width:27px;height:27px;line-height:27px;text-align:center;border-radius:50%;font-weight:700;margin-right:10px;font-size:.9rem}
+.encuadre{background:#003366;color:#eaf3fb;padding:22px 26px;border-radius:8px;margin-bottom:26px}
+.encuadre strong{color:#ffd98a}
+.pregunta{background:#f8fafc;border:1px solid #dde5ee;border-left:5px solid #87CEEB;padding:16px 20px;margin-bottom:14px;border-radius:0 7px 7px 0}
+.pregunta .tt{display:block;font-size:.74rem;letter-spacing:1.4px;text-transform:uppercase;color:#0a4a80;font-weight:700;margin-bottom:7px}
+.ref{background:#f8fafc;border:1px solid #dde5ee;border-left:5px solid #003366;padding:15px 19px;margin-bottom:13px;border-radius:0 7px 7px 0;font-size:.95rem}
+.ref .tipo{display:inline-block;font-size:.68rem;letter-spacing:1.2px;text-transform:uppercase;background:#003366;color:#fff;padding:3px 9px;border-radius:11px;font-weight:700;margin-bottom:8px}
+.ref .tipo.norm{background:#a83232}
+.ref .tipo.web{background:#2e7d32}
+footer{background:#00294f;color:#bcd6ec;padding:22px 26px;font-size:.86rem;text-align:center}
+
+/* ================= EVOLUCIÓN / LÍNEA DE TIEMPO ================= */
+.evo{border-left:3px solid #87CEEB;margin:20px 0 20px 14px;padding-left:24px}
+.evo .et{position:relative;margin-bottom:24px}
+.evo .et::before{content:'';position:absolute;left:-32px;top:6px;width:14px;height:14px;background:#003366;border:3px solid #fff;border-radius:50%;box-shadow:0 0 0 2px #87CEEB}
+.evo .et .ep{display:block;font-family:'Lora',serif;font-size:1.05rem;color:#003366;font-weight:700;margin-bottom:5px}
+.evo .et .ed{font-size:.95rem;text-align:justify}
+
+@media(max-width:760px){
+ body{font-size:16px}
+ header{padding:22px 17px}
+ header h1{font-size:1.42rem}
+ header h2{font-size:1rem}
+ .panel{padding:24px 17px 36px}
+ h3{font-size:1.3rem}
+ h4{font-size:1.1rem}
+ nav.tabs button{padding:12px 13px;font-size:.87rem}
+ .formula{font-size:.92rem;padding:14px}
+ .capa{min-width:110px;font-size:.84rem}
+ .evo{padding-left:18px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="inst">Universidad de Guayaquil · Facultad de Ciencias Administrativas</div>
+  <h1>Día 10A · Registro en el Kardex: el método FIFO paso a paso</h1>
+  <h2>Unidad 3 — NIC 2 Inventarios y el proceso contable (II parte)</h2>
+  <div class="meta">
+    <span>Carrera: Negocios Internacionales</span>
+    <span>Contabilidad General · 091601124</span>
+    <span>Miércoles 26 de agosto de 2026</span>
+    <span>Primer semestre</span>
+    <span>Sesión de 5 horas</span>
+  </div>
+  <div class="doc">Ing. Gabriel Francisco García Gutiérrez, Mgs. · Período Académico Extraordinario 2026</div>
+</header>
+
+<nav class="tabs">
+  <button class="active" onclick="showTab('repaso',this)">Repaso</button>
+  <button onclick="showTab('t1',this)">Tema 1 · Qué es el Kardex</button>
+  <button onclick="showTab('t2',this)">Tema 2 · Anatomía y evolución</button>
+  <button onclick="showTab('t3',this)">Tema 3 · Kardex FIFO paso a paso</button>
+  <button onclick="showTab('t4',this)">Tema 4 · Del Kardex al asiento</button>
+  <button onclick="showTab('t5',this)">Tema 5 · Informes e indicadores</button>
+  <button onclick="showTab('ejer',this)">Ejercicio Interactivo</button>
+  <button onclick="showTab('cues',this)">Cuestionario</button>
+  <button onclick="showTab('ia',this)">Actividad con IA</button>
+  <button onclick="showTab('refl',this)">Reflexión</button>
+  <button onclick="showTab('bib',this)">Bibliografía</button>
+</nav>
+
+<!-- ==================== PESTAÑA: REPASO ==================== -->
+<section id="repaso" class="panel active">
+  <h3>Repaso acumulado — de dónde venimos</h3>
+  <p class="sub">Cada entrada se abre al hacer clic. Antes de entrar al Kardex conviene revisar, como mínimo, los días 7, 8 y 9: el Kardex no es un tema nuevo, es el <em>formato oficial</em> donde se escribe lo que ya aprendiste a calcular.</p>
+
+  <div class="acc">
+    <div class="acc-h" onclick="toggleAcc(this)"><span>Días 1 a 3 · Unidad 1 — Fundamentos de la contabilidad</span><span class="fl">&#9654;</span></div>
+    <div class="acc-c">
+      <p>La contabilidad es un <strong>sistema de información</strong>: capta hechos económicos, los clasifica, los mide, los registra y los comunica a quienes deben decidir. No es "llenar papeles", es producir información fiable para terceros que no estuvieron presentes cuando ocurrió el hecho.</p>
+      <p>Vimos la clasificación de las empresas (por actividad: comerciales, industriales, de servicios; por origen del capital; por forma jurídica), los usuarios internos y externos de la información, y los tipos de contabilidad. Estudiamos los <strong>principios éticos de la profesión</strong> y los organismos de control ecuatorianos: el Servicio de Rentas Internas (SRI) en materia tributaria y la Superintendencia de Compañías, Valores y Seguros en materia societaria.</p>
+      <p>Revisamos el <strong>Marco Conceptual de las NIIF</strong> —objetivo de la información financiera, características cualitativas fundamentales (relevancia y representación fiel) y de mejora (comparabilidad, verificabilidad, oportunidad, comprensibilidad)— y la <strong>NIC 1</strong>, que gobierna la presentación de estados financieros.</p>
+      <p>Cerramos la unidad con la estructura del Estado de Situación Financiera y del Estado de Resultados, el concepto de <strong>cuenta contable</strong>, su naturaleza deudora o acreedora, el plan de cuentas, la <strong>partida doble</strong> (todo hecho económico afecta al menos dos cuentas, y la suma del Debe siempre iguala la suma del Haber) y la <strong>ecuación contable</strong>: Activo = Pasivo + Patrimonio.</p>
+    </div>
+  </div>
+
+  <div class="acc">
+    <div class="acc-h" onclick="toggleAcc(this)"><span>Días 4 a 6 · Unidad 2 — Normas tributarias y proceso contable (I parte)</span><span class="fl">&#9654;</span></div>
+    <div class="acc-c">
+      <p><strong>IVA.</strong> Tarifa general del 15 % y tarifa 0 % para bienes y servicios expresamente señalados en la Ley de Régimen Tributario Interno. Aprendimos a reconocer cuál corresponde antes de calcular, nunca después.</p>
+      <p><strong>Retenciones.</strong> Dos retenciones distintas conviven en una misma factura y no deben confundirse:</p>
+      <ul>
+        <li><strong>Retención en la fuente del Impuesto a la Renta</strong>, regulada por la Resolución NAC-DGERCGC26-00000009, vigente desde el 1 de marzo de 2026: bienes 2 %, residual 3 %, arriendo de inmuebles 10 %, servicios profesionales prestados por sociedades 5 %. Se calcula sobre la <strong>base imponible sin IVA</strong>.</li>
+        <li><strong>Retención de IVA</strong>, regulada por la Resolución NAC-DGERCGC20-00000061: 30 % en la adquisición de bienes. Se calcula sobre el <strong>IVA</strong>, no sobre la base.</li>
+      </ul>
+      <p><strong>Trampa didáctica ya instalada:</strong> el consumo de energía eléctrica facturado por CNEL EP se registra con IVA 0 % y <em>sin</em> retención en la fuente, por la exención que la Ley de Régimen Tributario Interno reconoce a las empresas públicas. Quien retiene ahí, retiene mal.</p>
+      <p><strong>Proceso contable (I parte).</strong> Análisis y reconocimiento de la transacción &rarr; <strong>jornalización</strong> en el Libro Diario (caso AduanaPro Cía. Ltda.) &rarr; <strong>mayorización</strong> en el Libro Mayor &rarr; <strong>balance de comprobación preliminar</strong>. Cerramos con el ejercicio integrador de la empresa de servicios Ruta Pacífico Servicios Logísticos Cía. Ltda., con 12 transacciones.</p>
+    </div>
+  </div>
+
+  <div class="acc">
+    <div class="acc-h" onclick="toggleAcc(this)"><span>Día 7 · Inicio Unidad 3 — Fundamentos de inventarios y NIC 2</span><span class="fl">&#9654;</span></div>
+    <div class="acc-c">
+      <p>El inventario es el activo que la empresa mantiene <strong>para venderlo</strong> en el curso normal de su operación, o que está en proceso de producción para esa venta, o que son materiales que se consumirán en ese proceso. Recorrimos la cadena de valor en cuatro empresas para ver cómo un mismo bien físico cambia de nombre contable según quién lo tenga: materia prima en una, producto en proceso en otra, producto terminado en la tercera, mercadería en la comercializadora.</p>
+      <p>Distinguimos los <strong>dos sistemas de contabilización</strong>:</p>
+      <ul>
+        <li><strong>Sistema periódico:</strong> no se registra el costo en cada venta. El costo de ventas se determina al final del período mediante conteo físico. Requiere las cuentas Compras, Devoluciones y Fletes en compras.</li>
+        <li><strong>Sistema permanente (o perpetuo):</strong> cada entrada y cada salida se registra en el momento en que ocurre. La cuenta Inventario de Mercaderías está siempre actualizada y el costo de ventas se conoce transacción por transacción.</li>
+      </ul>
+      <p>Vimos también el caso de importación y qué costos se incorporan al inventario: precio de compra, aranceles, transporte, seguro y todo desembolso directamente atribuible hasta dejar el bien en condiciones de venta. Los descuentos y rebajas se restan.</p>
+    </div>
+  </div>
+
+  <div class="acc">
+    <div class="acc-h" onclick="toggleAcc(this)"><span>Día 8 · Medición: Costo, Valor Razonable y Valor Neto Realizable</span><span class="fl">&#9654;</span></div>
+    <div class="acc-c">
+      <p>Con el Caso A (Comercial El Astillero S.A., importación de licuadoras) diferenciamos tres magnitudes que los estudiantes suelen mezclar:</p>
+      <ul>
+        <li><strong>Costo:</strong> lo que efectivamente costó adquirir el bien y dejarlo listo para vender.</li>
+        <li><strong>Valor Razonable:</strong> el precio que se recibiría al vender el activo en una transacción ordenada entre participantes del mercado. Es una referencia <em>de mercado</em>, no de la empresa.</li>
+        <li><strong>Valor Neto Realizable (VNR):</strong> el precio estimado de venta <em>de esa empresa</em> menos los costos estimados para terminar la producción y para vender. Es una magnitud propia de la entidad.</li>
+      </ul>
+      <p>Dentro del contenido de la NIC 2 se establece que los inventarios se miden al <strong>menor entre el costo y el valor neto realizable</strong>. Ahí quedó introducido el método FIFO, que hoy desarrollamos en formato de tarjeta.</p>
+    </div>
+  </div>
+
+  <div class="acc">
+    <div class="acc-h" onclick="toggleAcc(this)"><span>Día 9 · FIFO extendido y promedio ponderado — el caso INV-4501</span><span class="fl">&#9654;</span></div>
+    <div class="acc-c">
+      <p>Trabajamos el artículo <strong>INV-4501 "Ventilador de techo VT-16"</strong> de Comercial El Astillero S.A., agosto de 2026, bajo sistema permanente. Es el mismo artículo que usaremos hoy, con las mismas cifras.</p>
+      <div class="tabla-wrap">
+      <table>
+        <tr><th>Fecha</th><th>Movimiento</th><th class="num">Unidades</th><th class="num">Costo unitario</th></tr>
+        <tr><td>01/08/2026</td><td>Existencia inicial</td><td class="num">100</td><td class="num">30,00</td></tr>
+        <tr><td>05/08/2026</td><td>Compra</td><td class="num">300</td><td class="num">34,00</td></tr>
+        <tr><td>09/08/2026</td><td>Venta</td><td class="num">(150)</td><td class="num">—</td></tr>
+        <tr><td>14/08/2026</td><td>Compra</td><td class="num">150</td><td class="num">39,00</td></tr>
+        <tr><td>18/08/2026</td><td>Venta</td><td class="num">(300)</td><td class="num">—</td></tr>
+        <tr><td>23/08/2026</td><td>Compra</td><td class="num">100</td><td class="num">40,25</td></tr>
+        <tr><td>28/08/2026</td><td>Venta</td><td class="num">(140)</td><td class="num">—</td></tr>
+        <tr class="tot"><td colspan="2">Mercadería disponible para la venta</td><td class="num">650</td><td class="num">23.075,00</td></tr>
+      </table>
+      </div>
+      <p>Precio de venta unitario: <strong>52,00</strong>. Resultados ya obtenidos y verificados:</p>
+      <ul>
+        <li><strong>FIFO:</strong> costo de ventas 20.660,00 · inventario final 2.415,00 (60 unidades a 40,25).</li>
+        <li><strong>Promedio ponderado móvil:</strong> costo de ventas 20.810,00 · inventario final 2.265,00. Costos unitarios sucesivos: 30,00 · 33,00 · 35,25 · 37,75.</li>
+        <li><strong>Promedio del período:</strong> costo de ventas 20.945,00 · inventario final 2.130,00 (costo unitario único 35,50).</li>
+      </ul>
+      <p>También quedó explicado por completo el método <strong>UEPS</strong> (últimas entradas, primeras salidas): su criterio, las situaciones en que se recomendaba, las razones por las que el IASB lo eliminó y su situación actual bajo NIIF, en Ecuador y en US GAAP. No se vuelve a desarrollar: solo se lo referencia cuando haga falta.</p>
+    </div>
+  </div>
+
+  <div class="puente">
+    <span class="rot">Puente hacia el Día 10A</span>
+    <p>Hasta ayer calculaste el costo de ventas y el inventario final con hojas de trabajo y capas dibujadas a mano. Eso demuestra que <strong>entendiste el criterio</strong>, pero no es el documento que una empresa presenta ante un auditor, ante el SRI o ante un socio extranjero que audita la cadena de suministro. Ese documento es el <strong>Kardex</strong>. Hoy vas a aprender a llenarlo columna por columna, a leerlo, a conectarlo con el Libro Mayor y a extraer de él los informes e indicadores que hacen que el inventario deje de ser un número y se convierta en una decisión.</p>
+  </div>
+</section>
+
+<!-- ==================== TEMA 1 ==================== -->
+<section id="t1" class="panel">
+  <h3>Tema 1 · Qué es el Kardex y por qué existe</h3>
+  <p class="sub">Antes de llenar una sola casilla hay que entender qué clase de documento es esto, quién lo exige, quién no lo exige, y qué pasa cuando no existe.</p>
+
+  <h4>1.1 Empecemos por la vida diaria</h4>
+  <p>Imagina la despensa de tu casa. Tu mamá compra arroz tres veces al mes, a distintos precios, y la familia consume arroz todos los días. Si alguien te pregunta un martes cualquiera <em>"¿cuánto arroz queda?"</em>, tienes dos caminos: ir a la cocina y contar los sacos, o llevar un cuaderno donde cada vez que entra o sale arroz lo anotas, y consultar el cuaderno.</p>
+  <p>El primer camino es el <strong>sistema periódico</strong>: solo sabes cuánto hay cuando cuentas. El segundo es el <strong>sistema permanente</strong>: sabes cuánto hay en cualquier momento porque tienes un registro corriente. <strong>Ese cuaderno es el Kardex.</strong></p>
+  <p>Pero un Kardex serio no anota solamente cantidades. Anota también <strong>cuánto costó</strong> cada entrada y, en consecuencia, cuánto vale lo que sale y cuánto vale lo que queda. Ahí está la diferencia entre una libreta de bodega y un registro contable: la bodega cuenta unidades, la contabilidad cuenta unidades <em>y</em> dólares.</p>
+
+  <div class="definicion">
+    <span class="rot">Definición</span>
+    <p><strong>Kardex</strong> (también llamado <em>tarjeta de control de existencias</em>, <em>tarjeta de inventario permanente</em> o <em>mayor auxiliar de inventarios</em>): registro auxiliar, individual por cada artículo, en el que se anotan cronológicamente todas las entradas y salidas de ese artículo, expresadas simultáneamente en <strong>cantidades, costo unitario y costo total</strong>, de modo que después de cada movimiento se conozca la existencia disponible y su valor.</p>
+  </div>
+
+  <div class="nota-lateral">
+    <span class="rot">De dónde viene la palabra</span>
+    <p>"Kardex" no es un término técnico contable de origen normativo: proviene de una marca comercial de sistemas de archivo en tarjetas que se popularizó a tal punto que el nombre de la marca reemplazó al del objeto, igual que ocurrió con "termo" o "curita". El nombre técnico correcto en español es <strong>tarjeta de control de existencias</strong> o <strong>registro auxiliar de inventarios</strong>. Ambos términos son válidos en el aula y en la práctica ecuatoriana; conviene que conozcas los dos porque los vas a encontrar indistintamente en textos y en software.</p>
+  </div>
+
+  <h4>1.2 Qué exige la norma contable y qué no exige</h4>
+  <p>Aquí hay que ser muy preciso, porque circula una confusión frecuente: mucha gente afirma que "las NIIF obligan a llevar Kardex". Eso <strong>no</strong> es exacto, y decirlo así te expone a un error en un examen o ante un cliente.</p>
+
+  <div class="norma">
+    <span class="rot">El deber ser — qué dice realmente la norma contable</span>
+    <p>Dentro del contenido de la <strong>NIC 2 Inventarios</strong> se regula el <em>resultado</em>, no el <em>formulario</em>. La norma establece cómo debe medirse el inventario (al menor entre el costo y el valor neto realizable), qué fórmulas de costo se admiten (identificación específica cuando los bienes no son ordinariamente intercambiables; en los demás casos, <strong>primera entrada primera salida</strong> o <strong>costo promedio ponderado</strong>), que la fórmula elegida debe aplicarse de manera <strong>uniforme</strong> a todos los inventarios de naturaleza y uso similares, y que en las notas debe revelarse la política contable adoptada, incluida la fórmula de costo utilizada.</p>
+    <p>La NIC 2 <strong>no</strong> prescribe un diseño de tarjeta, ni columnas, ni encabezados, ni la obligación de usar un formato llamado "Kardex". Lo que exige es que las cifras de inventario y de costo de ventas de los estados financieros sean correctas y estén respaldadas.</p>
+    <p>Entonces, ¿por qué todo el mundo lleva Kardex? Porque bajo sistema permanente <strong>es materialmente imposible</strong> llegar a esas cifras correctas sin un registro de este tipo. El Kardex es el instrumento con el que se cumple la norma, no la norma misma.</p>
+  </div>
+
+  <div class="alerta">
+    <span class="rot">Error frecuente que debes evitar decir</span>
+    <p>&#10060; "El Kardex es obligatorio según la NIC 2."<br>
+    &#9989; "La NIC 2 obliga a medir y revelar correctamente el inventario; el Kardex es el registro auxiliar mediante el cual, en el sistema permanente, se logra y se sustenta esa medición."</p>
+    <p>La diferencia parece de matiz, pero es la diferencia entre repetir y comprender.</p>
+  </div>
+
+  <h4>1.3 Qué exige el marco legal ecuatoriano</h4>
+  <p>Si la norma contable internacional regula el resultado, ¿quién exige el registro? El marco jurídico nacional, por tres vías distintas y complementarias:</p>
+
+  <div class="norma">
+    <span class="rot">El deber ser — marco legal aplicable en Ecuador</span>
+    <ul>
+      <li><strong>Código de Comercio.</strong> Dentro de su articulado se establece la obligación de las personas y sociedades con actividad mercantil de llevar contabilidad bajo Normas Internacionales de Información Financiera, junto con los registros y libros que permitan reconstruir la operación. El registro auxiliar de inventarios cae dentro de esa exigencia.</li>
+      <li><strong>Ley de Régimen Tributario Interno y su Reglamento de aplicación.</strong> La normativa tributaria dispone que los sujetos pasivos obligados a llevar contabilidad la lleven bajo NIIF y que los costos y gastos deducibles estén debidamente <strong>sustentados</strong>. El costo de ventas es un rubro deducible: si no hay registro que muestre cómo se formó, el sustento se debilita. La misma normativa establece el plazo durante el cual deben conservarse los registros y documentos de respaldo, vinculado a los plazos de caducidad y prescripción de la obligación tributaria.</li>
+      <li><strong>Reglamento de Comprobantes de Venta, Retención y Documentos Complementarios.</strong> Define cuáles son los documentos que respaldan cada movimiento: factura, nota de crédito, nota de débito, guía de remisión. Cada fila del Kardex debe poder señalar uno de esos documentos.</li>
+      <li><strong>Superintendencia de Compañías, Valores y Seguros.</strong> Como organismo de control societario, requiere de las compañías sujetas a su vigilancia la presentación de estados financieros bajo NIIF y la información complementaria que sustente los saldos, entre ellos el de inventarios.</li>
+    </ul>
+  </div>
+
+  <div class="ejemplo">
+    <span class="rot">Ejemplo aplicado — contexto ecuatoriano</span>
+    <p>Comercial El Astillero S.A. es notificada por el SRI en un proceso de control. Se le pide justificar el costo de ventas declarado del ejercicio. La empresa presenta el Estado de Resultados con la cifra global, pero no puede mostrar cómo se formó artículo por artículo.</p>
+    <p>El problema no es que le falte un "papel". El problema es que <strong>no puede demostrar</strong> que el costo de ventas declarado corresponde a mercadería efectivamente adquirida y efectivamente vendida, ni que la fórmula de costo se aplicó de manera uniforme. Con Kardex, cada dólar del costo de ventas se rastrea hasta una factura de compra concreta. Sin Kardex, hay una cifra sin genealogía.</p>
+    <p>Lo mismo ocurre, con otro interlocutor, cuando un comprador extranjero exige una auditoría de trazabilidad antes de firmar un contrato de suministro: quiere saber de qué lote salió lo que le vendieron.</p>
+  </div>
+
+  <h4>1.4 Kardex de bodega y Kardex contable: no son lo mismo</h4>
+  <p>En muchas empresas conviven dos registros con el mismo nombre y funciones distintas. Confundirlos genera discusiones inútiles entre áreas.</p>
+  <div class="tabla-wrap">
+  <table>
+    <tr><th>Aspecto</th><th>Kardex de bodega (control físico)</th><th>Kardex contable (control valorado)</th></tr>
+    <tr><td>Quién lo lleva</td><td>Bodega / almacén</td><td>Contabilidad</td></tr>
+    <tr><td>Qué registra</td><td>Solo unidades</td><td>Unidades, costo unitario y costo total</td></tr>
+    <tr><td>Pregunta que responde</td><td>¿Cuánto hay?</td><td>¿Cuánto hay y cuánto vale?</td></tr>
+    <tr><td>Documento que lo alimenta</td><td>Nota de ingreso, egreso de bodega, guía de remisión</td><td>Factura de compra, factura de venta, notas de crédito y débito</td></tr>
+    <tr><td>Sirve para</td><td>Reposición, control físico, seguridad</td><td>Costo de ventas, saldo de inventario en el estado financiero, sustento tributario</td></tr>
+  </table>
+  </div>
+  <p>El <strong>deber ser</strong> es que ambos coincidan en unidades. Cuando no coinciden, hay una diferencia de inventario que debe investigarse y, si se confirma, ajustarse contablemente.</p>
+
+  <div class="futuro">
+    <span class="rot">Contenido diferido</span>
+    <p>El <strong>asiento de ajuste</strong> por diferencias entre el conteo físico y el Kardex, así como el ajuste cuando el valor neto realizable resulta menor que el costo, corresponden al <strong>Día 11 (Asientos de ajuste — II parte del proceso contable, Unidad 3)</strong>. Hoy aprendemos a detectar la diferencia y a nombrarla correctamente; el registro del ajuste se hace allá.</p>
+  </div>
+
+  <div class="carrera-box">
+    <span class="rot">Por qué esto le importa a un profesional de Negocios Internacionales</span>
+    <ul>
+      <li><strong>Comercio exterior:</strong> la trazabilidad del inventario es la que permite responder de qué embarque salió una mercadería concreta. En regímenes aduaneros especiales y en procesos de control posterior, la autoridad reconstruye el movimiento de la mercadería importada; sin registro auxiliar por artículo esa reconstrucción no es posible.</li>
+      <li><strong>Finanzas internacionales:</strong> el inventario es uno de los activos que un banco o un inversionista extranjero examina con más desconfianza, porque es el más fácil de sobrevalorar. Un registro auxiliar completo es lo que convierte una cifra declarada en una cifra creíble ante una línea de crédito o una due diligence.</li>
+      <li><strong>Marketing y negociación internacional:</strong> no se puede comprometer un plazo de entrega ante un cliente del exterior sin saber, en tiempo real y con certeza, cuántas unidades hay disponibles. Prometer sobre inventario que no existe destruye la relación comercial más rápido que un mal precio.</li>
+      <li><strong>Marco legal y normativo:</strong> el registro auxiliar es la pieza que articula la exigencia contable internacional (NIC 2) con la exigencia legal nacional (Código de Comercio, Ley de Régimen Tributario Interno, control de la Superintendencia de Compañías). Saber <em>cuál norma exige qué</em> es exactamente lo que distingue a un profesional de un repetidor.</li>
+    </ul>
+  </div>
+
+  <div class="conclusion">
+    <span class="rot">Idea clave del Tema 1</span>
+    <p>El Kardex no es un requisito de forma inventado por la contabilidad: es el <strong>único medio práctico</strong> de cumplir, bajo sistema permanente, lo que la NIC 2 exige en el fondo y lo que la ley ecuatoriana exige en el sustento. La norma internacional regula <strong>el resultado</strong>; la ley nacional exige <strong>el registro y su conservación</strong>; el Kardex es el punto donde ambas exigencias se encuentran.</p>
+  </div>
+</section>
+
+<!-- ==================== TEMA 2 ==================== -->
+<section id="t2" class="panel">
+  <h3>Tema 2 · Anatomía de la tarjeta y evolución del formato</h3>
+  <p class="sub">Todo lo que un Kardex contempla, casilla por casilla, y por qué el diseño de hace cien años sigue siendo el mismo que verás hoy en un ERP.</p>
+
+  <h4>2.1 La tarjeta tiene dos partes: encabezado y cuerpo</h4>
+  <p>Un error muy común de los estudiantes es dibujar solo la parte de las columnas y creer que eso es el Kardex. No lo es. La tarjeta tiene un <strong>encabezado de identificación</strong> que es tan importante como el cuerpo, porque sin él nadie sabe de qué artículo se está hablando ni bajo qué reglas se lo valoró.</p>
+
+  <h5>El encabezado — el deber ser completo</h5>
+  <div class="tabla-wrap">
+  <table>
+    <tr><th>Campo</th><th>Para qué sirve</th><th>Ejemplo del Caso A</th></tr>
+    <tr><td><strong>Empresa y RUC</strong></td><td>Identifica al sujeto pasivo responsable del registro</td><td>Comercial El Astillero S.A.</td></tr>
+    <tr><td><strong>Código del artículo</strong></td><td>Clave única; es la que enlaza el Kardex con el plan de cuentas auxiliar y con el sistema</td><td>INV-4501</td></tr>
+    <tr><td><strong>Descripción</strong></td><td>Nombre comercial y características que impiden confundirlo con otro artículo similar</td><td>Ventilador de techo VT-16</td></tr>
+    <tr><td><strong>Unidad de medida</strong></td><td>Impide sumar peras con manzanas: unidad, caja, kilogramo, metro, litro</td><td>Unidad</td></tr>
+    <tr><td><strong>Bodega o ubicación</strong></td><td>Permite el conteo físico dirigido y separa existencias por local</td><td>Bodega Central — Guayaquil</td></tr>
+    <tr><td><strong>Sistema de contabilización</strong></td><td>Declara si el registro es permanente o periódico</td><td>Permanente</td></tr>
+    <tr><td><strong>Método (fórmula) de valuación</strong></td><td><strong>Campo crítico.</strong> Declara la fórmula de costo aplicada, que debe ser uniforme para inventarios de naturaleza y uso similares</td><td>FIFO (primera entrada, primera salida)</td></tr>
+    <tr><td><strong>Moneda</strong></td><td>Relevante cuando hay importaciones y conversión de divisas</td><td>USD</td></tr>
+    <tr><td><strong>Período</strong></td><td>Delimita el rango que cubre la tarjeta</td><td>Agosto 2026</td></tr>
+    <tr><td><strong>Existencia mínima / máxima / punto de pedido</strong></td><td>Convierte el registro en herramienta de gestión: dispara la reposición</td><td>Mín. 80 u · Máx. 500 u</td></tr>
+    <tr><td><strong>Proveedor habitual</strong></td><td>Acelera la reposición y sirve al análisis de dependencia de proveedores</td><td>—</td></tr>
+    <tr><td><strong>Responsable del registro</strong></td><td>Asigna responsabilidad; es un elemento de control interno</td><td>Contabilidad</td></tr>
+  </table>
+  </div>
+
+  <div class="alerta">
+    <span class="rot">El campo que más se olvida y más problemas causa</span>
+    <p>El <strong>método de valuación</strong>. Si la tarjeta no lo declara, cualquier lector —un auditor, un socio, el SRI— tiene que <em>deducirlo</em> de los números, y una deducción no es un sustento. Peor aún: si dos artículos de naturaleza y uso similares aparecen valorados con fórmulas distintas, se rompe la exigencia de uniformidad que la NIC 2 establece, y la comparabilidad de los estados financieros queda comprometida. Declara siempre el método en el encabezado.</p>
+  </div>
+
+  <h5>El cuerpo — los tres bloques</h5>
+  <p>El cuerpo de la tarjeta se organiza en <strong>tres bloques verticales</strong>, cada uno con las mismas tres columnas: cantidad, costo unitario y costo total. A la izquierda de los tres bloques van las columnas de identificación del movimiento.</p>
+
+  <div class="tabla-wrap">
+  <table class="kardex">
+    <tr>
+      <th rowspan="2">Fecha</th><th rowspan="2">Documento</th><th rowspan="2">Detalle</th>
+      <th colspan="3" class="g-ent">ENTRADAS</th>
+      <th colspan="3" class="g-sal">SALIDAS</th>
+      <th colspan="3" class="g-exi">EXISTENCIAS</th>
+    </tr>
+    <tr>
+      <th class="g-ent">Cant.</th><th class="g-ent">C. Unit.</th><th class="g-ent">C. Total</th>
+      <th class="g-sal">Cant.</th><th class="g-sal">C. Unit.</th><th class="g-sal">C. Total</th>
+      <th class="g-exi">Cant.</th><th class="g-exi">C. Unit.</th><th class="g-exi">C. Total</th>
+    </tr>
+    <tr>
+      <td>Cuándo ocurrió</td><td>Qué lo respalda</td><td>Qué pasó</td>
+      <td colspan="3" class="c-ent">Lo que ingresó a bodega y a qué costo</td>
+      <td colspan="3" class="c-sal">Lo que salió y a qué costo se le dio salida</td>
+      <td colspan="3" class="c-exi">Lo que queda después del movimiento</td>
+    </tr>
+  </table>
+  </div>
+
+  <h4>2.2 Columna por columna: qué va, qué no va y de dónde sale</h4>
+  <div class="tabla-wrap">
+  <table>
+    <tr><th>Columna</th><th>Qué se anota</th><th>Regla del deber ser</th></tr>
+    <tr><td><strong>Fecha</strong></td><td>Fecha del hecho económico, no la fecha en que se digitó</td><td>Orden cronológico estricto, sin saltos. Una fecha fuera de orden invalida la lógica FIFO.</td></tr>
+    <tr><td><strong>Documento</strong></td><td>Tipo y número: Factura 001-002-000123, Nota de crédito, Guía de remisión, Acta de conteo</td><td>Ninguna fila sin documento fuente. Si no hay documento, no hay movimiento registrable.</td></tr>
+    <tr><td><strong>Detalle</strong></td><td>Concepto breve: "Existencia inicial", "Compra a proveedor X", "Venta según factura Y", "Devolución en venta"</td><td>Debe permitir entender el movimiento sin leer otro papel.</td></tr>
+    <tr><td><strong>Entradas — Cantidad</strong></td><td>Unidades que ingresan físicamente</td><td>Solo lo que efectivamente entró a bodega.</td></tr>
+    <tr><td><strong>Entradas — Costo unitario</strong></td><td>Costo de adquisición <strong>sin IVA</strong>, incluyendo todo desembolso atribuible (flete, seguro, aranceles) y descontando rebajas</td><td>El IVA no forma parte del costo cuando es crédito tributario recuperable. Las retenciones tampoco: no son costo, son anticipos de impuesto.</td></tr>
+    <tr><td><strong>Entradas — Costo total</strong></td><td>Cantidad × costo unitario</td><td>Debe cuadrar exactamente con la base imponible de la factura de compra de ese artículo.</td></tr>
+    <tr><td><strong>Salidas — Cantidad</strong></td><td>Unidades que salen: ventas, consumos, bajas, transferencias</td><td>Se registra al momento de la salida física, no al momento del cobro.</td></tr>
+    <tr><td><strong>Salidas — Costo unitario</strong></td><td><strong>El costo que la fórmula asigna</strong>, no el precio de venta</td><td>Aquí se aplica FIFO o promedio. <strong>Jamás</strong> se coloca el precio de venta.</td></tr>
+    <tr><td><strong>Salidas — Costo total</strong></td><td>Costo asignado a esa salida</td><td>Es la cifra que va al asiento de costo de ventas.</td></tr>
+    <tr><td><strong>Existencias — Cantidad</strong></td><td>Saldo anterior + entradas &minus; salidas</td><td>Debe coincidir con el conteo físico. Si no coincide, hay diferencia de inventario.</td></tr>
+    <tr><td><strong>Existencias — Costo unitario</strong></td><td>Bajo promedio: un único costo recalculado. Bajo FIFO: se muestran las <strong>capas</strong> pendientes con su costo propio</td><td>Es la columna que revela cuál método se está aplicando.</td></tr>
+    <tr><td><strong>Existencias — Costo total</strong></td><td>Valor del inventario después del movimiento</td><td>El saldo de la última fila es el <strong>inventario final</strong> que va al Estado de Situación Financiera.</td></tr>
+  </table>
+  </div>
+
+  <div class="alerta">
+    <span class="rot">Los cinco errores que más se cometen al llenar un Kardex</span>
+    <ol>
+      <li><strong>Poner el precio de venta en la columna de salidas.</strong> El Kardex es un registro <em>de costo</em>. El precio de venta no aparece jamás en la tarjeta.</li>
+      <li><strong>Incluir el IVA en el costo unitario de entrada.</strong> Cuando el IVA es crédito tributario recuperable no es costo del inventario.</li>
+      <li><strong>Registrar la retención como si redujera el costo.</strong> La retención en la fuente y la retención de IVA son anticipos de impuesto: reducen el <em>efectivo a pagar</em>, no el costo del bien.</li>
+      <li><strong>Alterar el orden cronológico.</strong> Bajo FIFO el orden <em>es</em> el método; desordenar las fechas cambia el resultado.</li>
+      <li><strong>Borrar o sobrescribir una fila.</strong> Un error se corrige con un movimiento de corrección debidamente documentado, nunca borrando. La trazabilidad exige que el error y su corrección sean ambos visibles.</li>
+    </ol>
+  </div>
+
+  <h4>2.3 La evolución del formato — y por qué es siempre el mismo</h4>
+  <p>Vale la pena recorrer cómo llegó esta tarjeta hasta el software que usarás mañana, porque explica por qué su estructura no cambió.</p>
+
+  <div class="evo">
+    <div class="et">
+      <span class="ep">Etapa 1 · El libro de almacén manuscrito</span>
+      <span class="ed">Antes de la tarjeta existía el <em>libro de almacén</em>: un libro empastado, encuadernado, donde el almacenero anotaba entradas y salidas renglón tras renglón, mezclando todos los artículos. Ventaja: no se podían arrancar hojas. Desventaja fatal: para saber cuánto había de un artículo específico había que recorrer el libro completo. La información existía, pero era inutilizable para decidir.</span>
+    </div>
+    <div class="et">
+      <span class="ep">Etapa 2 · La tarjeta individual en archivador vertical</span>
+      <span class="ed">La solución fue romper el libro en piezas: <strong>una tarjeta por artículo</strong>, guardadas en un archivador de gavetas donde cada tarjeta quedaba visible por su borde inferior. Este es el origen del nombre. La ganancia fue enorme: consultar un artículo pasó de minutos a segundos, y la reposición se volvió gestionable. La pérdida fue el riesgo de extravío o sustitución de una tarjeta, que se compensó con controles de custodia y numeración.</span>
+    </div>
+    <div class="et">
+      <span class="ep">Etapa 3 · La tarjeta valorada de tres bloques</span>
+      <span class="ed">Al principio la tarjeta solo llevaba cantidades. El salto decisivo fue <strong>agregarle el dinero</strong>: cantidad, costo unitario y costo total, en los tres bloques de Entradas, Salidas y Existencias. Con ese diseño el registro dejó de ser un instrumento de bodega y se convirtió en un <strong>registro contable</strong>, capaz de alimentar directamente el costo de ventas y el saldo del activo. <strong>Este es el formato que aún usamos y el que vas a llenar hoy.</strong></span>
+    </div>
+    <div class="et">
+      <span class="ep">Etapa 4 · La hoja columnar y la mecanización</span>
+      <span class="ed">Con máquinas de contabilidad y hojas columnares el mismo diseño se trasladó a papel de mayor formato, con la misma disposición de columnas. Cambió el soporte; no cambió la estructura. Aparecieron los primeros totales automáticos y las corridas mensuales impresas.</span>
+    </div>
+    <div class="et">
+      <span class="ep">Etapa 5 · La hoja electrónica</span>
+      <span class="ed">La hoja de cálculo replicó exactamente los tres bloques y añadió el recálculo automático del saldo. Es donde la mayoría de PYMES ecuatorianas todavía lleva su Kardex. Ventaja: costo cero y flexibilidad. Riesgo serio: una hoja de cálculo se puede modificar sin dejar rastro, y eso debilita justamente la trazabilidad que el registro debe garantizar. Por eso el control interno exige respaldos, bloqueo de celdas y versionamiento.</span>
+    </div>
+    <div class="et">
+      <span class="ep">Etapa 6 · El módulo de inventarios integrado (ERP)</span>
+      <span class="ed">Hoy el Kardex vive dentro del sistema, alimentado por lectura de código de barras o etiquetas de radiofrecuencia, actualizado en tiempo real, con el asiento contable generado automáticamente en el mismo instante del movimiento y con <strong>pista de auditoría</strong> que impide borrar sin dejar registro. Y si abres cualquiera de esos módulos y pides el reporte "Kardex", lo que aparece en pantalla es —columna por columna— la misma tarjeta de tres bloques de la Etapa 3.</span>
+    </div>
+  </div>
+
+  <div class="nota-lateral">
+    <span class="rot">Por qué el formato no cambió</span>
+    <p>Porque el diseño responde a tres preguntas que ninguna tecnología ha modificado: <strong>¿qué entró y a qué costo?</strong>, <strong>¿qué salió y a qué costo?</strong>, <strong>¿qué queda y cuánto vale?</strong> Mientras esas sigan siendo las preguntas, la respuesta seguirá teniendo tres bloques. Lo que cambió fue la velocidad, la capacidad de almacenamiento y la seguridad del registro; no su lógica.</p>
+  </div>
+
+  <h4>2.4 Variantes legítimas del formato</h4>
+  <p>El diseño base admite variantes, todas válidas, según lo que se necesite controlar:</p>
+  <ul>
+    <li><strong>Kardex de cantidades:</strong> sin columnas de valor. Es el de bodega, útil para control físico, insuficiente para contabilidad.</li>
+    <li><strong>Kardex valorado por promedio:</strong> la columna de existencias muestra <strong>un solo costo unitario</strong>, recalculado en cada entrada. Es el más compacto.</li>
+    <li><strong>Kardex valorado por FIFO:</strong> la columna de existencias se abre en <strong>capas</strong>, porque conviven unidades con costos distintos. Ocupa más espacio, pero es el único modo de aplicar la fórmula correctamente.</li>
+    <li><strong>Kardex por lote o por número de serie:</strong> exigido cuando los bienes no son ordinariamente intercambiables entre sí —maquinaria, vehículos, bienes con fecha de caducidad—, porque en esos casos la fórmula aplicable es la <strong>identificación específica</strong>: cada unidad conserva su propio costo.</li>
+    <li><strong>Kardex consolidado por bodega:</strong> una tarjeta por artículo <em>y</em> por ubicación, que luego se totaliza. Necesario cuando hay varios locales.</li>
+  </ul>
+
+  <div class="ejemplo">
+    <span class="rot">Ejemplo aplicado — cuál elegiría cada empresa</span>
+    <p>Una <strong>farmacia</strong> en Guayaquil necesita Kardex por lote y fecha de caducidad: no le sirve saber que tiene 400 cajas si no sabe cuáles vencen en noviembre. Una <strong>concesionaria de vehículos</strong> lleva Kardex por número de chasis, porque cada unidad tiene costo propio y no es intercambiable. Una <strong>ferretería</strong> que vende tornillos por kilo lleva Kardex valorado por promedio, porque los tornillos sí son ordinariamente intercambiables. Comercial El Astillero S.A., que vende ventiladores idénticos comprados a distintos precios, lleva Kardex FIFO valorado. La elección no es de gusto: depende de la naturaleza del bien.</p>
+  </div>
+
+  <div class="carrera-box">
+    <span class="rot">Por qué esto le importa a un profesional de Negocios Internacionales</span>
+    <ul>
+      <li><strong>Comercio exterior:</strong> el campo "documento" de cada fila es el que conecta la mercadería con la declaración aduanera de importación y la guía de remisión. En un control posterior, esa cadena documental es lo que se revisa.</li>
+      <li><strong>Finanzas internacionales:</strong> el campo "método de valuación" del encabezado determina el valor del inventario reportado y, con él, el capital de trabajo, la razón corriente y los indicadores que la banca evalúa. Un mismo inventario físico produce dos cifras distintas según el método declarado.</li>
+      <li><strong>Marketing y negociación internacional:</strong> los campos de existencia mínima y punto de pedido son los que permiten comprometer entregas con confianza en una negociación, en lugar de prometer y luego incumplir.</li>
+      <li><strong>Marco legal y normativo:</strong> el Kardex por lote o serie existe porque la NIC 2 distingue entre bienes ordinariamente intercambiables y bienes que no lo son. El formato de la tarjeta no es una decisión administrativa: es la consecuencia práctica de una regla de medición.</li>
+    </ul>
+  </div>
+
+  <div class="conclusion">
+    <span class="rot">Idea clave del Tema 2</span>
+    <p>Un Kardex completo es <strong>encabezado más cuerpo</strong>. El encabezado declara qué artículo es y bajo qué reglas se lo valora; el cuerpo responde, movimiento a movimiento, qué entró, qué salió y qué queda, siempre en cantidades y en dólares a la vez. Ese diseño de tres bloques sobrevivió a la tarjeta de cartulina, a la hoja columnar y a la hoja electrónica, y sigue vivo dentro de cualquier ERP moderno, <strong>porque responde a preguntas que no han cambiado</strong>.</p>
+  </div>
+</section>
+
+<!-- ==================== TEMA 3 ==================== -->
+<section id="t3" class="panel">
+  <h3>Tema 3 · Kardex FIFO paso a paso — Caso A, artículo INV-4501</h3>
+  <p class="sub">Siete movimientos, siete decisiones. Antes de escribir cada fila vamos a razonar qué capas existen, cuáles se consumen y qué queda. Cuando entiendas el razonamiento, la fila se escribe sola.</p>
+
+  <div class="definicion">
+    <span class="rot">Recordatorio del criterio</span>
+    <p><strong>FIFO</strong> (<em>first in, first out</em> — primera entrada, primera salida): se supone que las unidades que salen primero son las que ingresaron primero. En consecuencia, <strong>el costo de ventas se forma con los costos más antiguos</strong> y <strong>el inventario final queda valorado con los costos más recientes</strong>. Es un supuesto de <em>flujo de costos</em>, no una obligación de mover físicamente la mercadería en ese orden, aunque en bienes perecibles ambos suelen coincidir.</p>
+  </div>
+
+  <h4>3.1 Datos del caso y encabezado de la tarjeta</h4>
+  <div class="tabla-wrap">
+  <table>
+    <tr><th colspan="4" style="text-align:center">TARJETA DE CONTROL DE EXISTENCIAS — ENCABEZADO</th></tr>
+    <tr><td><strong>Empresa</strong></td><td>Comercial El Astillero S.A.</td><td><strong>Bodega</strong></td><td>Bodega Central — Guayaquil</td></tr>
+    <tr><td><strong>Código</strong></td><td>INV-4501</td><td><strong>Descripción</strong></td><td>Ventilador de techo VT-16</td></tr>
+    <tr><td><strong>Unidad de medida</strong></td><td>Unidad</td><td><strong>Moneda</strong></td><td>USD</td></tr>
+    <tr><td><strong>Sistema</strong></td><td>Permanente</td><td><strong>Método de valuación</strong></td><td><strong>FIFO — primera entrada, primera salida</strong></td></tr>
+    <tr><td><strong>Período</strong></td><td>Del 1 al 31 de agosto de 2026</td><td><strong>Existencia mínima</strong></td><td>80 unidades</td></tr>
+  </table>
+  </div>
+  <p>Precio de venta unitario del artículo: <strong>52,00</strong> (dato de gestión, <em>no</em> se escribe en la tarjeta). Los costos unitarios de entrada están expresados sin IVA.</p>
+
+  <h4>3.2 Movimiento 1 — 01/08/2026 · Existencia inicial</h4>
+  <p>La tarjeta abre con lo que quedó del mes anterior. No es una compra: es el <strong>traslado del saldo</strong> del período precedente, y su documento fuente es el cierre del Kardex de julio.</p>
+  <div class="capas">
+    <div class="capa"><span class="t">Capa 1</span><span class="u">100 u × 30,00</span>= 3.000,00</div>
+  </div>
+  <p>Existencia después del movimiento: <strong>100 unidades por 3.000,00</strong>. Una sola capa, un solo costo.</p>
+
+  <h4>3.3 Movimiento 2 — 05/08/2026 · Compra de 300 u a 34,00</h4>
+  <p>Entra mercadería a un costo distinto. Bajo FIFO <strong>no se mezcla</strong>: la mercadería nueva se apila detrás de la vieja formando una segunda capa, y cada capa conserva su propio costo hasta que se agote.</p>
+  <div class="capas">
+    <div class="capa"><span class="t">Capa 1 (antigua)</span><span class="u">100 u × 30,00</span>= 3.000,00</div>
+    <div class="capa nueva"><span class="t">Capa 2 (nueva)</span><span class="u">300 u × 34,00</span>= 10.200,00</div>
+  </div>
+  <div class="desglose">
+    <span class="rot">Cálculo de la entrada</span>
+    <p>300 u &times; 34,00 = <strong>10.200,00</strong><br>
+    Nueva existencia en unidades: 100 + 300 = <strong>400 u</strong><br>
+    Nueva existencia en valor: 3.000,00 + 10.200,00 = <strong>13.200,00</strong></p>
+  </div>
+  <div class="alerta">
+    <span class="rot">Atención</span>
+    <p>Aunque la existencia total vale 13.200,00 y hay 400 unidades, <strong>el costo unitario de la existencia NO es 33,00 bajo FIFO</strong>. Ese 33,00 sería el promedio, y el promedio es otro método. Bajo FIFO conviven dos costos unitarios distintos y así deben permanecer en la tarjeta.</p>
+  </div>
+
+  <h4>3.4 Movimiento 3 — 09/08/2026 · Venta de 150 u</h4>
+  <p>Salen 150 unidades. La pregunta que resuelve el método es: <em>¿a qué costo salen?</em> FIFO responde: primero se agota la capa más antigua; si no alcanza, se continúa con la siguiente.</p>
+  <div class="capas">
+    <div class="capa consumida"><span class="t">Se consume Capa 1</span><span class="u">100 u × 30,00</span>= 3.000,00</div>
+    <div class="capa consumida"><span class="t">Se consume de Capa 2</span><span class="u">50 u × 34,00</span>= 1.700,00</div>
+  </div>
+  <div class="desglose">
+    <span class="rot">Cálculo del costo de la salida</span>
+    <p>Necesito 150 unidades.<br>
+    &#8226; De la Capa 1 tomo las 100 disponibles: 100 &times; 30,00 = 3.000,00 &rarr; capa agotada.<br>
+    &#8226; Me faltan 50: las tomo de la Capa 2: 50 &times; 34,00 = 1.700,00<br>
+    <strong>Costo total de la salida = 3.000,00 + 1.700,00 = 4.700,00</strong></p>
+    <p>Existencia que queda: 400 &minus; 150 = <strong>250 u</strong> · 13.200,00 &minus; 4.700,00 = <strong>8.500,00</strong>, todas de la Capa 2 (250 u &times; 34,00 = 8.500,00 &#10003;)</p>
+  </div>
+  <div class="capas">
+    <div class="capa"><span class="t">Capa 2 (resto)</span><span class="u">250 u × 34,00</span>= 8.500,00</div>
+  </div>
+  <div class="nota-lateral">
+    <span class="rot">Cómo se escribe esto en la tarjeta</span>
+    <p>Cuando una salida consume unidades de <strong>dos capas distintas</strong>, el bloque de Salidas se escribe en <strong>dos renglones</strong> dentro de la misma fecha —uno por cada costo unitario— y luego se totaliza. Escribir un solo renglón con un costo unitario "promediado" de 31,3333 sería un error: convertiría el FIFO en un promedio disfrazado.</p>
+  </div>
+
+  <h4>3.5 Movimiento 4 — 14/08/2026 · Compra de 150 u a 39,00</h4>
+  <p>Nueva capa, nuevo costo. La Capa 2 sigue pendiente y la nueva se apila detrás.</p>
+  <div class="capas">
+    <div class="capa"><span class="t">Capa 2</span><span class="u">250 u × 34,00</span>= 8.500,00</div>
+    <div class="capa nueva"><span class="t">Capa 3 (nueva)</span><span class="u">150 u × 39,00</span>= 5.850,00</div>
+  </div>
+  <div class="desglose">
+    <span class="rot">Cálculo de la entrada</span>
+    <p>150 u &times; 39,00 = <strong>5.850,00</strong><br>
+    Existencia: 250 + 150 = <strong>400 u</strong> · 8.500,00 + 5.850,00 = <strong>14.350,00</strong></p>
+  </div>
+  <p>Esta compra es la que contabilizaremos en detalle en el Tema 4, con su IVA y sus dos retenciones.</p>
+
+  <h4>3.6 Movimiento 5 — 18/08/2026 · Venta de 300 u</h4>
+  <p>Salida grande: consume la Capa 2 completa y parte de la Capa 3.</p>
+  <div class="capas">
+    <div class="capa consumida"><span class="t">Se consume Capa 2</span><span class="u">250 u × 34,00</span>= 8.500,00</div>
+    <div class="capa consumida"><span class="t">Se consume de Capa 3</span><span class="u">50 u × 39,00</span>= 1.950,00</div>
+  </div>
+  <div class="desglose">
+    <span class="rot">Cálculo del costo de la salida</span>
+    <p>Necesito 300 unidades.<br>
+    &#8226; Capa 2 completa: 250 &times; 34,00 = 8.500,00 &rarr; capa agotada.<br>
+    &#8226; Faltan 50, de la Capa 3: 50 &times; 39,00 = 1.950,00<br>
+    <strong>Costo total de la salida = 8.500,00 + 1.950,00 = 10.450,00</strong></p>
+    <p>Existencia: 400 &minus; 300 = <strong>100 u</strong> · 14.350,00 &minus; 10.450,00 = <strong>3.900,00</strong> (100 u &times; 39,00 &#10003;)</p>
+  </div>
+  <div class="capas">
+    <div class="capa"><span class="t">Capa 3 (resto)</span><span class="u">100 u × 39,00</span>= 3.900,00</div>
+  </div>
+  <div class="alerta">
+    <span class="rot">Alerta de gestión — el Kardex habla</span>
+    <p>La existencia mínima declarada en el encabezado es de 80 unidades. Después de esta venta quedan 100. El registro está avisando que el artículo se acerca al punto de reposición. <strong>Un Kardex bien llevado no solo informa el pasado: anticipa una decisión.</strong> Por eso la empresa compra el 23/08.</p>
+  </div>
+
+  <h4>3.7 Movimiento 6 — 23/08/2026 · Compra de 100 u a 40,25</h4>
+  <div class="capas">
+    <div class="capa"><span class="t">Capa 3</span><span class="u">100 u × 39,00</span>= 3.900,00</div>
+    <div class="capa nueva"><span class="t">Capa 4 (nueva)</span><span class="u">100 u × 40,25</span>= 4.025,00</div>
+  </div>
+  <div class="desglose">
+    <span class="rot">Cálculo de la entrada</span>
+    <p>100 u &times; 40,25 = <strong>4.025,00</strong><br>
+    Existencia: 100 + 100 = <strong>200 u</strong> · 3.900,00 + 4.025,00 = <strong>7.925,00</strong></p>
+  </div>
+
+  <h4>3.8 Movimiento 7 — 28/08/2026 · Venta de 140 u</h4>
+  <div class="capas">
+    <div class="capa consumida"><span class="t">Se consume Capa 3</span><span class="u">100 u × 39,00</span>= 3.900,00</div>
+    <div class="capa consumida"><span class="t">Se consume de Capa 4</span><span class="u">40 u × 40,25</span>= 1.610,00</div>
+  </div>
+  <div class="desglose">
+    <span class="rot">Cálculo del costo de la salida</span>
+    <p>Necesito 140 unidades.<br>
+    &#8226; Capa 3 completa: 100 &times; 39,00 = 3.900,00 &rarr; capa agotada.<br>
+    &#8226; Faltan 40, de la Capa 4: 40 &times; 40,25 = 1.610,00<br>
+    <strong>Costo total de la salida = 3.900,00 + 1.610,00 = 5.510,00</strong></p>
+    <p>Existencia final: 200 &minus; 140 = <strong>60 u</strong> · 7.925,00 &minus; 5.510,00 = <strong>2.415,00</strong> (60 u &times; 40,25 &#10003;)</p>
+  </div>
+  <div class="capas">
+    <div class="capa"><span class="t">Capa 4 (resto) — inventario final</span><span class="u">60 u × 40,25</span>= 2.415,00</div>
+  </div>
+  <p>Observa el efecto característico del FIFO: <strong>el inventario final quedó valorado íntegramente al costo más reciente (40,25)</strong>, el que más se aproxima al costo de reposición del artículo hoy.</p>
+
+  <h4>3.9 La tarjeta completa</h4>
+  <p>Reunidos los siete movimientos, así queda el Kardex del artículo INV-4501. Compara cada fila con el razonamiento que acabas de hacer.</p>
+  <div class="tabla-wrap">
+  <table class="kardex">
+    <tr>
+      <th rowspan="2">Fecha</th><th rowspan="2">Detalle</th>
+      <th colspan="3" class="g-ent">ENTRADAS</th>
+      <th colspan="3" class="g-sal">SALIDAS</th>
+      <th colspan="3" class="g-exi">EXISTENCIAS</th>
+    </tr>
+    <tr>
+      <th class="g-ent">Cant.</th><th class="g-ent">C.U.</th><th class="g-ent">Total</th>
+      <th class="g-sal">Cant.</th><th class="g-sal">C.U.</th><th class="g-sal">Total</th>
+      <th class="g-exi">Cant.</th><th class="g-exi">C.U.</th><th class="g-exi">Total</th>
+    </tr>
+    <tr>
+      <td>01/08</td><td>Existencia inicial</td>
+      <td class="c-ent ctr">&mdash;</td><td class="c-ent ctr">&mdash;</td><td class="c-ent ctr">&mdash;</td>
+      <td class="c-sal ctr">&mdash;</td><td class="c-sal ctr">&mdash;</td><td class="c-sal ctr">&mdash;</td>
+      <td class="c-exi num">100</td><td class="c-exi num">30,00</td><td class="c-exi num">3.000,00</td>
+    </tr>
+    <tr>
+      <td>05/08</td><td>Compra s/factura</td>
+      <td class="c-ent num">300</td><td class="c-ent num">34,00</td><td class="c-ent num">10.200,00</td>
+      <td class="c-sal ctr">&mdash;</td><td class="c-sal ctr">&mdash;</td><td class="c-sal ctr">&mdash;</td>
+      <td class="c-exi num">100<br>300<br><strong>400</strong></td><td class="c-exi num">30,00<br>34,00<br>&nbsp;</td><td class="c-exi num">3.000,00<br>10.200,00<br><strong>13.200,00</strong></td>
+    </tr>
+    <tr class="fila-act">
+      <td>09/08</td><td>Venta s/factura</td>
+      <td class="c-ent ctr">&mdash;</td><td class="c-ent ctr">&mdash;</td><td class="c-ent ctr">&mdash;</td>
+      <td class="c-sal num">100<br>50<br><strong>150</strong></td><td class="c-sal num">30,00<br>34,00<br>&nbsp;</td><td class="c-sal num">3.000,00<br>1.700,00<br><strong>4.700,00</strong></td>
+      <td class="c-exi num">250</td><td class="c-exi num">34,00</td><td class="c-exi num">8.500,00</td>
+    </tr>
+    <tr>
+      <td>14/08</td><td>Compra s/factura</td>
+      <td class="c-ent num">150</td><td class="c-ent num">39,00</td><td class="c-ent num">5.850,00</td>
+      <td class="c-sal ctr">&mdash;</td><td class="c-sal ctr">&mdash;</td><td class="c-sal ctr">&mdash;</td>
+      <td class="c-exi num">250<br>150<br><strong>400</strong></td><td class="c-exi num">34,00<br>39,00<br>&nbsp;</td><td class="c-exi num">8.500,00<br>5.850,00<br><strong>14.350,00</strong></td>
+    </tr>
+    <tr class="fila-act">
+      <td>18/08</td><td>Venta s/factura</td>
+      <td class="c-ent ctr">&mdash;</td><td class="c-ent ctr">&mdash;</td><td class="c-ent ctr">&mdash;</td>
+      <td class="c-sal num">250<br>50<br><strong>300</strong></td><td class="c-sal num">34,00<br>39,00<br>&nbsp;</td><td class="c-sal num">8.500,00<br>1.950,00<br><strong>10.450,00</strong></td>
+      <td class="c-exi num">100</td><td class="c-exi num">39,00</td><td class="c-exi num">3.900,00</td>
+    </tr>
+    <tr>
+      <td>23/08</td><td>Compra s/factura</td>
+      <td class="c-ent num">100</td><td class="c-ent num">40,25</td><td class="c-ent num">4.025,00</td>
+      <td class="c-sal ctr">&mdash;</td><td class="c-sal ctr">&mdash;</td><td class="c-sal ctr">&mdash;</td>
+      <td class="c-exi num">100<br>100<br><strong>200</strong></td><td class="c-exi num">39,00<br>40,25<br>&nbsp;</td><td class="c-exi num">3.900,00<br>4.025,00<br><strong>7.925,00</strong></td>
+    </tr>
+    <tr class="fila-act">
+      <td>28/08</td><td>Venta s/factura</td>
+      <td class="c-ent ctr">&mdash;</td><td class="c-ent ctr">&mdash;</td><td class="c-ent ctr">&mdash;</td>
+      <td class="c-sal num">100<br>40<br><strong>140</strong></td><td class="c-sal num">39,00<br>40,25<br>&nbsp;</td><td class="c-sal num">3.900,00<br>1.610,00<br><strong>5.510,00</strong></td>
+      <td class="c-exi num">60</td><td class="c-exi num">40,25</td><td class="c-exi num">2.415,00</td>
+    </tr>
+    <tr class="cierre">
+      <td colspan="2">TOTALES DEL PERÍODO</td>
+      <td class="num">550</td><td class="ctr">&mdash;</td><td class="num">20.075,00</td>
+      <td class="num">590</td><td class="ctr">&mdash;</td><td class="num">20.660,00</td>
+      <td class="num">60</td><td class="num">40,25</td><td class="num">2.415,00</td>
+    </tr>
+  </table>
+  </div>
+
+  <div class="formula">
+    <span class="fx">Existencia inicial + Entradas = Salidas + Existencia final</span>
+    3.000,00 + 20.075,00 = 20.660,00 + 2.415,00<br>
+    23.075,00 = 23.075,00 &#10003;
+    <span class="nota">Prueba de cuadre obligatoria. Si no se cumple, el Kardex está mal y no debe pasarse al asiento contable.</span>
+  </div>
+
+  <div class="ejemplo">
+    <span class="rot">Cómo leer la tarjeta terminada</span>
+    <p><strong>Mercadería disponible para la venta:</strong> 650 u por 23.075,00 (existencia inicial 3.000,00 + entradas 20.075,00).<br>
+    <strong>Costo de ventas del período:</strong> 20.660,00 &mdash; el total de la columna de salidas. Va al Estado de Resultados.<br>
+    <strong>Inventario final:</strong> 2.415,00 &mdash; el saldo de la última fila. Va al Estado de Situación Financiera.<br>
+    <strong>Unidades vendidas:</strong> 590. <strong>Unidades en bodega:</strong> 60, que deben coincidir con el conteo físico.</p>
+    <p>Una sola tarjeta alimenta simultáneamente dos estados financieros distintos. Esa es la razón de su importancia.</p>
+  </div>
+
+  <div class="futuro">
+    <span class="rot">Contenido diferido</span>
+    <p>El mismo artículo, con los mismos siete movimientos, se registrará bajo <strong>promedio ponderado móvil</strong> y se comparará método contra método en el <strong>Día 10B (Unidad 3)</strong>. El tratamiento de las <strong>diferencias entre el conteo físico y el saldo del Kardex</strong> y del <strong>ajuste al valor neto realizable</strong> corresponde al <strong>Día 11 (Asientos de ajuste, Unidad 3)</strong>. El <strong>balance de comprobación ajustado</strong> es del <strong>Día 12</strong>.</p>
+  </div>
+
+  <div class="carrera-box">
+    <span class="rot">Por qué esto le importa a un profesional de Negocios Internacionales</span>
+    <ul>
+      <li><strong>Comercio exterior:</strong> cada capa del Kardex corresponde, en la práctica, a un embarque o a una importación distinta con su propio costo de nacionalización. Rastrear la capa es rastrear el embarque.</li>
+      <li><strong>Finanzas internacionales:</strong> bajo FIFO el inventario final queda medido a costos recientes, de modo que el activo reportado se acerca al costo de reposición. Eso mejora la lectura del capital de trabajo frente a un financista extranjero, y a la vez —en contextos de precios crecientes— produce un costo de ventas menor y una utilidad mayor, con su correspondiente efecto tributario.</li>
+      <li><strong>Marketing y negociación internacional:</strong> conocer el costo real de cada capa es lo que permite fijar un precio de exportación defendible y saber hasta dónde se puede ceder en una negociación sin vender por debajo del costo.</li>
+      <li><strong>Marco legal y normativo:</strong> FIFO es una de las fórmulas de costo que la NIC 2 admite. La empresa la elige, la declara en sus políticas contables y debe aplicarla de manera uniforme; cambiarla a conveniencia de un período a otro no es una decisión libre.</li>
+    </ul>
+  </div>
+
+  <div class="conclusion">
+    <span class="rot">Idea clave del Tema 3</span>
+    <p>FIFO se lleva en el Kardex <strong>respetando las capas</strong>: cada entrada crea una capa con su costo propio, cada salida consume las capas más antiguas primero, y una salida que atraviesa dos capas se escribe en dos renglones, nunca en un costo promediado. El resultado tiene que cerrar siempre con la prueba <strong>inicial + entradas = salidas + final</strong>, y de esa tarjeta salen dos cifras que van a dos estados financieros distintos: el costo de ventas y el inventario final.</p>
+  </div>
+</section>
+
+<!-- ==================== TEMA 4 ==================== -->
+<section id="t4" class="panel">
+  <h3>Tema 4 · Del Kardex al asiento contable</h3>
+  <p class="sub">El Kardex por sí solo no es contabilidad: es un auxiliar. Su razón de ser es alimentar el Libro Diario. Aquí vemos exactamente qué cifra de la tarjeta va a qué línea del asiento.</p>
+
+  <h4>4.1 La regla de oro de la correspondencia</h4>
+  <div class="formula">
+    <span class="fx">Cada movimiento del Kardex tiene un asiento; cada asiento de inventario tiene una fila en el Kardex.</span>
+    <span class="nota">Si existe una fila sin asiento, o un asiento sin fila, hay un descuadre entre el auxiliar y el mayor.</span>
+  </div>
+  <div class="tabla-wrap">
+  <table>
+    <tr><th>Movimiento en el Kardex</th><th>Qué cifra se toma</th><th>A dónde va en el asiento</th></tr>
+    <tr><td>Entrada por compra</td><td>Costo total de la entrada</td><td>Debe de <em>Inventario de Mercaderías</em></td></tr>
+    <tr><td>Salida por venta</td><td>Costo total de la salida (el que la fórmula asignó)</td><td>Debe de <em>Costo de Ventas</em> y Haber de <em>Inventario de Mercaderías</em></td></tr>
+    <tr><td>Devolución en compra</td><td>Costo total devuelto, al mismo costo con que ingresó</td><td>Haber de <em>Inventario de Mercaderías</em></td></tr>
+    <tr><td>Devolución en venta</td><td>Costo con que salió (reingresa a su capa de origen)</td><td>Debe de <em>Inventario de Mercaderías</em> y Haber de <em>Costo de Ventas</em></td></tr>
+    <tr><td>Saldo de la última fila</td><td>Valor de la existencia final</td><td>Saldo deudor de <em>Inventario de Mercaderías</em> en el Estado de Situación Financiera</td></tr>
+  </table>
+  </div>
+  <div class="alerta">
+    <span class="rot">Cuidado con la devolución en venta</span>
+    <p>La mercadería devuelta por un cliente <strong>no reingresa al costo de la última compra</strong>: reingresa al costo con que salió, porque es esa misma mercadería la que vuelve. Es el error más frecuente en los ejercicios de Kardex con devoluciones.</p>
+  </div>
+
+  <h4>4.2 Asiento de la compra del 14/08/2026</h4>
+  <p>Comercial El Astillero S.A. adquiere 150 ventiladores a 39,00 cada uno, según factura del proveedor. Es una compra de <strong>bienes</strong> a una sociedad, con IVA 15 %. Antes del asiento, el desglose completo, línea por línea.</p>
+
+  <div class="desglose">
+    <span class="rot">Desglose del cálculo — compra 14/08</span>
+    <div class="tabla-wrap">
+    <table>
+      <tr><th>Concepto</th><th>Cómo se calcula</th><th class="num">Valor</th></tr>
+      <tr><td>Base imponible (costo del inventario)</td><td>150 u &times; 39,00</td><td class="num">5.850,00</td></tr>
+      <tr><td>IVA 15 %</td><td>5.850,00 &times; 15 %</td><td class="num">877,50</td></tr>
+      <tr><td>Retención en la fuente de IR, 2 % bienes</td><td>5.850,00 &times; 2 %</td><td class="num">(117,00)</td></tr>
+      <tr><td>Retención de IVA, 30 % en bienes</td><td>877,50 &times; 30 %</td><td class="num">(263,25)</td></tr>
+      <tr class="tot"><td colspan="2">Valor neto a pagar al proveedor</td><td class="num">6.347,25</td></tr>
+    </table>
+    </div>
+    <p><strong>Comprobación:</strong> 5.850,00 + 877,50 &minus; 117,00 &minus; 263,25 = 6.347,25 &#10003;</p>
+    <p><strong>Cifra que va al Kardex:</strong> únicamente <strong>5.850,00</strong> (150 u a 39,00). Ni el IVA ni las retenciones tocan la tarjeta: el IVA es crédito tributario y las retenciones son anticipos de impuesto que la empresa recauda para el Estado.</p>
+  </div>
+
+  <div class="asiento">
+    <div class="cab"><span>&minus;1&minus;</span><span>14 de agosto de 2026</span></div>
+    <div class="tabla-wrap">
+    <table>
+      <tr><th>Código</th><th>Detalle</th><th class="num">Parcial</th><th class="num">Debe</th><th class="num">Haber</th></tr>
+      <tr><td>1.1.03.01</td><td>Inventario de Mercaderías</td><td class="num">&nbsp;</td><td class="num">5.850,00</td><td class="num">&nbsp;</td></tr>
+      <tr><td>&nbsp;</td><td style="padding-left:24px;font-style:italic">INV-4501 Ventilador de techo VT-16 · 150 u a 39,00</td><td class="num">5.850,00</td><td class="num">&nbsp;</td><td class="num">&nbsp;</td></tr>
+      <tr><td>1.1.05.01</td><td>IVA en Compras (crédito tributario)</td><td class="num">&nbsp;</td><td class="num">877,50</td><td class="num">&nbsp;</td></tr>
+      <tr><td>2.1.03.01</td><td class="acr">a) Retención en la Fuente de IR por Pagar 2 %</td><td class="num">&nbsp;</td><td class="num">&nbsp;</td><td class="num">117,00</td></tr>
+      <tr><td>2.1.03.02</td><td class="acr">a) Retención de IVA por Pagar 30 %</td><td class="num">&nbsp;</td><td class="num">&nbsp;</td><td class="num">263,25</td></tr>
+      <tr><td>2.1.01.01</td><td class="acr">a) Cuentas por Pagar Proveedores</td><td class="num">&nbsp;</td><td class="num">&nbsp;</td><td class="num">6.347,25</td></tr>
+      <tr class="suman"><td>&nbsp;</td><td>SUMAN</td><td class="num">&nbsp;</td><td class="num">6.727,50</td><td class="num">6.727,50</td></tr>
+    </table>
+    </div>
+    <div class="glosa">P/R Compra de 150 unidades del artículo INV-4501 a 39,00 cada una, según factura del proveedor, con IVA 15 %, retención en la fuente del 2 % por adquisición de bienes conforme a la Resolución NAC-DGERCGC26-00000009 y retención del 30 % del IVA conforme a la Resolución NAC-DGERCGC20-00000061. Registro simultáneo en Kardex INV-4501, sistema permanente, método FIFO.</div>
+  </div>
+
+  <div class="nota-lateral">
+    <span class="rot">Fíjate en el detalle de la línea "Parcial"</span>
+    <p>La columna Parcial se usa para desagregar el movimiento por artículo dentro de una misma cuenta. Cuando una factura trae varios artículos, cada uno ocupa un renglón de parcial y todos suman al Debe de Inventario de Mercaderías. Ese renglón es, literalmente, <strong>el puente entre el Libro Diario y el Kardex</strong>.</p>
+  </div>
+
+  <h4>4.3 Asiento de la venta del 18/08/2026 — el asiento dual</h4>
+  <p>Aquí está el rasgo que distingue al sistema permanente. Una venta genera <strong>dos asientos</strong>, no uno:</p>
+  <ul>
+    <li><strong>Asiento de la venta:</strong> reconoce el ingreso, al <em>precio de venta</em>.</li>
+    <li><strong>Asiento del costo:</strong> reconoce el costo de la mercadería entregada y da de baja el inventario, al <em>costo que asignó el Kardex</em>.</li>
+  </ul>
+  <p>Se venden 300 unidades a 52,00. El cliente es una sociedad que actúa como agente de retención, de modo que El Astillero <strong>recibe</strong> retenciones: no son un gasto ni una pérdida, son <strong>activos</strong>, anticipos que se compensarán contra el impuesto del ejercicio.</p>
+
+  <div class="desglose">
+    <span class="rot">Desglose del cálculo — venta 18/08 (parte del ingreso)</span>
+    <div class="tabla-wrap">
+    <table>
+      <tr><th>Concepto</th><th>Cómo se calcula</th><th class="num">Valor</th></tr>
+      <tr><td>Base imponible de la venta</td><td>300 u &times; 52,00</td><td class="num">15.600,00</td></tr>
+      <tr><td>IVA 15 %</td><td>15.600,00 &times; 15 %</td><td class="num">2.340,00</td></tr>
+      <tr><td>Retención en la fuente de IR recibida, 2 %</td><td>15.600,00 &times; 2 %</td><td class="num">(312,00)</td></tr>
+      <tr><td>Retención de IVA recibida, 30 %</td><td>2.340,00 &times; 30 %</td><td class="num">(702,00)</td></tr>
+      <tr class="tot"><td colspan="2">Valor neto por cobrar al cliente</td><td class="num">16.926,00</td></tr>
+    </table>
+    </div>
+    <p><strong>Comprobación:</strong> 15.600,00 + 2.340,00 &minus; 312,00 &minus; 702,00 = 16.926,00 &#10003;</p>
+  </div>
+
+  <div class="desglose">
+    <span class="rot">Desglose del cálculo — venta 18/08 (parte del costo, tomado del Kardex)</span>
+    <p>El precio de venta no dice nada sobre el costo. El costo lo determina la tarjeta:</p>
+    <p>&#8226; 250 u de la Capa 2 &times; 34,00 = 8.500,00<br>
+    &#8226; 50 u de la Capa 3 &times; 39,00 = 1.950,00<br>
+    <strong>Costo de la salida = 10.450,00</strong> &mdash; exactamente el total de la columna Salidas de la fila del 18/08.</p>
+  </div>
+
+  <div class="asiento">
+    <div class="cab"><span>&minus;2&minus;</span><span>18 de agosto de 2026 · reconocimiento del ingreso</span></div>
+    <div class="tabla-wrap">
+    <table>
+      <tr><th>Código</th><th>Detalle</th><th class="num">Parcial</th><th class="num">Debe</th><th class="num">Haber</th></tr>
+      <tr><td>1.1.02.01</td><td>Cuentas por Cobrar Clientes</td><td class="num">&nbsp;</td><td class="num">16.926,00</td><td class="num">&nbsp;</td></tr>
+      <tr><td>1.1.05.03</td><td>Anticipo de IR — Retenciones en la Fuente Recibidas</td><td class="num">&nbsp;</td><td class="num">312,00</td><td class="num">&nbsp;</td></tr>
+      <tr><td>1.1.05.04</td><td>Crédito Tributario por Retenciones de IVA Recibidas</td><td class="num">&nbsp;</td><td class="num">702,00</td><td class="num">&nbsp;</td></tr>
+      <tr><td>4.1.01.01</td><td class="acr">a) Ventas de Mercaderías</td><td class="num">&nbsp;</td><td class="num">&nbsp;</td><td class="num">15.600,00</td></tr>
+      <tr><td>2.1.05.01</td><td class="acr">a) IVA en Ventas</td><td class="num">&nbsp;</td><td class="num">&nbsp;</td><td class="num">2.340,00</td></tr>
+      <tr class="suman"><td>&nbsp;</td><td>SUMAN</td><td class="num">&nbsp;</td><td class="num">17.940,00</td><td class="num">17.940,00</td></tr>
+    </table>
+    </div>
+    <div class="glosa">P/R Venta de 300 unidades del artículo INV-4501 a 52,00 cada una según factura emitida, con IVA 15 %; el cliente, en calidad de agente de retención, practica retención en la fuente de IR del 2 % y retención del 30 % del IVA, que la empresa reconoce como anticipos a su favor.</div>
+  </div>
+
+  <div class="asiento">
+    <div class="cab"><span>&minus;3&minus;</span><span>18 de agosto de 2026 · reconocimiento del costo (sistema permanente)</span></div>
+    <div class="tabla-wrap">
+    <table>
+      <tr><th>Código</th><th>Detalle</th><th class="num">Parcial</th><th class="num">Debe</th><th class="num">Haber</th></tr>
+      <tr><td>5.1.01.01</td><td>Costo de Ventas</td><td class="num">&nbsp;</td><td class="num">10.450,00</td><td class="num">&nbsp;</td></tr>
+      <tr><td>1.1.03.01</td><td class="acr">a) Inventario de Mercaderías</td><td class="num">&nbsp;</td><td class="num">&nbsp;</td><td class="num">10.450,00</td></tr>
+      <tr><td>&nbsp;</td><td class="acr" style="font-style:italic">INV-4501 · 250 u a 34,00 y 50 u a 39,00</td><td class="num">10.450,00</td><td class="num">&nbsp;</td><td class="num">&nbsp;</td></tr>
+      <tr class="suman"><td>&nbsp;</td><td>SUMAN</td><td class="num">&nbsp;</td><td class="num">10.450,00</td><td class="num">10.450,00</td></tr>
+    </table>
+    </div>
+    <div class="glosa">P/R Costo de la mercadería vendida según factura del 18 de agosto de 2026, determinado en el Kardex del artículo INV-4501 bajo el método FIFO, con baja de 250 unidades a 34,00 y 50 unidades a 39,00.</div>
+  </div>
+
+  <div class="alerta">
+    <span class="rot">Trampa conceptual</span>
+    <p>La utilidad bruta de esta venta <strong>no aparece en ningún asiento</strong>. Nadie registra "utilidad bruta 5.150,00". La utilidad bruta es una <em>diferencia</em> que se lee en el Estado de Resultados (15.600,00 &minus; 10.450,00), no una cuenta que se contabiliza. Quien intente registrarla directamente está inventando una cuenta que no existe.</p>
+  </div>
+
+  <h4>4.4 Conciliación entre el Kardex y el Libro Mayor</h4>
+  <p>El Kardex es un <strong>auxiliar</strong>: no reemplaza al mayor, lo detalla. La prueba de que ambos están bien es que el saldo de la cuenta de mayor coincida con la suma de todas las tarjetas de todos los artículos.</p>
+  <div class="tabla-wrap">
+  <table>
+    <tr><th>Fecha</th><th>Movimiento</th><th class="num">Debe</th><th class="num">Haber</th><th class="num">Saldo del mayor</th><th class="num">Saldo del Kardex</th></tr>
+    <tr><td>01/08</td><td>Saldo inicial</td><td class="num">&mdash;</td><td class="num">&mdash;</td><td class="num">3.000,00</td><td class="num">3.000,00</td></tr>
+    <tr><td>05/08</td><td>Compra</td><td class="num">10.200,00</td><td class="num">&mdash;</td><td class="num">13.200,00</td><td class="num">13.200,00</td></tr>
+    <tr><td>09/08</td><td>Costo de la venta</td><td class="num">&mdash;</td><td class="num">4.700,00</td><td class="num">8.500,00</td><td class="num">8.500,00</td></tr>
+    <tr><td>14/08</td><td>Compra</td><td class="num">5.850,00</td><td class="num">&mdash;</td><td class="num">14.350,00</td><td class="num">14.350,00</td></tr>
+    <tr><td>18/08</td><td>Costo de la venta</td><td class="num">&mdash;</td><td class="num">10.450,00</td><td class="num">3.900,00</td><td class="num">3.900,00</td></tr>
+    <tr><td>23/08</td><td>Compra</td><td class="num">4.025,00</td><td class="num">&mdash;</td><td class="num">7.925,00</td><td class="num">7.925,00</td></tr>
+    <tr><td>28/08</td><td>Costo de la venta</td><td class="num">&mdash;</td><td class="num">5.510,00</td><td class="num">2.415,00</td><td class="num">2.415,00</td></tr>
+    <tr class="tot"><td colspan="2">Totales del período</td><td class="num">20.075,00</td><td class="num">20.660,00</td><td class="num">2.415,00</td><td class="num">2.415,00</td></tr>
+  </table>
+  </div>
+  <p>Movimiento por movimiento, mayor y auxiliar caminan idénticos. Cuando en la práctica no coinciden, las causas típicas son: una compra registrada en el Diario pero no en la tarjeta, una salida de bodega sin factura emitida, o una devolución valorada a un costo distinto del original.</p>
+
+  <div class="ejemplo">
+    <span class="rot">Ejemplo aplicado — importación y costo del inventario</span>
+    <p>Supón que la compra del 23/08 hubiese sido una importación: 100 unidades con precio de compra de 3.700,00, arancel 180,00, flete internacional 95,00 y seguro 50,00. El costo del inventario sería 3.700 + 180 + 95 + 50 = <strong>4.025,00</strong>, es decir 40,25 por unidad &mdash; la misma cifra del caso. El Kardex registra <em>el costo completo</em>, no solo el precio facturado por el proveedor extranjero. Los tributos recuperables, en cambio, no se capitalizan.</p>
+  </div>
+
+  <div class="carrera-box">
+    <span class="rot">Por qué esto le importa a un profesional de Negocios Internacionales</span>
+    <ul>
+      <li><strong>Comercio exterior:</strong> el costo unitario que entra al Kardex en una importación se forma con precio, arancel, flete y seguro. Equivocarse ahí distorsiona el costo de ventas de todos los meses siguientes, no solo del mes de la importación.</li>
+      <li><strong>Finanzas internacionales:</strong> las retenciones recibidas son activos, no pérdidas. Muchas empresas pequeñas las tratan como gasto y subestiman su propia liquidez fiscal frente a un análisis de flujo de caja.</li>
+      <li><strong>Marketing y negociación internacional:</strong> el asiento dual demuestra que un aumento en ventas no equivale a un aumento en utilidad. Negociar un descuento agresivo sin conocer el costo de la capa que se va a entregar puede convertir una venta grande en una pérdida.</li>
+      <li><strong>Marco legal y normativo:</strong> la glosa de cada asiento debe citar el documento fuente y el sustento normativo aplicable. Un asiento sin glosa es, en un proceso de control o en una auditoría, un asiento sin defensa.</li>
+    </ul>
+  </div>
+
+  <div class="conclusion">
+    <span class="rot">Idea clave del Tema 4</span>
+    <p>El Kardex y el Libro Diario son <strong>dos vistas del mismo hecho</strong>. La tarjeta aporta la cifra del costo; el asiento la registra en el sistema de partida doble. Bajo sistema permanente cada venta exige <strong>dos asientos</strong> —el del ingreso al precio de venta y el del costo al valor que asignó la fórmula— y el saldo final de la tarjeta debe coincidir exactamente con el saldo de la cuenta Inventario de Mercaderías en el mayor.</p>
+  </div>
+</section>
+
+<!-- ==================== TEMA 5 ==================== -->
+<section id="t5" class="panel">
+  <h3>Tema 5 · Qué se puede hacer con un Kardex: registros, informes e indicadores</h3>
+  <p class="sub">Una tarjeta bien llevada no termina en sí misma. Alimenta registros obligatorios, produce informes de gestión y permite calcular indicadores. Aquí está todo lo que sale de ella.</p>
+
+  <h4>5.1 Nivel 1 — Registros contables que el Kardex alimenta</h4>
+  <p>Esto no es opcional ni de gestión: es la cadena formal del proceso contable.</p>
+  <div class="tabla-wrap">
+  <table>
+    <tr><th>Registro o estado</th><th>Qué toma del Kardex</th><th>Carácter</th></tr>
+    <tr><td><strong>Libro Diario</strong></td><td>Costo total de cada entrada y de cada salida, para los asientos de compra y de costo de ventas</td><td>Obligatorio</td></tr>
+    <tr><td><strong>Libro Mayor</strong></td><td>Movimientos de la cuenta Inventario de Mercaderías, que deben conciliar con el auxiliar</td><td>Obligatorio</td></tr>
+    <tr><td><strong>Balance de comprobación</strong></td><td>El saldo de Inventario de Mercaderías y el de Costo de Ventas</td><td>Obligatorio</td></tr>
+    <tr><td><strong>Estado de Resultados</strong></td><td>El total de la columna Salidas del período: el costo de ventas</td><td>Obligatorio</td></tr>
+    <tr><td><strong>Estado de Situación Financiera</strong></td><td>El saldo de la última fila: el inventario final, dentro del activo corriente</td><td>Obligatorio</td></tr>
+    <tr><td><strong>Notas a los estados financieros</strong></td><td>Detalle por categorías, política contable y fórmula de costo aplicada</td><td>Obligatorio</td></tr>
+    <tr><td><strong>Anexos e información al organismo de control</strong></td><td>Composición y sustento del saldo de inventarios</td><td>Obligatorio</td></tr>
+  </table>
+  </div>
+
+  <div class="norma">
+    <span class="rot">El deber ser — qué debe revelarse sobre inventarios</span>
+    <p>Dentro del contenido de la <strong>NIC 2</strong> se exige que los estados financieros revelen, entre otros asuntos: las <strong>políticas contables adoptadas para la medición de los inventarios, incluida la fórmula de costo utilizada</strong>; el <strong>importe en libros total</strong> y el correspondiente a cada categoría en que la entidad clasifique sus inventarios; el <strong>importe de los inventarios reconocido como gasto</strong> durante el período; el importe de las <strong>rebajas de valor</strong> reconocidas y el de las <strong>reversiones</strong> de rebajas anteriores, junto con las circunstancias que las originaron; y el importe de los inventarios <strong>pignorados en garantía</strong> de obligaciones.</p>
+    <p>Todas esas revelaciones se construyen a partir del Kardex. Sin él, la nota no se puede redactar con sustento.</p>
+  </div>
+
+  <div class="futuro">
+    <span class="rot">Contenido diferido</span>
+    <p>La <strong>elaboración completa del Estado de Resultados y del Estado de Situación Financiera</strong> corresponde a la <strong>Unidad 4 (Días 14 a 18)</strong>. Hoy solo identificamos qué cifra del Kardex viaja a cada uno; allá los construiremos.</p>
+  </div>
+
+  <h4>5.2 Nivel 2 — Informes de gestión que se derivan del Kardex</h4>
+  <p>Con las mismas columnas, sin agregar un solo dato nuevo, se obtienen informes que la gerencia usa para decidir. Estos no son obligatorios por norma, pero son la razón por la que el Kardex vale más que su costo administrativo.</p>
+
+  <div class="tabla-wrap">
+  <table>
+    <tr><th>Informe</th><th>Qué muestra</th><th>Qué decisión habilita</th></tr>
+    <tr><td><strong>Existencias valoradas</strong></td><td>Saldo en unidades y en dólares de todos los artículos a una fecha</td><td>Conocer cuánto capital está inmovilizado en bodega</td></tr>
+    <tr><td><strong>Movimientos por período</strong></td><td>Entradas y salidas de un artículo entre dos fechas</td><td>Auditoría, investigación de faltantes, defensa ante control tributario</td></tr>
+    <tr><td><strong>Artículos bajo mínimo</strong></td><td>Aquellos cuya existencia cayó por debajo del punto de pedido</td><td>Disparar la orden de compra antes del quiebre de stock</td></tr>
+    <tr><td><strong>Artículos sin movimiento</strong></td><td>Los que no registran salidas en N meses</td><td>Detectar inventario obsoleto o de lenta rotación; es el insumo del análisis de valor neto realizable</td></tr>
+    <tr><td><strong>Clasificación ABC</strong></td><td>Ordena los artículos por participación en el valor total del inventario</td><td>Concentrar el control físico y los conteos en el pequeño grupo de artículos que concentra la mayor parte del valor</td></tr>
+    <tr><td><strong>Márgenes por artículo</strong></td><td>Precio de venta frente al costo asignado por la fórmula</td><td>Decidir precios, promociones y descuentos con base en el costo real</td></tr>
+    <tr><td><strong>Conciliación con conteo físico</strong></td><td>Saldo del Kardex frente al conteo, artículo por artículo</td><td>Detectar mermas, errores de registro, robo o deterioro</td></tr>
+    <tr><td><strong>Antigüedad del inventario</strong></td><td>Cuánto tiempo lleva cada capa sin consumirse</td><td>Anticipar caducidad, deterioro y necesidad de liquidación</td></tr>
+    <tr><td><strong>Costo por proveedor / por origen</strong></td><td>De qué proveedor o de qué importación proviene cada capa</td><td>Negociar con proveedores y evaluar dependencia de un único origen</td></tr>
+  </table>
+  </div>
+
+  <div class="nota-lateral">
+    <span class="rot">Un dato que solo el FIFO permite</span>
+    <p>El informe de <strong>antigüedad del inventario</strong> es posible bajo FIFO porque la tarjeta conserva las capas identificadas con su fecha y su costo. Bajo promedio ponderado ese detalle se pierde en el recálculo: queda un solo costo unitario y ya no se sabe de qué compra proviene cada unidad. Es una ventaja informativa real del FIFO, y una de las razones de fondo para elegirlo.</p>
+  </div>
+
+  <h4>5.3 Nivel 3 — Indicadores que se calculan con los datos del Kardex</h4>
+  <p>Aquí el registro se convierte en análisis. Todos los indicadores que siguen se calculan con las cifras del artículo INV-4501 que ya tienes en la tarjeta. No hace falta ningún dato externo salvo el precio de venta.</p>
+
+  <h5>a) Rotación de inventarios</h5>
+  <div class="formula">
+    <span class="fx">Rotación = Costo de ventas &divide; Inventario promedio</span>
+    <span class="nota">Inventario promedio = (Inventario inicial + Inventario final) &divide; 2</span>
+  </div>
+  <div class="desglose">
+    <span class="rot">Cálculo con el Caso A</span>
+    <p>Inventario promedio = (3.000,00 + 2.415,00) &divide; 2 = <strong>2.707,50</strong><br>
+    Rotación = 20.660,00 &divide; 2.707,50 = <strong>7,63 veces en el mes</strong></p>
+    <p><em>Lectura:</em> durante agosto la empresa renovó su inventario de ventiladores algo más de siete veces. Es una rotación alta, propia de un artículo de mucha demanda. Una rotación alta libera capital de trabajo; una rotación baja lo inmoviliza.</p>
+  </div>
+
+  <h5>b) Días de inventario (permanencia)</h5>
+  <div class="formula">
+    <span class="fx">Días de inventario = Días del período &divide; Rotación</span>
+  </div>
+  <div class="desglose">
+    <span class="rot">Cálculo con el Caso A</span>
+    <p>30 &divide; 7,63 = <strong>3,93 días</strong></p>
+    <p><em>Lectura:</em> en promedio, un ventilador permanece menos de cuatro días en bodega antes de venderse. Este indicador es el que se compara contra el plazo de reposición del proveedor: si el proveedor demora 15 días en entregar y el inventario dura 4, la empresa está permanentemente al borde del quiebre de stock.</p>
+  </div>
+
+  <h5>c) Cobertura de inventario</h5>
+  <div class="formula">
+    <span class="fx">Cobertura = Existencia final en unidades &divide; Consumo promedio diario en unidades</span>
+  </div>
+  <div class="desglose">
+    <span class="rot">Cálculo con el Caso A</span>
+    <p>Unidades vendidas en el mes: 150 + 300 + 140 = <strong>590 u</strong><br>
+    Consumo promedio diario = 590 &divide; 30 = <strong>19,67 u/día</strong><br>
+    Cobertura = 60 &divide; 19,67 = <strong>3,05 días</strong></p>
+    <p><em>Lectura:</em> con 60 unidades al 31 de agosto, la empresa tiene mercadería para aproximadamente tres días de venta. Es una señal de alerta que debe activar la reposición inmediata.</p>
+  </div>
+
+  <h5>d) Margen bruto por artículo</h5>
+  <div class="formula">
+    <span class="fx">Utilidad bruta = Ventas &minus; Costo de ventas &nbsp;·&nbsp; Margen % = Utilidad bruta &divide; Ventas &times; 100</span>
+  </div>
+  <div class="desglose">
+    <span class="rot">Cálculo con el Caso A</span>
+    <p>Ventas = 590 u &times; 52,00 = <strong>30.680,00</strong><br>
+    Costo de ventas (FIFO) = <strong>20.660,00</strong><br>
+    Utilidad bruta = 30.680,00 &minus; 20.660,00 = <strong>10.020,00</strong><br>
+    Margen = 10.020,00 &divide; 30.680,00 &times; 100 = <strong>32,66 %</strong></p>
+    <p><em>Lectura:</em> por cada dólar vendido de este artículo quedan 32,66 centavos antes de gastos operativos. Es el piso sobre el cual se decide cuánto descuento se puede conceder.</p>
+  </div>
+
+  <h5>e) Costo unitario promedio de las ventas</h5>
+  <div class="desglose">
+    <span class="rot">Cálculo con el Caso A</span>
+    <p>20.660,00 &divide; 590 u = <strong>35,02 por unidad</strong></p>
+    <p><em>Lectura:</em> aunque el precio de compra subió de 30,00 a 40,25 durante el mes, el costo promedio efectivamente cargado a resultados fue 35,02, porque FIFO descargó primero las capas antiguas. <strong>Esta es la cifra que revela el efecto económico del método elegido.</strong></p>
+  </div>
+
+  <h5>f) Índice de exactitud del inventario</h5>
+  <div class="formula">
+    <span class="fx">Exactitud = Unidades contadas físicamente &divide; Unidades según Kardex &times; 100</span>
+  </div>
+  <p>Si el conteo físico del 31 de agosto arroja 60 unidades, la exactitud es del 100 % y no hay ajuste que hacer. Si arrojara 57, la exactitud sería del 95 % y habría un faltante de 3 unidades por investigar. Este indicador es la puerta de entrada al ajuste de inventario.</p>
+
+  <div class="futuro">
+    <span class="rot">Contenido diferido</span>
+    <p>El <strong>registro contable del faltante o sobrante</strong> detectado por este índice, y el <strong>ajuste cuando el valor neto realizable es menor que el costo</strong>, corresponden al <strong>Día 11 (Asientos de ajuste — II parte del proceso contable, Unidad 3)</strong>. Hoy los identificamos y los cuantificamos; el asiento se hace allá.</p>
+  </div>
+
+  <h4>5.4 Lo que el Kardex NO puede hacer</h4>
+  <p>Parte del deber ser es conocer los límites del instrumento. Un Kardex, por bien llevado que esté:</p>
+  <ul>
+    <li><strong>No sustituye el conteo físico.</strong> Registra lo que se le informó, no lo que hay. La toma física de inventarios sigue siendo indispensable como control independiente.</li>
+    <li><strong>No detecta por sí solo el deterioro ni la obsolescencia.</strong> Un artículo puede estar impecablemente registrado a su costo y valer, en el mercado, mucho menos. Esa comparación exige una evaluación externa a la tarjeta.</li>
+    <li><strong>No decide el método de valuación.</strong> Lo aplica. La elección es una política contable de la entidad, que debe ser uniforme para inventarios de naturaleza y uso similares.</li>
+    <li><strong>No corrige un dato de origen equivocado.</strong> Si el costo unitario de entrada se digitó mal, todos los cálculos posteriores heredan el error con apariencia de exactitud.</li>
+    <li><strong>No es un comprobante de venta.</strong> No reemplaza a la factura ni a la guía de remisión; se apoya en ellas.</li>
+  </ul>
+
+  <div class="ejemplo">
+    <span class="rot">Ejemplo aplicado — la tarjeta que decide una compra</span>
+    <p>El 28 de agosto el gerente de El Astillero mira la tarjeta del INV-4501: 60 unidades, cobertura de 3 días, existencia mínima de 80 unidades, rotación de 7,63 veces al mes, margen del 32,66 % y una tendencia clara de costos al alza (30,00 &rarr; 34,00 &rarr; 39,00 &rarr; 40,25).</p>
+    <p>Con esos cinco datos —todos obtenidos de una sola tarjeta— decide comprar de inmediato, negociar volumen antes de que el costo suba otra vez, y revisar el precio de venta de 52,00 porque el margen se está estrechando compra tras compra. <strong>Ninguna de esas decisiones habría sido posible mirando solamente el saldo del Estado de Situación Financiera.</strong></p>
+  </div>
+
+  <div class="carrera-box">
+    <span class="rot">Por qué esto le importa a un profesional de Negocios Internacionales</span>
+    <ul>
+      <li><strong>Comercio exterior:</strong> la cobertura y los días de inventario, contrastados con el <em>lead time</em> de una importación —tránsito marítimo, desaduanización, transporte interno—, son los que determinan cuándo debe emitirse una orden de compra al exterior para no quedarse sin mercadería.</li>
+      <li><strong>Finanzas internacionales:</strong> la rotación de inventarios es uno de los componentes del ciclo de conversión de efectivo, y por tanto uno de los indicadores que un banco extranjero o un fondo evalúan antes de otorgar financiamiento.</li>
+      <li><strong>Marketing y negociación internacional:</strong> el margen bruto por artículo fija el límite real de una negociación de precio. Conceder un descuento del 35 % sobre un artículo con margen del 32,66 % significa vender por debajo del costo, aunque la venta se vea grande.</li>
+      <li><strong>Marco legal y normativo:</strong> las revelaciones sobre inventarios que la NIC 2 exige —política contable, fórmula de costo, importe reconocido como gasto, rebajas de valor, inventarios pignorados— se redactan íntegramente con información extraída del registro auxiliar.</li>
+    </ul>
+  </div>
+
+  <div class="conclusion">
+    <span class="rot">Idea clave del Tema 5</span>
+    <p>El Kardex opera en tres niveles a la vez: es un <strong>registro obligatorio</strong> que alimenta el Diario, el Mayor y los estados financieros; es una <strong>fuente de informes</strong> de gestión —existencias, mínimos, obsolescencia, ABC, márgenes, antigüedad—; y es la <strong>base de cálculo de los indicadores</strong> de rotación, cobertura, margen y exactitud. Una sola tarjeta bien llevada responde preguntas contables, tributarias y gerenciales al mismo tiempo. Y su límite es igual de importante: registra lo que se le informa, por lo que jamás sustituye al conteo físico.</p>
+  </div>
+</section>
+
+<!-- ==================== EJERCICIO ==================== -->
+<section id="ejer" class="panel">
+  <h3>Ejercicio Interactivo · Completa el Kardex de Náutica del Golfo S.A.</h3>
+  <p class="sub">Ocho casillas de una tarjeta FIFO. Resuelve <strong>todas</strong> antes de verificar: el sistema no te dirá si vas bien hasta que termines, igual que en la vida real, donde el error aparece al cuadrar y no antes.</p>
+
+  <div class="tabla-wrap">
+  <table>
+    <tr><th colspan="4" style="text-align:center">ENCABEZADO DE LA TARJETA</th></tr>
+    <tr><td><strong>Empresa</strong></td><td>Náutica del Golfo S.A. (Guayaquil)</td><td><strong>Código</strong></td><td>MM-115</td></tr>
+    <tr><td><strong>Descripción</strong></td><td>Motor fuera de borda 15 HP</td><td><strong>Unidad</strong></td><td>Unidad</td></tr>
+    <tr><td><strong>Sistema</strong></td><td>Permanente</td><td><strong>Método</strong></td><td><strong>FIFO</strong></td></tr>
+    <tr><td><strong>Período</strong></td><td>Septiembre 2026</td><td><strong>Moneda</strong></td><td>USD</td></tr>
+  </table>
+  </div>
+
+  <div class="tabla-wrap">
+  <table>
+    <tr><th>Fecha</th><th>Movimiento</th><th class="num">Unidades</th><th class="num">Costo unitario</th></tr>
+    <tr><td>01/09/2026</td><td>Existencia inicial</td><td class="num">40</td><td class="num">120,00</td></tr>
+    <tr><td>06/09/2026</td><td>Compra según factura</td><td class="num">60</td><td class="num">130,00</td></tr>
+    <tr><td>12/09/2026</td><td>Venta según factura</td><td class="num">(70)</td><td class="num">&mdash;</td></tr>
+    <tr><td>19/09/2026</td><td>Compra según factura</td><td class="num">50</td><td class="num">140,00</td></tr>
+    <tr><td>25/09/2026</td><td>Venta según factura</td><td class="num">(50)</td><td class="num">&mdash;</td></tr>
+  </table>
+  </div>
+  <p>Los costos unitarios están expresados sin IVA. Precio de venta unitario: 195,00 (dato de gestión; no se registra en la tarjeta).</p>
+
+  <div class="item">
+    <div class="q">1. Después de la compra del 06/09, ¿cuál es la existencia?</div>
+    <div class="ops">
+      <label><input type="radio" name="ei1" value="a"> 100 unidades por 12.600,00</label>
+      <label><input type="radio" name="ei1" value="b"> 100 unidades por 12.500,00</label>
+      <label><input type="radio" name="ei1" value="c"> 60 unidades por 7.800,00</label>
+      <label><input type="radio" name="ei1" value="d"> 100 unidades por 13.000,00</label>
+    </div>
+    <div class="fb" id="fei1"></div>
+  </div>
+
+  <div class="item">
+    <div class="q">2. En la columna "Existencias — Costo unitario" de esa misma fila del 06/09, ¿qué debe aparecer bajo FIFO?</div>
+    <div class="ops">
+      <label><input type="radio" name="ei2" value="a"> Un costo único de 126,00</label>
+      <label><input type="radio" name="ei2" value="b"> Un costo único de 130,00, el más reciente</label>
+      <label><input type="radio" name="ei2" value="c"> Dos costos que conviven: 120,00 y 130,00, cada uno con sus unidades</label>
+      <label><input type="radio" name="ei2" value="d"> Un costo único de 125,00, promedio simple de los dos</label>
+    </div>
+    <div class="fb" id="fei2"></div>
+  </div>
+
+  <div class="item">
+    <div class="q">3. ¿Cuál es el costo total de la salida del 12/09?</div>
+    <div class="ops">
+      <label><input type="radio" name="ei3" value="a"> 9.100,00</label>
+      <label><input type="radio" name="ei3" value="b"> 8.700,00</label>
+      <label><input type="radio" name="ei3" value="c"> 8.400,00</label>
+      <label><input type="radio" name="ei3" value="d"> 8.820,00</label>
+    </div>
+    <div class="fb" id="fei3"></div>
+  </div>
+
+  <div class="item">
+    <div class="q">4. ¿Cómo debe escribirse esa salida del 12/09 en el bloque de Salidas?</div>
+    <div class="ops">
+      <label><input type="radio" name="ei4" value="a"> Un solo renglón: 70 unidades a 124,29</label>
+      <label><input type="radio" name="ei4" value="b"> Un solo renglón: 70 unidades a 130,00</label>
+      <label><input type="radio" name="ei4" value="c"> Un solo renglón: 70 unidades a 126,00</label>
+      <label><input type="radio" name="ei4" value="d"> Dos renglones: 40 unidades a 120,00 y 30 unidades a 130,00</label>
+    </div>
+    <div class="fb" id="fei4"></div>
+  </div>
+
+  <div class="item">
+    <div class="q">5. ¿Cuál es la existencia después de la venta del 12/09?</div>
+    <div class="ops">
+      <label><input type="radio" name="ei5" value="a"> 30 unidades por 3.600,00</label>
+      <label><input type="radio" name="ei5" value="b"> 30 unidades por 4.200,00</label>
+      <label><input type="radio" name="ei5" value="c"> 30 unidades por 3.900,00</label>
+      <label><input type="radio" name="ei5" value="d"> 80 unidades por 10.900,00</label>
+    </div>
+    <div class="fb" id="fei5"></div>
+  </div>
+
+  <div class="item">
+    <div class="q">6. ¿Cuál es el costo total de la salida del 25/09?</div>
+    <div class="ops">
+      <label><input type="radio" name="ei6" value="a"> 6.700,00</label>
+      <label><input type="radio" name="ei6" value="b"> 7.000,00</label>
+      <label><input type="radio" name="ei6" value="c"> 6.500,00</label>
+      <label><input type="radio" name="ei6" value="d"> 6.800,00</label>
+    </div>
+    <div class="fb" id="fei6"></div>
+  </div>
+
+  <div class="item">
+    <div class="q">7. ¿Cuál es el inventario final del artículo MM-115 al 30/09?</div>
+    <div class="ops">
+      <label><input type="radio" name="ei7" value="a"> 30 unidades por 3.900,00 (a 130,00)</label>
+      <label><input type="radio" name="ei7" value="b"> 30 unidades por 4.000,00</label>
+      <label><input type="radio" name="ei7" value="c"> 30 unidades por 3.600,00 (a 120,00)</label>
+      <label><input type="radio" name="ei7" value="d"> 30 unidades por 4.200,00 (a 140,00)</label>
+    </div>
+    <div class="fb" id="fei7"></div>
+  </div>
+
+  <div class="item">
+    <div class="q">8. ¿Cuál de estas es la prueba de cuadre correcta de la tarjeta?</div>
+    <div class="ops">
+      <label><input type="radio" name="ei8" value="a"> 19.600,00 = 15.400,00 + 4.500,00</label>
+      <label><input type="radio" name="ei8" value="b"> 19.600,00 = 15.400,00 + 4.200,00</label>
+      <label><input type="radio" name="ei8" value="c"> 14.800,00 = 10.600,00 + 4.200,00</label>
+      <label><input type="radio" name="ei8" value="d"> 19.600,00 = 14.800,00 + 4.800,00</label>
+    </div>
+    <div class="fb" id="fei8"></div>
+  </div>
+
+  <div class="aviso" id="avisoEjer">Faltan respuestas por marcar. Completa las ocho antes de verificar.</div>
+  <button class="btn" onclick="verificarEjer()">Verificar respuestas</button>
+  <button class="btn sec" onclick="reiniciarEjer()">Reiniciar</button>
+
+  <div class="result" id="resEjer">
+    <span class="em" id="emEjer"></span>
+    <div class="pt" id="ptEjer"></div>
+    <div class="msg" id="msgEjer"></div>
+    <div class="barra"><div class="fill" id="barEjer"></div></div>
+  </div>
+
+  <div class="solucion">
+    <span class="rot">Solución completa desarrollada</span>
+    <p><strong>Capa por capa:</strong></p>
+    <ul>
+      <li><strong>01/09</strong> — Existencia inicial: Capa 1 de 40 u a 120,00 = 4.800,00. Existencia: 40 u / 4.800,00.</li>
+      <li><strong>06/09</strong> — Entra Capa 2: 60 u a 130,00 = 7.800,00. Existencia: 100 u / 12.600,00, con dos costos conviviendo (40 a 120,00 y 60 a 130,00).</li>
+      <li><strong>12/09</strong> — Salen 70 u: se agota Capa 1 (40 &times; 120,00 = 4.800,00) y se toman 30 de la Capa 2 (30 &times; 130,00 = 3.900,00). <strong>Costo de la salida = 8.700,00</strong>, escrito en dos renglones. Existencia: 30 u / 3.900,00.</li>
+      <li><strong>19/09</strong> — Entra Capa 3: 50 u a 140,00 = 7.000,00. Existencia: 80 u / 10.900,00.</li>
+      <li><strong>25/09</strong> — Salen 50 u: se agota el resto de Capa 2 (30 &times; 130,00 = 3.900,00) y se toman 20 de la Capa 3 (20 &times; 140,00 = 2.800,00). <strong>Costo de la salida = 6.700,00</strong>. Existencia final: 30 u a 140,00 = <strong>4.200,00</strong>.</li>
+    </ul>
+    <p><strong>Totales:</strong> mercadería disponible 150 u por 19.600,00 (4.800,00 + 7.800,00 + 7.000,00). Costo de ventas: 8.700,00 + 6.700,00 = <strong>15.400,00</strong>. Inventario final: <strong>4.200,00</strong>.</p>
+    <div class="formula">
+      <span class="fx">Prueba de cuadre</span>
+      4.800,00 + 14.800,00 = 15.400,00 + 4.200,00 &nbsp;&rarr;&nbsp; 19.600,00 = 19.600,00 &#10003;
+      <span class="nota">Existencia inicial + entradas del período = salidas + existencia final</span>
+    </div>
+    <p><strong>Y con estos datos, un indicador:</strong> unidades vendidas 120, ventas 120 &times; 195,00 = 23.400,00; utilidad bruta = 23.400,00 &minus; 15.400,00 = 8.000,00; margen = 34,19 %. Inventario promedio = (4.800,00 + 4.200,00) &divide; 2 = 4.500,00; rotación = 15.400,00 &divide; 4.500,00 = 3,42 veces en el mes.</p>
+  </div>
+</section>
+
+<!-- ==================== CUESTIONARIO ==================== -->
+<section id="cues" class="panel">
+  <h3>Cuestionario de evaluación</h3>
+  <p class="sub">Diez preguntas: siete se responden con el contenido del widget y tres exigen que analices un caso con datos propios. Responde todas y luego verifica.</p>
+
+  <div class="item">
+    <div class="q"><span class="badge b-teo">Teórica</span>1. ¿Cuál de estas afirmaciones sobre el Kardex y la NIC 2 es correcta?</div>
+    <div class="ops">
+      <label><input type="radio" name="qi1" value="a"> La NIC 2 establece el formato obligatorio de la tarjeta, con sus columnas y encabezados.</label>
+      <label><input type="radio" name="qi1" value="b"> La NIC 2 regula la medición y la revelación del inventario, pero no prescribe un formato de registro; el Kardex es el instrumento práctico con que se cumple bajo sistema permanente.</label>
+      <label><input type="radio" name="qi1" value="c"> La NIC 2 prohíbe el uso del Kardex y exige en su lugar el sistema periódico.</label>
+      <label><input type="radio" name="qi1" value="d"> El Kardex no tiene relación alguna con la NIC 2; es exclusivamente un requisito tributario ecuatoriano.</label>
+    </div>
+    <div class="fb" id="fqi1"></div>
+  </div>
+
+  <div class="item">
+    <div class="q"><span class="badge b-teo">Teórica</span>2. Del encabezado de la tarjeta, ¿cuál es el campo cuya omisión compromete directamente la comparabilidad y el sustento de los estados financieros?</div>
+    <div class="ops">
+      <label><input type="radio" name="qi2" value="a"> El proveedor habitual</label>
+      <label><input type="radio" name="qi2" value="b"> La bodega o ubicación</label>
+      <label><input type="radio" name="qi2" value="c"> El responsable del registro</label>
+      <label><input type="radio" name="qi2" value="d"> El método o fórmula de valuación aplicada</label>
+    </div>
+    <div class="fb" id="fqi2"></div>
+  </div>
+
+  <div class="item">
+    <div class="q"><span class="badge b-teo">Teórica</span>3. ¿Qué dato NUNCA debe aparecer dentro de las columnas de un Kardex valorado?</div>
+    <div class="ops">
+      <label><input type="radio" name="qi3" value="a"> El precio de venta de la mercadería</label>
+      <label><input type="radio" name="qi3" value="b"> El costo unitario de las entradas</label>
+      <label><input type="radio" name="qi3" value="c"> Las unidades que salen de bodega</label>
+      <label><input type="radio" name="qi3" value="d"> El costo total de la existencia después de cada movimiento</label>
+    </div>
+    <div class="fb" id="fqi3"></div>
+  </div>
+
+  <div class="item">
+    <div class="q"><span class="badge b-teo">Teórica</span>4. Un cliente devuelve mercadería que se le había vendido. ¿A qué costo reingresa al Kardex?</div>
+    <div class="ops">
+      <label><input type="radio" name="qi4" value="a"> Al costo de la compra más reciente</label>
+      <label><input type="radio" name="qi4" value="b"> Al precio de venta que figuraba en la factura</label>
+      <label><input type="radio" name="qi4" value="c"> Al mismo costo con que salió, porque es esa misma mercadería la que retorna</label>
+      <label><input type="radio" name="qi4" value="d"> Al costo promedio del período completo</label>
+    </div>
+    <div class="fb" id="fqi4"></div>
+  </div>
+
+  <div class="item">
+    <div class="q"><span class="badge b-teo">Teórica</span>5. En un contexto de costos de compra crecientes, bajo FIFO el inventario final queda valorado:</div>
+    <div class="ops">
+      <label><input type="radio" name="qi5" value="a"> A los costos más antiguos, por lo que subvalora el activo</label>
+      <label><input type="radio" name="qi5" value="b"> A un costo promedio de todas las compras del período</label>
+      <label><input type="radio" name="qi5" value="c"> Al costo más bajo del período, por prudencia</label>
+      <label><input type="radio" name="qi5" value="d"> A los costos más recientes, por lo que se aproxima al costo de reposición</label>
+    </div>
+    <div class="fb" id="fqi5"></div>
+  </div>
+
+  <div class="item">
+    <div class="q"><span class="badge b-teo">Teórica</span>6. La rotación de inventarios se calcula como:</div>
+    <div class="ops">
+      <label><input type="radio" name="qi6" value="a"> Costo de ventas dividido para el inventario promedio</label>
+      <label><input type="radio" name="qi6" value="b"> Ventas dividido para el inventario final</label>
+      <label><input type="radio" name="qi6" value="c"> Inventario promedio dividido para el costo de ventas</label>
+      <label><input type="radio" name="qi6" value="d"> Utilidad bruta dividido para el inventario inicial</label>
+    </div>
+    <div class="fb" id="fqi6"></div>
+  </div>
+
+  <div class="item">
+    <div class="q"><span class="badge b-teo">Teórica</span>7. ¿Cuál de estas es una limitación real del Kardex, por bien llevado que esté?</div>
+    <div class="ops">
+      <label><input type="radio" name="qi7" value="a"> No permite conocer el saldo del inventario en cualquier momento</label>
+      <label><input type="radio" name="qi7" value="b"> No sirve para calcular el costo de ventas</label>
+      <label><input type="radio" name="qi7" value="c"> No sustituye al conteo físico: registra lo que se le informó, no necesariamente lo que hay en bodega</label>
+      <label><input type="radio" name="qi7" value="d"> No puede aplicarse a empresas comerciales</label>
+    </div>
+    <div class="fb" id="fqi7"></div>
+  </div>
+
+  <div class="alerta">
+    <span class="rot">Caso para las preguntas 8, 9 y 10</span>
+    <p><strong>Distribuidora Puerto Azul Cía. Ltda.</strong> (Guayaquil) lleva sistema permanente y valúa por <strong>FIFO</strong>. Artículo <strong>CB-90 — Cabo de amarre 90 m</strong>, octubre de 2026:</p>
+    <ul>
+      <li>01/10: existencia inicial 20 unidades a 50,00</li>
+      <li>08/10: compra de 80 unidades a 55,00</li>
+      <li>15/10: venta de 60 unidades a 92,00 cada una</li>
+    </ul>
+  </div>
+
+  <div class="item">
+    <div class="q"><span class="badge b-caso">Análisis de caso</span>8. ¿Cuál es el costo total de la salida del 15/10?</div>
+    <div class="ops">
+      <label><input type="radio" name="qi8" value="a"> 3.300,00</label>
+      <label><input type="radio" name="qi8" value="b"> 3.200,00</label>
+      <label><input type="radio" name="qi8" value="c"> 3.000,00</label>
+      <label><input type="radio" name="qi8" value="d"> 5.520,00</label>
+    </div>
+    <div class="fb" id="fqi8"></div>
+  </div>
+
+  <div class="item">
+    <div class="q"><span class="badge b-caso">Análisis de caso</span>9. ¿Cuál es la existencia del artículo CB-90 después de esa venta?</div>
+    <div class="ops">
+      <label><input type="radio" name="qi9" value="a"> 40 unidades por 2.000,00</label>
+      <label><input type="radio" name="qi9" value="b"> 40 unidades por 2.400,00</label>
+      <label><input type="radio" name="qi9" value="c"> 100 unidades por 5.400,00</label>
+      <label><input type="radio" name="qi9" value="d"> 40 unidades por 2.200,00</label>
+    </div>
+    <div class="fb" id="fqi9"></div>
+  </div>
+
+  <div class="item">
+    <div class="q"><span class="badge b-caso">Análisis de caso</span>10. ¿Cuál es el asiento que reconoce el <em>costo</em> de esa venta bajo sistema permanente?</div>
+    <div class="ops">
+      <label><input type="radio" name="qi10" value="a"> Debe: Costo de Ventas 3.200,00 &nbsp;·&nbsp; Haber: Inventario de Mercaderías 3.200,00</label>
+      <label><input type="radio" name="qi10" value="b"> Debe: Inventario de Mercaderías 3.200,00 &nbsp;·&nbsp; Haber: Costo de Ventas 3.200,00</label>
+      <label><input type="radio" name="qi10" value="c"> Debe: Costo de Ventas 5.520,00 &nbsp;·&nbsp; Haber: Ventas 5.520,00</label>
+      <label><input type="radio" name="qi10" value="d"> No se registra ningún asiento de costo: basta con el asiento de la venta</label>
+    </div>
+    <div class="fb" id="fqi10"></div>
+  </div>
+
+  <div class="aviso" id="avisoCues">Faltan preguntas por responder. Contesta las diez antes de verificar.</div>
+  <button class="btn" onclick="verificarCues()">Verificar respuestas</button>
+  <button class="btn sec" onclick="reiniciarCues()">Reiniciar</button>
+
+  <div class="result" id="resCues">
+    <span class="em" id="emCues"></span>
+    <div class="pt" id="ptCues"></div>
+    <div class="msg" id="msgCues"></div>
+    <div class="barra"><div class="fill" id="barCues"></div></div>
+  </div>
+</section>
+
+<!-- ==================== ACTIVIDAD CON IA ==================== -->
+<section id="ia" class="panel">
+  <h3>Actividad con Inteligencia Artificial</h3>
+  <p class="sub">Vas a usar la IA en el único orden que produce aprendizaje: primero resuelves tú, después consultas, y al final <strong>auditas</strong> lo que la máquina respondió. El orden inverso —preguntar primero— te deja sin criterio para juzgar la respuesta.</p>
+
+  <div class="alerta">
+    <span class="rot">Herramienta recomendada</span>
+    <p>Usa <strong>Claude</strong> en <strong>claude.ai</strong>, que cuenta con acceso gratuito suficiente para esta actividad. No necesitas pagar nada ni instalar programas. Si prefieres otra herramienta, la actividad funciona igual; lo que no funciona es saltarse el paso 1.</p>
+  </div>
+
+  <div class="paso">
+    <span class="n">1</span><strong>Resuelve a mano, sin ayuda.</strong>
+    <p>Construye en papel o en una hoja de cálculo el Kardex FIFO completo del siguiente artículo. No consultes nada todavía.</p>
+    <p><strong>Ferretería Marítima del Guayas S.A. — artículo AN-220 "Ancla de fondeo 22 kg", noviembre 2026, sistema permanente, método FIFO:</strong></p>
+    <ul>
+      <li>01/11: existencia inicial 50 unidades a 68,00</li>
+      <li>07/11: compra 120 unidades a 72,00</li>
+      <li>13/11: venta 90 unidades</li>
+      <li>20/11: compra 80 unidades a 75,50</li>
+      <li>27/11: venta 130 unidades</li>
+    </ul>
+    <p>Anota tus tres resultados: <strong>mercadería disponible</strong>, <strong>costo de ventas</strong> e <strong>inventario final</strong>. Verifica el cuadre antes de continuar.</p>
+  </div>
+
+  <div class="paso">
+    <span class="n">2</span><strong>Ahora consulta a la IA con este prompt exacto.</strong>
+    <p>Cópialo tal cual. Está redactado para obligar a la IA a mostrar el procedimiento, no solo el resultado.</p>
+    <div class="prompt">Actúa como docente de Contabilidad General de primer semestre en Ecuador.
+
+Construye el Kardex bajo el método FIFO del artículo AN-220 "Ancla de fondeo 22 kg" de Ferretería Marítima del Guayas S.A., noviembre 2026, sistema de inventario permanente:
+
+01/11 existencia inicial 50 unidades a 68,00
+07/11 compra 120 unidades a 72,00
+13/11 venta 90 unidades
+20/11 compra 80 unidades a 75,50
+27/11 venta 130 unidades
+
+Requisitos:
+1. Presenta la tarjeta con encabezado completo y los tres bloques (Entradas, Salidas, Existencias), cada uno con cantidad, costo unitario y costo total.
+2. Cuando una salida consuma unidades de dos capas distintas, muéstrala en renglones separados, uno por cada costo unitario.
+3. Muestra el cálculo de cada salida capa por capa antes de escribir la fila.
+4. Al final presenta la prueba de cuadre: existencia inicial + entradas = salidas + existencia final.
+5. Indica qué cifra va al Estado de Resultados y cuál al Estado de Situación Financiera.
+6. Calcula la rotación de inventarios del mes y los días de inventario.
+
+No uses el método promedio en ninguna parte de la respuesta.</div>
+  </div>
+
+  <div class="paso">
+    <span class="n">3</span><strong>Audita la respuesta con esta lista de verificación.</strong>
+    <p>No preguntes a la IA si se equivocó: revísalo tú, casilla por casilla.</p>
+    <ul>
+      <li>¿La existencia inicial vale 3.400,00 y las entradas del período 14.680,00?</li>
+      <li>¿La salida del 13/11 se descompuso en 50 unidades a 68,00 y 40 unidades a 72,00?</li>
+      <li>¿La salida del 27/11 respetó el orden de las capas pendientes?</li>
+      <li>¿La prueba de cuadre cierra exactamente, sin diferencias de centavos?</li>
+      <li>¿En algún momento apareció un costo unitario "promediado" donde debía haber dos renglones? Si apareció, la IA se deslizó al promedio sin avisar.</li>
+      <li>¿El inventario final quedó valorado al costo más reciente, como corresponde a FIFO?</li>
+      <li>¿Coincide con lo que tú calculaste en el paso 1? Si no coincide, <strong>encuentra dónde está la diferencia antes de decidir quién tiene razón.</strong></li>
+    </ul>
+  </div>
+
+  <div class="paso">
+    <span class="n">4</span><strong>Prompt con errores deliberados — detéctalos ANTES de enviarlo.</strong>
+    <p>El siguiente prompt contiene <strong>cuatro errores conceptuales</strong> sembrados a propósito. Léelo, identifícalos y escríbelos en tu cuaderno. Solo después corrígelo y envíalo.</p>
+    <div class="prompt">Arma el Kardex del artículo AN-220 por el método FIFO.
+El costo unitario de entrada del 07/11 es 72,00 más el IVA del 15%,
+o sea 82,80, porque el IVA forma parte del costo del inventario.
+En la columna de salidas registra el precio de venta de 110,00 por unidad,
+que es lo que realmente sale de la bodega.
+Como la retención en la fuente del 2% se le hizo al proveedor,
+réstala del costo unitario de la compra.
+Y para la venta del 27/11 usa un costo unitario único, promediando
+las capas pendientes, así la tarjeta queda más ordenada.</div>
+    <div class="nota-lateral">
+      <span class="rot">Pista</span>
+      <p>Los cuatro errores están relacionados con: qué integra el costo del inventario, qué naturaleza tiene la columna de salidas, qué son realmente las retenciones y qué pasa cuando se promedia dentro de un método que no es el promedio. Los cuatro fueron advertidos explícitamente en los Temas 2 y 4 de este widget.</p>
+    </div>
+  </div>
+
+  <div class="paso">
+    <span class="n">5</span><strong>Entrega.</strong>
+    <p>Presenta un documento con: (a) tu Kardex resuelto a mano; (b) la respuesta de la IA; (c) tu auditoría punto por punto; (d) la lista de los cuatro errores del prompt del paso 4 con la explicación de por qué cada uno es un error; y (e) un cierre escrito de cinco a diez líneas respondiendo: <em>¿en qué te resultó útil la IA y en qué habría sido peligroso confiar en ella sin haber resuelto antes por tu cuenta?</em></p>
+  </div>
+
+  <div class="conclusion">
+    <span class="rot">Criterio de evaluación — qué distingue el pensamiento crítico de la copia</span>
+    <p>Un trabajo <strong>copiado</strong> reproduce la tarjeta de la IA y afirma que está correcta. Un trabajo con <strong>pensamiento crítico</strong> muestra el cálculo propio, señala con precisión dónde coincide y dónde no, explica <em>por qué</em> cada error del paso 4 es un error usando el criterio contable —no la autoridad de la máquina— y llega a una conclusión propia sobre los límites de la herramienta. La diferencia no está en el resultado: <strong>está en si puedes defenderlo sin la IA delante.</strong></p>
+  </div>
+</section>
+
+<!-- ==================== REFLEXIÓN ==================== -->
+<section id="refl" class="panel">
+  <h3>Reflexión</h3>
+
+  <div class="encuadre">
+    <p>Antes de responder, detente en algo que conviene repetir cada clase, porque se olvida rápido: <strong>Negocios Internacionales es mucho más amplio que "negociar"</strong>. La negociación es una de las cosas que harás, no la única ni necesariamente la principal. Un profesional de esta carrera analiza costos, lee estados financieros redactados en otro idioma y bajo otra moneda, diseña y controla cadenas de abastecimiento, gestiona riesgo cambiario, interpreta normativa aduanera y tributaria, y —sobre todo— <strong>sustenta sus decisiones ante terceros</strong>: un banco, un socio extranjero, una autoridad de control, un directorio. Una tarjeta de inventario, que hoy puede parecerte un ejercicio menor, es exactamente el tipo de documento con el que se sustenta una decisión.</p>
+  </div>
+
+  <p class="sub">Estas preguntas no tienen respuesta correcta. Se responden por escrito, con honestidad, y se guardan: al final del semestre volverás a leerlas.</p>
+
+  <div class="pregunta">
+    <span class="tt">1 · Del objeto concreto</span>
+    <p>Piensa en el cuaderno que tienes ahora mismo en la mano, o en el celular con el que quizá estás leyendo esto. <strong>¿Sabes cuánto costó exactamente?</strong> No el precio que crees recordar: el valor con el que efectivamente salió el dinero de tu casa o de tu bolsillo. Si tuvieras que demostrárselo a alguien —una factura, una fecha, un vendedor— ¿podrías?</p>
+    <p>Escribe qué sentiste al intentar responder: certeza, duda, incomodidad. Esa sensación es la misma que tiene una empresa cuando le piden justificar su inventario y no tiene registro.</p>
+  </div>
+
+  <div class="pregunta">
+    <span class="tt">2 · De la cadena de actores</span>
+    <p>Ese mismo objeto pasó por muchas manos antes de llegar a la tuya: quien lo fabricó, quien lo embarcó, quien lo importó, quien lo almacenó, quien te lo vendió. <strong>Cada uno de ellos anotó ese objeto en algún registro, con un costo distinto.</strong></p>
+    <p>Elige uno de esos actores —el importador, por ejemplo— e imagina qué pasaría si no llevara registro de cuánto le costó cada lote. ¿A quién perjudicaría primero: a él, a su proveedor, a su cliente, al Estado? ¿Por qué crees que sería a ese y no a otro?</p>
+  </div>
+
+  <div class="pregunta">
+    <span class="tt">3 · De la necesidad de información confiable</span>
+    <p>Hoy viste que un mismo inventario físico —60 ventiladores en una bodega de Guayaquil— puede valer 2.415,00 o 2.265,00 según el método declarado, y que ambas cifras son correctas. <strong>Nada en la bodega cambió; cambió la regla con la que se lo mide.</strong></p>
+    <p>¿Qué implicaciones tiene eso para quien lee un estado financiero sin conocer el método aplicado? ¿Y qué te dice sobre por qué la NIC 2 exige que la política contable se revele y se aplique de manera uniforme?</p>
+  </div>
+
+  <div class="pregunta">
+    <span class="tt">4 · Del negocio internacional</span>
+    <p>Imagina que trabajas en una empresa ecuatoriana que quiere venderle a un comprador en Rotterdam. El comprador exige, antes de firmar, una auditoría de trazabilidad: quiere saber de qué embarque salió cada unidad y a qué costo se registró.</p>
+    <p>¿Qué le entregarías? ¿Qué pasaría con la negociación si la única respuesta disponible fuera "tenemos la cifra global en el balance"? Escribe, en dos o tres líneas, cómo le explicarías a un gerente que no ve la utilidad del Kardex por qué ese registro acaba de decidir un contrato de exportación.</p>
+  </div>
+
+  <div class="pregunta">
+    <span class="tt">5 · Exploración vocacional</span>
+    <p>La carrera se despliega en cuatro áreas: <strong>comercio exterior</strong> (aduanas, logística, regímenes, trazabilidad), <strong>finanzas internacionales</strong> (financiamiento, riesgo cambiario, análisis de estados financieros), <strong>marketing y negociación internacional</strong> (mercados, precios, contratos, relación con clientes del exterior) y <strong>marco legal y normativo</strong> (normativa contable, tributaria, aduanera y societaria).</p>
+    <p>Después de esta clase: <strong>¿en cuál de las cuatro te viste trabajando?</strong> No cuál te parece más prestigiosa: cuál te resultó más interesante <em>mientras la estabas haciendo</em>. Escribe el área y una razón concreta, tomada del contenido de hoy, que sostenga tu elección. Si ninguna te atrajo, escribe eso también: es un dato válido y útil.</p>
+  </div>
+
+  <div class="pregunta">
+    <span class="tt">6 · Inteligencia emocional</span>
+    <p>Hubo un momento en la clase de hoy en que probablemente algo no cuadró: una capa mal descontada, un total que no cerraba, una respuesta del ejercicio que creíste correcta y no lo era.</p>
+    <p><strong>¿Qué hiciste en ese momento?</strong> ¿Volviste al punto donde se generó la diferencia, o pasaste adelante esperando que se resolviera sola? ¿Sentiste frustración, vergüenza, curiosidad, indiferencia?</p>
+    <p>Vale la pena que lo pienses en serio, porque la contabilidad tiene una particularidad: <strong>el error avisa</strong>. Cuando el cuadre no da, algo está mal y el sistema te lo está diciendo. Aprender a recibir ese aviso sin desanimarte —y sin taparlo— es una competencia profesional tan real como saber aplicar FIFO. En una auditoría, la diferencia entre un profesional confiable y uno que no lo es rara vez está en no equivocarse nunca: está en qué hace cuando el número no cuadra.</p>
+  </div>
+
+  <div class="pregunta">
+    <span class="tt">7 · Proyección</span>
+    <p>Esta asignatura antecede a <strong>Contabilidad Financiera</strong> y a <strong>Contabilidad de Costos</strong>. En Costos volverás a encontrar el Kardex, pero controlando materia prima y productos en proceso dentro de una fábrica.</p>
+    <p>¿Qué te llevas hoy que crees que te va a servir allá? ¿Y qué sientes que todavía no dominas y deberías reforzar antes de que llegue ese momento? Sé específico: "todo" no es una respuesta útil para ti.</p>
+  </div>
+</section>
+
+<!-- ==================== BIBLIOGRAFÍA ==================== -->
+<section id="bib" class="panel">
+  <h3>Bibliografía y fuentes normativas</h3>
+  <p class="sub">Referencias en formato APA, séptima edición. Las fuentes básicas corresponden a las declaradas en el sílabo de la asignatura.</p>
+
+  <h4>Bibliografía básica</h4>
+  <div class="ref"><span class="tipo">Libro</span><br>
+  Zapata Sánchez, P. (2011). <em>Laboratorio de contabilidad general</em> (7.ª ed.). McGraw-Hill.</div>
+
+  <div class="ref"><span class="tipo">Libro digital</span><br>
+  Vite Rangel, V. T. (s. f.). <em>Contabilidad general</em>. Editorial Digital UNID. Disponible en el repositorio eLibro de la Universidad de Guayaquil.</div>
+
+  <div class="ref"><span class="tipo">Libro digital</span><br>
+  Moreno Fernández, J. A. (s. f.). <em>Contabilidad básica</em> (4.ª ed.). Grupo Editorial Patria. ISBN ebook: 978-607-438-883-1. Disponible en el repositorio eLibro de la Universidad de Guayaquil.</div>
+
+  <h4>Normativa contable</h4>
+  <div class="ref"><span class="tipo norm">Norma</span><br>
+  IFRS Foundation. (s. f.). <em>NIC 2 Inventarios</em>. International Accounting Standards Board. https://www.ifrs.org</div>
+
+  <div class="ref"><span class="tipo norm">Norma</span><br>
+  IFRS Foundation. (s. f.). <em>NIC 1 Presentación de estados financieros</em>. International Accounting Standards Board. https://www.ifrs.org</div>
+
+  <div class="ref"><span class="tipo norm">Norma</span><br>
+  IFRS Foundation. (s. f.). <em>Marco Conceptual para la Información Financiera</em>. International Accounting Standards Board. https://www.ifrs.org</div>
+
+  <h4>Normativa legal ecuatoriana</h4>
+  <div class="ref"><span class="tipo norm">Ley</span><br>
+  Asamblea Nacional del Ecuador. (2019). <em>Código de Comercio</em>. Registro Oficial Suplemento 497.</div>
+
+  <div class="ref"><span class="tipo norm">Ley</span><br>
+  Congreso Nacional del Ecuador. <em>Ley de Régimen Tributario Interno</em> (codificación vigente) y <em>Reglamento para la aplicación de la Ley de Régimen Tributario Interno</em>.</div>
+
+  <div class="ref"><span class="tipo norm">Resolución</span><br>
+  Servicio de Rentas Internas. (2026). <em>Resolución NAC-DGERCGC26-00000009</em>, sobre porcentajes de retención en la fuente del impuesto a la renta. Vigente desde el 1 de marzo de 2026. https://www.sri.gob.ec</div>
+
+  <div class="ref"><span class="tipo norm">Resolución</span><br>
+  Servicio de Rentas Internas. (2020). <em>Resolución NAC-DGERCGC20-00000061</em>, sobre porcentajes de retención del impuesto al valor agregado. https://www.sri.gob.ec</div>
+
+  <h4>Sitios institucionales de consulta</h4>
+  <div class="ref"><span class="tipo web">Sitio web</span><br>
+  Servicio de Rentas Internas del Ecuador. https://www.sri.gob.ec</div>
+
+  <div class="ref"><span class="tipo web">Sitio web</span><br>
+  Superintendencia de Compañías, Valores y Seguros del Ecuador. https://www.supercias.gob.ec</div>
+
+  <div class="ref"><span class="tipo web">Sitio web</span><br>
+  IFRS Foundation. https://www.ifrs.org</div>
+
+  <div class="nota-lateral">
+    <span class="rot">Nota para el estudiante</span>
+    <p>Verifica siempre la vigencia de las resoluciones del SRI antes de aplicarlas: los porcentajes de retención cambian por resolución administrativa y una cifra desactualizada produce un registro incorrecto. Para localizar y contrastar las fuentes académicas, utiliza <strong>Google Scholar</strong> o el <strong>repositorio institucional de la Universidad de Guayaquil</strong>. Cuando cites normativa en un trabajo, indica la norma y su fecha de vigencia; evita atribuirle a una norma contenidos que no puedas ubicar en su texto oficial.</p>
+  </div>
+</section>
+
+<footer>
+  Universidad de Guayaquil &middot; Facultad de Ciencias Administrativas &middot; Carrera de Negocios Internacionales<br>
+  Contabilidad General (091601124) &middot; Unidad 3 &middot; Día 10A &middot; 26 de agosto de 2026<br>
+  Ing. Gabriel Francisco García Gutiérrez, Mgs. &middot; Período Académico Extraordinario 2026
+</footer>
+
+</div><!-- /wrap -->
+
+<script>
+/* ============ NAVEGACIÓN DE PESTAÑAS ============ */
+function showTab(id, btn){
+  var paneles = document.querySelectorAll('.panel');
+  for(var i=0;i<paneles.length;i++){ paneles[i].classList.remove('active'); }
+  document.getElementById(id).classList.add('active');
+  var botones = document.querySelectorAll('nav.tabs button');
+  for(var j=0;j<botones.length;j++){ botones[j].classList.remove('active'); }
+  btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ============ ACORDEÓN DEL REPASO ============ */
+function toggleAcc(cab){
+  var cuerpo = cab.nextElementSibling;
+  var flecha = cab.querySelector('.fl');
+  var abierto = cuerpo.classList.contains('abierto');
+  if(abierto){ cuerpo.classList.remove('abierto'); flecha.innerHTML = '&#9654;'; }
+  else { cuerpo.classList.add('abierto'); flecha.innerHTML = '&#9660;'; }
+}
+
+/* ============ EJERCICIO INTERACTIVO ============ */
+var clavesEjer = { ei1:'a', ei2:'c', ei3:'b', ei4:'d', ei5:'c', ei6:'a', ei7:'d', ei8:'b' };
+
+var retroEjer = {
+ ei1:'Correcto: 40 u de la capa inicial (4.800,00) más 60 u de la nueva compra (7.800,00) dan 100 unidades por 12.600,00. El error de 12.500,00 aparece cuando se multiplica mal la compra; el de 13.000,00, cuando se valora todo a 130,00.',
+ ei2:'Correcto: bajo FIFO conviven dos costos unitarios distintos, 120,00 y 130,00, cada uno con sus unidades. Colocar un costo único de 126,00 sería aplicar promedio ponderado, que es otro método. Y 125,00 sería un promedio simple, que no es válido en ninguna fórmula de la NIC 2.',
+ ei3:'Correcto: 8.700,00. Se agota primero la capa antigua completa (40 u × 120,00 = 4.800,00) y luego se toman 30 u de la nueva (30 × 130,00 = 3.900,00). El distractor de 8.820,00 es el resultado de aplicar el costo promedio de 126,00 a las 70 unidades: un error frecuente de método.',
+ ei4:'Correcto: dos renglones, uno por cada costo unitario. Escribir un solo renglón con 124,29 (el promedio de la mezcla) convierte el FIFO en un promedio disfrazado y rompe la trazabilidad de las capas, que es justamente lo que este método permite conservar.',
+ ei5:'Correcto: 30 unidades por 3.900,00, todas provenientes de la capa de 130,00 (30 × 130,00 = 3.900,00). También se comprueba por diferencia: 12.600,00 − 8.700,00 = 3.900,00.',
+ ei6:'Correcto: 6.700,00. Se agota el resto de la capa de 130,00 (30 u × 130,00 = 3.900,00) y se toman 20 u de la capa nueva de 140,00 (20 × 140,00 = 2.800,00).',
+ ei7:'Correcto: 30 unidades a 140,00 = 4.200,00. Es el rasgo característico del FIFO: el inventario final queda valorado al costo más reciente, el más cercano al costo de reposición del artículo.',
+ ei8:'Correcto: existencia inicial (4.800,00) más entradas del período (14.800,00) igual a 19.600,00, que debe coincidir con salidas (15.400,00) más existencia final (4.200,00). Si esta prueba no cierra exactamente, la tarjeta está mal y no debe pasarse al asiento contable.'
+};
+
+function verificarEjer(){
+  var claves = Object.keys(clavesEjer);
+  var faltan = false;
+  for(var i=0;i<claves.length;i++){
+    if(!document.querySelector('input[name="'+claves[i]+'"]:checked')){ faltan = true; }
+  }
+  var aviso = document.getElementById('avisoEjer');
+  if(faltan){ aviso.classList.add('visible'); return; }
+  aviso.classList.remove('visible');
+
+  var aciertos = 0;
+  for(var k=0;k<claves.length;k++){
+    var nombre = claves[k];
+    var sel = document.querySelector('input[name="'+nombre+'"]:checked').value;
+    var fb = document.getElementById('f'+nombre);
+    fb.classList.add('visible');
+    if(sel === clavesEjer[nombre]){
+      aciertos++;
+      fb.classList.remove('mal'); fb.classList.add('ok');
+      fb.innerHTML = '<strong>&#10004; Correcto.</strong> ' + retroEjer[nombre];
+    } else {
+      fb.classList.remove('ok'); fb.classList.add('mal');
+      fb.innerHTML = '<strong>&#10008; Revisa.</strong> La respuesta correcta es la opción <strong>' + clavesEjer[nombre].toUpperCase() + '</strong>. ' + retroEjer[nombre];
+    }
+  }
+  mostrarResultado(aciertos, claves.length, 'Ejer');
+}
+
+function reiniciarEjer(){
+  var claves = Object.keys(clavesEjer);
+  for(var i=0;i<claves.length;i++){
+    var radios = document.getElementsByName(claves[i]);
+    for(var j=0;j<radios.length;j++){ radios[j].checked = false; }
+    var fb = document.getElementById('f'+claves[i]);
+    fb.classList.remove('visible','ok','mal'); fb.innerHTML = '';
+  }
+  document.getElementById('resEjer').classList.remove('visible');
+  document.getElementById('avisoEjer').classList.remove('visible');
+  document.getElementById('barEjer').style.width = '0';
+}
+
+/* ============ CUESTIONARIO ============ */
+var clavesCues = { qi1:'b', qi2:'d', qi3:'a', qi4:'c', qi5:'d', qi6:'a', qi7:'c', qi8:'b', qi9:'d', qi10:'a' };
+
+var retroCues = {
+ qi1:'La NIC 2 regula la medición de los inventarios, las fórmulas de costo admitidas y la información a revelar, pero no prescribe un formato de tarjeta. El Kardex es el instrumento práctico con el que, bajo sistema permanente, se cumple esa exigencia. Afirmar que "la NIC 2 obliga a llevar Kardex" es impreciso y te expone a un error.',
+ qi2:'El método o fórmula de valuación. Sin ese campo, cualquier lector tiene que deducir del contenido cuál fórmula se aplicó, y una deducción no es sustento. Además, si artículos de naturaleza y uso similares aparecen valorados con fórmulas distintas, se rompe la uniformidad que la NIC 2 exige.',
+ qi3:'El precio de venta. El Kardex es un registro de costo: en la columna de salidas se anota el costo que la fórmula asignó a la mercadería entregada, nunca el valor por el que se la facturó al cliente. El precio de venta vive en la factura y en el asiento de ingreso, no en la tarjeta.',
+ qi4:'Al mismo costo con que salió. Es la misma mercadería que retorna a su capa de origen; valorarla al costo de la última compra alteraría tanto el costo de ventas del período como el valor del inventario final.',
+ qi5:'A los costos más recientes. Como las salidas descargan primero las capas antiguas, lo que permanece en bodega es lo comprado al final, y su valor se aproxima al costo de reposición actual. Ese es precisamente el efecto característico del método.',
+ qi6:'Costo de ventas dividido para el inventario promedio, siendo el inventario promedio la semisuma del inicial y el final. Dividir ventas para inventario final mezcla una magnitud a precio de venta con una a costo, y produce un indicador que no significa nada.',
+ qi7:'No sustituye al conteo físico. La tarjeta registra lo que se le informó a través de documentos; si hubo merma, deterioro, error de digitación o sustracción, el Kardex seguirá mostrando un saldo que la bodega ya no tiene. Por eso la toma física de inventarios es un control independiente e insustituible.',
+ qi8:'3.200,00. Se agota la capa inicial completa (20 u × 50,00 = 1.000,00) y se toman 40 u de la compra del 08/10 (40 × 55,00 = 2.200,00). El distractor de 5.520,00 corresponde a las 60 unidades al precio de venta de 92,00: es el error de confundir costo con precio.',
+ qi9:'40 unidades por 2.200,00, todas al costo de 55,00. Se comprueba por diferencia: mercadería disponible 5.400,00 menos costo de la salida 3.200,00 igual a 2.200,00.',
+ qi10:'Debe Costo de Ventas 3.200,00 contra Haber Inventario de Mercaderías 3.200,00. Bajo sistema permanente cada venta genera dos asientos: el del ingreso al precio de venta y el del costo al valor que asignó el Kardex. Omitir el segundo dejaría el inventario sobrevalorado y el resultado del período inflado.'
+};
+
+function verificarCues(){
+  var claves = Object.keys(clavesCues);
+  var faltan = false;
+  for(var i=0;i<claves.length;i++){
+    if(!document.querySelector('input[name="'+claves[i]+'"]:checked')){ faltan = true; }
+  }
+  var aviso = document.getElementById('avisoCues');
+  if(faltan){ aviso.classList.add('visible'); return; }
+  aviso.classList.remove('visible');
+
+  var aciertos = 0;
+  for(var k=0;k<claves.length;k++){
+    var nombre = claves[k];
+    var sel = document.querySelector('input[name="'+nombre+'"]:checked').value;
+    var fb = document.getElementById('f'+nombre);
+    fb.classList.add('visible');
+    if(sel === clavesCues[nombre]){
+      aciertos++;
+      fb.classList.remove('mal'); fb.classList.add('ok');
+      fb.innerHTML = '<strong>&#10004; Correcto.</strong> ' + retroCues[nombre];
+    } else {
+      fb.classList.remove('ok'); fb.classList.add('mal');
+      fb.innerHTML = '<strong>&#10008; Revisa.</strong> La respuesta correcta es la opción <strong>' + clavesCues[nombre].toUpperCase() + '</strong>. ' + retroCues[nombre];
+    }
+  }
+  mostrarResultado(aciertos, claves.length, 'Cues');
+}
+
+function reiniciarCues(){
+  var claves = Object.keys(clavesCues);
+  for(var i=0;i<claves.length;i++){
+    var radios = document.getElementsByName(claves[i]);
+    for(var j=0;j<radios.length;j++){ radios[j].checked = false; }
+    var fb = document.getElementById('f'+claves[i]);
+    fb.classList.remove('visible','ok','mal'); fb.innerHTML = '';
+  }
+  document.getElementById('resCues').classList.remove('visible');
+  document.getElementById('avisoCues').classList.remove('visible');
+  document.getElementById('barCues').style.width = '0';
+}
+
+/* ============ RESULTADO COMÚN ============ */
+function mostrarResultado(aciertos, total, sufijo){
+  var pct = Math.round((aciertos/total)*100);
+  var emoji, mensaje;
+  if(pct === 100){ emoji='&#127942;'; mensaje='Dominio completo. Podrías explicarle esta tarjeta a un compañero, y ese es el mejor indicador de que la entendiste.'; }
+  else if(pct >= 80){ emoji='&#127919;'; mensaje='Muy buen desempeño. Revisa las explicaciones de los ítems fallados: suelen ser detalles de método, no de cálculo.'; }
+  else if(pct >= 60){ emoji='&#128218;'; mensaje='Vas por buen camino, pero hay conceptos que conviene reforzar. Vuelve a los Temas 3 y 4 antes de seguir.'; }
+  else if(pct >= 40){ emoji='&#9888;&#65039;'; mensaje='Hay confusiones de fondo. Relee el Tema 3 paso a paso y rehaz el ejercicio desde la primera capa, sin saltarte movimientos.'; }
+  else { emoji='&#128214;'; mensaje='Es momento de volver al inicio, con calma. Reconstruye el Kardex del Caso A movimiento por movimiento; cuando entiendas las capas, el resto se ordena solo.'; }
+
+  document.getElementById('em'+sufijo).innerHTML = emoji;
+  document.getElementById('pt'+sufijo).innerHTML = aciertos + ' / ' + total + ' &nbsp;·&nbsp; ' + pct + '%';
+  document.getElementById('msg'+sufijo).innerHTML = mensaje;
+  document.getElementById('res'+sufijo).classList.add('visible');
+  var barra = document.getElementById('bar'+sufijo);
+  barra.style.width = '0';
+  setTimeout(function(){ barra.style.width = pct + '%'; }, 120);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,1744 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Día 11 — Asientos de ajuste | Contabilidad General</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Source Sans 3',sans-serif;font-size:17px;line-height:1.72;color:#22282e;background:#eef2f6;padding:0}
+.contenedor{max-width:1180px;margin:0 auto;background:#fff;box-shadow:0 0 26px rgba(0,0,0,.13)}
+.encabezado{background:#003366;color:#fff;padding:30px 34px 26px}
+.encabezado h1{font-family:'Lora',serif;font-size:2.05rem;line-height:1.22;margin-bottom:10px;color:#fff}
+.encabezado .inst{font-size:.94rem;color:#cfe4f7;letter-spacing:.4px;text-transform:uppercase;margin-bottom:14px}
+.encabezado .meta{font-size:1rem;color:#eaf3fc}
+.encabezado .meta strong{color:#fff}
+.cinta{background:#87CEEB;color:#00243f;padding:9px 34px;font-size:.95rem;font-weight:600}
+.nav-tabs{display:flex;background:#87CEEB;overflow-x:auto;white-space:nowrap;border-bottom:3px solid #003366;-webkit-overflow-scrolling:touch}
+.nav-tabs button{flex:0 0 auto;background:transparent;border:none;color:#000;font-family:'Source Sans 3',sans-serif;font-size:.97rem;font-weight:600;padding:13px 17px;cursor:pointer;border-right:1px solid rgba(0,51,102,.22)}
+.nav-tabs button:hover{background:#a9dcf2}
+.nav-tabs button.active{background:#fff;color:#003366;font-weight:700}
+.panel{display:none;padding:32px 34px 46px}
+.panel.visible{display:block}
+h2{font-family:'Lora',serif;color:#003366;font-size:1.62rem;margin-bottom:6px;line-height:1.28}
+h3{font-family:'Lora',serif;color:#004b8d;font-size:1.24rem;margin:26px 0 9px}
+h4{font-family:'Source Sans 3',sans-serif;color:#003366;font-size:1.05rem;margin:18px 0 6px;font-weight:700}
+p{margin-bottom:13px;text-align:justify}
+ul,ol{margin:0 0 14px 24px}
+li{margin-bottom:7px;text-align:justify}
+.subt{color:#5b6b7a;font-style:italic;margin-bottom:20px;font-size:1.02rem}
+strong{color:#00294f}
+.definicion{background:#eaf3fb;border-left:5px solid #003366;padding:15px 19px;margin:17px 0;border-radius:0 6px 6px 0}
+.definicion h4{margin-top:0;color:#003366}
+.ejemplo{background:#f4f9ef;border-left:5px solid #4c8b2b;padding:15px 19px;margin:17px 0;border-radius:0 6px 6px 0}
+.ejemplo h4{margin-top:0;color:#3a6a20}
+.alerta{background:#fff5e6;border-left:5px solid #e08b00;padding:15px 19px;margin:17px 0;border-radius:0 6px 6px 0}
+.alerta h4{margin-top:0;color:#9c5f00}
+.nota-lateral{background:#f3f1fb;border-left:5px solid #6c5ce7;padding:14px 18px;margin:16px 0;border-radius:0 6px 6px 0;font-size:.97rem}
+.nota-lateral h4{margin-top:0;color:#4a3bbd}
+.formula{background:#00294f;color:#fff;padding:16px 20px;margin:17px 0;border-radius:7px;font-family:'Courier New',monospace;font-size:1.02rem;text-align:center;line-height:1.9}
+.formula em{color:#9fd4f5;font-style:normal}
+.conclusion{background:#003366;color:#fff;padding:18px 22px;margin:26px 0 6px;border-radius:8px}
+.conclusion h4{color:#87CEEB;margin-top:0}
+.conclusion p{color:#f0f7ff;margin-bottom:0}
+.carrera-box{background:#f0f9ee;border:2px dashed #4c8b2b;padding:17px 20px;margin:24px 0;border-radius:8px}
+.carrera-box h4{color:#356b17;margin-top:0}
+.carrera-box ul{margin-bottom:0}
+.carrera-box li{font-size:.98rem}
+.futuro{background:#fdf0f5;border-left:5px solid #b5175f;padding:14px 18px;margin:17px 0;border-radius:0 6px 6px 0;font-size:.97rem}
+.futuro h4{margin-top:0;color:#93104c}
+.tabla{width:100%;border-collapse:collapse;margin:18px 0;font-size:.95rem}
+.tabla th{background:#003366;color:#fff;padding:10px 11px;text-align:left;font-weight:600;border:1px solid #002a55}
+.tabla td{padding:9px 11px;border:1px solid #cdd8e2;vertical-align:top}
+.tabla tr:nth-child(even) td{background:#f6f9fc}
+.tabla td.num{text-align:right;font-family:'Courier New',monospace}
+.tabla th.num{text-align:right}
+.tabla .fila-total td{background:#e3eef8;font-weight:700;border-top:2px solid #003366}
+.asiento{margin:22px 0;border:1px solid #003366;border-radius:7px;overflow:hidden}
+.asiento-cab{background:#003366;color:#fff;padding:10px 15px;font-weight:700;font-size:1rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px}
+.asiento-cab span{font-weight:400;color:#cfe4f7;font-size:.93rem}
+.asiento table{width:100%;border-collapse:collapse;font-size:.94rem}
+.asiento th{background:#e3eef8;color:#00294f;padding:8px 10px;border:1px solid #b9cbdd;font-weight:600;text-align:left}
+.asiento td{padding:7px 10px;border:1px solid #d5e0ea;vertical-align:top}
+.asiento td.num{text-align:right;font-family:'Courier New',monospace;white-space:nowrap}
+.asiento td.cod{font-family:'Courier New',monospace;font-size:.9rem;color:#40525f;white-space:nowrap}
+.acreedora{padding-left:34px !important}
+.suman td{border-top:3px double #003366;font-weight:700;background:#eef4fa}
+.glosa td{font-style:italic;color:#4a5a68;background:#fafcfe;font-size:.92rem}
+.calculo{background:#f7fafd;border:1px solid #c6d6e5;border-radius:7px;padding:14px 18px;margin:16px 0}
+.calculo h4{margin-top:0;color:#004b8d}
+.calculo table{width:100%;border-collapse:collapse;font-size:.93rem}
+.calculo table td{padding:5px 8px;border-bottom:1px dotted #c6d6e5}
+.calculo table td.num{text-align:right;font-family:'Courier New',monospace;white-space:nowrap}
+.calculo table tr.res td{font-weight:700;color:#00294f;border-top:2px solid #8fb0cd;border-bottom:none}
+.vida-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(258px,1fr));gap:15px;margin:20px 0}
+.vida-card{background:#f7fafd;border:1px solid #c6d6e5;border-top:5px solid #003366;border-radius:8px;padding:15px 17px}
+.vida-card h4{margin-top:0;color:#003366;font-size:1.02rem}
+.vida-card p{font-size:.95rem;margin-bottom:8px}
+.vida-card .puente{display:block;background:#003366;color:#fff;font-size:.88rem;padding:7px 10px;border-radius:5px;margin-top:10px;text-align:left}
+.biblio-card{background:#f7fafd;border-left:5px solid #003366;padding:14px 18px;margin-bottom:13px;border-radius:0 6px 6px 0;font-size:.96rem}
+.biblio-card span{display:block;color:#5b6b7a;font-size:.88rem;margin-top:5px;font-style:italic}
+.ej-item{background:#f9fbfd;border:1px solid #d5e0ea;border-radius:8px;padding:16px 19px;margin-bottom:15px}
+.ej-item .enun{font-weight:600;color:#00294f;margin-bottom:10px;display:block;text-align:justify}
+.badge{display:inline-block;font-size:.74rem;font-weight:700;padding:3px 9px;border-radius:11px;margin-right:8px;vertical-align:middle;letter-spacing:.5px}
+.badge-t{background:#003366;color:#fff}
+.badge-c{background:#4c8b2b;color:#fff}
+.opciones label{display:block;padding:8px 11px;margin-bottom:6px;background:#fff;border:1px solid #d5e0ea;border-radius:6px;cursor:pointer;font-size:.97rem;text-align:justify}
+.opciones label:hover{background:#eaf3fb;border-color:#87CEEB}
+.opciones input{margin-right:9px}
+.feedback{display:none;margin-top:11px;padding:12px 15px;border-radius:6px;font-size:.95rem;text-align:justify}
+.feedback.visible{display:block}
+.feedback.ok{background:#eaf7e6;border-left:5px solid #4c8b2b;color:#2c5417}
+.feedback.mal{background:#fdeceb;border-left:5px solid #c0392b;color:#7c2018}
+.btn{background:#003366;color:#fff;border:none;padding:12px 26px;font-family:'Source Sans 3',sans-serif;font-size:1rem;font-weight:600;border-radius:6px;cursor:pointer;margin:6px 8px 6px 0}
+.btn:hover{background:#004b8d}
+.btn-sec{background:#87CEEB;color:#00294f}
+.btn-sec:hover{background:#a9dcf2}
+.resultado{display:none;margin-top:22px;padding:20px 24px;background:#eaf3fb;border:2px solid #003366;border-radius:9px;text-align:center}
+.resultado.visible{display:block}
+.resultado .marca{font-size:2.5rem;display:block;margin-bottom:6px}
+.resultado .cifra{font-family:'Lora',serif;font-size:1.55rem;color:#003366;font-weight:700}
+.barra{height:22px;background:#d5e0ea;border-radius:11px;overflow:hidden;margin:15px 0 8px}
+.barra-relleno{height:100%;width:0;background:linear-gradient(90deg,#004b8d,#87CEEB);transition:width 1.1s ease;border-radius:11px}
+.acc-item{border:1px solid #cdd8e2;border-radius:7px;margin-bottom:11px;overflow:hidden}
+.acc-cabecera{background:#eaf3fb;padding:13px 17px;cursor:pointer;font-weight:600;color:#003366;display:flex;align-items:center;gap:10px;font-size:1rem}
+.acc-cabecera:hover{background:#dcebf8}
+.acc-flecha{color:#004b8d;font-size:.85rem;transition:transform .25s}
+.acc-item.abierto .acc-flecha{transform:rotate(90deg)}
+.acc-panel{display:none;padding:17px 20px;background:#fff;border-top:1px solid #cdd8e2}
+.acc-item.abierto .acc-panel{display:block}
+.puente-box{background:#003366;color:#fff;padding:18px 22px;border-radius:8px;margin-top:22px}
+.puente-box h4{color:#87CEEB;margin-top:0}
+.puente-box p{color:#f0f7ff;margin-bottom:0}
+.pasos{counter-reset:paso;list-style:none;margin-left:0}
+.pasos li{position:relative;padding-left:44px;margin-bottom:13px}
+.pasos li:before{counter-increment:paso;content:counter(paso);position:absolute;left:0;top:1px;background:#003366;color:#fff;width:29px;height:29px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.92rem}
+.prompt-box{background:#1c2733;color:#e8f1f8;padding:18px 21px;border-radius:8px;margin:16px 0;font-family:'Courier New',monospace;font-size:.92rem;line-height:1.65;white-space:pre-wrap;text-align:left}
+.reflexion-q{background:#f7fafd;border-left:5px solid #87CEEB;padding:15px 19px;margin-bottom:14px;border-radius:0 6px 6px 0}
+.reflexion-q h4{margin-top:0;color:#003366}
+.reflexion-q p{margin-bottom:0;font-size:.97rem}
+.pie{background:#00294f;color:#b9d4ea;padding:20px 34px;font-size:.9rem;text-align:center}
+@media(max-width:760px){
+ body{font-size:16px}
+ .panel{padding:22px 17px 36px}
+ .encabezado{padding:22px 18px}
+ .encabezado h1{font-size:1.5rem}
+ .cinta{padding:8px 18px;font-size:.88rem}
+ .tabla,.asiento table,.calculo table{font-size:.85rem}
+ .asiento td.num{font-size:.85rem}
+ .acreedora{padding-left:20px !important}
+ .pie{padding:16px 18px}
+}
+</style>
+</head>
+<body>
+<div class="contenedor">
+
+<div class="encabezado">
+  <div class="inst">Universidad de Guayaquil &middot; Facultad de Ciencias Administrativas &middot; Carrera de Negocios Internacionales</div>
+  <h1>Día 11 &mdash; Asientos de ajuste: los conceptos que obligan a corregir los libros</h1>
+  <div class="meta"><strong>Contabilidad General</strong> (091601124) &middot; Unidad 3: NIC 2 Inventarios y el proceso contable (II parte) &middot; Jueves 27 de agosto de 2026 &middot; 5 horas</div>
+</div>
+<div class="cinta">Proceso contable, segunda parte &middot; Conceptos que implican ajustes &middot; Del hecho cotidiano al asiento de ajuste</div>
+
+<div class="nav-tabs" id="navTabs">
+  <button class="active" onclick="showTab('repaso',this)">Repaso</button>
+  <button onclick="showTab('tema1',this)">Tema 1 &middot; Por qué ajustar</button>
+  <button onclick="showTab('tema2',this)">Tema 2 &middot; Anatomía</button>
+  <button onclick="showTab('tema3',this)">Tema 3 &middot; Acumulación</button>
+  <button onclick="showTab('tema4',this)">Tema 4 &middot; Diferimiento</button>
+  <button onclick="showTab('tema5',this)">Tema 5 &middot; Estimación</button>
+  <button onclick="showTab('tema6',this)">Tema 6 &middot; Inventarios</button>
+  <button onclick="showTab('tema7',this)">Tema 7 &middot; Operación internacional</button>
+  <button onclick="showTab('ejercicio',this)">Ejercicio</button>
+  <button onclick="showTab('cuestionario',this)">Cuestionario</button>
+  <button onclick="showTab('ia',this)">Actividad con IA</button>
+  <button onclick="showTab('reflexion',this)">Reflexión</button>
+  <button onclick="showTab('biblio',this)">Bibliografía</button>
+</div>
+
+<!-- ============ PESTAÑA REPASO ============ -->
+<div class="panel visible" id="repaso">
+  <h2>Repaso: de dónde venimos</h2>
+  <p class="subt">Abra cada día para recuperar lo esencial. Hoy cerramos una promesa que quedó abierta desde el Día 8.</p>
+
+  <div class="acc-item">
+    <div class="acc-cabecera" onclick="toggleAcordeon(this)"><span class="acc-flecha">&#9654;</span> Días 1 a 3 (Unidad 1) — Fundamentos del sistema contable</div>
+    <div class="acc-panel">
+      <p>La <strong>contabilidad</strong> es un sistema de información que reconoce, mide, registra y comunica los hechos económicos de una entidad. Conocimos la clasificación de las empresas, los usuarios de la información, los principios éticos de la profesión y los organismos de control ecuatorianos: <strong>SRI</strong>, <strong>Superintendencia de Compañías, Valores y Seguros</strong>, <strong>Ministerio del Trabajo</strong>, <strong>IESS</strong> y <strong>SENAE</strong>.</p>
+      <p>Estudiamos el <strong>Marco Conceptual para la Información Financiera</strong> —relevancia y representación fiel como características fundamentales— y la <strong>NIC 1 Presentación de Estados Financieros</strong>, con el principio de <strong>empresa en marcha</strong> y el juego completo de estados financieros.</p>
+      <p>Cerramos la unidad con la <strong>cuenta contable</strong> y su naturaleza (activo y gasto, deudoras; pasivo, patrimonio e ingreso, acreedoras), el <strong>plan de cuentas</strong> con codificación jerárquica, la <strong>partida doble</strong> y la <strong>ecuación contable</strong> en su forma ampliada: Activo = Pasivo + Patrimonio + Ingresos &minus; Gastos. Esa ecuación es la que hoy vamos a mantener en equilibrio mientras corregimos saldos.</p>
+    </div>
+  </div>
+
+  <div class="acc-item">
+    <div class="acc-cabecera" onclick="toggleAcordeon(this)"><span class="acc-flecha">&#9654;</span> Días 4 a 6 (Unidad 2) — Tributación y proceso contable (I parte)</div>
+    <div class="acc-panel">
+      <p>Trabajamos el <strong>IVA</strong> al 0 % y 15 %, el reconocimiento de bienes y servicios gravados, y las <strong>retenciones de IVA</strong> conforme a la Resolución NAC-DGERCGC20-00000061. Vimos la <strong>retención en la fuente del Impuesto a la Renta</strong> con los porcentajes de la Resolución NAC-DGERCGC26-00000009, vigente desde el 1 de marzo de 2026: 2 % en bienes, 3 % residual, 10 % en arriendo de inmuebles y 5 % en servicios profesionales prestados por sociedades.</p>
+      <p>Recorrimos la <strong>primera parte del proceso contable</strong>: análisis y reconocimiento de la transacción, <strong>jornalización</strong> en el Libro Diario, <strong>mayorización</strong> en el Libro Mayor y <strong>balance de comprobación preliminar</strong>. Ese balance preliminar es exactamente el punto donde hoy retomamos: los ajustes vienen después de él y antes del balance ajustado.</p>
+      <p>Cerramos con el ejercicio integrador de una empresa de servicios y con los tres casos paralelos del curso: <strong>Caso A</strong> Comercial El Astillero S.A. (comercial minorista), <strong>Caso B</strong> Cartonera del Litoral Cía. Ltda. (industrial) y <strong>Caso C</strong> persona natural obligada a llevar contabilidad.</p>
+    </div>
+  </div>
+
+  <div class="acc-item">
+    <div class="acc-cabecera" onclick="toggleAcordeon(this)"><span class="acc-flecha">&#9654;</span> Días 7 y 8 — NIC 2, sistemas de contabilización y medición al menor entre costo y VNR</div>
+    <div class="acc-panel">
+      <p>El Día 7 definimos <strong>inventario</strong> y sus tipos, y distinguimos los dos <strong>sistemas de contabilización</strong>: el <strong>permanente</strong> (o de inventario perpetuo), que actualiza la cuenta de inventario en cada movimiento y reconoce el costo de ventas simultáneamente con la venta, y el <strong>periódico</strong>, que determina el costo solo al final mediante conteo físico.</p>
+      <p>El Día 8 medimos el inventario. Distinguimos tres valores que conviven sobre un mismo bien: el <strong>costo</strong> (lo que costó adquirirlo y ponerlo en condiciones de venta), el <strong>valor razonable</strong> (el precio de mercado entre partes independientes) y el <strong>valor neto realizable (VNR)</strong>, que es el precio estimado de venta en el curso normal de la operación menos los costos estimados de terminación y los necesarios para realizar la venta.</p>
+      <p>La regla quedó fijada: dentro del contenido de la NIC 2 se establece que los inventarios se miden <strong>al menor entre el costo y el valor neto realizable</strong>. Aprendimos a calcular el VNR y a decidir si procede rebajar. Lo único que quedó pendiente fue <strong>cómo se registra contablemente esa rebaja</strong>. Hoy lo resolvemos.</p>
+    </div>
+  </div>
+
+  <div class="acc-item">
+    <div class="acc-cabecera" onclick="toggleAcordeon(this)"><span class="acc-flecha">&#9654;</span> Días 9, 10A y 10B — Métodos de valuación y Kardex del artículo INV-4501</div>
+    <div class="acc-panel">
+      <p>El Día 9 desarrollamos los <strong>métodos de valuación</strong> con el artículo <strong>INV-4501 "Ventilador de techo VT-16"</strong> de Comercial El Astillero S.A. durante agosto de 2026: mercadería disponible de <strong>650 unidades por 23.075,00</strong>. Bajo <strong>FIFO</strong>, costo de ventas 20.660,00 e inventario final 2.415,00; bajo <strong>promedio ponderado móvil</strong>, 20.810,00 y 2.265,00; bajo <strong>promedio del período</strong>, 20.945,00 y 2.130,00. También explicamos por completo el <strong>UEPS</strong> y las razones por las que el IASB lo eliminó; hoy solo lo mencionamos de paso.</p>
+      <p>Los Días 10A y 10B levantaron el <strong>Kardex formal</strong> del mismo artículo bajo FIFO y bajo promedio móvil, con su cuadre (entradas 550 u / 20.075,00 · salidas 590 u · existencia final 60 u), la contabilización de compras y ventas con IVA y retenciones, la conciliación Kardex&ndash;Mayor y el comparativo de utilidad bruta sobre ventas de 30.680,00: FIFO 10.020,00, móvil 9.870,00, período 9.735,00.</p>
+      <p>Ese Kardex nos entrega hoy una cifra concreta: <strong>60 unidades a 40,25 = 2.415,00</strong> bajo FIFO. Es el saldo en libros con el que vamos a confrontar el conteo físico y el valor neto realizable.</p>
+    </div>
+  </div>
+
+  <div class="puente-box">
+    <h4>Puente hacia el Día 11</h4>
+    <p>Hasta hoy registramos <em>transacciones</em>: hechos con documento fuente, fecha y contraparte. Pero el mundo económico no espera al documento. El seguro se consume día a día sin que nadie emita una factura diaria; el interés del préstamo corre aunque el banco cobre el mes siguiente; el inventario se deteriora en silencio; y el conteo físico revela que la bodega no tiene exactamente lo que dice el Kardex. Los <strong>asientos de ajuste</strong> son el mecanismo con el que la contabilidad se pone al día con la realidad antes de cerrar el período. Hoy los estudiamos como concepto, los clasificamos en cuatro familias y los registramos uno por uno sobre el Caso A.</p>
+  </div>
+</div>
+
+<!-- ============ TEMA 1 ============ -->
+<div class="panel" id="tema1">
+  <h2>Tema 1 &mdash; Por qué la contabilidad necesita ajustarse: la vida real no emite facturas todos los días</h2>
+  <p class="subt">De la vida cotidiana al libro contable: las situaciones que <em>exigen</em> corregir lo registrado.</p>
+
+  <h3>1.1 El problema que da origen a todo: la vida es continua, la información es por períodos</h3>
+  <p>Una empresa no nace el 1 de enero ni muere el 31 de diciembre. Compra, vende, se endeuda, se desgasta y cobra de manera <strong>ininterrumpida</strong>. Sin embargo, nadie puede esperar a que la empresa se liquide para saber si ganó o perdió. El banco quiere saberlo antes de renovar el crédito; el socio, antes de decidir si reinvierte; el SRI, antes del vencimiento de la declaración; el proveedor extranjero, antes de conceder crédito a 90 días.</p>
+  <p>Por eso la contabilidad hace un corte artificial en el tiempo y lo llama <strong>período contable</strong>. Y aquí aparece el problema central de esta clase: <em>al momento de hacer ese corte, los libros casi nunca están al día</em>. No porque el contador haya trabajado mal, sino porque muchos hechos económicos <strong>ocurren sin que nadie emita un documento en el instante en que ocurren</strong>.</p>
+
+  <div class="definicion">
+    <h4>Período contable</h4>
+    <p>Intervalo de tiempo definido por la entidad (mensual, trimestral o anual) al término del cual se mide el resultado de la gestión y la situación financiera. En Ecuador, el ejercicio económico de las compañías coincide con el año calendario, del 1 de enero al 31 de diciembre, aunque para efectos de control interno y de declaraciones mensuales las empresas cierran también por meses. En este curso trabajamos un <strong>cierre mensual al 31 de agosto de 2026</strong>.</p>
+  </div>
+
+  <h3>1.2 Ajustes en la vida diaria: seis situaciones que usted ya conoce</h3>
+  <p>Antes de tocar una sola cuenta, mire su propia vida. Usted ya hace ajustes; solo que no los llama así. Cada tarjeta describe una situación cotidiana y, debajo, el hecho contable idéntico que ocurre en una empresa.</p>
+
+  <div class="vida-grid">
+    <div class="vida-card">
+      <h4>1. El cilindro de gas</h4>
+      <p>Usted compró el cilindro el 3 de agosto y pagó todo ese día. Pero no lo <em>consumió</em> ese día: lo consume cada vez que hierve agua. El 31 de agosto queda gas adentro. Si alguien le pregunta cuánto gasta al mes en gas, la respuesta honesta no es "lo que pagué", sino "lo que quemé".</p>
+      <span class="puente">En contabilidad: pagar no es gastar. El desembolso crea un <strong>activo</strong>; el consumo crea el <strong>gasto</strong>. Ese traslado se hace con un asiento de ajuste.</span>
+    </div>
+    <div class="vida-card">
+      <h4>2. El arriendo del departamento</h4>
+      <p>Usted paga el arriendo el día 1 de cada mes, por adelantado. El día 1 no ha vivido ni una noche en el departamento: pagó por un derecho a ocuparlo treinta días. Cada día que pasa, una porción de ese pago deja de ser derecho y se convierte en costo de haber vivido allí.</p>
+      <span class="puente">En contabilidad: un pago anticipado es un derecho (activo) que se va convirtiendo en gasto <strong>por el paso del tiempo</strong>, no por una nueva factura.</span>
+    </div>
+    <div class="vida-card">
+      <h4>3. El sueldo que ya se ganó pero aún no se cobra</h4>
+      <p>Es 31 de agosto. Usted trabajó todo el mes, pero le pagan el 5 de septiembre. ¿Ya se ganó ese dinero? Sí. ¿Ya lo tiene? No. Si alguien midiera su situación económica al 31 de agosto y no contara ese sueldo, lo estaría empobreciendo artificialmente.</p>
+      <span class="puente">En contabilidad: para la empresa que le debe, eso es un <strong>gasto ya causado y una obligación pendiente</strong>. Para usted, un derecho de cobro. Ninguno de los dos tiene todavía documento de pago.</span>
+    </div>
+    <div class="vida-card">
+      <h4>4. La moto que se desgasta</h4>
+      <p>Nadie le emite una factura por el desgaste de su moto. No hay proveedor, no hay documento, no hay transferencia bancaria. Y sin embargo, la moto de hoy vale menos que la de hace un año. El desgaste ocurrió, aunque nadie lo haya cobrado.</p>
+      <span class="puente">En contabilidad: el desgaste de los bienes de uso se llama <strong>depreciación</strong>, y es un gasto que no nace de una transacción con terceros sino de una estimación técnica.</span>
+    </div>
+    <div class="vida-card">
+      <h4>5. El préstamo entre amigos</h4>
+      <p>Usted le prestó 200 dólares a un conocido hace ocho meses. Sigue anotado en su libreta como "me deben 200". Pero usted, en el fondo, ya sabe que probablemente no le devuelvan todo. Seguir anotando 200 es engañarse a sí mismo.</p>
+      <span class="puente">En contabilidad: la cartera se estima por lo que <strong>razonablemente se espera recuperar</strong>, no por lo que dice el papel. Esa diferencia se reconoce como estimación de incobrables.</span>
+    </div>
+    <div class="vida-card">
+      <h4>6. La despensa y la lista</h4>
+      <p>En un papel pegado a la refrigeradora usted anota lo que va comprando y consumiendo. A fin de mes abre la despensa y cuenta: la lista dice ocho latas de atún y hay siete. Alguien no anotó, se dañó una, o simplemente se perdió. El papel debe rendirse ante la despensa, no al revés.</p>
+      <span class="puente">En contabilidad: el <strong>conteo físico</strong> manda sobre el Kardex. La diferencia se registra como faltante o sobrante de inventario.</span>
+    </div>
+  </div>
+
+  <div class="alerta">
+    <h4>El hilo que une las seis situaciones</h4>
+    <p>En ninguna de las seis hay un documento nuevo que le obligue a registrar algo. No llega una factura, no se firma un cheque, no entra ni sale dinero. Y sin embargo, <strong>en las seis la realidad económica cambió</strong>. Ese es exactamente el territorio del asiento de ajuste: el registro de hechos económicos <em>ciertos</em> que no vinieron acompañados de un documento de transacción.</p>
+  </div>
+
+  <h3>1.3 El principio que lo justifica: base de acumulación o devengo</h3>
+  <p>Todo lo anterior descansa sobre un principio que ya conocemos por el Marco Conceptual y por la NIC 1: la <strong>base contable de acumulación (o devengo)</strong>.</p>
+
+  <div class="definicion">
+    <h4>Base de acumulación o devengo</h4>
+    <p>Criterio según el cual los efectos de las transacciones y demás sucesos se reconocen <strong>cuando ocurren</strong> —y no cuando se cobra o se paga el efectivo correspondiente&mdash;, y se registran en los libros e informan en los estados financieros de los períodos con los cuales se relacionan. Dentro del contenido de la NIC 1 se exige que la entidad elabore sus estados financieros, excepto el de flujos de efectivo, utilizando esta base.</p>
+  </div>
+
+  <p>Su opuesto es la <strong>base de efectivo</strong> (o de caja): registrar el ingreso cuando entra el dinero y el gasto cuando sale. Es intuitiva, es la que usa una tienda de barrio con un cuaderno, y es la que aplican muchas personas naturales no obligadas a llevar contabilidad. Pero produce resultados engañosos: una empresa que cobra por anticipado un contrato de dos años aparecería como enormemente rentable el primer día y sin ingresos durante veintitrés meses.</p>
+
+  <table class="tabla">
+    <tr><th>Situación</th><th>Base de efectivo diría&hellip;</th><th>Base de devengo dice&hellip;</th></tr>
+    <tr><td>Se paga en agosto un seguro anual de 1.800,00</td><td>Gasto de agosto: 1.800,00</td><td>Gasto de agosto: 150,00. Los otros 1.650,00 son un derecho que se consumirá en los meses siguientes.</td></tr>
+    <tr><td>Se cobra por anticipado un servicio que se prestará en cuatro meses</td><td>Ingreso del mes del cobro, completo</td><td>Ingreso de cada mes, la parte efectivamente prestada. El resto es una obligación con el cliente.</td></tr>
+    <tr><td>Se venden mercaderías a crédito el 28 de agosto</td><td>Todavía no hay ingreso</td><td>Ingreso de agosto: la venta ya ocurrió, el control del bien ya se transfirió.</td></tr>
+    <tr><td>El préstamo genera intereses en agosto, pagaderos en septiembre</td><td>Todavía no hay gasto</td><td>Gasto financiero de agosto: el dinero estuvo prestado en agosto.</td></tr>
+  </table>
+
+  <h3>1.4 La segunda idea: correlación entre ingresos y gastos</h3>
+  <p>El devengo tiene una consecuencia práctica que conviene nombrar aparte: los gastos deben reconocerse <strong>en el mismo período en que se reconocen los ingresos que ayudaron a generar</strong>. Si la venta de agosto se hizo usando un vehículo que se desgastó en agosto, con un local asegurado en agosto y con vendedores que trabajaron en agosto, entonces el resultado de agosto debe cargar con todo eso. De lo contrario el estado de resultados es una ficción: muestra los ingresos de un mes contra los gastos de otro.</p>
+
+  <div class="formula">
+    Resultado razonable del período = <em>Ingresos devengados en el período</em> &minus; <em>Gastos incurridos para generarlos</em><br>
+    &darr;<br>
+    Los <em>asientos de ajuste</em> son el mecanismo que hace verdadera esa igualdad
+  </div>
+
+  <div class="ejemplo">
+    <h4>Ejemplo aplicado &mdash; Comercial El Astillero S.A.</h4>
+    <p>Al 31 de agosto de 2026, el balance de comprobación preliminar de El Astillero (el que aprendimos a construir en el Día 5) muestra una utilidad aparente. Pero en ese balance: el seguro anual de la mercadería figura íntegro como activo aunque ya se consumió un mes; el préstamo bancario no muestra intereses aunque el dinero estuvo quince días en la empresa; el vehículo de reparto aparece a su costo de compra aunque ya recorrió un mes de rutas por Guayaquil; y el Kardex del artículo INV-4501 dice 60 unidades aunque la bodega no las tenga todas. <strong>Ninguno de esos cuatro hechos generó documento alguno.</strong> Los cuatro exigen ajuste, y los cuatro se registrarán hoy.</p>
+  </div>
+
+  <div class="carrera-box">
+    <h4>Conexión con Negocios Internacionales</h4>
+    <ul>
+      <li><strong>Comercio exterior:</strong> en una importación, el bien puede estar embarcado en Shanghái el 31 de agosto y llegar a Guayaquil el 20 de septiembre. Determinar en qué período se reconoce ese inventario no depende de dónde está la caja, sino de cuándo se transfirieron los riesgos y el control conforme al Incoterm pactado. Sin devengo, esa decisión no tendría criterio.</li>
+      <li><strong>Finanzas internacionales:</strong> un banco corresponsal o un fondo extranjero que evalúa a una empresa ecuatoriana compara su rentabilidad con la de empresas de otros países. Esa comparación solo tiene sentido si todas reconocen ingresos y gastos con el mismo criterio temporal. El devengo es la condición de comparabilidad.</li>
+      <li><strong>Marketing y negociación internacional:</strong> quien negocia un contrato con cobro anticipado debe entender que ese dinero recibido no es utilidad todavía, sino una obligación de entregar. Confundirlo lleva a comprometer márgenes que aún no existen.</li>
+      <li><strong>Marco legal y normativo:</strong> tanto la NIC 1 como la normativa societaria ecuatoriana exigen la base de devengo. Presentar estados financieros a la Superintendencia de Compañías sobre base de efectivo no es una elección de estilo: es un incumplimiento.</li>
+    </ul>
+  </div>
+
+  <div class="conclusion">
+    <h4>Idea clave del Tema 1</h4>
+    <p>Los asientos de ajuste no corrigen errores del contador: corrigen el <strong>desfase natural</strong> entre el momento en que ocurre un hecho económico y el momento en que aparece un documento que lo respalde. Existen porque la vida económica es continua y la información financiera es periódica, y porque las NIIF exigen reconocer los hechos cuando ocurren y no cuando se cobran o se pagan.</p>
+  </div>
+</div>
+
+<!-- ============ TEMA 2 ============ -->
+<div class="panel" id="tema2">
+  <h2>Tema 2 &mdash; Anatomía del asiento de ajuste y las cuatro familias de conceptos que lo exigen</h2>
+  <p class="subt">Qué es, dónde se ubica en el proceso contable, qué reglas obedece y cómo se clasifica.</p>
+
+  <h3>2.1 Definición</h3>
+  <div class="definicion">
+    <h4>Asiento de ajuste</h4>
+    <p>Registro que se practica en el Libro Diario <strong>al cierre del período contable</strong>, con el objeto de reconocer hechos económicos ya ocurridos que no fueron registrados oportunamente, o de corregir saldos que dejaron de representar fielmente la realidad, de modo que los estados financieros cumplan con la base de devengo y con las características de <strong>relevancia</strong> y <strong>representación fiel</strong>. No nace de una transacción con un tercero, sino del análisis del contador sobre el paso del tiempo, el consumo, el desgaste, la estimación o la comprobación física.</p>
+  </div>
+
+  <p>Conviene distinguirlo con precisión de dos figuras vecinas, porque los estudiantes suelen mezclarlas:</p>
+  <table class="tabla">
+    <tr><th>Figura</th><th>Qué es</th><th>Cuándo se hace</th></tr>
+    <tr><td><strong>Asiento de transacción</strong> (o de operación)</td><td>Registra un hecho con documento fuente: factura, comprobante de retención, nota de crédito, papeleta de depósito.</td><td>Durante el período, en la fecha del documento.</td></tr>
+    <tr><td><strong>Asiento de ajuste</strong></td><td>Reconoce un hecho económico real sin documento externo que lo dispare, o actualiza una medición.</td><td>Al cierre del período, con fecha de cierre.</td></tr>
+    <tr><td><strong>Asiento de corrección de error</strong></td><td>Enmienda una equivocación efectiva: cuenta equivocada, cifra transpuesta, asiento duplicado.</td><td>En cuanto se detecta el error, en cualquier momento.</td></tr>
+  </table>
+
+  <div class="alerta">
+    <h4>Error frecuente</h4>
+    <p>Llamar "ajuste" a la corrección de una equivocación. Si usted registró 1.500,00 donde debía registrar 1.050,00, eso <strong>no es un ajuste</strong>: es un error y se corrige como tal. El ajuste presupone que todo lo anterior estuvo bien registrado y que, aun así, falta reconocer algo que la realidad produjo por sí sola.</p>
+  </div>
+
+  <h3>2.2 Dónde se ubica el ajuste dentro del proceso contable</h3>
+  <p>El Día 5 recorrimos la primera parte del proceso contable. Hoy continuamos exactamente donde quedó:</p>
+  <ol class="pasos">
+    <li><strong>Reconocimiento y análisis de la transacción</strong> a partir del documento fuente. <em>(Día 5)</em></li>
+    <li><strong>Jornalización</strong>: registro en el Libro Diario respetando la partida doble. <em>(Día 5)</em></li>
+    <li><strong>Mayorización</strong>: traslado a las cuentas del Libro Mayor. <em>(Día 5)</em></li>
+    <li><strong>Balance de comprobación preliminar</strong>: verificación de que la suma del Debe iguala la del Haber. <em>(Día 5)</em></li>
+    <li><strong>Asientos de ajuste</strong>: reconocimiento de lo devengado, lo consumido, lo estimado y lo comprobado físicamente. <em>&larr; estamos aquí, Día 11</em></li>
+    <li><strong>Balance de comprobación ajustado</strong>: saldos definitivos previos a los estados financieros.</li>
+    <li><strong>Estados financieros y asientos de cierre.</strong></li>
+  </ol>
+
+  <div class="futuro">
+    <h4>Contenido diferido</h4>
+    <p>El <strong>paso 6, balance de comprobación ajustado</strong>, con la hoja de trabajo que traslada los saldos preliminares más los ajustes hacia los saldos ajustados, corresponde al <strong>Día 12 (viernes 28 de agosto), Unidad 3</strong>. Los <strong>asientos de cierre</strong> del paso 7 y la elaboración de los estados financieros pertenecen a la <strong>Unidad 4</strong>, concretamente al <strong>Día 15</strong> los asientos de cierre y a los Días 14 y 16 la estructura del Estado de Resultado Integral y del Estado de Situación Financiera. Hoy nos detenemos en el paso 5 y no lo cruzamos.</p>
+  </div>
+
+  <h3>2.3 Las tres reglas que todo asiento de ajuste cumple</h3>
+
+  <div class="definicion">
+    <h4>Regla 1 &mdash; Fecha de cierre</h4>
+    <p>Todos los ajustes se fechan el <strong>último día del período</strong> (en nuestro caso, 31 de agosto de 2026), aunque materialmente se elaboren días después. Reflejan la situación <em>a esa fecha</em>.</p>
+  </div>
+  <div class="definicion">
+    <h4>Regla 2 &mdash; No intervienen Caja ni Bancos</h4>
+    <p>Un ajuste jamás mueve efectivo. Si un asiento que usted considera de ajuste debita o acredita <strong>Caja</strong> o <strong>Bancos</strong>, casi con seguridad no es un ajuste: es una transacción no registrada, o una corrección de error. El ajuste reconoce hechos que <em>todavía no</em> o que <em>ya no</em> pasan por efectivo.</p>
+  </div>
+  <div class="definicion">
+    <h4>Regla 3 &mdash; Una cuenta de balance y una de resultados</h4>
+    <p>Prácticamente todo ajuste toca al menos una cuenta del Estado de Situación Financiera (activo o pasivo) y al menos una del Estado de Resultados (ingreso o gasto). Es la consecuencia lógica del devengo: si la realidad económica cambió, cambió el patrimonio, y el patrimonio cambia por ingresos y gastos.</p>
+  </div>
+
+  <div class="nota-lateral">
+    <h4>Un uso práctico de la Regla 3</h4>
+    <p>Es un excelente autocontrol. Termine cualquier ajuste y pregúntese: ¿toqué una cuenta de balance? ¿toqué una de resultados? Si la respuesta a alguna es "no", revise. Un ajuste que solo mueve activos entre sí (por ejemplo, reclasificar de una cuenta por cobrar a otra) es una reclasificación, no un ajuste por devengo.</p>
+  </div>
+
+  <h3>2.4 Las cuatro familias de conceptos que implican ajustes</h3>
+  <p>El sílabo pide identificar los <strong>conceptos que implican ajustes</strong>. Existen decenas de situaciones concretas, pero todas caben en cuatro familias. Aprenda las familias y no tendrá que memorizar casos.</p>
+
+  <table class="tabla">
+    <tr><th>Familia</th><th>Pregunta que la identifica</th><th>Situaciones típicas</th><th>Se estudia hoy en&hellip;</th></tr>
+    <tr>
+      <td><strong>A. Acumulaciones</strong><br>(devengados no registrados)</td>
+      <td>¿Ocurrió ya el hecho, pero todavía no se cobra ni se paga?</td>
+      <td>Intereses por pagar, sueldos y beneficios devengados, servicios básicos consumidos sin factura, intereses o arriendos ganados por cobrar</td>
+      <td>Tema 3</td>
+    </tr>
+    <tr>
+      <td><strong>B. Diferimientos</strong><br>(anticipados por devengar)</td>
+      <td>¿Ya se cobró o se pagó, pero el hecho todavía no ocurre por completo?</td>
+      <td>Seguros pagados por anticipado, arriendos prepagados, suministros en existencia, anticipos recibidos de clientes</td>
+      <td>Tema 4</td>
+    </tr>
+    <tr>
+      <td><strong>C. Estimaciones</strong><br>(mediciones que nadie factura)</td>
+      <td>¿Hay un consumo o una pérdida real que ningún tercero cuantifica por mí?</td>
+      <td>Depreciación de propiedades, planta y equipo; amortización de intangibles; estimación de cuentas incobrables</td>
+      <td>Tema 5</td>
+    </tr>
+    <tr>
+      <td><strong>D. Comprobaciones y regularizaciones</strong><br>(la realidad física contra el libro)</td>
+      <td>¿Lo que dice el libro coincide con lo que existe y con lo que vale?</td>
+      <td>Faltantes y sobrantes de inventario detectados en conteo físico; rebaja del inventario a su valor neto realizable y su posterior reversión</td>
+      <td>Tema 6</td>
+    </tr>
+  </table>
+
+  <h3>2.5 De la vida diaria a la familia contable</h3>
+  <p>Volvamos a las seis situaciones cotidianas del Tema 1 y ubiquémoslas. Este cuadro es la traducción completa entre su experiencia y el lenguaje técnico:</p>
+  <table class="tabla">
+    <tr><th>Situación cotidiana</th><th>Hecho económico</th><th>Familia</th><th>Efecto contable</th></tr>
+    <tr><td>El cilindro de gas a medio consumir</td><td>Se pagó todo, se consumió una parte</td><td>B. Diferimiento</td><td>Disminuye un activo, nace un gasto</td></tr>
+    <tr><td>El arriendo pagado el día 1</td><td>El derecho se consume por el paso del tiempo</td><td>B. Diferimiento</td><td>Disminuye un activo, nace un gasto</td></tr>
+    <tr><td>El sueldo ganado y no cobrado</td><td>El trabajo ya se prestó</td><td>A. Acumulación</td><td>Nace un gasto y una obligación</td></tr>
+    <tr><td>El desgaste de la moto</td><td>Pérdida de capacidad de servicio del bien</td><td>C. Estimación</td><td>Nace un gasto, se reduce indirectamente el activo</td></tr>
+    <tr><td>El préstamo que probablemente no vuelva</td><td>La cartera vale menos de lo que dice el papel</td><td>C. Estimación</td><td>Nace un gasto, se reduce indirectamente el activo</td></tr>
+    <tr><td>Las latas de la despensa que no cuadran</td><td>La existencia real difiere del registro</td><td>D. Comprobación</td><td>Se corrige el activo contra un gasto o un ingreso</td></tr>
+  </table>
+
+  <h3>2.6 El plan de cuentas que usaremos hoy</h3>
+  <p>Recordemos lo dicho en el Día 6: las NIIF <strong>no norman los nombres ni los códigos</strong> de las cuentas. Regulan reconocimiento, medición, presentación y revelación. La codificación que sigue es la del curso, construida sobre la práctica profesional ecuatoriana consolidada y sobre la estructura que la Superintendencia de Compañías, Valores y Seguros requiere para el reporte de estados financieros.</p>
+  <table class="tabla">
+    <tr><th>Código</th><th>Cuenta</th><th>Naturaleza</th><th>Aparece en el ajuste&hellip;</th></tr>
+    <tr><td>1.1.02.01</td><td>Cuentas por cobrar clientes</td><td>Deudora</td><td>Estimación de incobrables</td></tr>
+    <tr><td>1.1.02.05</td><td>Intereses acumulados por cobrar</td><td>Deudora</td><td>Acumulación de ingresos</td></tr>
+    <tr><td>1.1.02.09</td><td>(&minus;) Provisión cuentas incobrables</td><td>Acreedora <em>(regularizadora de activo)</em></td><td>Estimación de incobrables</td></tr>
+    <tr><td>1.1.03.01</td><td>Inventario de mercaderías</td><td>Deudora</td><td>Faltantes y sobrantes</td></tr>
+    <tr><td>1.1.03.09</td><td>(&minus;) Provisión por valor neto de realización</td><td>Acreedora <em>(regularizadora de activo)</em></td><td>Rebaja al VNR y su reversión</td></tr>
+    <tr><td>1.1.04.01</td><td>Seguros pagados por anticipado</td><td>Deudora</td><td>Diferimiento de gastos</td></tr>
+    <tr><td>1.1.04.02</td><td>Suministros de oficina</td><td>Deudora</td><td>Diferimiento de gastos</td></tr>
+    <tr><td>1.2.01.05 / 1.2.01.06</td><td>Vehículos / Equipo de cómputo</td><td>Deudora</td><td>Depreciación</td></tr>
+    <tr><td>1.2.01.12 / 1.2.01.13</td><td>(&minus;) Depreciación acumulada vehículos / equipo de cómputo</td><td>Acreedora <em>(regularizadora de activo)</em></td><td>Depreciación</td></tr>
+    <tr><td>2.1.03.01</td><td>Intereses acumulados por pagar</td><td>Acreedora</td><td>Acumulación de gastos</td></tr>
+    <tr><td>2.1.05.01</td><td>Anticipos de clientes</td><td>Acreedora</td><td>Diferimiento de ingresos</td></tr>
+    <tr><td>4.1.01.02 / 4.2.01.01</td><td>Ingreso por servicios / Intereses ganados</td><td>Acreedora</td><td>Acumulación y diferimiento de ingresos</td></tr>
+    <tr><td>5.x</td><td>Cuentas de gasto (seguros, suministros, depreciación, incobrables, financieros, faltante de inventario, rebaja al VNR)</td><td>Deudora</td><td>Todas las familias</td></tr>
+  </table>
+
+  <div class="nota-lateral">
+    <h4>Cuenta regularizadora (o de valuación)</h4>
+    <p>Es una cuenta de naturaleza contraria a la del grupo al que pertenece y que <strong>no se resta directamente del activo</strong>, sino que se presenta debajo de él para mostrar simultáneamente el valor original y la disminución acumulada. Por eso escribimos "(&minus;) Depreciación acumulada" o "(&minus;) Provisión cuentas incobrables". Conservar ambos datos es más informativo que borrar el costo original: el lector sabe cuánto costó el bien y cuánto se ha consumido.</p>
+  </div>
+
+  <div class="carrera-box">
+    <h4>Conexión con Negocios Internacionales</h4>
+    <ul>
+      <li><strong>Comercio exterior:</strong> el momento del cierre define qué embarques entran al inventario del período y cuáles no. Un ajuste mal ubicado en el tiempo distorsiona el costo de la mercadería importada y, con él, todo el margen del negocio.</li>
+      <li><strong>Finanzas internacionales:</strong> las cuentas regularizadoras son las primeras que revisa un analista financiero externo, porque revelan el grado de prudencia de la administración. Una cartera sin provisión alguna en una empresa que vende a crédito enciende alertas inmediatas en cualquier comité de crédito.</li>
+      <li><strong>Marketing y negociación internacional:</strong> quien negocia condiciones de pago necesita saber que un anticipo cobrado se contabiliza como pasivo y no como ingreso; de lo contrario prometerá descuentos apoyado en utilidades inexistentes.</li>
+      <li><strong>Marco legal y normativo:</strong> las cuentas y su presentación deben ser trazables hacia la estructura de reporte de la Superintendencia de Compañías y hacia los formularios del SRI. La libertad de nomenclatura termina donde empieza la obligación de reportar.</li>
+    </ul>
+  </div>
+
+  <div class="conclusion">
+    <h4>Idea clave del Tema 2</h4>
+    <p>Un asiento de ajuste se fecha al cierre, no toca efectivo y siempre enlaza una cuenta de balance con una de resultados. Todos los conceptos que exigen ajuste caben en cuatro familias: <strong>acumulaciones</strong> (ya ocurrió, aún no se cobra ni se paga), <strong>diferimientos</strong> (ya se cobró o se pagó, aún no ocurre), <strong>estimaciones</strong> (nadie lo factura, hay que medirlo) y <strong>comprobaciones</strong> (la realidad física contra el libro).</p>
+  </div>
+</div>
+
+<!-- ============ TEMA 3 ============ -->
+<div class="panel" id="tema3">
+  <h2>Tema 3 &mdash; Familia A: ajustes por acumulación (lo devengado que aún no se cobra ni se paga)</h2>
+  <p class="subt">El hecho ya ocurrió. El dinero llegará después. Los libros deben decirlo hoy.</p>
+
+  <h3>3.1 El concepto</h3>
+  <div class="definicion">
+    <h4>Ajuste por acumulación</h4>
+    <p>Reconocimiento, al cierre del período, de un <strong>gasto ya incurrido cuya obligación de pago todavía no vence</strong>, o de un <strong>ingreso ya ganado cuyo derecho de cobro todavía no se ha facturado</strong>. Se le llama también "ajuste por devengado no registrado". Su rasgo distintivo: el hecho económico está completo, lo único pendiente es el movimiento de efectivo.</p>
+  </div>
+
+  <p>La lógica es simétrica y conviene fijarla como par:</p>
+  <table class="tabla">
+    <tr><th>Tipo</th><th>Qué se debita</th><th>Qué se acredita</th><th>Ejemplo cotidiano</th></tr>
+    <tr><td><strong>Gasto acumulado por pagar</strong></td><td>Una cuenta de <strong>gasto</strong> (aumenta)</td><td>Un <strong>pasivo</strong> (nace la obligación)</td><td>La planilla de luz del mes que se paga a mediados del siguiente</td></tr>
+    <tr><td><strong>Ingreso acumulado por cobrar</strong></td><td>Un <strong>activo</strong> (nace el derecho)</td><td>Una cuenta de <strong>ingreso</strong> (aumenta)</td><td>El sueldo trabajado en agosto que se cobra el 5 de septiembre</td></tr>
+  </table>
+
+  <div class="alerta">
+    <h4>La trampa conceptual más común</h4>
+    <p>Muchos estudiantes creen que "si no hay factura, no hay gasto". Es falso. La factura es un <strong>documento tributario</strong>: sirve para sustentar crédito tributario y deducibilidad. El gasto contable nace del <strong>consumo del recurso</strong>, no del papel. Una empresa puede tener un gasto perfectamente devengado y contabilizado sin factura al cierre, y recibirla en el período siguiente. Lo que sí ocurre es que el tratamiento tributario de la deducibilidad se resuelve con reglas propias del régimen fiscal, distintas de las reglas contables de reconocimiento.</p>
+  </div>
+
+  <h3>3.2 Caso A &mdash; Ajuste 1: intereses devengados por pagar</h3>
+  <p><strong>Antecedente.</strong> El 16 de agosto de 2026, Comercial El Astillero S.A. obtuvo un préstamo bancario de <strong>30.000,00</strong> a una tasa nominal del <strong>12 % anual</strong>, con pago de capital e intereses a partir de septiembre. Al 31 de agosto no ha pagado ni un centavo de interés. Y sin embargo, el dinero estuvo en poder de la empresa quince días. Ese uso del dinero <em>ya se consumió</em>.</p>
+
+  <div class="calculo">
+    <h4>Desglose del cálculo</h4>
+    <table>
+      <tr><td>Capital del préstamo</td><td class="num">30.000,00</td></tr>
+      <tr><td>Tasa nominal anual</td><td class="num">12,00 %</td></tr>
+      <tr><td>Días transcurridos (16 al 31 de agosto, inclusive el 31)</td><td class="num">15 días</td></tr>
+      <tr><td>Base de cálculo comercial del período</td><td class="num">15 / 360</td></tr>
+      <tr class="res"><td>Interés devengado = 30.000,00 &times; 12 % &times; 15 / 360</td><td class="num">150,00</td></tr>
+    </table>
+  </div>
+
+  <div class="nota-lateral">
+    <h4>Por qué 360 y no 365</h4>
+    <p>El sistema financiero ecuatoriano liquida ordinariamente los intereses sobre <strong>año comercial de 360 días</strong>, criterio que este curso adopta de manera uniforme. Si el contrato pactara año calendario de 365 días, el cálculo sería 30.000,00 &times; 12 % &times; 15 / 365 = 147,95. La diferencia parece trivial en quince días; sobre una cartera de millones y doce meses, no lo es. <strong>La base de días es una cláusula contractual, no una convención libre del contador.</strong></p>
+  </div>
+
+  <div class="asiento">
+    <div class="asiento-cab"><span>Asiento de ajuste N.&deg; 1</span> Intereses devengados por pagar <span>31/08/2026</span></div>
+    <table>
+      <tr><th>Fecha</th><th>Código</th><th>Detalle</th><th class="num">Parcial</th><th class="num">Debe</th><th class="num">Haber</th></tr>
+      <tr><td>31/08/2026</td><td class="cod">5.2.02.01</td><td>Gasto intereses</td><td class="num"></td><td class="num">150,00</td><td class="num"></td></tr>
+      <tr><td></td><td class="cod">2.1.03.01</td><td class="acreedora">a) Intereses acumulados por pagar</td><td class="num"></td><td class="num"></td><td class="num">150,00</td></tr>
+      <tr class="suman"><td></td><td></td><td>SUMAN</td><td class="num"></td><td class="num">150,00</td><td class="num">150,00</td></tr>
+      <tr class="glosa"><td colspan="6">P/R Ajuste por intereses devengados y no pagados del préstamo bancario obtenido el 16/08/2026, correspondientes a 15 días de agosto, en aplicación de la base contable de acumulación que exige la NIC 1. Sustento: tabla de amortización del contrato de préstamo.</td></tr>
+    </table>
+  </div>
+
+  <p><strong>Lectura del asiento.</strong> El gasto financiero de agosto crece en 150,00, de modo que la utilidad de agosto se reduce en esa cantidad, que es lo correcto: el préstamo sirvió para operar en agosto. Al mismo tiempo nace un pasivo de 150,00 que no existía en el balance preliminar. Cuando en septiembre el banco cobre, el asiento será de pago (debitar el pasivo, acreditar Bancos) y <strong>no volverá a registrarse gasto</strong> por esos quince días. Si el ajuste no se hiciera, agosto aparecería más rentable de lo que fue y septiembre soportaría un gasto que no le pertenece.</p>
+
+  <h3>3.3 Caso A &mdash; Ajuste 2: intereses ganados por cobrar</h3>
+  <p><strong>Antecedente.</strong> El 1 de agosto de 2026, El Astillero colocó un excedente de tesorería de <strong>10.000,00</strong> en una póliza de acumulación a <strong>6 % anual</strong>, con vencimiento e intereses pagaderos en diciembre. Al 31 de agosto la empresa no ha recibido nada, pero su dinero trabajó treinta días.</p>
+
+  <div class="calculo">
+    <h4>Desglose del cálculo</h4>
+    <table>
+      <tr><td>Valor colocado en la póliza</td><td class="num">10.000,00</td></tr>
+      <tr><td>Tasa nominal anual</td><td class="num">6,00 %</td></tr>
+      <tr><td>Días transcurridos (1 al 31 de agosto: mes comercial completo)</td><td class="num">30 días</td></tr>
+      <tr class="res"><td>Interés ganado = 10.000,00 &times; 6 % &times; 30 / 360</td><td class="num">50,00</td></tr>
+    </table>
+  </div>
+
+  <div class="asiento">
+    <div class="asiento-cab"><span>Asiento de ajuste N.&deg; 2</span> Intereses ganados por cobrar <span>31/08/2026</span></div>
+    <table>
+      <tr><th>Fecha</th><th>Código</th><th>Detalle</th><th class="num">Parcial</th><th class="num">Debe</th><th class="num">Haber</th></tr>
+      <tr><td>31/08/2026</td><td class="cod">1.1.02.05</td><td>Intereses acumulados por cobrar</td><td class="num"></td><td class="num">50,00</td><td class="num"></td></tr>
+      <tr><td></td><td class="cod">4.2.01.01</td><td class="acreedora">a) Intereses ganados</td><td class="num"></td><td class="num"></td><td class="num">50,00</td></tr>
+      <tr class="suman"><td></td><td></td><td>SUMAN</td><td class="num"></td><td class="num">50,00</td><td class="num">50,00</td></tr>
+      <tr class="glosa"><td colspan="6">P/R Ajuste por intereses ganados y no cobrados de la póliza de acumulación constituida el 01/08/2026, correspondientes a 30 días de agosto, conforme a la base de acumulación. Sustento: certificado de la póliza y liquidación de la entidad financiera.</td></tr>
+    </table>
+  </div>
+
+  <div class="ejemplo">
+    <h4>Otros conceptos de esta misma familia</h4>
+    <p>Aunque hoy solo registremos dos, la familia de acumulaciones abarca varios conceptos que usted encontrará en cualquier cierre real: <strong>sueldos y beneficios sociales devengados</strong> por los días trabajados y no pagados al cierre; <strong>servicios básicos consumidos</strong> (energía, agua, telecomunicaciones) cuya planilla llega en el mes siguiente; <strong>comisiones de vendedores</strong> ganadas sobre ventas del período; <strong>arriendos ganados por cobrar</strong> cuando la empresa subarrienda un espacio; e <strong>impuestos causados</strong> pendientes de liquidación. En todos, la pregunta es la misma: <em>¿el hecho ya ocurrió?</em> Si la respuesta es sí, se ajusta.</p>
+  </div>
+
+  <div class="alerta">
+    <h4>Cuidado con el IVA y las retenciones en los ajustes por acumulación</h4>
+    <p>El IVA se causa con la emisión del comprobante de venta, y las retenciones se practican en el momento del pago o del registro del comprobante, lo que ocurra primero. Por eso <strong>los asientos de ajuste por acumulación generalmente no incluyen IVA ni retenciones</strong>: reconocen únicamente el hecho económico devengado. El componente tributario aparecerá después, cuando se emita o reciba el comprobante correspondiente. Confundirlo lleva a registrar crédito tributario que todavía no existe.</p>
+  </div>
+
+  <div class="carrera-box">
+    <h4>Conexión con Negocios Internacionales</h4>
+    <ul>
+      <li><strong>Comercio exterior:</strong> los gastos de una importación &mdash;flete internacional, seguro de carga, agente afianzado, almacenaje portuario&mdash; suelen liquidarse semanas después del desaduanamiento. Si el cierre ocurre antes de recibir esas liquidaciones, deben acumularse; de lo contrario el costo de la mercadería queda incompleto y el margen del negocio, inflado.</li>
+      <li><strong>Finanzas internacionales:</strong> las líneas de crédito de bancos corresponsales y el financiamiento de proveedores del exterior devengan intereses diariamente aunque se paguen al vencimiento. El costo financiero real de importar solo es visible si esos intereses se acumulan mes a mes.</li>
+      <li><strong>Marketing y negociación internacional:</strong> las comisiones de agentes y distribuidores en el exterior se ganan con la venta, no con el pago. Reconocerlas cuando se generan permite negociar esquemas de comisión sabiendo su efecto real sobre el margen.</li>
+      <li><strong>Marco legal y normativo:</strong> las obligaciones aduaneras y tributarias causadas y no pagadas al cierre son pasivos exigibles y deben figurar como tales. Omitirlas expone a la empresa a diferencias en fiscalizaciones del SRI y del SENAE.</li>
+    </ul>
+  </div>
+
+  <div class="conclusion">
+    <h4>Idea clave del Tema 3</h4>
+    <p>En las acumulaciones el hecho económico ya se completó y solo falta el dinero. El gasto devengado no pagado se registra <strong>debitando gasto y acreditando pasivo</strong>; el ingreso ganado no cobrado, <strong>debitando activo y acreditando ingreso</strong>. La ausencia de factura nunca es razón suficiente para no reconocer un hecho que ya ocurrió.</p>
+  </div>
+</div>
+
+<!-- ============ TEMA 4 ============ -->
+<div class="panel" id="tema4">
+  <h2>Tema 4 &mdash; Familia B: ajustes por diferimiento (lo cobrado o pagado que aún no se ha devengado)</h2>
+  <p class="subt">El dinero ya se movió. El hecho todavía se está produciendo. Cada cierre reconoce la porción consumida.</p>
+
+  <h3>4.1 El concepto</h3>
+  <div class="definicion">
+    <h4>Ajuste por diferimiento</h4>
+    <p>Reconocimiento, al cierre del período, de la <strong>porción efectivamente consumida de un pago anticipado</strong> o de la <strong>porción efectivamente ganada de un cobro anticipado</strong>. Se le llama también "ajuste por anticipado devengado". Su rasgo distintivo: el efectivo ya se movió al inicio, y lo que el ajuste hace es <em>repartir</em> ese movimiento entre los períodos que corresponda.</p>
+  </div>
+
+  <p>Otra vez, la lógica es un par simétrico:</p>
+  <table class="tabla">
+    <tr><th>Tipo</th><th>Al momento del pago o cobro se registró&hellip;</th><th>El ajuste al cierre&hellip;</th></tr>
+    <tr><td><strong>Gasto pagado por anticipado</strong></td><td>Un <strong>activo</strong>: un derecho a recibir un servicio o un bien en el futuro</td><td>Debita <strong>gasto</strong> y acredita el <strong>activo</strong> por la parte consumida</td></tr>
+    <tr><td><strong>Ingreso cobrado por anticipado</strong></td><td>Un <strong>pasivo</strong>: la obligación de entregar un bien o prestar un servicio</td><td>Debita el <strong>pasivo</strong> y acredita <strong>ingreso</strong> por la parte cumplida</td></tr>
+  </table>
+
+  <div class="nota-lateral">
+    <h4>Por qué un cobro anticipado es un pasivo y no un ingreso</h4>
+    <p>Porque la empresa recibió dinero <strong>sin haber cumplido todavía su parte</strong>. Mientras no entregue el bien o preste el servicio, debe algo: o el servicio, o la devolución del dinero. Esa es la definición misma de pasivo en el Marco Conceptual: una obligación presente de transferir un recurso económico como resultado de sucesos pasados. Solo cuando cumple, el pasivo se extingue y aparece el ingreso.</p>
+  </div>
+
+  <h3>4.2 Caso A &mdash; Ajuste 3: seguro pagado por anticipado</h3>
+  <p><strong>Antecedente.</strong> El 1 de agosto de 2026, Comercial El Astillero S.A. contrató una póliza anual que cubre la mercadería de bodega contra incendio y robo, con una prima de <strong>1.800,00</strong> por doce meses, pagada íntegramente al inicio. En el momento del pago se registró como activo, en la cuenta <em>Seguros pagados por anticipado</em>. Al 31 de agosto la empresa estuvo asegurada exactamente un mes.</p>
+
+  <div class="calculo">
+    <h4>Desglose del cálculo</h4>
+    <table>
+      <tr><td>Prima total de la póliza (cobertura 01/08/2026 &ndash; 31/07/2027)</td><td class="num">1.800,00</td></tr>
+      <tr><td>Meses de cobertura</td><td class="num">12</td></tr>
+      <tr><td>Costo mensual de la cobertura = 1.800,00 / 12</td><td class="num">150,00</td></tr>
+      <tr><td>Meses transcurridos al 31/08/2026</td><td class="num">1</td></tr>
+      <tr class="res"><td>Gasto devengado en agosto</td><td class="num">150,00</td></tr>
+      <tr class="res"><td>Saldo que permanece como activo (11 meses)</td><td class="num">1.650,00</td></tr>
+    </table>
+  </div>
+
+  <div class="asiento">
+    <div class="asiento-cab"><span>Asiento de ajuste N.&deg; 3</span> Devengamiento del seguro prepagado <span>31/08/2026</span></div>
+    <table>
+      <tr><th>Fecha</th><th>Código</th><th>Detalle</th><th class="num">Parcial</th><th class="num">Debe</th><th class="num">Haber</th></tr>
+      <tr><td>31/08/2026</td><td class="cod">5.1.03.04</td><td>Gasto seguros</td><td class="num"></td><td class="num">150,00</td><td class="num"></td></tr>
+      <tr><td></td><td class="cod">1.1.04.01</td><td class="acreedora">a) Seguros pagados por anticipado</td><td class="num"></td><td class="num"></td><td class="num">150,00</td></tr>
+      <tr class="suman"><td></td><td></td><td>SUMAN</td><td class="num"></td><td class="num">150,00</td><td class="num">150,00</td></tr>
+      <tr class="glosa"><td colspan="6">P/R Ajuste por la porción devengada en agosto de 2026 de la póliza anual de seguro de mercaderías contratada el 01/08/2026. Sustento: póliza y factura de la aseguradora.</td></tr>
+    </table>
+  </div>
+
+  <div class="alerta">
+    <h4>El IVA del seguro ya se resolvió en su momento</h4>
+    <p>La prima de seguro está gravada con IVA y, al pagarla, se registró el crédito tributario correspondiente y la retención que procediera. Ese tratamiento tributario ocurrió el 1 de agosto, en el <strong>asiento de transacción</strong>. El ajuste de hoy trabaja únicamente sobre la <strong>base de 1.800,00</strong> y no vuelve a tocar impuestos. Registrar IVA en un asiento de ajuste por devengamiento es duplicar crédito tributario, y es una de las observaciones más frecuentes en auditoría tributaria.</p>
+  </div>
+
+  <h3>4.3 Caso A &mdash; Ajuste 4: consumo de suministros de oficina</h3>
+  <p><strong>Antecedente.</strong> El 3 de agosto de 2026 la empresa adquirió suministros de oficina por <strong>480,00</strong>, registrados como activo en la cuenta <em>Suministros de oficina</em>. El 31 de agosto se practicó un conteo del armario de suministros y se determinó una existencia real de <strong>310,00</strong>. Nadie llevó un registro diario de cuántas resmas o cartuchos salieron: el consumo se determina <strong>por diferencia</strong>.</p>
+
+  <div class="calculo">
+    <h4>Desglose del cálculo</h4>
+    <table>
+      <tr><td>Suministros adquiridos y registrados como activo</td><td class="num">480,00</td></tr>
+      <tr><td>(&minus;) Existencia según conteo físico al 31/08/2026</td><td class="num">310,00</td></tr>
+      <tr class="res"><td>= Consumo del período (gasto)</td><td class="num">170,00</td></tr>
+    </table>
+  </div>
+
+  <div class="asiento">
+    <div class="asiento-cab"><span>Asiento de ajuste N.&deg; 4</span> Consumo de suministros de oficina <span>31/08/2026</span></div>
+    <table>
+      <tr><th>Fecha</th><th>Código</th><th>Detalle</th><th class="num">Parcial</th><th class="num">Debe</th><th class="num">Haber</th></tr>
+      <tr><td>31/08/2026</td><td class="cod">5.1.03.07</td><td>Gasto suministros de oficina</td><td class="num"></td><td class="num">170,00</td><td class="num"></td></tr>
+      <tr><td></td><td class="cod">1.1.04.02</td><td class="acreedora">a) Suministros de oficina</td><td class="num"></td><td class="num"></td><td class="num">170,00</td></tr>
+      <tr class="suman"><td></td><td></td><td>SUMAN</td><td class="num"></td><td class="num">170,00</td><td class="num">170,00</td></tr>
+      <tr class="glosa"><td colspan="6">P/R Ajuste por consumo de suministros de oficina de agosto de 2026, determinado por diferencia entre lo adquirido y la existencia comprobada mediante conteo físico. Sustento: acta de conteo físico de suministros del 31/08/2026.</td></tr>
+    </table>
+  </div>
+
+  <div class="nota-lateral">
+    <h4>Dos métodos de registro inicial, un mismo saldo final</h4>
+    <p>Existen dos formas legítimas de registrar un anticipado en el momento del desembolso. En el <strong>método del activo</strong> (el que usamos) el pago se carga a una cuenta de activo y el ajuste traslada al gasto la porción consumida. En el <strong>método del gasto</strong> el pago se carga directamente a gasto y el ajuste hace lo contrario: reconoce como activo la porción <em>no</em> consumida. Con el suministro: 480,00 al gasto en agosto y luego un ajuste que debita el activo 310,00 y acredita el gasto 310,00. <strong>El saldo final es idéntico en ambos métodos</strong> (gasto 170,00, activo 310,00); cambian el camino y la dirección del ajuste, no el resultado. Lo que no se puede es mezclar métodos entre períodos, porque se pierde la comparabilidad.</p>
+  </div>
+
+  <h3>4.4 Caso A &mdash; Ajuste 5: anticipo de clientes devengado</h3>
+  <p><strong>Antecedente.</strong> El 12 de agosto de 2026, un cliente corporativo contrató a El Astillero la <strong>instalación de 30 ventiladores</strong> en un edificio de oficinas por un valor de <strong>1.500,00</strong> más IVA, cobrado al 100 % al momento de la firma. Se emitió el comprobante de venta por el anticipo, se liquidó el IVA y el valor del servicio se registró como pasivo en <em>Anticipos de clientes</em>. Al 31 de agosto se han instalado <strong>18 de los 30 ventiladores</strong>.</p>
+
+  <div class="calculo">
+    <h4>Desglose del cálculo</h4>
+    <table>
+      <tr><td>Valor total del servicio contratado (sin IVA)</td><td class="num">1.500,00</td></tr>
+      <tr><td>Unidades instaladas al cierre / unidades contratadas</td><td class="num">18 / 30</td></tr>
+      <tr><td>Grado de avance</td><td class="num">60,00 %</td></tr>
+      <tr class="res"><td>Ingreso devengado en agosto = 1.500,00 &times; 60 %</td><td class="num">900,00</td></tr>
+      <tr class="res"><td>Saldo que permanece como pasivo (12 ventiladores pendientes)</td><td class="num">600,00</td></tr>
+    </table>
+  </div>
+
+  <div class="asiento">
+    <div class="asiento-cab"><span>Asiento de ajuste N.&deg; 5</span> Devengamiento del anticipo de clientes <span>31/08/2026</span></div>
+    <table>
+      <tr><th>Fecha</th><th>Código</th><th>Detalle</th><th class="num">Parcial</th><th class="num">Debe</th><th class="num">Haber</th></tr>
+      <tr><td>31/08/2026</td><td class="cod">2.1.05.01</td><td>Anticipos de clientes</td><td class="num"></td><td class="num">900,00</td><td class="num"></td></tr>
+      <tr><td></td><td class="cod">4.1.01.02</td><td class="acreedora">a) Ingreso por servicios de instalación</td><td class="num"></td><td class="num"></td><td class="num">900,00</td></tr>
+      <tr class="suman"><td></td><td></td><td>SUMAN</td><td class="num"></td><td class="num">900,00</td><td class="num">900,00</td></tr>
+      <tr class="glosa"><td colspan="6">P/R Ajuste por reconocimiento del ingreso devengado correspondiente a 18 de 30 instalaciones ejecutadas al 31/08/2026, sobre el anticipo cobrado el 12/08/2026. Sustento: contrato de servicio y acta de avance de instalación.</td></tr>
+    </table>
+  </div>
+
+  <p><strong>Lectura del asiento.</strong> Observe que este ajuste debita un pasivo. No es un error de naturaleza: el pasivo <em>disminuye</em> porque la empresa cumplió parte de su obligación. El anticipo pasa de "debo un servicio" a "ya presté el servicio y por tanto lo gané". Al 31 de agosto quedan 600,00 en el pasivo, que se irán reconociendo como ingreso a medida que se instalen los doce ventiladores restantes.</p>
+
+  <div class="ejemplo">
+    <h4>Otros conceptos de esta misma familia</h4>
+    <p><strong>Pagados por anticipado:</strong> arriendos prepagados, publicidad contratada por temporada, matrículas y licencias de software anuales, impuestos prediales del ejercicio, garantías y fianzas. <strong>Cobrados por anticipado:</strong> anticipos de clientes por pedidos, suscripciones y membresías, arriendos cobrados adelantadamente, contratos de mantenimiento pagados por año. En todos, la pregunta es la misma: <em>¿cuánto de lo que ya se pagó o cobró corresponde realmente a este período?</em></p>
+  </div>
+
+  <div class="carrera-box">
+    <h4>Conexión con Negocios Internacionales</h4>
+    <ul>
+      <li><strong>Comercio exterior:</strong> los <em>anticipos a proveedores del exterior</em> son la forma de pago más habitual en las primeras operaciones con un proveedor asiático. Ese desembolso no es compra ni gasto: es un activo hasta que la mercadería quede bajo control de la empresa. Confundirlo adelanta un costo que aún no existe.</li>
+      <li><strong>Finanzas internacionales:</strong> las primas de seguro de carga internacional, las comisiones de apertura de cartas de crédito y las garantías bancarias se pagan por adelantado y cubren períodos que cruzan cierres. Distribuirlas correctamente es lo que permite conocer el costo financiero real de cada embarque.</li>
+      <li><strong>Marketing y negociación internacional:</strong> pactar anticipos de clientes protege el flujo de caja, pero el negociador debe tener claro que ese dinero es una <strong>obligación de entregar</strong>, no utilidad disponible. Muchas empresas exportadoras jóvenes fracasan por gastar anticipos que aún debían.</li>
+      <li><strong>Marco legal y normativo:</strong> en Ecuador el IVA se causa con la emisión del comprobante por el anticipo, aunque el ingreso contable se reconozca después, con el avance. Contabilidad y tributación siguen líneas de tiempo distintas, y el profesional debe manejar ambas sin confundirlas.</li>
+    </ul>
+  </div>
+
+  <div class="conclusion">
+    <h4>Idea clave del Tema 4</h4>
+    <p>En los diferimientos el dinero se movió primero y el hecho económico ocurre después, en porciones. El pago anticipado nace como <strong>activo</strong> y se convierte en gasto con el consumo; el cobro anticipado nace como <strong>pasivo</strong> y se convierte en ingreso con el cumplimiento. El ajuste no crea ni destruye valor: reparte en el tiempo lo que el efectivo concentró en un solo día.</p>
+  </div>
+</div>
+
+<!-- ============ TEMA 5 ============ -->
+<div class="panel" id="tema5">
+  <h2>Tema 5 &mdash; Familia C: ajustes por estimación (lo que ningún tercero factura)</h2>
+  <p class="subt">Depreciación de propiedades, planta y equipo · estimación de cuentas incobrables.</p>
+
+  <h3>5.1 El concepto</h3>
+  <div class="definicion">
+    <h4>Ajuste por estimación</h4>
+    <p>Reconocimiento de un gasto que corresponde a una <strong>pérdida real de valor o de capacidad de servicio</strong> que no proviene de una transacción con terceros y que, por tanto, <strong>nadie cuantifica por la empresa</strong>. Su importe se determina mediante un juicio técnico fundamentado (vida útil esperada, comportamiento histórico de la cartera, condiciones del mercado) y no mediante un documento externo. Es la familia donde el criterio profesional del contador pesa más, y donde más se juega su integridad.</p>
+  </div>
+
+  <div class="alerta">
+    <h4>Estimar no es adivinar</h4>
+    <p>Una estimación contable es una <strong>medición fundamentada bajo incertidumbre</strong>, no una cifra cómoda. Debe apoyarse en evidencia: informes técnicos sobre la vida útil de los bienes, estadísticas propias de recuperación de cartera, condiciones contractuales. Un contador que elige la estimación que más conviene a la utilidad deseada no está estimando: está manipulando. Esta es exactamente la frontera ética que trabajamos en el Día 2 al hablar de los principios de la profesión.</p>
+  </div>
+
+  <h3>5.2 Depreciación</h3>
+  <div class="definicion">
+    <h4>Depreciación</h4>
+    <p>Distribución sistemática del <strong>importe depreciable</strong> de un activo a lo largo de su <strong>vida útil</strong>. Dentro del contenido de la NIC 16 Propiedades, Planta y Equipo se establece que el cargo por depreciación de cada período se reconoce en el resultado, y que el importe depreciable de un activo se determina restando de su costo el <strong>valor residual</strong>, es decir, el importe que la entidad espera obtener por su disposición al final de la vida útil, deducidos los costos de esa disposición.</p>
+  </div>
+
+  <p>Tres elementos definen toda depreciación, y conviene nombrarlos con precisión:</p>
+  <ul>
+    <li><strong>Costo del activo:</strong> precio de adquisición más todos los desembolsos necesarios para ponerlo en condiciones de operar (transporte, instalación, aranceles no recuperables).</li>
+    <li><strong>Valor residual:</strong> lo que la entidad espera recibir al desprenderse del bien al final de su vida útil. Puede ser cero, y en la práctica ecuatoriana con frecuencia se estima así por simplicidad, pero <em>estimarlo en cero es una decisión, no un dato automático</em>.</li>
+    <li><strong>Vida útil:</strong> el período durante el cual se espera utilizar el activo, o el número de unidades de producción que se espera obtener de él. Es un juicio de la entidad sobre <em>su</em> uso, no una característica física universal del bien.</li>
+  </ul>
+
+  <div class="formula">
+    Importe depreciable = <em>Costo</em> &minus; <em>Valor residual</em><br>
+    Depreciación anual (línea recta) = <em>Importe depreciable</em> &divide; <em>Vida útil en años</em><br>
+    Depreciación mensual = <em>Depreciación anual</em> &divide; <em>12</em>
+  </div>
+
+  <div class="nota-lateral">
+    <h4>Método de línea recta y sus alternativas</h4>
+    <p>El <strong>método de línea recta</strong> reparte el importe depreciable en cuotas iguales a lo largo de la vida útil. Es el más utilizado por su simplicidad y porque se ajusta a bienes cuyo servicio se consume de manera uniforme. Dentro del contenido de la NIC 16 se admiten también el <strong>método de depreciación decreciente</strong> y el de <strong>unidades de producción</strong>; la entidad debe elegir el que mejor refleje el patrón esperado de consumo de los beneficios económicos del activo. En este curso trabajamos exclusivamente línea recta.</p>
+  </div>
+
+  <h4>Caso A &mdash; Ajuste 6: depreciación de agosto de 2026</h4>
+  <p>Comercial El Astillero S.A. mantiene dos bienes depreciables adquiridos con anterioridad: un <strong>vehículo de reparto</strong> con costo de 28.800,00 y vida útil estimada de 5 años, y un <strong>equipo de cómputo</strong> con costo de 3.600,00 y vida útil estimada de 3 años. En ambos se estimó valor residual cero, decisión documentada en la política contable de la empresa.</p>
+
+  <div class="calculo">
+    <h4>Desglose del cálculo</h4>
+    <table>
+      <tr><td><strong>Vehículo de reparto</strong> &mdash; costo</td><td class="num">28.800,00</td></tr>
+      <tr><td>(&minus;) Valor residual estimado</td><td class="num">0,00</td></tr>
+      <tr><td>Importe depreciable</td><td class="num">28.800,00</td></tr>
+      <tr><td>Vida útil</td><td class="num">5 años</td></tr>
+      <tr><td>Depreciación anual = 28.800,00 / 5</td><td class="num">5.760,00</td></tr>
+      <tr class="res"><td>Depreciación mensual = 5.760,00 / 12</td><td class="num">480,00</td></tr>
+      <tr><td><strong>Equipo de cómputo</strong> &mdash; costo</td><td class="num">3.600,00</td></tr>
+      <tr><td>Importe depreciable (valor residual cero)</td><td class="num">3.600,00</td></tr>
+      <tr><td>Vida útil</td><td class="num">3 años</td></tr>
+      <tr><td>Depreciación anual = 3.600,00 / 3</td><td class="num">1.200,00</td></tr>
+      <tr class="res"><td>Depreciación mensual = 1.200,00 / 12</td><td class="num">100,00</td></tr>
+      <tr class="res"><td><strong>Depreciación total del mes</strong></td><td class="num">580,00</td></tr>
+    </table>
+  </div>
+
+  <div class="asiento">
+    <div class="asiento-cab"><span>Asiento de ajuste N.&deg; 6</span> Depreciación de propiedades, planta y equipo <span>31/08/2026</span></div>
+    <table>
+      <tr><th>Fecha</th><th>Código</th><th>Detalle</th><th class="num">Parcial</th><th class="num">Debe</th><th class="num">Haber</th></tr>
+      <tr><td>31/08/2026</td><td class="cod">5.1.03.09</td><td>Gasto depreciación propiedades, planta y equipo</td><td class="num"></td><td class="num">580,00</td><td class="num"></td></tr>
+      <tr><td></td><td class="cod">5.1.03.09.01</td><td>&nbsp;&nbsp;&nbsp;Vehículo de reparto</td><td class="num">480,00</td><td class="num"></td><td class="num"></td></tr>
+      <tr><td></td><td class="cod">5.1.03.09.02</td><td>&nbsp;&nbsp;&nbsp;Equipo de cómputo</td><td class="num">100,00</td><td class="num"></td><td class="num"></td></tr>
+      <tr><td></td><td class="cod">1.2.01.12</td><td class="acreedora">a) (&minus;) Depreciación acumulada vehículos</td><td class="num"></td><td class="num"></td><td class="num">480,00</td></tr>
+      <tr><td></td><td class="cod">1.2.01.13</td><td class="acreedora">a) (&minus;) Depreciación acumulada equipo de cómputo</td><td class="num"></td><td class="num"></td><td class="num">100,00</td></tr>
+      <tr class="suman"><td></td><td></td><td>SUMAN</td><td class="num"></td><td class="num">580,00</td><td class="num">580,00</td></tr>
+      <tr class="glosa"><td colspan="6">P/R Ajuste por depreciación de agosto de 2026 calculada por el método de línea recta sobre las vidas útiles estimadas en la política contable de la entidad, conforme al tratamiento previsto en la NIC 16. Sustento: cuadro de depreciación y registro de activos fijos.</td></tr>
+    </table>
+  </div>
+
+  <div class="nota-lateral">
+    <h4>Aquí se usa la columna Parcial</h4>
+    <p>Note que las cifras 480,00 y 100,00 aparecen en la columna <strong>Parcial</strong> y no en el Debe. Esa columna sirve para desagregar el detalle interno de una cuenta cuyo total sí va al Debe o al Haber. La suma de los parciales debe coincidir exactamente con el total de la cuenta que los contiene: 480,00 + 100,00 = 580,00. Los parciales <strong>nunca se suman en la fila SUMAN</strong>.</p>
+  </div>
+
+  <div class="alerta">
+    <h4>La vida útil contable y el porcentaje tributario no son lo mismo</h4>
+    <p>La normativa tributaria ecuatoriana fija porcentajes máximos de depreciación deducible: entre ellos, vehículos y equipo de transporte hasta el 20 % anual y equipos de cómputo y software hasta el 33 % anual. En nuestro caso, 5 años equivalen al 20 % anual y 3 años al 33,33 % anual, de modo que la vida útil contable coincide con el límite tributario y no se genera diferencia. <strong>Pero puede no coincidir.</strong> Si la entidad estima técnicamente que su vehículo durará 8 años, contablemente depreciará al 12,5 % anual, y esa será la cifra correcta en los estados financieros aunque el límite fiscal permita más. La contabilidad mide la realidad económica; la tributación fija topes de deducibilidad. Son dos lógicas distintas que conviven.</p>
+  </div>
+
+  <h3>5.3 Estimación de cuentas incobrables</h3>
+  <div class="definicion">
+    <h4>Estimación (o provisión) de cuentas incobrables</h4>
+    <p>Reconocimiento del hecho de que una parte de la cartera de clientes <strong>no será recuperada</strong>, sin que se sepa todavía cuál cliente específico dejará de pagar. Se registra debitando un gasto y acreditando una cuenta regularizadora del activo, de modo que las cuentas por cobrar se presenten en el balance por el importe que razonablemente se espera cobrar.</p>
+  </div>
+
+  <p><strong>Por qué no se acredita directamente Cuentas por cobrar clientes.</strong> Porque al cierre no se sabe <em>quién</em> no pagará. Si se rebajara directamente la cuenta principal, se perdería el control individual de la cartera: el auxiliar de clientes dejaría de cuadrar con el mayor. La cuenta regularizadora permite mostrar simultáneamente los 38.000,00 que los clientes deben y los 380,00 que probablemente no lleguen.</p>
+
+  <h4>Caso A &mdash; Ajuste 7: estimación de incobrables</h4>
+  <p><strong>Antecedente.</strong> Al 31 de agosto de 2026 el saldo de <em>Cuentas por cobrar clientes</em> de El Astillero asciende a <strong>38.000,00</strong>, íntegramente por créditos comerciales concedidos en el ejercicio. La política contable de la entidad estima la incobrabilidad en el <strong>1 % del saldo de la cartera comercial</strong>. La cuenta regularizadora no registra saldo anterior.</p>
+
+  <div class="calculo">
+    <h4>Desglose del cálculo</h4>
+    <table>
+      <tr><td>Cartera comercial al 31/08/2026</td><td class="num">38.000,00</td></tr>
+      <tr><td>Porcentaje estimado de incobrabilidad</td><td class="num">1,00 %</td></tr>
+      <tr class="res"><td>Estimación del período = 38.000,00 &times; 1 %</td><td class="num">380,00</td></tr>
+      <tr><td>Cartera neta a presentar = 38.000,00 &minus; 380,00</td><td class="num">37.620,00</td></tr>
+    </table>
+  </div>
+
+  <div class="asiento">
+    <div class="asiento-cab"><span>Asiento de ajuste N.&deg; 7</span> Estimación de cuentas incobrables <span>31/08/2026</span></div>
+    <table>
+      <tr><th>Fecha</th><th>Código</th><th>Detalle</th><th class="num">Parcial</th><th class="num">Debe</th><th class="num">Haber</th></tr>
+      <tr><td>31/08/2026</td><td class="cod">5.1.03.11</td><td>Gasto cuentas incobrables</td><td class="num"></td><td class="num">380,00</td><td class="num"></td></tr>
+      <tr><td></td><td class="cod">1.1.02.09</td><td class="acreedora">a) (&minus;) Provisión cuentas incobrables</td><td class="num"></td><td class="num"></td><td class="num">380,00</td></tr>
+      <tr class="suman"><td></td><td></td><td>SUMAN</td><td class="num"></td><td class="num">380,00</td><td class="num">380,00</td></tr>
+      <tr class="glosa"><td colspan="6">P/R Ajuste por estimación de incobrabilidad del 1 % sobre la cartera comercial al 31/08/2026, según la política contable de la entidad. Sustento: reporte de antigüedad de cartera al cierre.</td></tr>
+    </table>
+  </div>
+
+  <div class="alerta">
+    <h4>El 1 % contable y el 1 % tributario coinciden en la cifra, no en la lógica</h4>
+    <p>La Ley de Régimen Tributario Interno admite como deducible la provisión de créditos incobrables constituida hasta el <strong>1 % anual sobre los créditos comerciales concedidos en el ejercicio y no recuperados</strong>, con un acumulado que no supere el <strong>10 % de la cartera total</strong>. En nuestro caso ese tope acumulado sería 3.800,00, muy por encima de los 380,00 estimados. Pero conviene que quede claro: <strong>ese 1 % es un límite fiscal de deducibilidad, no una regla de medición contable</strong>. Contablemente, la estimación debe reflejar la expectativa real de pérdida; si la evidencia indicara una incobrabilidad del 4 %, la contabilidad debe registrar el 4 % y aceptar que solo una parte será deducible.</p>
+  </div>
+
+  <div class="futuro">
+    <h4>Contenido diferido</h4>
+    <p>El modelo de <strong>pérdidas crediticias esperadas</strong> de la NIIF 9, que sustituye el enfoque de pérdida incurrida y exige proyectar el deterioro con información prospectiva, así como el <strong>deterioro del valor de los activos de la NIC 36</strong> y los métodos de depreciación distintos de la línea recta, corresponden a <strong>Contabilidad Financiera</strong>, asignatura posterior a este curso. Aquí trabajamos la estimación en su forma introductoria, que es la prevista para la Unidad 3.</p>
+  </div>
+
+  <div class="carrera-box">
+    <h4>Conexión con Negocios Internacionales</h4>
+    <ul>
+      <li><strong>Comercio exterior:</strong> los contenedores, montacargas y vehículos de una operación logística se deprecian con intensidad muy distinta a la de un escritorio. Estimar bien su vida útil determina el costo real de mover mercadería y, con él, la tarifa que la empresa puede ofrecer sin perder dinero.</li>
+      <li><strong>Finanzas internacionales:</strong> la depreciación es un gasto que no consume efectivo, y por eso los analistas la suman de vuelta al construir indicadores de generación de caja. Comprender esa mecánica es indispensable para leer los estados financieros de una contraparte extranjera.</li>
+      <li><strong>Marketing y negociación internacional:</strong> vender al exterior a crédito multiplica el riesgo de incobrabilidad, porque cobrar judicialmente en otra jurisdicción es lento y caro. Por eso el comercio internacional desarrolló cartas de crédito, seguros de crédito a la exportación y cobranzas documentarias: instrumentos que existen precisamente para reducir la estimación de incobrables.</li>
+      <li><strong>Marco legal y normativo:</strong> el profesional debe sostener simultáneamente dos cifras coherentes: la estimación contable conforme a NIIF y el gasto deducible conforme a la LRTI, con la conciliación tributaria que explique la diferencia. Sostener solo una de las dos es incumplir la otra.</li>
+    </ul>
+  </div>
+
+  <div class="conclusion">
+    <h4>Idea clave del Tema 5</h4>
+    <p>Las estimaciones reconocen pérdidas reales que ningún tercero factura: el desgaste de los bienes y la porción de cartera que no volverá. Ambas usan <strong>cuentas regularizadoras</strong> para conservar visible el valor original del activo junto a su disminución acumulada. Y ambas exigen fundamentación técnica: la frontera entre estimar y manipular es la evidencia que respalda el juicio.</p>
+  </div>
+</div>
+
+<!-- ============ TEMA 6 ============ -->
+<div class="panel" id="tema6">
+  <h2>Tema 6 &mdash; Familia D: ajustes de inventarios bajo la NIC 2</h2>
+  <p class="subt">Faltantes y sobrantes del conteo físico · rebaja al valor neto realizable y su reversión. Aquí cerramos lo prometido el Día 8.</p>
+
+  <h3>6.1 Dos preguntas distintas sobre el mismo inventario</h3>
+  <p>Al cierre, el inventario debe someterse a dos exámenes independientes, y es un error frecuente confundirlos:</p>
+  <table class="tabla">
+    <tr><th></th><th>Pregunta de <strong>cantidad</strong></th><th>Pregunta de <strong>valor</strong></th></tr>
+    <tr><td>Qué se verifica</td><td>¿Existen físicamente las unidades que dice el Kardex?</td><td>¿Vale el inventario lo que dicen los libros?</td></tr>
+    <tr><td>Instrumento</td><td>Conteo físico (toma de inventario)</td><td>Cálculo del valor neto realizable</td></tr>
+    <tr><td>Resultado posible</td><td>Faltante o sobrante</td><td>Rebaja al VNR (o ninguna, si el VNR supera al costo)</td></tr>
+    <tr><td>Orden lógico</td><td>Primero</td><td>Después, sobre las unidades que realmente existen</td></tr>
+  </table>
+  <p>El orden importa: no tendría sentido calcular la rebaja al VNR sobre sesenta unidades si en la bodega solo hay cincuenta y siete.</p>
+
+  <h3>6.2 Faltantes y sobrantes de inventario</h3>
+  <div class="definicion">
+    <h4>Conteo físico o toma de inventario</h4>
+    <p>Procedimiento de control mediante el cual se cuentan, pesan o miden las existencias reales en bodega a una fecha determinada, para compararlas con los saldos registrados en el Kardex. En el <strong>sistema permanente</strong> que usamos, el conteo no sirve para determinar el costo de ventas &mdash;eso ya lo hizo el Kardex movimiento a movimiento&mdash; sino para <strong>verificar</strong> que el registro corresponde a la realidad.</p>
+  </div>
+
+  <div class="definicion">
+    <h4>Faltante y sobrante de inventario</h4>
+    <p><strong>Faltante:</strong> la existencia física es <em>menor</em> que la registrada. Sus causas típicas son mermas naturales, roturas, deterioro, errores de despacho, robo o hurto interno. <strong>Sobrante:</strong> la existencia física es <em>mayor</em> que la registrada; casi siempre responde a un ingreso no registrado, a una devolución de cliente no procesada o a un error de conteo anterior. En ambos casos <strong>manda el conteo físico</strong>: el libro se ajusta a la realidad, nunca al revés.</p>
+  </div>
+
+  <div class="alerta">
+    <h4>Faltante no es lo mismo que descuadre del Kardex</h4>
+    <p>Un <strong>descuadre</strong> es un error aritmético o de registro dentro del propio Kardex: una salida mal valorada, una columna mal sumada. Se corrige rehaciendo el registro, no con un asiento de ajuste. Un <strong>faltante</strong> es una diferencia entre un Kardex correctamente llevado y la existencia física real. Antes de registrar un faltante hay que descartar el descuadre; de lo contrario se enmascara un error de proceso como si fuera una pérdida física.</p>
+  </div>
+
+  <h4>Caso A &mdash; Ajuste 8: faltante del artículo INV-4501</h4>
+  <p><strong>Antecedente.</strong> El Kardex del artículo <strong>INV-4501 "Ventilador de techo VT-16"</strong>, valorado por FIFO en el Día 10A, cerró agosto con una existencia de <strong>60 unidades a 40,25 cada una, es decir 2.415,00</strong>. El 31 de agosto de 2026 se practicó la toma física de inventario y se contaron <strong>57 unidades</strong>. Verificado el Kardex y descartado el error de registro, se concluye que existe un faltante real de tres unidades, atribuido a rotura en bodega durante la manipulación.</p>
+
+  <div class="calculo">
+    <h4>Desglose del cálculo</h4>
+    <table>
+      <tr><td>Existencia según Kardex FIFO al 31/08/2026</td><td class="num">60 u</td></tr>
+      <tr><td>Existencia según conteo físico</td><td class="num">57 u</td></tr>
+      <tr><td>Diferencia (faltante)</td><td class="num">3 u</td></tr>
+      <tr><td>Costo unitario de la última capa FIFO</td><td class="num">40,25</td></tr>
+      <tr class="res"><td>Valor del faltante = 3 u &times; 40,25</td><td class="num">120,75</td></tr>
+      <tr class="res"><td>Saldo del inventario después del ajuste = 2.415,00 &minus; 120,75</td><td class="num">2.294,25</td></tr>
+    </table>
+  </div>
+
+  <div class="asiento">
+    <div class="asiento-cab"><span>Asiento de ajuste N.&deg; 8</span> Faltante de inventario detectado en conteo físico <span>31/08/2026</span></div>
+    <table>
+      <tr><th>Fecha</th><th>Código</th><th>Detalle</th><th class="num">Parcial</th><th class="num">Debe</th><th class="num">Haber</th></tr>
+      <tr><td>31/08/2026</td><td class="cod">5.1.03.14</td><td>Gasto faltante de inventario</td><td class="num"></td><td class="num">120,75</td><td class="num"></td></tr>
+      <tr><td></td><td class="cod">1.1.03.01</td><td class="acreedora">a) Inventario de mercaderías</td><td class="num"></td><td class="num"></td><td class="num">120,75</td></tr>
+      <tr class="suman"><td></td><td></td><td>SUMAN</td><td class="num"></td><td class="num">120,75</td><td class="num">120,75</td></tr>
+      <tr class="glosa"><td colspan="6">P/R Ajuste por faltante de 3 unidades del artículo INV-4501 establecido en la toma física de inventario al 31/08/2026, valorado al costo de la última capa FIFO. Sustento: acta de toma física de inventario y informe de bodega.</td></tr>
+    </table>
+  </div>
+
+  <div class="ejemplo">
+    <h4>Supuesto alternativo &mdash; si el conteo hubiera arrojado un sobrante</h4>
+    <p>Suponga, solo para efectos de contraste y sin que forme parte del caso, que el conteo hubiera encontrado <strong>63 unidades</strong> en lugar de 57. Habría un sobrante de 3 unidades por 120,75. El asiento invierte la lógica: el activo aumenta y se reconoce un ingreso o una recuperación de costo.</p>
+    <div class="asiento">
+      <div class="asiento-cab"><span>Asiento ilustrativo (no forma parte del caso)</span> Sobrante de inventario <span>31/08/2026</span></div>
+      <table>
+        <tr><th>Fecha</th><th>Código</th><th>Detalle</th><th class="num">Parcial</th><th class="num">Debe</th><th class="num">Haber</th></tr>
+        <tr><td>31/08/2026</td><td class="cod">1.1.03.01</td><td>Inventario de mercaderías</td><td class="num"></td><td class="num">120,75</td><td class="num"></td></tr>
+        <tr><td></td><td class="cod">4.2.02.01</td><td class="acreedora">a) Otros ingresos &mdash; sobrante de inventario</td><td class="num"></td><td class="num"></td><td class="num">120,75</td></tr>
+        <tr class="suman"><td></td><td></td><td>SUMAN</td><td class="num"></td><td class="num">120,75</td><td class="num">120,75</td></tr>
+        <tr class="glosa"><td colspan="6">P/R Ajuste ilustrativo por sobrante de 3 unidades del artículo INV-4501 establecido en toma física, valorado al costo de la última capa FIFO.</td></tr>
+      </table>
+    </div>
+    <p>Un sobrante nunca debe celebrarse: casi siempre revela una falla de control interno tan seria como la del faltante. Si aparecen unidades que nadie registró, el sistema de información dejó de reflejar la operación.</p>
+  </div>
+
+  <div class="nota-lateral">
+    <h4>Dimensión tributaria del faltante</h4>
+    <p>En Ecuador, las mermas y bajas de inventario requieren sustento formal &mdash;típicamente acta de destrucción o declaración juramentada ante notario, según el caso&mdash; para ser consideradas deducibles. Un faltante sin justificación documentada no solo es un gasto no deducible: puede ser tratado como autoconsumo y generar IVA. Por eso el <strong>acta de toma física</strong> no es un trámite burocrático, sino el soporte que da validez tributaria al ajuste.</p>
+  </div>
+
+  <h3>6.3 Rebaja del inventario a su valor neto realizable</h3>
+  <p>Recuperemos lo que el Día 8 dejó establecido y no repetiremos: el <strong>VNR</strong> es el precio estimado de venta en el curso normal de la operación menos los costos estimados de terminación y los necesarios para llevar a cabo la venta; y dentro del contenido de la NIC 2 se exige medir los inventarios <strong>al menor entre el costo y el valor neto realizable</strong>. Lo que hoy resolvemos es la pregunta que quedó pendiente: <strong>¿cómo se registra esa rebaja?</strong></p>
+
+  <div class="definicion">
+    <h4>Rebaja al valor neto realizable</h4>
+    <p>Reconocimiento contable de la pérdida de valor del inventario cuando su costo en libros supera al importe que la entidad espera obtener al venderlo. Dentro del contenido de la NIC 2 se establece que el importe de cualquier rebaja hasta alcanzar el valor neto realizable se reconoce <strong>como gasto del período en que ocurre</strong>. La razón de fondo es la definición de activo: un inventario no puede figurar en el balance por encima del beneficio económico que se espera obtener de él.</p>
+  </div>
+
+  <p><strong>Antecedente del Caso A.</strong> Tras el ajuste por faltante quedan <strong>57 unidades a 40,25 = 2.294,25</strong>. La empresa evalúa el mercado al 31 de agosto: la competencia ha introducido un modelo más eficiente y el precio de venta estimado del VT-16 cae a <strong>44,00</strong>, mientras que los costos estimados para concretar la venta (transporte al cliente, comisión del vendedor y publicidad de liquidación) ascienden a <strong>6,00 por unidad</strong>.</p>
+
+  <div class="calculo">
+    <h4>Desglose del cálculo</h4>
+    <table>
+      <tr><td>Precio de venta estimado por unidad</td><td class="num">44,00</td></tr>
+      <tr><td>(&minus;) Costos estimados necesarios para realizar la venta</td><td class="num">6,00</td></tr>
+      <tr class="res"><td>= Valor neto realizable unitario</td><td class="num">38,00</td></tr>
+      <tr><td>Costo unitario en libros (última capa FIFO)</td><td class="num">40,25</td></tr>
+      <tr><td>Comparación: costo 40,25 &gt; VNR 38,00 &rarr; <strong>procede rebajar</strong></td><td class="num"></td></tr>
+      <tr><td>Rebaja unitaria = 40,25 &minus; 38,00</td><td class="num">2,25</td></tr>
+      <tr><td>Unidades existentes tras el conteo físico</td><td class="num">57 u</td></tr>
+      <tr class="res"><td>Rebaja total = 2,25 &times; 57</td><td class="num">128,25</td></tr>
+      <tr class="res"><td>Valor en libros después de la rebaja = 2.294,25 &minus; 128,25 = 57 u &times; 38,00</td><td class="num">2.166,00</td></tr>
+    </table>
+  </div>
+
+  <div class="asiento">
+    <div class="asiento-cab"><span>Asiento de ajuste N.&deg; 9</span> Rebaja del inventario a su valor neto realizable <span>31/08/2026</span></div>
+    <table>
+      <tr><th>Fecha</th><th>Código</th><th>Detalle</th><th class="num">Parcial</th><th class="num">Debe</th><th class="num">Haber</th></tr>
+      <tr><td>31/08/2026</td><td class="cod">5.1.03.15</td><td>Gasto rebaja de inventario al valor neto realizable</td><td class="num"></td><td class="num">128,25</td><td class="num"></td></tr>
+      <tr><td></td><td class="cod">1.1.03.09</td><td class="acreedora">a) (&minus;) Provisión por valor neto de realización</td><td class="num"></td><td class="num"></td><td class="num">128,25</td></tr>
+      <tr class="suman"><td></td><td></td><td>SUMAN</td><td class="num"></td><td class="num">128,25</td><td class="num">128,25</td></tr>
+      <tr class="glosa"><td colspan="6">P/R Ajuste por rebaja de 57 unidades del artículo INV-4501 desde su costo de 40,25 hasta su valor neto realizable de 38,00 por unidad, en aplicación de la medición al menor entre costo y VNR que exige la NIC 2. Sustento: informe de mercado y cálculo de costos de venta al 31/08/2026.</td></tr>
+    </table>
+  </div>
+
+  <div class="nota-lateral">
+    <h4>Dos formas de acreditar la rebaja</h4>
+    <p>Algunos textos acreditan la rebaja <strong>directamente</strong> a <em>Inventario de mercaderías</em>, dejando el activo en 2.166,00 sin rastro del costo original. Nosotros usamos una <strong>cuenta regularizadora</strong>, <em>(&minus;) Provisión por valor neto de realización</em>, que es la denominación que emplea la estructura de reporte de la Superintendencia de Compañías, Valores y Seguros. La ventaja es informativa: el balance muestra simultáneamente el costo de 2.294,25 y la rebaja de 128,25, de modo que el lector conoce la magnitud del problema. Además, si la rebaja debe revertirse, la reversión es limpia: se debita la regularizadora. Ambas presentaciones dan el mismo valor neto; la segunda revela más.</p>
+  </div>
+
+  <h3>6.4 Reversión de la rebaja</h3>
+  <p>La rebaja al VNR no es definitiva. Dentro del contenido de la NIC 2 se establece que, cuando las circunstancias que causaron la rebaja dejan de existir o cuando hay evidencia clara de un incremento del valor neto realizable por cambios en las circunstancias económicas, <strong>se revierte el importe de la rebaja</strong>. Y fija un límite estricto: la reversión no puede exceder el importe de la rebaja originalmente reconocida.</p>
+
+  <div class="formula">
+    Reversión = el <em>menor</em> entre:<br>
+    (a) el aumento del VNR respecto del valor rebajado &nbsp;&nbsp;y&nbsp;&nbsp; (b) la rebaja previamente reconocida<br>
+    &rarr; el inventario <em>nunca</em> puede superar su costo original
+  </div>
+
+  <p><strong>Supuesto de continuidad.</strong> Al 30 de septiembre de 2026 las 57 unidades siguen en bodega. La competencia retiró su modelo del mercado ecuatoriano y el precio de venta estimado se recupera, de modo que el VNR asciende a <strong>42,00</strong> por unidad. ¿Cuánto se revierte?</p>
+
+  <div class="calculo">
+    <h4>Desglose del cálculo</h4>
+    <table>
+      <tr><td>VNR unitario recuperado al 30/09/2026</td><td class="num">42,00</td></tr>
+      <tr><td>Valor unitario rebajado en agosto</td><td class="num">38,00</td></tr>
+      <tr><td>Aumento teórico = (42,00 &minus; 38,00) &times; 57 u</td><td class="num">228,00</td></tr>
+      <tr><td>Rebaja previamente reconocida (tope)</td><td class="num">128,25</td></tr>
+      <tr class="res"><td>Reversión = menor entre 228,00 y 128,25</td><td class="num">128,25</td></tr>
+      <tr class="res"><td>Valor en libros tras la reversión = 2.166,00 + 128,25 = 57 u &times; 40,25</td><td class="num">2.294,25</td></tr>
+    </table>
+  </div>
+
+  <div class="asiento">
+    <div class="asiento-cab"><span>Asiento de ajuste N.&deg; 10</span> Reversión de la rebaja al valor neto realizable <span>30/09/2026</span></div>
+    <table>
+      <tr><th>Fecha</th><th>Código</th><th>Detalle</th><th class="num">Parcial</th><th class="num">Debe</th><th class="num">Haber</th></tr>
+      <tr><td>30/09/2026</td><td class="cod">1.1.03.09</td><td>(&minus;) Provisión por valor neto de realización</td><td class="num"></td><td class="num">128,25</td><td class="num"></td></tr>
+      <tr><td></td><td class="cod">5.1.03.15</td><td class="acreedora">a) Gasto rebaja de inventario al valor neto realizable</td><td class="num"></td><td class="num"></td><td class="num">128,25</td></tr>
+      <tr class="suman"><td></td><td></td><td>SUMAN</td><td class="num"></td><td class="num">128,25</td><td class="num">128,25</td></tr>
+      <tr class="glosa"><td colspan="6">P/R Ajuste por reversión total de la rebaja al valor neto realizable del artículo INV-4501 reconocida el 31/08/2026, al desaparecer las circunstancias que la originaron, limitada al importe originalmente rebajado conforme lo dispone la NIC 2. Sustento: informe de mercado al 30/09/2026.</td></tr>
+    </table>
+  </div>
+
+  <div class="alerta">
+    <h4>El error que la norma quiere impedir</h4>
+    <p>Si la reversión no tuviera tope, una empresa podría rebajar agresivamente en un mal año y "recuperar utilidades" en el siguiente cuando el precio de mercado subiera, convirtiendo el inventario en una fuente de resultados fabricados. Por eso el límite: <strong>el inventario jamás sube por encima de su costo</strong>. Un aumento del valor de mercado por encima del costo no es una ganancia; es una expectativa que solo se confirmará cuando la venta realmente ocurra. Aquí se ve con claridad la diferencia entre <em>valor razonable</em> y <em>valor neto realizable</em> que estudiamos el Día 8: el primero mira el mercado, el segundo mira lo que la empresa puede efectivamente recuperar.</p>
+  </div>
+
+  <h3>6.5 Resumen de los ajustes del Caso A al 31 de agosto de 2026</h3>
+  <p>Los nueve ajustes practicados al cierre de agosto (el décimo asiento pertenece a septiembre) producen el siguiente efecto:</p>
+  <table class="tabla">
+    <tr><th>N.&deg;</th><th>Concepto</th><th>Familia</th><th class="num">Aumenta gasto</th><th class="num">Aumenta ingreso</th></tr>
+    <tr><td>1</td><td>Intereses devengados por pagar</td><td>A. Acumulación</td><td class="num">150,00</td><td class="num">&mdash;</td></tr>
+    <tr><td>2</td><td>Intereses ganados por cobrar</td><td>A. Acumulación</td><td class="num">&mdash;</td><td class="num">50,00</td></tr>
+    <tr><td>3</td><td>Seguro devengado</td><td>B. Diferimiento</td><td class="num">150,00</td><td class="num">&mdash;</td></tr>
+    <tr><td>4</td><td>Consumo de suministros</td><td>B. Diferimiento</td><td class="num">170,00</td><td class="num">&mdash;</td></tr>
+    <tr><td>5</td><td>Anticipo de clientes devengado</td><td>B. Diferimiento</td><td class="num">&mdash;</td><td class="num">900,00</td></tr>
+    <tr><td>6</td><td>Depreciación de propiedades, planta y equipo</td><td>C. Estimación</td><td class="num">580,00</td><td class="num">&mdash;</td></tr>
+    <tr><td>7</td><td>Estimación de cuentas incobrables</td><td>C. Estimación</td><td class="num">380,00</td><td class="num">&mdash;</td></tr>
+    <tr><td>8</td><td>Faltante de inventario</td><td>D. Comprobación</td><td class="num">120,75</td><td class="num">&mdash;</td></tr>
+    <tr><td>9</td><td>Rebaja al valor neto realizable</td><td>D. Comprobación</td><td class="num">128,25</td><td class="num">&mdash;</td></tr>
+    <tr class="fila-total"><td colspan="3">TOTALES</td><td class="num">1.679,00</td><td class="num">950,00</td></tr>
+  </table>
+  <p>El efecto neto sobre el resultado de agosto es una <strong>disminución de 729,00</strong> (1.679,00 de mayores gastos contra 950,00 de mayores ingresos). Ninguno de esos 729,00 aparecía en el balance de comprobación preliminar, y ninguno provino de una factura. Esa cifra es la medida exacta de cuánto se equivocaría quien leyera los libros sin ajustar.</p>
+
+  <div class="futuro">
+    <h4>Contenido diferido</h4>
+    <p>El traslado de estos nueve ajustes a la <strong>hoja de trabajo</strong> y la obtención del <strong>balance de comprobación ajustado</strong> corresponden al <strong>Día 12 (viernes 28 de agosto), Unidad 3</strong>. La construcción del Estado de Resultado Integral y del Estado de Situación Financiera a partir de esos saldos ajustados pertenece a la <strong>Unidad 4</strong>. Hoy dejamos los ajustes registrados en el Libro Diario y ahí nos detenemos.</p>
+  </div>
+
+  <div class="carrera-box">
+    <h4>Conexión con Negocios Internacionales</h4>
+    <ul>
+      <li><strong>Comercio exterior:</strong> la mercadería importada envejece y cambia de precio mientras cruza el océano. Un contenedor de electrónica embarcado a un precio puede llegar a un mercado donde ya salió el modelo siguiente. La rebaja al VNR es el mecanismo que impide que ese inventario siga figurando por lo que costó traerlo.</li>
+      <li><strong>Finanzas internacionales:</strong> el inventario respalda líneas de crédito y garantías. Un banco que financia contra inventario exige conteos físicos periódicos y valuación al menor entre costo y VNR precisamente porque no quiere prestar contra unidades inexistentes o invendibles.</li>
+      <li><strong>Marketing y negociación internacional:</strong> la decisión de liquidar una línea de producto se sustenta en el cálculo del VNR. Saber que el valor neto realizable es 38,00 permite negociar una liquidación a 40,00 sabiendo exactamente cuánto se pierde y cuánto se recupera.</li>
+      <li><strong>Marco legal y normativo:</strong> la NIC 2 gobierna la medición, pero la deducibilidad tributaria de faltantes y rebajas se rige por la normativa ecuatoriana y exige documentación específica. La conciliación entre ambas es una competencia profesional que se exige desde el primer empleo.</li>
+    </ul>
+  </div>
+
+  <div class="conclusion">
+    <h4>Idea clave del Tema 6</h4>
+    <p>El inventario se somete a dos exámenes al cierre: <strong>cuánto hay</strong> y <strong>cuánto vale</strong>. El conteo físico manda sobre el Kardex y su diferencia se registra como faltante o sobrante; la comparación entre costo y VNR determina si procede rebajar. La rebaja es gasto del período y puede revertirse cuando desaparecen sus causas, <strong>nunca por encima del costo original</strong>. Con esto queda cerrado el compromiso que el Día 8 dejó abierto.</p>
+  </div>
+</div>
+
+<!-- ============ TEMA 7 ============ -->
+<div class="panel" id="tema7">
+  <h2>Tema 7 &mdash; Los ajustes en la operación internacional: por qué aquí importan más</h2>
+  <p class="subt">Aplicación de las cuatro familias al comercio exterior. Sin cifras nuevas: solo criterio.</p>
+
+  <h3>7.1 Tres razones estructurales</h3>
+  <p>Una tienda de barrio compra en la mañana y vende en la tarde: sus libros y su realidad casi coinciden. Una empresa importadora vive en el extremo opuesto, y por tres razones concretas necesita ajustar mucho más:</p>
+  <ol>
+    <li><strong>El tiempo entre el hecho y el documento se dilata.</strong> Entre la orden de compra en Guangzhou y la liquidación final del agente afianzado en Guayaquil pueden transcurrir dos o tres meses. En ese lapso caen uno o varios cierres contables.</li>
+    <li><strong>Intervienen muchos actores y cada uno factura por su lado.</strong> Proveedor extranjero, naviera, aseguradora, agente de aduana, almacenera, transportista interno, banco corresponsal. Al cierre, es prácticamente seguro que algunos de esos costos ya se causaron y aún no llegó su liquidación.</li>
+    <li><strong>La propiedad y el riesgo no cambian de manos donde uno cree.</strong> En comercio interno el bien se entrega y punto. En comercio exterior, el momento en que la mercadería pasa a ser de la empresa depende del <strong>Incoterm</strong> pactado, y ese momento puede caer antes o después del cierre.</li>
+  </ol>
+
+  <div class="definicion">
+    <h4>Mercadería en tránsito</h4>
+    <p>Inventario que ya es de propiedad de la empresa &mdash;porque los riesgos y ventajas se transfirieron conforme a la condición de entrega pactada&mdash; pero que todavía no ha llegado físicamente a sus bodegas. Se presenta como inventario en el Estado de Situación Financiera aunque esté a bordo de un buque, porque lo que define su reconocimiento es el <strong>control</strong> del recurso, no su ubicación geográfica.</p>
+  </div>
+
+  <div class="ejemplo">
+    <h4>Ejemplo &mdash; el mismo embarque, dos respuestas distintas</h4>
+    <p>Una empresa ecuatoriana compra a un proveedor en Shanghái. La mercadería se embarca el <strong>27 de agosto</strong> y llega a Guayaquil el <strong>18 de septiembre</strong>. El cierre es el 31 de agosto. ¿Ese inventario pertenece a agosto o a septiembre?</p>
+    <p><strong>Si se pactó FOB puerto de embarque:</strong> los riesgos se transfieren cuando la mercadería queda a bordo en Shanghái. Al 31 de agosto <em>ya es de la empresa</em>, y debe figurar en el inventario de agosto como mercadería en tránsito, con su correspondiente cuenta por pagar al proveedor del exterior.</p>
+    <p><strong>Si se pactó DAP en las bodegas del comprador:</strong> el vendedor conserva el riesgo hasta la entrega en destino. Al 31 de agosto <em>todavía no es de la empresa</em>, y no se registra inventario alguno; solo el anticipo pagado, si lo hubo, como activo.</p>
+    <p>Es exactamente el mismo contenedor, el mismo buque y la misma fecha. Lo que cambia es una cláusula contractual. Por eso quien trabaja en negocios internacionales necesita leer contablemente un Incoterm: <strong>determina en qué período entra el costo de la mercadería y, por tanto, en qué período aparece el margen</strong>.</p>
+  </div>
+
+  <div class="alerta">
+    <h4>Un ajuste omitido, un margen falso</h4>
+    <p>Si la empresa no reconoce la mercadería en tránsito al cierre y sí registra los anticipos pagados como gasto, agosto mostrará un gasto sin inventario que lo respalde y septiembre un inventario que apareció de la nada. Los dos meses quedan mal, y el análisis de rotación de inventario &mdash;uno de los indicadores que trabajamos en el Día 10A&mdash; pierde todo sentido.</p>
+  </div>
+
+  <h3>7.2 Situaciones internacionales típicas y la familia a la que pertenecen</h3>
+  <table class="tabla">
+    <tr><th>Situación en la operación internacional</th><th>Pregunta a formular al cierre</th><th>Familia</th></tr>
+    <tr><td>Flete internacional, seguro de carga y honorarios del agente afianzado ya prestados, cuya liquidación llegará el mes siguiente</td><td>¿El servicio ya se prestó?</td><td>A. Acumulación</td></tr>
+    <tr><td>Intereses de una carta de crédito o de financiamiento del proveedor del exterior, pagaderos al vencimiento</td><td>¿El dinero ya estuvo a disposición de la empresa?</td><td>A. Acumulación</td></tr>
+    <tr><td>Comisiones de agentes y distribuidores en el exterior, ganadas sobre ventas del período</td><td>¿La venta que las genera ya se reconoció?</td><td>A. Acumulación</td></tr>
+    <tr><td>Póliza de seguro de carga o de responsabilidad contratada por un período que cruza el cierre</td><td>¿Cuántos días de cobertura corresponden a este período?</td><td>B. Diferimiento</td></tr>
+    <tr><td>Anticipo pagado al proveedor del exterior por una compra aún no embarcada</td><td>¿Ya se transfirieron los riesgos y el control?</td><td>B. Diferimiento</td></tr>
+    <tr><td>Anticipo cobrado a un cliente del exterior por una exportación aún no despachada</td><td>¿La obligación de entregar ya se cumplió?</td><td>B. Diferimiento</td></tr>
+    <tr><td>Depreciación de contenedores, montacargas, vehículos de reparto y equipos de manipulación</td><td>¿Cuánta capacidad de servicio se consumió?</td><td>C. Estimación</td></tr>
+    <tr><td>Cartera por cobrar a clientes del exterior, con riesgo de cobro y jurisdicción distinta</td><td>¿Qué porción esperamos razonablemente recuperar?</td><td>C. Estimación</td></tr>
+    <tr><td>Toma física en bodega, zona primaria o depósito temporal</td><td>¿Existe lo que dice el registro?</td><td>D. Comprobación</td></tr>
+    <tr><td>Mercadería importada que perdió vigencia comercial o quedó obsoleta durante el tránsito</td><td>¿El VNR sigue siendo superior al costo?</td><td>D. Comprobación</td></tr>
+  </table>
+
+  <p>Note que <strong>no hay una quinta familia "internacional"</strong>. Las cuatro que estudiamos hoy alcanzan para todo. Lo que cambia en el comercio exterior es la <em>frecuencia</em>, la <em>magnitud</em> y la <em>dificultad de determinación</em> de cada ajuste, no su naturaleza. Quien domina las cuatro preguntas &mdash;¿ya ocurrió?, ¿ya se pagó?, ¿hay que estimarlo?, ¿coincide con la realidad física?&mdash; puede resolver un cierre de una tienda de barrio o de una comercializadora de cacao con la misma herramienta.</p>
+
+  <div class="futuro">
+    <h4>Contenido diferido</h4>
+    <p>Cuando la compra o la venta se pactan en una <strong>moneda distinta del dólar</strong> &mdash;euros con un proveedor español, yuanes con uno chino&mdash; aparece un ajuste adicional al cierre: la <strong>diferencia de cambio</strong> por la revaluación de las partidas monetarias pendientes. Su tratamiento corresponde a la NIC 21 Efectos de las Variaciones en las Tasas de Cambio de la Moneda Extranjera y se estudia en <strong>Contabilidad Financiera</strong>, asignatura posterior a este curso. Lo mencionamos para que usted sepa que existe, no para desarrollarlo aquí.</p>
+  </div>
+
+  <div class="nota-lateral">
+    <h4>Un cierre bien hecho es un argumento de negociación</h4>
+    <p>Cuando una empresa ecuatoriana busca un distribuidor en Colombia, una línea de crédito con un banco corresponsal o un socio para exportar, lo primero que le piden son sus estados financieros. Unos estados sin ajustes se detectan rápido: la utilidad no guarda relación con el flujo de caja, el inventario no rota, la cartera nunca se deteriora. Eso no comunica prosperidad: comunica desorden. <strong>El cierre riguroso es, literalmente, un activo comercial.</strong></p>
+  </div>
+
+  <div class="carrera-box">
+    <h4>Conexión con Negocios Internacionales</h4>
+    <ul>
+      <li><strong>Comercio exterior:</strong> el Incoterm pactado determina el momento del reconocimiento del inventario y, por tanto, qué ajuste corresponde al cierre. Leer contablemente un contrato de compraventa internacional es una competencia técnica, no administrativa.</li>
+      <li><strong>Finanzas internacionales:</strong> acumular correctamente intereses de cartas de crédito, comisiones bancarias y financiamiento de proveedores es lo único que revela el <em>costo financiero total</em> de importar, que suele ser muy superior al que muestra la factura del proveedor.</li>
+      <li><strong>Marketing y negociación internacional:</strong> negociar plazos, anticipos y comisiones sin entender cómo se contabilizan lleva a comprometer márgenes inexistentes. El negociador que entiende el devengo negocia sobre utilidad real, no sobre efectivo recibido.</li>
+      <li><strong>Marco legal y normativo:</strong> los ajustes de una operación internacional deben ser trazables ante el SRI, el SENAE y la Superintendencia de Compañías simultáneamente, cada uno con sus propios requisitos de sustento documental. La coherencia entre los tres es responsabilidad del profesional.</li>
+    </ul>
+  </div>
+
+  <div class="conclusion">
+    <h4>Idea clave del Tema 7</h4>
+    <p>El comercio internacional no inventa nuevas clases de ajuste: <strong>estira el tiempo, multiplica los actores y complica la determinación</strong>, de modo que las mismas cuatro familias se vuelven mucho más frecuentes y mucho más decisivas. La pregunta que gobierna todo sigue siendo la misma: <em>¿qué parte de este hecho pertenece realmente a este período?</em></p>
+  </div>
+</div>
+
+<!-- ============ EJERCICIO ============ -->
+<div class="panel" id="ejercicio">
+  <h2>Ejercicio interactivo &mdash; Cierre de agosto en Almacenes Río Daule Cía. Ltda.</h2>
+  <p class="subt">Nueve decisiones de ajuste sobre un mismo cierre. Responda todo y presione Verificar al final.</p>
+
+  <div class="definicion">
+    <h4>Situación</h4>
+    <p><strong>Almacenes Río Daule Cía. Ltda.</strong>, comercializadora de electrodomésticos con local en Daule, provincia del Guayas, cierra su período mensual el <strong>31 de agosto de 2026</strong>. Lleva inventario por el <strong>sistema permanente</strong> y valora por <strong>FIFO</strong>. El contador reunió la siguiente información al cierre:</p>
+    <ul>
+      <li><strong>(a)</strong> El 1 de julio de 2026 pagó por anticipado el arriendo del local por seis meses: <strong>3.600,00</strong>, registrado como activo.</li>
+      <li><strong>(b)</strong> Cinco empleados trabajaron los últimos <strong>4 días</strong> de agosto, a razón de <strong>30,00 diarios</strong> cada uno. Se les pagará el 5 de septiembre.</li>
+      <li><strong>(c)</strong> Un equipo de refrigeración con costo de <strong>12.000,00</strong>, valor residual estimado de <strong>1.200,00</strong> y vida útil de <strong>10 años</strong>, se deprecia por línea recta.</li>
+      <li><strong>(d)</strong> El Kardex del artículo TC-77 registra <strong>240 unidades a 18,50</strong>. El conteo físico arrojó <strong>236 unidades</strong>.</li>
+      <li><strong>(e)</strong> Para el mismo artículo TC-77, el precio de venta estimado cayó y su <strong>valor neto realizable</strong> quedó en <strong>17,00 por unidad</strong>.</li>
+      <li><strong>(f)</strong> El 11 de agosto colocó <strong>8.000,00</strong> en una inversión al <strong>9 % anual</strong>; al cierre han transcurrido <strong>20 días</strong> y no ha cobrado intereses.</li>
+      <li><strong>(g)</strong> Suministros de oficina: saldo inicial <strong>260,00</strong>, compras del mes <strong>140,00</strong>, existencia según conteo al 31/08 <strong>165,00</strong>.</li>
+    </ul>
+    <p><em>Nota: la empresa liquida intereses sobre año comercial de 360 días.</em></p>
+  </div>
+
+  <div class="ej-item">
+    <span class="enun">1. Situación (a). ¿Cuál es el importe del ajuste por arriendo devengado al 31 de agosto de 2026?</span>
+    <div class="opciones">
+      <label><input type="radio" name="ei1" value="a"> a) 3.600,00, porque ya se pagó la totalidad</label>
+      <label><input type="radio" name="ei1" value="b"> b) 1.200,00, correspondiente a julio y agosto</label>
+      <label><input type="radio" name="ei1" value="c"> c) 2.400,00, correspondiente a los meses aún no consumidos</label>
+      <label><input type="radio" name="ei1" value="d"> d) 600,00, correspondiente únicamente a agosto</label>
+    </div>
+    <div class="feedback" id="fei1"></div>
+  </div>
+
+  <div class="ej-item">
+    <span class="enun">2. Situación (a). ¿A qué familia de ajustes pertenece el arriendo pagado por anticipado?</span>
+    <div class="opciones">
+      <label><input type="radio" name="ei2" value="a"> a) Acumulación, porque el gasto ya se causó</label>
+      <label><input type="radio" name="ei2" value="b"> b) Estimación, porque hay que calcular cuánto se consumió</label>
+      <label><input type="radio" name="ei2" value="c"> c) Diferimiento, porque el desembolso ya ocurrió y el consumo se produce después</label>
+      <label><input type="radio" name="ei2" value="d"> d) Comprobación, porque se verifica contra el contrato</label>
+    </div>
+    <div class="feedback" id="fei2"></div>
+  </div>
+
+  <div class="ej-item">
+    <span class="enun">3. Situación (b). ¿Cuál es el asiento de ajuste correcto por los sueldos devengados?</span>
+    <div class="opciones">
+      <label><input type="radio" name="ei3" value="a"> a) Debitar Gasto sueldos 600,00 y acreditar Bancos 600,00</label>
+      <label><input type="radio" name="ei3" value="b"> b) Debitar Gasto sueldos 600,00 y acreditar Sueldos acumulados por pagar 600,00</label>
+      <label><input type="radio" name="ei3" value="c"> c) Debitar Sueldos acumulados por pagar 600,00 y acreditar Gasto sueldos 600,00</label>
+      <label><input type="radio" name="ei3" value="d"> d) No procede ajuste, porque el pago se hará en septiembre</label>
+    </div>
+    <div class="feedback" id="fei3"></div>
+  </div>
+
+  <div class="ej-item">
+    <span class="enun">4. Situación (c). ¿Cuál es la depreciación mensual del equipo de refrigeración?</span>
+    <div class="opciones">
+      <label><input type="radio" name="ei4" value="a"> a) 100,00</label>
+      <label><input type="radio" name="ei4" value="b"> b) 110,00</label>
+      <label><input type="radio" name="ei4" value="c"> c) 90,00</label>
+      <label><input type="radio" name="ei4" value="d"> d) 1.080,00</label>
+    </div>
+    <div class="feedback" id="fei4"></div>
+  </div>
+
+  <div class="ej-item">
+    <span class="enun">5. Situación (d). ¿Cuál es el importe del faltante de inventario del artículo TC-77?</span>
+    <div class="opciones">
+      <label><input type="radio" name="ei5" value="a"> a) 74,00</label>
+      <label><input type="radio" name="ei5" value="b"> b) 4,00</label>
+      <label><input type="radio" name="ei5" value="c"> c) 4.366,00</label>
+      <label><input type="radio" name="ei5" value="d"> d) 4.440,00</label>
+    </div>
+    <div class="feedback" id="fei5"></div>
+  </div>
+
+  <div class="ej-item">
+    <span class="enun">6. Situación (e). Considerando que el ajuste por faltante ya fue registrado, ¿cuál es el importe de la rebaja al valor neto realizable?</span>
+    <div class="opciones">
+      <label><input type="radio" name="ei6" value="a"> a) 4.012,00</label>
+      <label><input type="radio" name="ei6" value="b"> b) 1,50</label>
+      <label><input type="radio" name="ei6" value="c"> c) 360,00</label>
+      <label><input type="radio" name="ei6" value="d"> d) 354,00</label>
+    </div>
+    <div class="feedback" id="fei6"></div>
+  </div>
+
+  <div class="ej-item">
+    <span class="enun">7. Situación (f). ¿Cuál es el importe de los intereses ganados por cobrar al 31 de agosto?</span>
+    <div class="opciones">
+      <label><input type="radio" name="ei7" value="a"> a) 40,00</label>
+      <label><input type="radio" name="ei7" value="b"> b) 60,00</label>
+      <label><input type="radio" name="ei7" value="c"> c) 720,00</label>
+      <label><input type="radio" name="ei7" value="d"> d) No procede ajuste hasta que la inversión venza</label>
+    </div>
+    <div class="feedback" id="fei7"></div>
+  </div>
+
+  <div class="ej-item">
+    <span class="enun">8. Situación (g). ¿Cuál es el gasto por consumo de suministros de agosto?</span>
+    <div class="opciones">
+      <label><input type="radio" name="ei8" value="a"> a) 140,00</label>
+      <label><input type="radio" name="ei8" value="b"> b) 165,00</label>
+      <label><input type="radio" name="ei8" value="c"> c) 400,00</label>
+      <label><input type="radio" name="ei8" value="d"> d) 235,00</label>
+    </div>
+    <div class="feedback" id="fei8"></div>
+  </div>
+
+  <div class="ej-item">
+    <span class="enun">9. De las siguientes operaciones del mes, ¿cuál <strong>no</strong> corresponde a un asiento de ajuste?</span>
+    <div class="opciones">
+      <label><input type="radio" name="ei9" value="a"> a) Reconocer la energía eléctrica consumida en agosto cuya planilla llegará en septiembre</label>
+      <label><input type="radio" name="ei9" value="b"> b) Reconocer la porción devengada de un anticipo cobrado a un cliente</label>
+      <label><input type="radio" name="ei9" value="c"> c) Registrar el pago en efectivo de la planilla de energía eléctrica de julio</label>
+      <label><input type="radio" name="ei9" value="d"> d) Registrar la estimación de incobrabilidad sobre la cartera comercial</label>
+    </div>
+    <div class="feedback" id="fei9"></div>
+  </div>
+
+  <button class="btn" onclick="verificarEjercicio()">Verificar respuestas</button>
+  <button class="btn btn-sec" onclick="reiniciarEjercicio()">Reiniciar</button>
+
+  <div class="resultado" id="resEjercicio">
+    <span class="marca" id="marcaEj"></span>
+    <div class="cifra" id="cifraEj"></div>
+    <div class="barra"><div class="barra-relleno" id="barraEj"></div></div>
+    <div id="msgEj"></div>
+  </div>
+
+  <h3>Solución completa desarrollada</h3>
+  <p>Contraste su razonamiento con el desarrollo íntegro del cierre de Almacenes Río Daule Cía. Ltda.</p>
+
+  <div class="calculo">
+    <h4>(a) Arriendo prepagado &mdash; Diferimiento</h4>
+    <table>
+      <tr><td>Arriendo pagado por 6 meses (01/07/2026 &ndash; 31/12/2026)</td><td class="num">3.600,00</td></tr>
+      <tr><td>Costo mensual = 3.600,00 / 6</td><td class="num">600,00</td></tr>
+      <tr><td>Meses transcurridos al 31/08 (julio y agosto)</td><td class="num">2</td></tr>
+      <tr class="res"><td>Gasto devengado = 600,00 &times; 2</td><td class="num">1.200,00</td></tr>
+      <tr class="res"><td>Saldo que permanece como activo</td><td class="num">2.400,00</td></tr>
+    </table>
+    <p>Asiento: debitar <strong>Gasto arriendos 1.200,00</strong>, acreditar <strong>Arriendos pagados por anticipado 1.200,00</strong>.</p>
+  </div>
+
+  <div class="calculo">
+    <h4>(b) Sueldos devengados &mdash; Acumulación</h4>
+    <table>
+      <tr><td>Empleados &times; días &times; valor diario = 5 &times; 4 &times; 30,00</td><td class="num">600,00</td></tr>
+    </table>
+    <p>Asiento: debitar <strong>Gasto sueldos 600,00</strong>, acreditar <strong>Sueldos acumulados por pagar 600,00</strong>.</p>
+  </div>
+
+  <div class="calculo">
+    <h4>(c) Depreciación &mdash; Estimación</h4>
+    <table>
+      <tr><td>Costo del equipo</td><td class="num">12.000,00</td></tr>
+      <tr><td>(&minus;) Valor residual</td><td class="num">1.200,00</td></tr>
+      <tr><td>= Importe depreciable</td><td class="num">10.800,00</td></tr>
+      <tr><td>Depreciación anual = 10.800,00 / 10</td><td class="num">1.080,00</td></tr>
+      <tr class="res"><td>Depreciación mensual = 1.080,00 / 12</td><td class="num">90,00</td></tr>
+    </table>
+    <p>Asiento: debitar <strong>Gasto depreciación 90,00</strong>, acreditar <strong>(&minus;) Depreciación acumulada 90,00</strong>.</p>
+  </div>
+
+  <div class="calculo">
+    <h4>(d) y (e) Inventario del artículo TC-77 &mdash; Comprobación</h4>
+    <table>
+      <tr><td>Kardex: 240 u &times; 18,50</td><td class="num">4.440,00</td></tr>
+      <tr><td>Conteo físico: 236 u &rarr; faltante 4 u &times; 18,50</td><td class="num">74,00</td></tr>
+      <tr><td>Saldo tras el faltante: 236 u &times; 18,50</td><td class="num">4.366,00</td></tr>
+      <tr><td>Rebaja unitaria al VNR = 18,50 &minus; 17,00</td><td class="num">1,50</td></tr>
+      <tr class="res"><td>Rebaja total = 1,50 &times; 236 u</td><td class="num">354,00</td></tr>
+      <tr class="res"><td>Valor final del inventario = 236 u &times; 17,00</td><td class="num">4.012,00</td></tr>
+    </table>
+    <p>Comprobación: 4.440,00 &minus; 74,00 &minus; 354,00 = 4.012,00. El orden es indispensable: primero la cantidad, luego el valor.</p>
+  </div>
+
+  <div class="calculo">
+    <h4>(f) Intereses ganados &mdash; Acumulación</h4>
+    <table>
+      <tr class="res"><td>8.000,00 &times; 9 % &times; 20 / 360</td><td class="num">40,00</td></tr>
+    </table>
+    <p>Asiento: debitar <strong>Intereses acumulados por cobrar 40,00</strong>, acreditar <strong>Intereses ganados 40,00</strong>.</p>
+  </div>
+
+  <div class="calculo">
+    <h4>(g) Suministros &mdash; Diferimiento</h4>
+    <table>
+      <tr><td>Saldo inicial</td><td class="num">260,00</td></tr>
+      <tr><td>(+) Compras del mes</td><td class="num">140,00</td></tr>
+      <tr><td>= Disponible</td><td class="num">400,00</td></tr>
+      <tr><td>(&minus;) Existencia según conteo</td><td class="num">165,00</td></tr>
+      <tr class="res"><td>= Consumo del período</td><td class="num">235,00</td></tr>
+    </table>
+    <p>Asiento: debitar <strong>Gasto suministros 235,00</strong>, acreditar <strong>Suministros de oficina 235,00</strong>.</p>
+  </div>
+
+  <div class="alerta">
+    <h4>Sobre la pregunta 9</h4>
+    <p>Pagar en efectivo la planilla de julio es un <strong>asiento de transacción</strong>: tiene documento fuente, mueve Bancos y extingue un pasivo previamente reconocido. Recuerde la Regla 2 del Tema 2: <em>un ajuste jamás mueve efectivo</em>. Ese solo criterio resuelve la pregunta sin necesidad de analizar nada más.</p>
+  </div>
+</div>
+
+<!-- ============ CUESTIONARIO ============ -->
+<div class="panel" id="cuestionario">
+  <h2>Cuestionario &mdash; 10 preguntas</h2>
+  <p class="subt">Siete preguntas teóricas que se responden con el contenido del widget y tres de análisis de caso con datos propios. Responda todo antes de verificar.</p>
+
+  <div class="definicion">
+    <h4>Datos para las preguntas 8, 9 y 10</h4>
+    <p><strong>Textiles Manabí Sur S.A.</strong>, empresa manufacturera de Portoviejo, cierra su período mensual el <strong>31 de agosto de 2026</strong> y presenta la siguiente información:</p>
+    <ul>
+      <li>El <strong>1 de mayo de 2026</strong> contrató una póliza de seguro por <strong>12 meses</strong> con prima de <strong>2.400,00</strong>, pagada íntegramente y registrada como activo.</li>
+      <li>Posee una <strong>maquinaria</strong> con costo de <strong>43.200,00</strong>, valor residual estimado de <strong>3.600,00</strong> y vida útil de <strong>10 años</strong>, depreciada por línea recta.</li>
+      <li>Recibió un <strong>anticipo de 5.000,00</strong> de un cliente por un pedido de uniformes; al cierre ha entregado el <strong>40 %</strong> del pedido.</li>
+    </ul>
+  </div>
+
+  <div class="ej-item">
+    <span class="enun"><span class="badge badge-t">Teórica</span>1. ¿Qué distingue esencialmente a un asiento de ajuste de un asiento de transacción?</span>
+    <div class="opciones">
+      <label><input type="radio" name="qi1" value="a"> a) Que el asiento de ajuste siempre tiene un importe menor</label>
+      <label><input type="radio" name="qi1" value="b"> b) Que el asiento de ajuste se registra en el Libro Mayor y no en el Libro Diario</label>
+      <label><input type="radio" name="qi1" value="c"> c) Que el asiento de ajuste no se origina en un documento fuente externo, sino en el reconocimiento del devengo, del consumo o de una medición al cierre</label>
+      <label><input type="radio" name="qi1" value="d"> d) Que el asiento de ajuste corrige errores cometidos durante el período</label>
+    </div>
+    <div class="feedback" id="fqi1"></div>
+  </div>
+
+  <div class="ej-item">
+    <span class="enun"><span class="badge badge-t">Teórica</span>2. ¿Cuál de las siguientes cuentas <strong>no debería</strong> aparecer en un asiento de ajuste?</span>
+    <div class="opciones">
+      <label><input type="radio" name="qi2" value="a"> a) Inventario de mercaderías</label>
+      <label><input type="radio" name="qi2" value="b"> b) Bancos</label>
+      <label><input type="radio" name="qi2" value="c"> c) Anticipos de clientes</label>
+      <label><input type="radio" name="qi2" value="d"> d) (&minus;) Depreciación acumulada vehículos</label>
+    </div>
+    <div class="feedback" id="fqi2"></div>
+  </div>
+
+  <div class="ej-item">
+    <span class="enun"><span class="badge badge-t">Teórica</span>3. La base contable de acumulación o devengo establece que&hellip;</span>
+    <div class="opciones">
+      <label><input type="radio" name="qi3" value="a"> a) los efectos de las transacciones se reconocen cuando ocurren, y no cuando se cobra o se paga el efectivo correspondiente</label>
+      <label><input type="radio" name="qi3" value="b"> b) los ingresos se reconocen cuando el dinero ingresa a la cuenta bancaria de la empresa</label>
+      <label><input type="radio" name="qi3" value="c"> c) los gastos se reconocen únicamente cuando existe factura que los respalde</label>
+      <label><input type="radio" name="qi3" value="d"> d) todos los hechos económicos deben registrarse el último día del período</label>
+    </div>
+    <div class="feedback" id="fqi3"></div>
+  </div>
+
+  <div class="ej-item">
+    <span class="enun"><span class="badge badge-t">Teórica</span>4. Una empresa cobra por anticipado un servicio que prestará en los próximos cuatro meses. En el momento del cobro, ese valor se registra como&hellip;</span>
+    <div class="opciones">
+      <label><input type="radio" name="qi4" value="a"> a) ingreso del período, porque el dinero ya ingresó</label>
+      <label><input type="radio" name="qi4" value="b"> b) patrimonio, porque incrementa los recursos propios</label>
+      <label><input type="radio" name="qi4" value="c"> c) activo diferido, porque representa un derecho a favor de la empresa</label>
+      <label><input type="radio" name="qi4" value="d"> d) pasivo, porque representa la obligación presente de prestar el servicio o devolver el dinero</label>
+    </div>
+    <div class="feedback" id="fqi4"></div>
+  </div>
+
+  <div class="ej-item">
+    <span class="enun"><span class="badge badge-t">Teórica</span>5. ¿Por qué la estimación de incobrables se acredita a una cuenta regularizadora y no directamente a Cuentas por cobrar clientes?</span>
+    <div class="opciones">
+      <label><input type="radio" name="qi5" value="a"> a) Porque la normativa tributaria prohíbe modificar el saldo de clientes</label>
+      <label><input type="radio" name="qi5" value="b"> b) Porque al cierre no se sabe qué cliente específico dejará de pagar, y rebajar la cuenta principal haría que el auxiliar de clientes dejara de cuadrar con el mayor</label>
+      <label><input type="radio" name="qi5" value="c"> c) Porque las cuentas por cobrar solo pueden modificarse al cierre del ejercicio anual</label>
+      <label><input type="radio" name="qi5" value="d"> d) Porque la cuenta regularizadora es de naturaleza deudora y compensa el activo</label>
+    </div>
+    <div class="feedback" id="fqi5"></div>
+  </div>
+
+  <div class="ej-item">
+    <span class="enun"><span class="badge badge-t">Teórica</span>6. Un inventario fue rebajado a su valor neto realizable en 500,00. Al cierre siguiente, las circunstancias mejoran y el VNR aumenta en 900,00 respecto del valor rebajado. ¿Cuánto puede revertirse?</span>
+    <div class="opciones">
+      <label><input type="radio" name="qi6" value="a"> a) 900,00, porque es el aumento real del valor neto realizable</label>
+      <label><input type="radio" name="qi6" value="b"> b) 1.400,00, sumando la rebaja original y el aumento</label>
+      <label><input type="radio" name="qi6" value="c"> c) 500,00, porque la reversión no puede exceder la rebaja previamente reconocida</label>
+      <label><input type="radio" name="qi6" value="d"> d) Nada, porque las rebajas al valor neto realizable son definitivas</label>
+    </div>
+    <div class="feedback" id="fqi6"></div>
+  </div>
+
+  <div class="ej-item">
+    <span class="enun"><span class="badge badge-t">Teórica</span>7. ¿Cuál de las siguientes situaciones corresponde a un ajuste por <strong>acumulación</strong>?</span>
+    <div class="opciones">
+      <label><input type="radio" name="qi7" value="a"> a) Reconocer el consumo de suministros de oficina determinado por conteo</label>
+      <label><input type="radio" name="qi7" value="b"> b) Registrar la depreciación mensual del vehículo de reparto</label>
+      <label><input type="radio" name="qi7" value="c"> c) Reconocer la porción devengada de un seguro pagado por anticipado</label>
+      <label><input type="radio" name="qi7" value="d"> d) Reconocer las comisiones ganadas por los vendedores en agosto, que se pagarán en septiembre</label>
+    </div>
+    <div class="feedback" id="fqi7"></div>
+  </div>
+
+  <div class="ej-item">
+    <span class="enun"><span class="badge badge-c">Análisis de caso</span>8. Textiles Manabí Sur S.A. &mdash; ¿Cuál es el gasto de seguro devengado que debe reconocerse al 31 de agosto de 2026?</span>
+    <div class="opciones">
+      <label><input type="radio" name="qi8" value="a"> a) 800,00</label>
+      <label><input type="radio" name="qi8" value="b"> b) 200,00</label>
+      <label><input type="radio" name="qi8" value="c"> c) 1.600,00</label>
+      <label><input type="radio" name="qi8" value="d"> d) 2.400,00</label>
+    </div>
+    <div class="feedback" id="fqi8"></div>
+  </div>
+
+  <div class="ej-item">
+    <span class="enun"><span class="badge badge-c">Análisis de caso</span>9. Textiles Manabí Sur S.A. &mdash; ¿Cuál es la depreciación mensual de la maquinaria?</span>
+    <div class="opciones">
+      <label><input type="radio" name="qi9" value="a"> a) 360,00</label>
+      <label><input type="radio" name="qi9" value="b"> b) 3.960,00</label>
+      <label><input type="radio" name="qi9" value="c"> c) 330,00</label>
+      <label><input type="radio" name="qi9" value="d"> d) 390,00</label>
+    </div>
+    <div class="feedback" id="fqi9"></div>
+  </div>
+
+  <div class="ej-item">
+    <span class="enun"><span class="badge badge-c">Análisis de caso</span>10. Textiles Manabí Sur S.A. &mdash; ¿Cuál es el asiento de ajuste correcto por el anticipo del cliente?</span>
+    <div class="opciones">
+      <label><input type="radio" name="qi10" value="a"> a) Debitar Ingreso por ventas 2.000,00 y acreditar Anticipos de clientes 2.000,00</label>
+      <label><input type="radio" name="qi10" value="b"> b) Debitar Anticipos de clientes 2.000,00 y acreditar Ingreso por ventas 2.000,00</label>
+      <label><input type="radio" name="qi10" value="c"> c) Debitar Bancos 2.000,00 y acreditar Ingreso por ventas 2.000,00</label>
+      <label><input type="radio" name="qi10" value="d"> d) Debitar Anticipos de clientes 5.000,00 y acreditar Ingreso por ventas 5.000,00</label>
+    </div>
+    <div class="feedback" id="fqi10"></div>
+  </div>
+
+  <button class="btn" onclick="verificarCuestionario()">Verificar respuestas</button>
+  <button class="btn btn-sec" onclick="reiniciarCuestionario()">Reiniciar</button>
+
+  <div class="resultado" id="resCuestionario">
+    <span class="marca" id="marcaCu"></span>
+    <div class="cifra" id="cifraCu"></div>
+    <div class="barra"><div class="barra-relleno" id="barraCu"></div></div>
+    <div id="msgCu"></div>
+  </div>
+</div>
+
+<!-- ============ ACTIVIDAD CON IA ============ -->
+<div class="panel" id="ia">
+  <h2>Actividad con Inteligencia Artificial</h2>
+  <p class="subt">Resuelva primero a mano. Después consulte a la IA. Al final, audítela. En ese orden.</p>
+
+  <div class="alerta">
+    <h4>Por qué este orden y no otro</h4>
+    <p>Si usted pregunta primero y calcula después, su cerebro ya tiene una respuesta que defender y dejará de razonar. Si calcula primero, la consulta se convierte en una verificación y usted conserva el criterio. Esta actividad está diseñada para que la IA trabaje <strong>para</strong> usted y no <strong>en lugar de</strong> usted. Use <strong>claude.ai</strong>, que es gratuito y suficiente para esta tarea.</p>
+  </div>
+
+  <h3>Fase 1 &mdash; Resuelva usted, en papel, sin ayuda</h3>
+  <div class="definicion">
+    <h4>Caso: Exportadora Manglar Verde Cía. Ltda.</h4>
+    <p>Empresa exportadora de camarón congelado con planta en Machala, provincia de El Oro. Cierra su período mensual el <strong>31 de agosto de 2026</strong>, lleva inventario por sistema permanente valorado por FIFO y liquida intereses sobre <strong>año comercial de 360 días</strong>. Al cierre dispone de esta información:</p>
+    <ul>
+      <li><strong>(a)</strong> El 1 de junio de 2026 contrató una póliza anual de seguro de carga por <strong>5.000,00</strong>, pagada íntegramente y registrada como activo.</li>
+      <li><strong>(b)</strong> Un vehículo refrigerado con costo de <strong>36.000,00</strong>, valor residual estimado de <strong>6.000,00</strong> y vida útil de <strong>8 años</strong>, depreciado por línea recta.</li>
+      <li><strong>(c)</strong> El 6 de agosto de 2026 obtuvo un préstamo de <strong>20.000,00</strong> al <strong>10,5 % anual</strong>; al cierre han transcurrido <strong>25 días</strong> sin pago de intereses.</li>
+      <li><strong>(d)</strong> El Kardex del artículo <strong>CV-90</strong> registra <strong>120 unidades a 62,40</strong>. El conteo físico arrojó <strong>117 unidades</strong>.</li>
+      <li><strong>(e)</strong> El valor neto realizable del artículo CV-90 al cierre se estimó en <strong>59,00</strong> por unidad.</li>
+    </ul>
+    <p>Calcule los cinco ajustes, redacte los cinco asientos con su glosa y determine el valor final del inventario. Anote sus resultados antes de continuar.</p>
+  </div>
+
+  <h3>Fase 2 &mdash; Corrija el prompt <em>antes</em> de enviarlo</h3>
+  <p>El siguiente prompt contiene <strong>cuatro errores deliberados</strong>. Si lo envía tal como está, la IA le devolverá cifras equivocadas con total seguridad y con excelente redacción, que es exactamente lo peligroso. Encuéntrelos, corríjalos y solo entonces envíelo.</p>
+
+  <div class="prompt-box">Actúa como docente de Contabilidad General. Necesito los asientos de ajuste al 31/08/2026 de Exportadora Manglar Verde Cía. Ltda., que cierra mensualmente.
+
+Datos:
+(a) Póliza anual de seguro de carga de 5.000,00 pagada el 01/06/2026 y registrada como activo.
+(b) Vehículo refrigerado: costo 36.000,00, valor residual 6.000,00, vida útil 8 años, línea recta.
+    Calcula la depreciación mensual dividiendo el costo total para la vida útil.
+(c) Préstamo de 20.000,00 al 10,5 % anual obtenido el 06/08/2026, 25 días transcurridos.
+    Usa año calendario de 365 días.
+(d) Artículo CV-90: Kardex 120 unidades a 62,40. Conteo físico: 117 unidades.
+    Valora el faltante al precio de venta de 75,00 por unidad.
+(e) Valor neto realizable de CV-90: 59,00 por unidad.
+    Calcula la rebaja sobre las 120 unidades que constan en el Kardex.
+
+Presenta cada asiento con columnas Fecha / Código / Detalle / Debe / Haber, con su glosa,
+y al final el valor en libros del inventario.</div>
+
+  <div class="nota-lateral">
+    <h4>Pistas, no respuestas</h4>
+    <p>Los cuatro errores están en las líneas de <em>instrucción</em>, no en los datos. Uno contradice la definición de importe depreciable; otro contradice una convención declarada del caso; otro confunde costo con precio; y otro aplica un cálculo sobre unidades que ya no existen. Revise el Tema 5 y el Tema 6 antes de decidir.</p>
+  </div>
+
+  <h3>Fase 3 &mdash; Audite la respuesta</h3>
+  <p>Con el prompt ya corregido, envíelo y someta la respuesta a este control. No acepte ninguna cifra sin verificarla contra su hoja:</p>
+  <ol class="pasos">
+    <li><strong>¿La depreciación descuenta el valor residual?</strong> Debe partir de un importe depreciable de 30.000,00 y no de 36.000,00. La diferencia entre hacerlo bien y mal es de 62,50 mensuales, que en ocho años son 6.000,00.</li>
+    <li><strong>¿El faltante está valorado al costo?</strong> Un faltante se registra al costo de la mercadería perdida, nunca al precio de venta: la empresa perdió lo que le costó, no la utilidad que esperaba.</li>
+    <li><strong>¿La rebaja al VNR se calculó sobre las unidades que realmente existen?</strong> Primero se ajusta la cantidad, después el valor. Aplicar la rebaja sobre 120 unidades cuando solo hay 117 infla la pérdida.</li>
+    <li><strong>Verifique el redondeo del seguro.</strong> Si la IA calcula la cuota mensual como 5.000,00 / 12 = 416,67 y luego la multiplica por tres, obtendrá 1.250,01. Si calcula directamente 5.000,00 &times; 3 / 12, obtendrá 1.250,00. Un centavo de diferencia por el orden de las operaciones. Decida cuál de los dos caminos adopta como política y justifíquelo.</li>
+    <li><strong>Verifique el interés.</strong> Con año comercial: 20.000,00 &times; 10,5 % &times; 25 / 360 = 145,8333&hellip;, que se presenta como 145,83. Pregúntese si la IA truncó o redondeó, y si lo declaró.</li>
+    <li><strong>Compruebe el cuadre final del inventario</strong> por dos caminos independientes: valor del Kardex menos faltante menos rebaja, y unidades reales por VNR unitario. Si los dos caminos no coinciden, hay un error en algún paso.</li>
+  </ol>
+
+  <h3>Fase 4 &mdash; Entregable</h3>
+  <div class="ejemplo">
+    <h4>Qué debe entregar</h4>
+    <p>Un documento de una a dos páginas con: <strong>(1)</strong> los cuatro errores del prompt, identificados y explicados con el fundamento conceptual de cada uno; <strong>(2)</strong> sus cinco asientos resueltos a mano; <strong>(3)</strong> la respuesta de la IA; <strong>(4)</strong> una tabla de tres columnas &mdash;concepto, su cifra, cifra de la IA&mdash; señalando toda diferencia; y <strong>(5)</strong> un párrafo final en el que usted <em>decide</em> cuál cifra es correcta y por qué, incluida la del centavo del seguro.</p>
+  </div>
+
+  <div class="alerta">
+    <h4>Criterio de evaluación: qué distingue el pensamiento crítico de la copia</h4>
+    <p>Un trabajo que solo pega la respuesta de la IA se reconoce de inmediato: no menciona los errores del prompt, no explica el redondeo y presenta las cifras sin contraste. Un trabajo con criterio profesional <strong>identifica los cuatro errores, sostiene una decisión sobre el centavo del seguro y explica por qué el faltante va al costo y no al precio de venta</strong>. La diferencia no está en tener la respuesta correcta, sino en poder defenderla ante alguien que pregunte por qué.</p>
+  </div>
+</div>
+
+<!-- ============ REFLEXIÓN ============ -->
+<div class="panel" id="reflexion">
+  <h2>Reflexión</h2>
+  <p class="subt">Sin respuestas correctas. Escriba lo que piensa realmente.</p>
+
+  <div class="definicion">
+    <h4>Antes de empezar: qué es realmente Negocios Internacionales</h4>
+    <p>Es frecuente que se entienda esta carrera como si consistiera únicamente en <em>negociar</em>: sentarse frente a una contraparte extranjera y conseguir un buen precio. Esa es una parte, y no la más grande. Un profesional de Negocios Internacionales analiza costos y determina si una operación es viable; lee estados financieros de empresas extranjeras para decidir con quién asociarse; diseña y controla cadenas de abastecimiento; gestiona riesgo cambiario y financiamiento internacional; aplica normativa aduanera y tributaria de más de un país; y sustenta sus decisiones ante socios, bancos y organismos de control. <strong>La clase de hoy pertenece de lleno a ese trabajo:</strong> quien no sabe qué hechos exigen ajuste no puede saber si una operación internacional realmente ganó dinero o solo movió efectivo.</p>
+  </div>
+
+  <div class="reflexion-q">
+    <h4>1. De la despensa al contenedor</h4>
+    <p>Piense en un objeto concreto de su casa que se consume sin que nadie le avise: el gas, el detergente, los datos de su plan celular. Nadie le emite una factura por lo consumido cada día. Ahora imagine que ese objeto no es suyo, sino de un negocio familiar donde trabajan tres personas, con un proveedor que da crédito y un banco que evalúa si les presta. ¿Qué pasaría si nadie midiera nunca lo que se consume? ¿Quiénes se verían afectados, en qué orden? Y si ese negocio quisiera importar directamente desde Perú o Colombia, ¿por qué la contraparte extranjera exigiría ver números medidos y no estimados a ojo? Escriba la cadena completa, desde el objeto hasta el proveedor extranjero.</p>
+  </div>
+
+  <div class="reflexion-q">
+    <h4>2. Su propio desfase entre pagar y consumir</h4>
+    <p>Haga una lista de todo lo que usted paga por adelantado y consume después: suscripciones, plan de datos, matrícula, transporte, seguros. Sume el valor mensual. ¿Cuánto de eso está consumiendo realmente y cuánto está pagando sin usar? ¿Cambiaría alguna decisión si llevara ese registro? Esta pregunta no es un ejercicio contable disfrazado: es la aplicación literal del Tema 4 a su economía personal.</p>
+  </div>
+
+  <div class="reflexion-q">
+    <h4>3. Reconocer una pérdida cuesta emocionalmente</h4>
+    <p>Registrar un faltante es admitir que algo se perdió bajo su responsabilidad. Estimar incobrables es admitir que confió en alguien que probablemente no le pagará. Rebajar un inventario al VNR es admitir que la compra que usted defendió no valió lo que costó. Los tres asientos tienen algo en común: <strong>obligan a reconocer un error o una pérdida por escrito</strong>. Recuerde una situación personal en la que le costó admitir que algo no funcionó. ¿Qué sintió? ¿Cuánto tiempo tardó en aceptarlo? ¿Qué habría cambiado si lo hubiera reconocido antes? ¿Ve alguna relación entre esa dificultad personal y la tentación profesional de no registrar un ajuste que reduce la utilidad?</p>
+  </div>
+
+  <div class="reflexion-q">
+    <h4>4. La presión que va a llegar</h4>
+    <p>Imagine que trabaja en el área contable de una empresa exportadora. El cierre de agosto arroja utilidad, pero al practicar los ajustes esa utilidad cae 30 %. El gerente le dice: "esos ajustes déjalos para el mes que viene, ahora necesitamos mostrar un buen resultado al banco". Usted sabe que la instrucción es incorrecta. ¿Qué hace, concretamente? ¿Qué diría, con qué palabras y a quién? ¿Qué necesitaría tener preparado <em>antes</em> de que ese momento llegue para poder sostener su posición sin quedarse sin argumentos ni sin trabajo?</p>
+  </div>
+
+  <div class="reflexion-q">
+    <h4>5. Exploración vocacional</h4>
+    <p>De las cuatro áreas de Negocios Internacionales &mdash;<strong>comercio exterior</strong>, <strong>finanzas internacionales</strong>, <strong>marketing y negociación internacional</strong>, <strong>marco legal y normativo</strong>&mdash;, ¿en cuál se imagina trabajando dentro de cinco años? Ahora vuelva a la clase de hoy y pregúntese: ¿qué parte específica de lo que estudiamos sería indispensable en esa área? Si su respuesta es "ninguna", vuelva a leer el Tema 7 y responda otra vez. Y una segunda pregunta, más incómoda: ¿eligió esa área porque le atrae el trabajo, o porque cree que se le da bien? No son lo mismo, y confundirlas cuesta años.</p>
+  </div>
+
+  <div class="reflexion-q">
+    <h4>6. Lo que aprendió hoy sobre su forma de aprender</h4>
+    <p>De los siete temas de hoy, ¿cuál le costó más? ¿Fue por la aritmética, por el concepto o por la cantidad de casos? Si mañana tuviera que explicarle a un compañero la diferencia entre acumulación y diferimiento sin mirar el widget, ¿podría? Identifique el punto exacto donde se sintió perdido y anótelo: ese es el punto al que debe volver antes del Día 12.</p>
+  </div>
+</div>
+
+<!-- ============ BIBLIOGRAFÍA ============ -->
+<div class="panel" id="biblio">
+  <h2>Bibliografía</h2>
+  <p class="subt">Referencias en formato APA, séptima edición.</p>
+
+  <div class="biblio-card">Zapata Sánchez, P. (2011). <em>Laboratorio de contabilidad general</em> (7.ª ed.). McGraw-Hill.<span>Texto básico del sílabo. Desarrollo de los asientos de ajuste dentro del proceso contable.</span></div>
+  <div class="biblio-card">Zapata Sánchez, P. (2017). <em>Contabilidad general: con base en Normas Internacionales de Información Financiera</em> (8.ª ed.). Alfaomega.<span>Tratamiento de ajustes, depreciación y provisiones bajo NIIF en el contexto ecuatoriano.</span></div>
+  <div class="biblio-card">Vite Rangel, V. T. (s. f.). <em>Contabilidad general</em>. Editorial Digital UNID. https://elibro.net/es/ereader/uguayaquil/41179<span>Disponible en la biblioteca virtual de la Universidad de Guayaquil.</span></div>
+  <div class="biblio-card">Moreno Fernández, J. A. (2014). <em>Contabilidad básica</em> (4.ª ed.). Grupo Editorial Patria.<span>Referencia del sílabo. Fundamentos del devengo y del cierre contable.</span></div>
+  <div class="biblio-card">Guajardo Cantú, G., &amp; Andrade de Guajardo, N. E. (2014). <em>Contabilidad financiera</em> (6.ª ed.). McGraw-Hill.<span>Capítulo sobre ajustes: acumulaciones, diferimientos, depreciación y estimaciones.</span></div>
+  <div class="biblio-card">IFRS Foundation. (2023). <em>NIC 1 Presentación de Estados Financieros</em>. En Normas NIIF de Contabilidad. https://www.ifrs.org<span>Base contable de acumulación y requisitos generales de presentación.</span></div>
+  <div class="biblio-card">IFRS Foundation. (2023). <em>NIC 2 Inventarios</em>. En Normas NIIF de Contabilidad. https://www.ifrs.org<span>Medición al menor entre costo y valor neto realizable, reconocimiento de la rebaja y su reversión.</span></div>
+  <div class="biblio-card">IFRS Foundation. (2023). <em>NIC 16 Propiedades, Planta y Equipo</em>. En Normas NIIF de Contabilidad. https://www.ifrs.org<span>Importe depreciable, vida útil, valor residual y métodos de depreciación.</span></div>
+  <div class="biblio-card">Congreso Nacional del Ecuador. (2004). <em>Ley de Régimen Tributario Interno</em> (Codificación 2004-026). Registro Oficial Suplemento 463. https://www.sri.gob.ec<span>Deducibilidad de provisiones por créditos incobrables y límites de depreciación.</span></div>
+  <div class="biblio-card">Servicio de Rentas Internas. (2026). <em>Resolución NAC-DGERCGC26-00000009</em>. https://www.sri.gob.ec<span>Porcentajes de retención en la fuente del impuesto a la renta vigentes desde marzo de 2026.</span></div>
+  <div class="biblio-card">Superintendencia de Compañías, Valores y Seguros. (s. f.). <em>Estructura de estados financieros bajo NIIF</em>. https://www.supercias.gob.ec<span>Denominación de cuentas regularizadoras y requisitos de reporte societario.</span></div>
+
+  <div class="nota-lateral">
+    <h4>Recomendación</h4>
+    <p>Verifique siempre la vigencia y los datos exactos de cada referencia en <strong>Google Scholar</strong>, en el <strong>repositorio institucional de la Universidad de Guayaquil</strong> o en la biblioteca virtual eLibro antes de citarla en un trabajo académico. Las normas tributarias ecuatorianas se reforman con frecuencia: confirme siempre la versión vigente en el portal del SRI antes de aplicar un porcentaje.</p>
+  </div>
+</div>
+
+<div class="pie">
+  Contabilidad General &middot; Universidad de Guayaquil &middot; Facultad de Ciencias Administrativas &middot; Carrera de Negocios Internacionales<br>
+  Día 11 &mdash; Asientos de ajuste (proceso contable, II parte) &middot; Unidad 3 &middot; Período Académico Extraordinario 2026
+</div>
+
+</div><!-- fin contenedor -->
+
+<script>
+/* ============================================================
+   1. NAVEGACIÓN POR PESTAÑAS
+   ============================================================ */
+function showTab(id, btn){
+  var paneles = document.querySelectorAll('.panel');
+  for(var i=0;i<paneles.length;i++){ paneles[i].classList.remove('visible'); }
+  document.getElementById(id).classList.add('visible');
+  var botones = document.querySelectorAll('#navTabs button');
+  for(var j=0;j<botones.length;j++){ botones[j].classList.remove('active'); }
+  btn.classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* ============================================================
+   2. ACORDEÓN DEL REPASO
+   ============================================================ */
+function toggleAcordeon(cab){
+  cab.parentElement.classList.toggle('abierto');
+  var flecha = cab.querySelector('.acc-flecha');
+  flecha.innerHTML = cab.parentElement.classList.contains('abierto') ? '&#9660;' : '&#9654;';
+}
+
+/* ============================================================
+   3. EJERCICIO INTERACTIVO — claves y retroalimentación
+   ============================================================ */
+var respEjercicio = {ei1:'b', ei2:'c', ei3:'b', ei4:'c', ei5:'a', ei6:'d', ei7:'a', ei8:'d', ei9:'c'};
+
+var retroEjercicio = {
+ ei1:'El arriendo de 3.600,00 cubre seis meses, de modo que el costo mensual es 600,00. Al 31 de agosto han transcurrido julio y agosto: 600,00 x 2 = 1.200,00 de gasto devengado. Los 2.400,00 restantes permanecen como activo porque corresponden a meses que la empresa todavía no ha ocupado. Elegir 3.600,00 sería aplicar base de efectivo; elegir 600,00 olvidaría que julio también transcurrió y que el ajuste al 31 de agosto debe recoger todo lo devengado desde el pago.',
+ ei2:'Es un diferimiento: el desembolso ya ocurrió por completo el 1 de julio y el consumo se produce mes a mes con el paso del tiempo. No es acumulación, porque en la acumulación el dinero todavía no se ha movido. No es estimación, porque no hay incertidumbre: el reparto es una división exacta fijada por contrato. Y no es comprobación, porque no se contrasta ninguna existencia física.',
+ ei3:'Cinco empleados por cuatro días a 30,00 diarios son 600,00 de sueldos ya devengados. Debe reconocerse el gasto de agosto contra un pasivo, porque el trabajo ya se prestó pero el pago ocurre en septiembre. Acreditar Bancos sería falso: no ha salido dinero, y además ningún ajuste mueve efectivo. La opción invertida confunde la naturaleza de las cuentas. Y no ajustar dejaría a agosto con ingresos generados por un trabajo cuyo costo aparecería en septiembre.',
+ ei4:'El importe depreciable es 12.000,00 menos 1.200,00 de valor residual, es decir 10.800,00. Dividido para 10 años da 1.080,00 anuales, y para 12 meses, 90,00 mensuales. La opción de 100,00 es el error más frecuente: ignorar el valor residual y dividir el costo total. La de 1.080,00 confunde la cuota anual con la mensual. Recuerde: el valor residual se resta antes de dividir, nunca después.',
+ ei5:'El Kardex registra 240 unidades y el conteo arroja 236, de modo que faltan 4 unidades. Valoradas al costo de 18,50 dan 74,00. Las 4 unidades son la diferencia física, no el importe. Los 4.366,00 son el saldo del inventario después del ajuste, y los 4.440,00 el saldo antes. El faltante siempre se valora al costo del inventario, nunca al precio de venta.',
+ ei6:'Primero se ajusta la cantidad y después el valor. Tras el faltante quedan 236 unidades reales. La rebaja unitaria es 18,50 menos 17,00, es decir 1,50, y multiplicada por 236 unidades da 354,00. La opción de 360,00 aplica la rebaja sobre las 240 unidades del Kardex, que ya no existen. Los 4.012,00 son el valor final del inventario y 1,50 es solo la rebaja unitaria.',
+ ei7:'8.000,00 por 9 % anual por 20 días sobre año comercial de 360 da 40,00. El dinero de la empresa trabajó veinte días de agosto y ese rendimiento pertenece a agosto aunque se cobre después: es un ingreso acumulado por cobrar. Esperar al vencimiento sería aplicar base de efectivo. Los 720,00 corresponden a un año completo de intereses.',
+ ei8:'El disponible del período es 260,00 de saldo inicial más 140,00 de compras, es decir 400,00. Como el conteo arroja 165,00 en existencia, el consumo es 400,00 menos 165,00 = 235,00. Elegir 140,00 confundiría la compra con el consumo, y 165,00 es justamente lo que NO se consumió. El consumo de suministros se determina por diferencia porque nadie lleva un registro unitario de su salida.',
+ ei9:'Pagar en efectivo la planilla de julio es un asiento de transacción: tiene documento fuente, mueve Bancos y cancela un pasivo ya reconocido. Las otras tres son ajustes clásicos: la energía consumida sin planilla es una acumulación, el anticipo devengado es un diferimiento y la estimación de incobrables es una estimación. La Regla 2 del Tema 2 resuelve la pregunta sin más análisis: un ajuste nunca mueve efectivo.'
+};
+
+function verificarEjercicio(){
+  var faltan = [];
+  for(var k in respEjercicio){
+    if(!document.querySelector('input[name="'+k+'"]:checked')){ faltan.push(k.replace('ei','')); }
+  }
+  if(faltan.length > 0){
+    alert('Aún faltan por responder los ítems: ' + faltan.join(', ') + '. Responda todos antes de verificar.');
+    return;
+  }
+  var aciertos = 0, total = 0;
+  for(var key in respEjercicio){
+    total++;
+    var sel = document.querySelector('input[name="'+key+'"]:checked').value;
+    var fb = document.getElementById('f'+key);
+    fb.classList.add('visible');
+    if(sel === respEjercicio[key]){
+      aciertos++;
+      fb.classList.add('ok'); fb.classList.remove('mal');
+      fb.innerHTML = '<strong>Correcto.</strong> ' + retroEjercicio[key];
+    } else {
+      fb.classList.add('mal'); fb.classList.remove('ok');
+      fb.innerHTML = '<strong>Incorrecto. La respuesta correcta es la opción ' + respEjercicio[key] + ').</strong> ' + retroEjercicio[key];
+    }
+  }
+  mostrarResultado(aciertos, total, 'resEjercicio', 'marcaEj', 'cifraEj', 'barraEj', 'msgEj');
+}
+
+function reiniciarEjercicio(){
+  for(var key in respEjercicio){
+    var radios = document.getElementsByName(key);
+    for(var i=0;i<radios.length;i++){ radios[i].checked = false; }
+    var fb = document.getElementById('f'+key);
+    fb.classList.remove('visible','ok','mal');
+    fb.innerHTML = '';
+  }
+  var r = document.getElementById('resEjercicio');
+  r.classList.remove('visible');
+  document.getElementById('barraEj').style.width = '0';
+}
+
+/* ============================================================
+   4. CUESTIONARIO — claves y retroalimentación
+   ============================================================ */
+var respCuestionario = {qi1:'c', qi2:'b', qi3:'a', qi4:'d', qi5:'b', qi6:'c', qi7:'d', qi8:'a', qi9:'c', qi10:'b'};
+
+var retroCuestionario = {
+ qi1:'El asiento de transacción nace de un documento fuente externo: factura, comprobante de retención, papeleta de depósito. El asiento de ajuste nace del análisis del contador sobre el paso del tiempo, el consumo, el desgaste, la estimación o la comprobación física, sin que ningún tercero emita documento. El importe no distingue nada, ambos se registran en el Libro Diario y se mayorizan igual, y la corrección de errores es una figura distinta del ajuste.',
+ qi2:'Bancos. La Regla 2 del Tema 2 establece que un ajuste jamás mueve efectivo, porque reconoce hechos que todavía no pasan por caja o que ya pasaron en un momento anterior. Si un supuesto ajuste debita o acredita Caja o Bancos, casi con seguridad es una transacción no registrada o una corrección de error. Las otras tres cuentas aparecen habitualmente en ajustes: inventario en faltantes, anticipos de clientes en diferimientos e ingresos, y la depreciación acumulada en estimaciones.',
+ qi3:'La base de acumulación o devengo reconoce los efectos de las transacciones cuando ocurren, con independencia del momento del cobro o del pago, y los informa en los períodos con los que se relacionan. Reconocer por el ingreso del dinero es la base de efectivo, que la NIC 1 admite únicamente para el estado de flujos de efectivo. Condicionar el gasto a la existencia de factura confunde el reconocimiento contable con el sustento tributario. Y no todos los hechos se registran al cierre: solo los ajustes.',
+ qi4:'Como pasivo. La empresa recibió dinero sin haber cumplido todavía su parte: debe el servicio o la devolución del dinero, que es la definición de obligación presente del Marco Conceptual. Solo cuando presta el servicio el pasivo se extingue y aparece el ingreso. Registrarlo como ingreso adelanta una utilidad no ganada; no es patrimonio porque no proviene de los socios; y no es un activo, porque la empresa no adquirió ningún derecho: contrajo una obligación.',
+ qi5:'Porque al cierre se sabe que una parte de la cartera no se recuperará, pero no qué cliente concreto dejará de pagar. Si se rebajara directamente Cuentas por cobrar clientes, el auxiliar individual dejaría de cuadrar con el mayor y se perdería el control de la cartera. La cuenta regularizadora permite presentar simultáneamente lo que los clientes deben y la porción que probablemente no llegue. Además, la cuenta regularizadora es de naturaleza acreedora, no deudora.',
+ qi6:'Solo 500,00. Dentro del contenido de la NIC 2 se establece que la reversión no puede exceder el importe de la rebaja previamente reconocida, de modo que el inventario nunca supere su costo original. Revertir los 900,00 llevaría el inventario por encima del costo y convertiría una expectativa de mercado en utilidad registrada. Sumar ambos importes carece de sentido. Y las rebajas no son definitivas: la norma prevé expresamente su reversión cuando desaparecen las circunstancias que las causaron.',
+ qi7:'Las comisiones ganadas en agosto y pagaderas en septiembre son una acumulación: el hecho económico está completo y solo falta el movimiento de efectivo. El consumo de suministros y el seguro devengado son diferimientos, porque el dinero se movió antes y ahora se reparte. La depreciación es una estimación, porque mide un desgaste que ningún tercero factura.',
+ qi8:'La prima de 2.400,00 cubre doce meses, es decir 200,00 mensuales. Desde el 1 de mayo hasta el 31 de agosto transcurrieron cuatro meses: 200,00 x 4 = 800,00 de gasto devengado. Los 1.600,00 son el saldo que permanece como activo por los ocho meses restantes, y los 2.400,00 la prima total. Los 200,00 corresponderían a un solo mes, no a los cuatro transcurridos.',
+ qi9:'El importe depreciable es 43.200,00 menos 3.600,00 de valor residual, es decir 39.600,00. Dividido para 10 años da 3.960,00 anuales y, entre 12 meses, 330,00 mensuales. La opción de 360,00 ignora el valor residual (43.200,00 / 10 / 12). Los 3.960,00 son la cuota anual, no la mensual. El error clásico está en no restar el residual antes de dividir.',
+ qi10:'Se debita Anticipos de clientes por 2.000,00 (el 40 % de 5.000,00) y se acredita el ingreso por el mismo valor. El pasivo disminuye porque la empresa ya cumplió esa parte de su obligación, y por eso aparece al Debe pese a ser una cuenta acreedora. La opción invertida crearía un pasivo en lugar de extinguirlo, Bancos no interviene en ningún ajuste, y devengar los 5.000,00 completos reconocería como ingreso el 60 % del pedido que aún no se ha entregado.'
+};
+
+function verificarCuestionario(){
+  var faltan = [];
+  for(var k in respCuestionario){
+    if(!document.querySelector('input[name="'+k+'"]:checked')){ faltan.push(k.replace('qi','')); }
+  }
+  if(faltan.length > 0){
+    alert('Aún faltan por responder las preguntas: ' + faltan.join(', ') + '. Responda todas antes de verificar.');
+    return;
+  }
+  var aciertos = 0, total = 0;
+  for(var key in respCuestionario){
+    total++;
+    var sel = document.querySelector('input[name="'+key+'"]:checked').value;
+    var fb = document.getElementById('f'+key);
+    fb.classList.add('visible');
+    if(sel === respCuestionario[key]){
+      aciertos++;
+      fb.classList.add('ok'); fb.classList.remove('mal');
+      fb.innerHTML = '<strong>Correcto.</strong> ' + retroCuestionario[key];
+    } else {
+      fb.classList.add('mal'); fb.classList.remove('ok');
+      fb.innerHTML = '<strong>Incorrecto. La respuesta correcta es la opción ' + respCuestionario[key] + ').</strong> ' + retroCuestionario[key];
+    }
+  }
+  mostrarResultado(aciertos, total, 'resCuestionario', 'marcaCu', 'cifraCu', 'barraCu', 'msgCu');
+}
+
+function reiniciarCuestionario(){
+  for(var key in respCuestionario){
+    var radios = document.getElementsByName(key);
+    for(var i=0;i<radios.length;i++){ radios[i].checked = false; }
+    var fb = document.getElementById('f'+key);
+    fb.classList.remove('visible','ok','mal');
+    fb.innerHTML = '';
+  }
+  var r = document.getElementById('resCuestionario');
+  r.classList.remove('visible');
+  document.getElementById('barraCu').style.width = '0';
+}
+
+/* ============================================================
+   5. RESULTADO CON BARRA ANIMADA Y EMOJI POR RANGO
+   ============================================================ */
+function mostrarResultado(aciertos, total, idRes, idMarca, idCifra, idBarra, idMsg){
+  var pct = Math.round((aciertos / total) * 1000) / 10;
+  var marca, msg;
+  if(pct === 100){ marca = '\uD83C\uDFC6'; msg = 'Dominio completo del tema. Está listo para el balance de comprobación ajustado del Día 12.'; }
+  else if(pct >= 80){ marca = '\uD83C\uDFAF'; msg = 'Muy buen desempeño. Revise la retroalimentación de los ítems fallados antes de avanzar.'; }
+  else if(pct >= 60){ marca = '\uD83D\uDCD8'; msg = 'Base aceptable. Vuelva a los temas donde falló y rehaga el ejercicio: los ajustes se consolidan practicando.'; }
+  else if(pct >= 40){ marca = '\u26A0\uFE0F'; msg = 'Todavía hay confusión entre las familias de ajustes. Relea los Temas 2 a 6 y reintente antes del Día 12.'; }
+  else { marca = '\uD83D\uDCD6'; msg = 'Conviene recorrer nuevamente el widget desde el Tema 1. No avance al Día 12 sin dominar estas cuatro familias.'; }
+
+  document.getElementById(idMarca).innerHTML = marca;
+  document.getElementById(idCifra).innerHTML = aciertos + ' de ' + total + ' &middot; ' + pct + ' %';
+  document.getElementById(idMsg).innerHTML = msg;
+  document.getElementById(idRes).classList.add('visible');
+  setTimeout(function(){ document.getElementById(idBarra).style.width = pct + '%'; }, 120);
+  document.getElementById(idRes).scrollIntoView({behavior:'smooth', block:'center'});
+}
+</script>
+</body>
+</html>

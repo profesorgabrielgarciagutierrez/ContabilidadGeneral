@@ -1,0 +1,1561 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Día 13 — Ejercicio integrador de una compañía comercial (I): del hecho económico al Libro Diario</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+
+/* ============ BASE ============ */
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Source Sans 3',sans-serif;font-size:17px;line-height:1.75;color:#1c2733;background:#eef2f6}
+.container{max-width:1180px;margin:0 auto;background:#fff;box-shadow:0 0 28px rgba(0,0,0,.10)}
+h1,h2,h3,h4{font-family:'Lora',serif;line-height:1.3}
+p{margin-bottom:15px;text-align:justify}
+ul,ol{margin:0 0 15px 26px}
+li{margin-bottom:9px;text-align:justify}
+strong{font-weight:700;color:#00264d}
+em{font-style:italic}
+
+/* ============ ENCABEZADO ============ */
+.header{background:#003366;color:#fff;padding:30px 26px 26px}
+.header h1{font-size:1.85em;color:#fff;margin-bottom:8px}
+.header .inst{font-size:.95em;color:#cfe4f7;letter-spacing:.4px;text-transform:uppercase;font-weight:600}
+.header .sub{font-size:1.02em;color:#eaf4ff;margin-top:10px}
+.header .meta{margin-top:16px;display:flex;flex-wrap:wrap;gap:9px}
+.header .chip{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.42);color:#fff;padding:5px 13px;border-radius:16px;font-size:.83em;font-weight:600}
+
+/* ============ PESTAÑAS ============ */
+.tabs{background:#87CEEB;display:flex;overflow-x:auto;white-space:nowrap;border-bottom:3px solid #003366;-webkit-overflow-scrolling:touch}
+.tab{background:transparent;border:none;color:#000;font-family:'Source Sans 3',sans-serif;font-size:.92em;font-weight:600;padding:14px 17px;cursor:pointer;flex:0 0 auto;border-right:1px solid rgba(0,51,102,.20);transition:background .15s}
+.tab:hover{background:rgba(255,255,255,.55)}
+.tab.active{background:#fff;color:#003366;font-weight:700}
+.panel{display:none;padding:30px 30px 46px}
+.panel.active{display:block}
+.panel h2{font-size:1.6em;color:#003366;border-bottom:3px solid #87CEEB;padding-bottom:9px;margin-bottom:20px}
+.panel h3{font-size:1.24em;color:#004a80;margin:26px 0 12px}
+.panel h4{font-size:1.06em;color:#00264d;margin:18px 0 9px}
+
+/* ============ RECUADROS ============ */
+.definicion{background:#eaf3fb;border-left:6px solid #003366;padding:16px 20px;margin:18px 0;border-radius:0 7px 7px 0}
+.definicion .rot{font-family:'Lora',serif;font-weight:700;color:#003366;display:block;margin-bottom:6px;font-size:1.03em}
+.ejemplo{background:#fffaf0;border-left:6px solid #d99500;padding:16px 20px;margin:18px 0;border-radius:0 7px 7px 0}
+.ejemplo .rot{font-family:'Lora',serif;font-weight:700;color:#a06d00;display:block;margin-bottom:6px;font-size:1.03em}
+.alerta{background:#fdecea;border-left:6px solid #c0392b;padding:16px 20px;margin:18px 0;border-radius:0 7px 7px 0}
+.alerta .rot{font-family:'Lora',serif;font-weight:700;color:#9b2d20;display:block;margin-bottom:6px;font-size:1.03em}
+.nota-lateral{background:#f4f6f8;border:1px dashed #8b9aa8;padding:14px 18px;margin:18px 0;border-radius:7px;font-size:.96em;color:#33424f}
+.nota-lateral .rot{font-weight:700;color:#33424f;display:block;margin-bottom:5px}
+.formula{background:#00264d;color:#eaf4ff;padding:17px 20px;margin:18px 0;border-radius:8px;font-family:'Courier New',monospace;font-size:1.02em;text-align:center;line-height:1.9;overflow-x:auto}
+.formula b{color:#87CEEB}
+.conclusion{background:#e8f5ec;border:2px solid #2e7d4f;border-radius:9px;padding:17px 21px;margin:24px 0 8px}
+.conclusion .rot{font-family:'Lora',serif;font-weight:700;color:#1e5c39;display:block;margin-bottom:6px;font-size:1.06em}
+.carrera-box{background:#f0faf3;border:2px dashed #2e7d4f;border-radius:9px;padding:17px 21px;margin:22px 0}
+.carrera-box .rot{font-family:'Lora',serif;font-weight:700;color:#1e5c39;display:block;margin-bottom:9px;font-size:1.05em}
+.carrera-box ul{margin:0 0 0 22px}
+.carrera-box li{margin-bottom:8px}
+.futuro{background:#f3eefc;border-left:6px solid #6b3fa0;padding:16px 20px;margin:18px 0;border-radius:0 7px 7px 0}
+.futuro .rot{font-family:'Lora',serif;font-weight:700;color:#54308a;display:block;margin-bottom:6px;font-size:1.03em}
+.destacado{background:#fff3cd;padding:2px 6px;border-radius:4px;font-weight:600}
+.calc-box{background:#f7f9fb;border:1px solid #c3d2df;border-radius:8px;padding:15px 19px;margin:16px 0;font-family:'Courier New',monospace;font-size:.95em;line-height:1.85;overflow-x:auto}
+.calc-box .tit{font-family:'Source Sans 3',sans-serif;font-weight:700;color:#003366;display:block;margin-bottom:8px;font-size:1.05em}
+
+/* ============ ACORDEÓN (REPASO) ============ */
+.acordeon{margin:14px 0}
+.acordeon-btn{width:100%;text-align:left;background:#eaf3fb;border:1px solid #b7d2e8;border-radius:7px;padding:14px 18px;font-family:'Lora',serif;font-size:1.06em;font-weight:600;color:#003366;cursor:pointer;margin-bottom:8px;transition:background .15s}
+.acordeon-btn:hover{background:#dcecf9}
+.acordeon-btn .flecha{display:inline-block;margin-right:10px;color:#00264d;font-size:.85em}
+.acordeon-panel{display:none;border:1px solid #d6e3ee;border-top:none;border-radius:0 0 7px 7px;padding:6px 22px 16px;margin:-10px 0 14px;background:#fcfdfe}
+.acordeon-panel.abierto{display:block}
+.puente{background:#003366;color:#eaf4ff;border-radius:9px;padding:19px 23px;margin:26px 0 6px}
+.puente .rot{font-family:'Lora',serif;font-weight:700;color:#87CEEB;display:block;margin-bottom:7px;font-size:1.1em}
+.puente p{color:#eaf4ff}
+
+/* ============ TABLAS GENERALES ============ */
+.tabla-wrap{overflow-x:auto;margin:18px 0}
+table.tabla{width:100%;border-collapse:collapse;font-size:.93em;background:#fff}
+table.tabla th{background:#003366;color:#fff;padding:10px 11px;text-align:left;font-weight:600;border:1px solid #002347}
+table.tabla td{padding:9px 11px;border:1px solid #cfdae5;vertical-align:top}
+table.tabla tr:nth-child(even) td{background:#f7fafc}
+table.tabla td.num{text-align:right;font-family:'Courier New',monospace;white-space:nowrap}
+table.tabla td.ctr{text-align:center}
+table.tabla tr.total td{font-weight:700;background:#e8eff6 !important;border-top:3px double #003366}
+table.tabla tr.sub td{font-weight:700;background:#eaf3fb !important}
+table.tabla .sec{background:#dbe8f4 !important;font-weight:700;color:#00264d}
+
+/* ============ ASIENTOS CONTABLES ============ */
+.asiento{margin:22px 0;border:2px solid #003366;border-radius:8px;overflow:hidden}
+.asiento-header{background:#003366;color:#fff;padding:9px 15px;font-family:'Lora',serif;font-weight:700;font-size:1.0em;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.asiento table{width:100%;border-collapse:collapse;font-size:.93em}
+.asiento th{background:#dbe8f4;color:#00264d;padding:8px 10px;text-align:left;font-weight:700;border-bottom:2px solid #003366;font-size:.9em}
+.asiento td{padding:7px 10px;border-bottom:1px solid #e2e9f0}
+.asiento td.valor{text-align:right;font-family:'Courier New',monospace;white-space:nowrap}
+.asiento td.cta-acreedora{padding-left:36px}
+.asiento tr.suman td{font-weight:700;border-top:3px double #003366;background:#f2f6fa}
+.glosa{padding:11px 15px;background:#f7f9fb;font-style:italic;font-size:.92em;color:#3a4a58;border-top:1px solid #dde5ec}
+
+/* ============ MAYOR EN T ============ */
+.mayor-grid{display:flex;flex-wrap:wrap;gap:16px;margin:18px 0}
+.mayor-t{flex:1 1 300px;border:2px solid #003366;border-radius:7px;overflow:hidden;min-width:260px}
+.mayor-t .tit{background:#003366;color:#fff;padding:7px 11px;font-weight:700;font-size:.92em;text-align:center;font-family:'Lora',serif}
+.mayor-t table{width:100%;border-collapse:collapse;font-size:.87em}
+.mayor-t th{background:#dbe8f4;color:#00264d;padding:5px 8px;width:50%;border:1px solid #b7cadd;text-align:center;font-size:.9em}
+.mayor-t td{padding:4px 8px;border:1px solid #e2e9f0;font-family:'Courier New',monospace;font-size:.95em}
+.mayor-t td:first-child{border-right:2px solid #003366}
+.mayor-t tr.saldo td{font-weight:700;background:#eef4fa;border-top:2px solid #003366;font-family:'Source Sans 3',sans-serif}
+
+/* ============ AUTOCHEQUEO ============ */
+.autocheck{background:#fffaf0;border:2px solid #d99500;border-radius:9px;padding:18px 22px;margin:24px 0}
+.autocheck .rot{font-family:'Lora',serif;font-weight:700;color:#a06d00;display:block;margin-bottom:10px;font-size:1.1em}
+.autocheck .preg{font-weight:600;color:#00264d;margin:14px 0 7px}
+.autocheck-btn{background:#d99500;color:#fff;border:none;border-radius:6px;padding:7px 15px;font-family:'Source Sans 3',sans-serif;font-size:.88em;font-weight:600;cursor:pointer}
+.autocheck-btn:hover{background:#b87d00}
+.autocheck-resp{display:none;margin-top:10px;background:#fff;border-left:5px solid #2e7d4f;padding:12px 16px;border-radius:0 6px 6px 0;font-size:.96em}
+.autocheck-resp.visible{display:block}
+
+/* ============ EJERCICIO Y CUESTIONARIO ============ */
+.item{background:#fbfcfd;border:1px solid #cfdae5;border-radius:9px;padding:19px 22px;margin:20px 0}
+.item .enun{font-weight:600;color:#00264d;margin-bottom:12px}
+.item .num-item{display:inline-block;background:#003366;color:#fff;border-radius:50%;width:29px;height:29px;line-height:29px;text-align:center;font-weight:700;margin-right:9px;font-size:.9em}
+.badge{display:inline-block;font-size:.72em;font-weight:700;padding:3px 10px;border-radius:12px;margin-left:8px;vertical-align:middle;letter-spacing:.3px}
+.badge-teorica{background:#dbe8f4;color:#003366;border:1px solid #8fb4d4}
+.badge-caso{background:#fdebd0;color:#8a5a00;border:1px solid #e0b060}
+.opciones{margin:10px 0 0}
+.opciones label{display:block;padding:9px 13px;margin-bottom:7px;background:#fff;border:1px solid #d6dfe8;border-radius:6px;cursor:pointer;transition:background .12s;font-size:.97em}
+.opciones label:hover{background:#eef4fa}
+.opciones input{margin-right:9px}
+.feedback{display:none;margin-top:12px;padding:13px 17px;border-radius:7px;font-size:.95em}
+.feedback.visible{display:block}
+.feedback.ok{background:#e8f5ec;border-left:5px solid #2e7d4f;color:#1e5c39}
+.feedback.mal{background:#fdecea;border-left:5px solid #c0392b;color:#8f2418}
+.feedback .vered{font-weight:700;display:block;margin-bottom:5px}
+.btn{background:#003366;color:#fff;border:none;border-radius:7px;padding:13px 27px;font-family:'Source Sans 3',sans-serif;font-size:1em;font-weight:600;cursor:pointer;margin:8px 8px 8px 0}
+.btn:hover{background:#00264d}
+.btn-sec{background:#6b7c8c}
+.btn-sec:hover{background:#55636f}
+.resultado{display:none;margin:22px 0;padding:22px 25px;border-radius:10px;background:#eaf3fb;border:2px solid #003366}
+.resultado.visible{display:block}
+.resultado .nota{font-family:'Lora',serif;font-size:1.5em;font-weight:700;color:#003366;margin-bottom:10px}
+.barra{background:#d6e3ee;border-radius:12px;height:26px;overflow:hidden;margin:12px 0}
+.barra-relleno{height:100%;width:0;background:linear-gradient(90deg,#2e7d4f,#87CEEB);transition:width 1.1s ease-out;border-radius:12px}
+.aviso{display:none;background:#fdecea;border-left:5px solid #c0392b;color:#8f2418;padding:12px 17px;border-radius:0 7px 7px 0;margin:14px 0;font-weight:600}
+.aviso.visible{display:block}
+.solucion{background:#f0faf3;border:2px solid #2e7d4f;border-radius:9px;padding:19px 23px;margin:26px 0}
+.solucion .rot{font-family:'Lora',serif;font-weight:700;color:#1e5c39;display:block;margin-bottom:9px;font-size:1.12em}
+
+/* ============ BIBLIOGRAFÍA ============ */
+.biblio-grid{display:flex;flex-wrap:wrap;gap:16px;margin:18px 0}
+.biblio-card{flex:1 1 330px;background:#fbfcfd;border:1px solid #cfdae5;border-left:6px solid #003366;border-radius:0 8px 8px 0;padding:16px 19px;min-width:280px}
+.biblio-card .tipo{font-size:.75em;font-weight:700;color:#004a80;text-transform:uppercase;letter-spacing:.6px;display:block;margin-bottom:6px}
+.biblio-card p{font-size:.93em;margin-bottom:0;text-align:left}
+
+/* ============ PIE ============ */
+.footer{background:#00264d;color:#b9d3ea;padding:22px 26px;font-size:.86em;text-align:center}
+
+/* ============ RESPONSIVO ============ */
+@media (max-width:760px){
+  body{font-size:16px}
+  .panel{padding:20px 15px 36px}
+  .header{padding:22px 16px}
+  .header h1{font-size:1.4em}
+  .tab{padding:12px 13px;font-size:.86em}
+  .asiento td.cta-acreedora{padding-left:22px}
+  .mayor-t{flex:1 1 100%}
+  .biblio-card{flex:1 1 100%}
+  table.tabla{font-size:.85em}
+  p,li{text-align:left}
+}
+
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ============================================================
+     ENCABEZADO INSTITUCIONAL
+     ============================================================ -->
+<div class="header">
+  <div class="inst">Universidad de Guayaquil · Facultad de Ciencias Administrativas · Carrera de Negocios Internacionales</div>
+  <h1>Día 13 · Ejercicio integrador de una compañía comercial — Parte I</h1>
+  <div class="sub">Del hecho económico al Libro Diario: análisis, tratamiento tributario, jornalización y Kardex del artículo INV-4501 · Caso Comercial El Astillero S.A., agosto de 2026</div>
+  <div class="meta">
+    <span class="chip">Contabilidad General</span>
+    <span class="chip">Unidad 3 · NIC 2 Inventarios y el proceso contable (II parte)</span>
+    <span class="chip">Lunes 31 de agosto de 2026</span>
+    <span class="chip">Archivo 1 de 2</span>
+    <span class="chip">Clase virtual autónoma</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     MENÚ DE PESTAÑAS
+     ============================================================ -->
+<div class="tabs">
+  <button class="tab active" onclick="showTab('repaso',this)">Repaso</button>
+  <button class="tab" onclick="showTab('t1',this)">Tema 1 · La empresa y su punto de partida</button>
+  <button class="tab" onclick="showTab('t2',this)">Tema 2 · Análisis de las transacciones</button>
+  <button class="tab" onclick="showTab('t3',this)">Tema 3 · Jornalización (I)</button>
+  <button class="tab" onclick="showTab('t3b',this)">Tema 3b · Jornalización (II)</button>
+  <button class="tab" onclick="showTab('t4',this)">Tema 4 · Kardex y enlace con el Diario</button>
+  <button class="tab" onclick="showTab('ejercicio',this)">Ejercicio Interactivo</button>
+  <button class="tab" onclick="showTab('cuestionario',this)">Cuestionario</button>
+  <button class="tab" onclick="showTab('ia',this)">Actividad con IA</button>
+  <button class="tab" onclick="showTab('reflexion',this)">Reflexión</button>
+  <button class="tab" onclick="showTab('biblio',this)">Bibliografía</button>
+</div>
+
+<!-- ============================================================
+     PESTAÑA: REPASO
+     ============================================================ -->
+<div id="repaso" class="panel active">
+<h2>Repaso de los días anteriores</h2>
+
+<p>Hoy no hay contenido nuevo que memorizar. Hoy hay un <strong>ejercicio integrador</strong>: todo lo construido desde el Día 5 se aplica de una sola vez, sobre una sola empresa, en un solo mes. Por eso este repaso es más importante que de costumbre. Abra cada bloque haciendo clic sobre su título y léalo completo antes de avanzar: cada uno aporta una pieza que hoy se va a usar.</p>
+
+<div class="acordeon">
+
+<button class="acordeon-btn" onclick="toggleAc('ac1',this)"><span class="flecha">&#9654;</span>Día 5 — Los primeros pasos del proceso contable</button>
+<div id="ac1" class="acordeon-panel">
+<p>El <strong>proceso contable</strong> es la secuencia ordenada de pasos que convierte un hecho económico en información financiera útil. Sus primeros pasos son:</p>
+<ol>
+<li><strong>Análisis y reconocimiento de la transacción.</strong> Se examina el <em>documento fuente</em> —factura, comprobante de retención, nota de débito bancaria, rol de pagos, acta de toma física— y se determina qué cuentas se afectan, en qué sentido y por qué valor. Sin documento fuente no hay registro.</li>
+<li><strong>Jornalización.</strong> Cada hecho se escribe en el Libro Diario como un <em>asiento contable</em>: cuentas deudoras al margen izquierdo, cuentas acreedoras indentadas y precedidas de «a)», y una <em>glosa</em> que explica la operación citando el documento fuente. La suma del Debe iguala siempre la suma del Haber: es la partida doble.</li>
+<li><strong>Mayorización.</strong> Cada valor jornalizado se traslada a la cuenta individual que le corresponde en el Libro Mayor. La representación didáctica de una cuenta es la <em>cuenta T</em>: el nombre arriba, los débitos a la izquierda, los créditos a la derecha y el saldo como diferencia entre ambos lados.</li>
+<li><strong>Balance de comprobación preliminar.</strong> Se listan todas las cuentas del mayor con sus sumas y sus saldos. Si la suma de saldos deudores iguala la de saldos acreedores, la contabilidad está aritméticamente cuadrada.</li>
+</ol>
+<p>Quedó establecido allí que el balance preliminar <strong>solo comprueba igualdad aritmética</strong>: no garantiza que se hayan elegido las cuentas correctas ni que estén registrados todos los hechos del período.</p>
+</div>
+
+<button class="acordeon-btn" onclick="toggleAc('ac2',this)"><span class="flecha">&#9654;</span>Días 4 y 5 — El tratamiento tributario de cada transacción</button>
+<div id="ac2" class="acordeon-panel">
+<p>Ninguna transacción mercantil ecuatoriana se registra solo por su valor comercial. Sobre la base imponible operan dos impuestos y dos mecanismos de retención que hoy se aplicarán en casi todos los asientos:</p>
+<ul>
+<li><strong>IVA.</strong> Tarifa general del 15%. Existen bienes y servicios gravados con tarifa 0%; el más frecuente en una empresa comercial es el <em>servicio de energía eléctrica</em>.</li>
+<li><strong>Retención en la fuente del impuesto a la renta.</strong> Regida por la Resolución NAC-DGERCGC26-00000009, vigente desde el 1 de marzo de 2026. Los porcentajes que se usan en este curso son: <strong>2%</strong> en la adquisición de bienes, <strong>3%</strong> como porcentaje residual de servicios, <strong>5%</strong> en servicios profesionales prestados por sociedades y <strong>10%</strong> en el arrendamiento de inmuebles. Se calcula sobre la base imponible, nunca sobre el IVA.</li>
+<li><strong>Retención del IVA.</strong> Regida por la Resolución NAC-DGERCGC20-00000061: <strong>30%</strong> del IVA en la adquisición de bienes y <strong>70%</strong> del IVA en la contratación de servicios. Se calcula sobre el valor del IVA, no sobre la base.</li>
+<li><strong>Efecto sobre el pago.</strong> Cuando la empresa <em>compra</em>, retiene: el valor a pagar al proveedor es base + IVA − retención de renta − retención de IVA, y las dos retenciones se convierten en pasivos frente al Servicio de Rentas Internas. Cuando la empresa <em>vende</em> a otra sociedad, le retienen: el valor a cobrar es menor, y las retenciones sufridas se registran como activos (crédito tributario).</li>
+</ul>
+<div class="alerta"><span class="rot">Trampa ya instalada en el Día 6</span>
+<p>Los pagos a <strong>empresas públicas</strong> no están sujetos a retención en la fuente. La planilla de energía eléctrica de CNEL EP no lleva ni IVA ni retención: se registra por su valor total como gasto. Volverá a aparecer hoy.</p></div>
+</div>
+
+<button class="acordeon-btn" onclick="toggleAc('ac3',this)"><span class="flecha">&#9654;</span>Días 7, 8 y 9 — NIC 2, medición y métodos de valuación</button>
+<div id="ac3" class="acordeon-panel">
+<p>Dentro del contenido de la NIC 2 se especifica que los inventarios se miden <strong>al menor valor entre el costo y el valor neto realizable</strong>. Se distinguieron tres magnitudes que no deben confundirse:</p>
+<ul>
+<li><strong>Costo:</strong> precio de compra más aranceles de importación, transporte, seguros, manejo y todo desembolso atribuible a dejar la mercadería en condiciones de venta, menos descuentos comerciales.</li>
+<li><strong>Valor razonable:</strong> precio al que se intercambiaría el bien entre participantes de mercado. No es la base ordinaria de medición del inventario.</li>
+<li><strong>Valor neto realizable (VNR):</strong> precio estimado de venta menos los costos estimados de terminación y de venta. Es la magnitud que se compara con el costo.</li>
+</ul>
+<p>Se estudiaron dos <strong>sistemas de contabilización</strong>: el <em>permanente</em> (o perpetuo), en el que cada venta genera dos asientos —uno por el ingreso y otro por el costo—, y el <em>periódico</em>, en el que el costo de ventas se determina al final por diferencia. Comercial El Astillero S.A. usa el sistema permanente.</p>
+<p>Los <strong>métodos de valuación</strong> admitidos son <em>FIFO</em> (primeras en entrar, primeras en salir) y <em>costo promedio ponderado</em>, en sus versiones móvil y de período. El método UEPS se explicó de manera completa el Día 9 —criterio, razones de su eliminación por el IASB y situación actual— y desde entonces solo se lo menciona como referencia histórica, porque las NIIF no lo admiten.</p>
+<div class="ejemplo"><span class="rot">El artículo que hoy vuelve</span>
+<p>El Día 9 se trabajó el artículo <strong>INV-4501 «Ventilador de techo VT-16»</strong> de Comercial El Astillero S.A. durante agosto de 2026. Sus resultados quedaron cerrados: mercadería disponible <strong>23.075,00</strong>; por FIFO, costo de ventas <strong>20.660,00</strong> e inventario final <strong>2.415,00</strong> (60 unidades a 40,25). Hoy ese mismo artículo se inserta dentro del ciclo contable completo de la compañía.</p></div>
+</div>
+
+<button class="acordeon-btn" onclick="toggleAc('ac4',this)"><span class="flecha">&#9654;</span>Día 10 — El Kardex y el registro de las ventas en sistema permanente</button>
+<div id="ac4" class="acordeon-panel">
+<p>El <strong>Kardex</strong> es el registro auxiliar donde se controla, artículo por artículo, cada entrada y cada salida de inventario con su cantidad, su costo unitario y su costo total, dejando siempre visible la existencia y su valorización. No es un libro principal: es el soporte que justifica ante un auditor las cifras de las cuentas <em>Inventario de mercaderías</em> y <em>Costo de ventas</em>.</p>
+<p>En el sistema permanente, cada venta genera <strong>dos asientos</strong>:</p>
+<ol>
+<li>El asiento del <em>ingreso</em>: precio de venta, IVA cobrado y retenciones recibidas del cliente.</li>
+<li>El asiento del <em>costo</em>: se debita Costo de ventas y se acredita Inventario de mercaderías por el valor que el Kardex determinó para esas unidades. Este segundo asiento no depende del precio de venta en absoluto.</li>
+</ol>
+<div class="formula">Mercadería disponible = Costo de ventas + Inventario final</div>
+<p>Esta identidad de control no puede fallar nunca. Si falla, el error está en el Kardex y no en el Diario.</p>
+</div>
+
+<button class="acordeon-btn" onclick="toggleAc('ac5',this)"><span class="flecha">&#9654;</span>Días 11 y 12 — Asientos de ajuste y balance de comprobación ajustado</button>
+<div id="ac5" class="acordeon-panel">
+<p>Los <strong>asientos de ajuste</strong> son registros que se practican al cierre del período para que los saldos reflejen la realidad económica y no solo lo documentado por transacciones externas. Responden al <em>principio de devengo</em>: los ingresos y los gastos se reconocen cuando ocurren, no cuando se cobran o se pagan. Se clasificaron en cuatro familias:</p>
+<ul>
+<li><strong>Acumulación:</strong> el hecho ya ocurrió pero todavía no hay documento ni movimiento de dinero (intereses causados y no pagados, sueldos devengados).</li>
+<li><strong>Diferimiento:</strong> el dinero ya se movió, pero el gasto o el ingreso todavía no se consume (arriendo pagado por anticipado, seguros prepagados).</li>
+<li><strong>Estimación:</strong> el valor no se conoce con exactitud y debe calcularse con una técnica razonable y consistente (depreciación, deterioro de cartera, ajuste del inventario al VNR).</li>
+<li><strong>Comprobación:</strong> se detecta, al verificar, un hecho real no registrado o registrado mal (notas de débito bancarias, faltantes en la toma física de inventario).</li>
+</ul>
+<p>El <strong>balance de comprobación ajustado</strong>, construido el Día 12 sobre tres empresas de modelos distintos, es el listado de todas las cuentas con sus saldos <em>después</em> de incorporar los ajustes. Allí quedó formulada la regla de control de sumas: el total ajustado equivale al total preliminar más el importe de los ajustes, menos los movimientos que van en sentido contrario a la naturaleza de la cuenta. Y quedó demostrada una conclusión incómoda: <strong>una empresa que no ajusta se ve mejor de lo que está</strong>.</p>
+</div>
+
+</div><!-- /acordeon -->
+
+<div class="puente"><span class="rot">Puente hacia el Día 13</span>
+<p>Hasta ayer usted practicó cada paso por separado y con datos servidos: le entregaban el balance preliminar y usted ajustaba; le entregaban los movimientos y usted armaba el Kardex. Hoy no se le entrega ningún paso resuelto. Se le entrega una empresa, un mes y un fajo de documentos fuente, y el recorrido completo es suyo.</p>
+<p>Este archivo cubre la primera mitad del recorrido: entender la empresa, analizar cada documento, decidir su tratamiento tributario, jornalizar los diecisiete asientos del mes y construir el Kardex que sostiene el costo de ventas. El segundo archivo del Día 13 recoge la segunda mitad: mayorizar, obtener el balance preliminar, practicar los ajustes y llegar a los saldos ajustados, con lo que se cierra la Unidad 3.</p>
+</div>
+
+</div><!-- /repaso -->
+
+<!-- ============================================================
+     PESTAÑA: TEMA 1
+     ============================================================ -->
+<div id="t1" class="panel">
+<h2>Tema 1 — La empresa, su plan de cuentas y su punto de partida</h2>
+
+<h3>1.1 Qué es un ejercicio integrador y por qué hoy se trabaja distinto</h3>
+
+<div class="definicion"><span class="rot">Ejercicio integrador</span>
+<p>Es un caso práctico que recorre <strong>todos los pasos del proceso contable sobre una misma entidad y un mismo período</strong>, sin que ninguno venga resuelto de antemano. A diferencia de los ejercicios temáticos —donde se entrega el balance preliminar para practicar solo los ajustes, o los movimientos para practicar solo el Kardex—, aquí el punto de partida son los <em>documentos fuente</em> y el punto de llegada son los <em>saldos ajustados</em>.</p></div>
+
+<p>La diferencia no es de dificultad, es de naturaleza. Un ejercicio temático evalúa si usted sabe ejecutar un procedimiento. Un ejercicio integrador evalúa si usted sabe <strong>decidir cuál procedimiento aplicar</strong> cuando nadie se lo dice. En la vida profesional nunca llega un documento con la etiqueta «esto es un diferimiento» o «aquí retenga el 3%». Llega una factura, y hay que leerla.</p>
+
+<p>Por eso el orden de trabajo de hoy es el orden real de una contabilidad:</p>
+
+<div class="formula">
+Documentos fuente &rarr; <b>análisis</b> &rarr; <b>jornalización</b> &rarr; <b>mayorización</b><br>
+&rarr; <b>balance preliminar</b> &rarr; <b>ajustes</b> &rarr; <b>balance ajustado</b>
+</div>
+
+<p>Los tres primeros pasos y el auxiliar de inventarios se desarrollan en este archivo. Los tres últimos, en el archivo 2 del Día 13.</p>
+
+<div class="alerta"><span class="rot">Cómo estudiar este archivo</span>
+<p>No lo lea como un texto. Léalo con papel al lado. En el Tema 2 se le pedirá que <strong>analice cada transacción antes de ver el asiento</strong>, y en el Tema 3 cada asiento viene precedido de su desglose de cálculo, precisamente para que usted pueda taparlo y resolverlo primero. Un ejercicio integrador leído sin escribir no enseña nada: la única forma de saber si comprendió es que su hoja coincida con la del widget.</p></div>
+
+<h3>1.2 La empresa: Comercial El Astillero S.A.</h3>
+
+<p><strong>Comercial El Astillero S.A.</strong> es una compañía anónima domiciliada en Guayaquil, dedicada a la <strong>comercialización al por menor de electrodomésticos y artículos de línea blanca</strong>. Compra a distribuidores nacionales —que a su vez importan desde Asia— y vende tanto a otros comercios como a consumidores finales. Es la misma empresa que se viene trabajando desde el Día 8, cuando se analizó su importación de licuadoras, y desde el Día 9, cuando se valoró su artículo INV-4501.</p>
+
+<div class="tabla-wrap"><table class="tabla">
+<thead><tr><th style="width:34%">Rasgo</th><th>Situación de la compañía</th></tr></thead>
+<tbody>
+<tr><td>Forma jurídica</td><td>Sociedad anónima, controlada por la Superintendencia de Compañías, Valores y Seguros</td></tr>
+<tr><td>Actividad</td><td>Comercio al por menor de electrodomésticos (compra y reventa, sin transformación)</td></tr>
+<tr><td>Obligación contable</td><td>Obligada a llevar contabilidad y a presentar estados financieros bajo NIIF</td></tr>
+<tr><td>Condición tributaria</td><td>Agente de retención del impuesto a la renta y del IVA</td></tr>
+<tr><td>Sistema de inventario</td><td>Permanente (perpetuo): cada venta genera asiento de ingreso y asiento de costo</td></tr>
+<tr><td>Método de valuación</td><td>FIFO — primeras en entrar, primeras en salir</td></tr>
+<tr><td>Período que se analiza</td><td>Mes de agosto de 2026, del 1 al 31</td></tr>
+<tr><td>Artículo bajo control de Kardex</td><td>INV-4501 «Ventilador de techo VT-16», precio de venta 52,00 por unidad</td></tr>
+</tbody></table></div>
+
+<div class="nota-lateral"><span class="rot">Por qué un solo artículo en el Kardex</span>
+<p>Una empresa real controla cientos de artículos y lleva un Kardex por cada uno. Aquí se trabaja con uno solo para que el auxiliar quepa en una pantalla y usted pueda seguir cada capa de costo. El procedimiento es idéntico con mil artículos: cambia el volumen, no el método.</p></div>
+
+<h3>1.3 El plan de cuentas de la compañía</h3>
+
+<p>El <strong>plan de cuentas</strong> es el listado ordenado y codificado de todas las cuentas que una entidad utiliza. Su estructura no es caprichosa: el primer dígito identifica el elemento del estado financiero, y los siguientes van abriendo niveles de detalle.</p>
+
+<div class="tabla-wrap"><table class="tabla">
+<thead><tr><th style="width:12%">Dígito</th><th style="width:26%">Elemento</th><th>Naturaleza del saldo y significado</th></tr></thead>
+<tbody>
+<tr><td class="ctr">1</td><td>Activo</td><td>Saldo <strong>deudor</strong>. Recursos controlados por la empresa de los que espera obtener beneficios.</td></tr>
+<tr><td class="ctr">2</td><td>Pasivo</td><td>Saldo <strong>acreedor</strong>. Obligaciones presentes cuya cancelación exigirá entregar recursos.</td></tr>
+<tr><td class="ctr">3</td><td>Patrimonio</td><td>Saldo <strong>acreedor</strong>. Participación residual de los accionistas en los activos, una vez deducidos los pasivos.</td></tr>
+<tr><td class="ctr">4</td><td>Ingresos</td><td>Saldo <strong>acreedor</strong>. Incrementos de beneficios económicos del período.</td></tr>
+<tr><td class="ctr">5</td><td>Costos y gastos</td><td>Saldo <strong>deudor</strong>. Disminuciones de beneficios económicos del período.</td></tr>
+</tbody></table></div>
+
+<div class="alerta"><span class="rot">Las cuentas que empiezan con «(–)»</span>
+<p>Cuatro cuentas del plan llevan un signo menos delante del nombre: <em>(–) Deterioro acumulado de cuentas por cobrar</em>, <em>(–) Deterioro acumulado de inventarios</em> y las tres <em>(–) Depreciación acumulada</em>. Se llaman <strong>cuentas de valuación</strong> o <em>correctoras</em>: pertenecen al activo por su ubicación, pero tienen <strong>saldo acreedor</strong>, porque su función es restar del activo bruto sin borrarlo. En el balance de comprobación aparecen en la columna del Haber, aunque su código empiece con 1. Confundir esto es el error más frecuente de todo el bloque.</p></div>
+
+<h3>1.4 Los saldos al 1 de agosto de 2026 y el asiento de apertura</h3>
+
+<p>El mes no empieza en cero. La compañía viene operando y arrastra los saldos con que cerró julio. El <strong>asiento de apertura</strong> es el primer registro del período: recoge esos saldos y los deja instalados en el Libro Diario para que la mayorización pueda comenzar.</p>
+
+<div class="tabla-wrap"><table class="tabla"><thead><tr><th style="width:14%">Código</th><th>Cuenta</th><th style="width:17%">Debe</th><th style="width:17%">Haber</th></tr></thead><tbody><tr><td>1.1.01.01</td><td>Caja</td><td class="num">1.200,00</td><td class="num">—</td></tr><tr><td>1.1.02.01</td><td>Bancos</td><td class="num">28.500,00</td><td class="num">—</td></tr><tr><td>1.1.03.01</td><td>Cuentas por cobrar clientes</td><td class="num">9.400,00</td><td class="num">—</td></tr><tr><td>1.1.05.01</td><td>Inventario de mercaderías</td><td class="num">3.000,00</td><td class="num">—</td></tr><tr><td>1.1.06.01</td><td>Arriendos pagados por anticipado</td><td class="num">3.000,00</td><td class="num">—</td></tr><tr><td>1.1.06.02</td><td>Seguros pagados por anticipado</td><td class="num">1.440,00</td><td class="num">—</td></tr><tr><td>1.2.01.05</td><td>Muebles y enseres</td><td class="num">9.600,00</td><td class="num">—</td></tr><tr><td>1.2.01.06</td><td>Equipo de computación</td><td class="num">3.600,00</td><td class="num">—</td></tr><tr><td>1.2.01.07</td><td>Vehículos</td><td class="num">24.000,00</td><td class="num">—</td></tr><tr><td>1.1.03.99</td><td>(–) Deterioro acumulado de cuentas por cobrar</td><td class="num">—</td><td class="num">120,00</td></tr><tr><td>1.2.01.95</td><td>(–) Depreciación acumulada muebles y enseres</td><td class="num">—</td><td class="num">1.920,00</td></tr><tr><td>1.2.01.96</td><td>(–) Depreciación acumulada equipo de computación</td><td class="num">—</td><td class="num">1.200,00</td></tr><tr><td>1.2.01.97</td><td>(–) Depreciación acumulada vehículos</td><td class="num">—</td><td class="num">4.800,00</td></tr><tr><td>2.1.01.01</td><td>Cuentas por pagar proveedores</td><td class="num">—</td><td class="num">7.200,00</td></tr><tr><td>2.2.01.01</td><td>Préstamo bancario por pagar</td><td class="num">—</td><td class="num">12.000,00</td></tr><tr><td>3.1.01.01</td><td>Capital social</td><td class="num">—</td><td class="num">50.000,00</td></tr><tr><td>3.4.01.01</td><td>Resultados acumulados</td><td class="num">—</td><td class="num">6.500,00</td></tr><tr class="total"><td colspan="2">SUMAN</td><td class="num">83.740,00</td><td class="num">83.740,00</td></tr></tbody></table></div>
+
+<p>Antes de ver el asiento, conviene leer estos saldos como información y no como cifras sueltas:</p>
+
+<ul>
+<li>La empresa tiene <strong>3.000,00</strong> en inventario: son las 100 unidades del artículo INV-4501 a 30,00 cada una que el Kardex del Día 9 registró como saldo inicial. La contabilidad y el auxiliar arrancan cuadrados.</li>
+<li>Los <strong>3.000,00</strong> de <em>Arriendos pagados por anticipado</em> corresponden a un contrato del local comercial pagado el 1 de julio de 2026 por seis meses. Julio ya se consumió; quedan cinco meses, de agosto a diciembre.</li>
+<li>Los <strong>1.440,00</strong> de <em>Seguros pagados por anticipado</em> corresponden a una póliza multirriesgo contratada el 1 de mayo de 2026 por doce meses. Quedan ocho meses pendientes de devengar.</li>
+<li>Las tres cuentas de <em>depreciación acumulada</em> muestran cuánto se ha consumido ya de cada activo fijo: los muebles llevan dos años de uso, el equipo de computación un año y el vehículo un año.</li>
+<li>El <em>Préstamo bancario por pagar</em> de <strong>12.000,00</strong> devenga interés del 12% anual, que se paga por trimestres vencidos. En agosto no hay pago, pero sí hay interés causado.</li>
+</ul>
+
+<div class="nota-lateral"><span class="rot">Guarde esta lectura</span>
+<p>Cada una de esas cinco observaciones se convertirá, el 31 de agosto, en un asiento de ajuste. Los ajustes no se inventan al final del mes: <strong>ya están anunciados en los saldos iniciales</strong>, y un contador atento los ve venir desde el día 1. Esa es la diferencia entre ajustar por rutina y ajustar por comprensión.</p></div>
+
+<div class="asiento">
+<div class="asiento-header"><span>Asiento N.º 1</span><span>01/08/2026</span></div>
+<table><thead><tr><th style="width:11%">Fecha</th><th style="width:13%">Código</th><th>Detalle</th><th style="width:12%">Parcial</th><th style="width:13%">Debe</th><th style="width:13%">Haber</th></tr></thead><tbody>
+<tr><td>01/08/2026</td><td>1.1.01.01</td><td>Caja</td><td class="valor">—</td><td class="valor">1.200,00</td><td class="valor">—</td></tr>
+<tr><td></td><td>1.1.02.01</td><td>Bancos</td><td class="valor">—</td><td class="valor">28.500,00</td><td class="valor">—</td></tr>
+<tr><td></td><td>1.1.03.01</td><td>Cuentas por cobrar clientes</td><td class="valor">—</td><td class="valor">9.400,00</td><td class="valor">—</td></tr>
+<tr><td></td><td>1.1.05.01</td><td>Inventario de mercaderías</td><td class="valor">—</td><td class="valor">3.000,00</td><td class="valor">—</td></tr>
+<tr><td></td><td>1.1.06.01</td><td>Arriendos pagados por anticipado</td><td class="valor">—</td><td class="valor">3.000,00</td><td class="valor">—</td></tr>
+<tr><td></td><td>1.1.06.02</td><td>Seguros pagados por anticipado</td><td class="valor">—</td><td class="valor">1.440,00</td><td class="valor">—</td></tr>
+<tr><td></td><td>1.2.01.05</td><td>Muebles y enseres</td><td class="valor">—</td><td class="valor">9.600,00</td><td class="valor">—</td></tr>
+<tr><td></td><td>1.2.01.06</td><td>Equipo de computación</td><td class="valor">—</td><td class="valor">3.600,00</td><td class="valor">—</td></tr>
+<tr><td></td><td>1.2.01.07</td><td>Vehículos</td><td class="valor">—</td><td class="valor">24.000,00</td><td class="valor">—</td></tr>
+<tr><td></td><td>1.1.03.99</td><td class="cta-acreedora">a) (–) Deterioro acumulado de cuentas por cobrar</td><td class="valor">—</td><td class="valor">—</td><td class="valor">120,00</td></tr>
+<tr><td></td><td>1.2.01.95</td><td class="cta-acreedora">a) (–) Depreciación acumulada muebles y enseres</td><td class="valor">—</td><td class="valor">—</td><td class="valor">1.920,00</td></tr>
+<tr><td></td><td>1.2.01.96</td><td class="cta-acreedora">a) (–) Depreciación acumulada equipo de computación</td><td class="valor">—</td><td class="valor">—</td><td class="valor">1.200,00</td></tr>
+<tr><td></td><td>1.2.01.97</td><td class="cta-acreedora">a) (–) Depreciación acumulada vehículos</td><td class="valor">—</td><td class="valor">—</td><td class="valor">4.800,00</td></tr>
+<tr><td></td><td>2.1.01.01</td><td class="cta-acreedora">a) Cuentas por pagar proveedores</td><td class="valor">—</td><td class="valor">—</td><td class="valor">7.200,00</td></tr>
+<tr><td></td><td>2.2.01.01</td><td class="cta-acreedora">a) Préstamo bancario por pagar</td><td class="valor">—</td><td class="valor">—</td><td class="valor">12.000,00</td></tr>
+<tr><td></td><td>3.1.01.01</td><td class="cta-acreedora">a) Capital social</td><td class="valor">—</td><td class="valor">—</td><td class="valor">50.000,00</td></tr>
+<tr><td></td><td>3.4.01.01</td><td class="cta-acreedora">a) Resultados acumulados</td><td class="valor">—</td><td class="valor">—</td><td class="valor">6.500,00</td></tr>
+<tr class="suman"><td></td><td></td><td>SUMAN</td><td class="valor">—</td><td class="valor">83.740,00</td><td class="valor">83.740,00</td></tr>
+</tbody></table>
+<div class="glosa">P/R Apertura de libros del mes de agosto de 2026 con los saldos del balance de situación inicial al 31 de julio de 2026.</div>
+</div>
+
+<div class="alerta"><span class="rot">Sobre el asiento de apertura</span>
+<p>Fíjese en que <em>Resultados acumulados</em> por 6.500,00 no se calculó: es un saldo que viene de ejercicios anteriores y que aquí simplemente se traslada. Y note que las cuentas de valuación aparecen en el Haber pese a ser parte del activo. Si usted intentara «cuadrar» el asiento moviéndolas al Debe, el asiento no cuadraría, y la contabilidad quedaría mal desde el primer registro del mes.</p></div>
+
+<div class="carrera-box"><span class="rot">Vinculación con las cuatro áreas de Negocios Internacionales</span>
+<ul>
+<li><strong>Comercio exterior:</strong> el inventario de 3.000,00 con que abre la empresa proviene de mercadería que alguien importó. Aunque El Astillero compre a un distribuidor nacional, el costo que paga incorpora fletes, seguros y aranceles pagados aguas arriba. Reconocer en qué eslabón de la cadena está una empresa es lo primero que se lee en su plan de cuentas.</li>
+<li><strong>Finanzas internacionales:</strong> los saldos iniciales son la fotografía con la que un banco corresponsal o un proveedor extranjero decide si abre una línea de crédito. Un patrimonio de 56.500,00 frente a un pasivo de 19.200,00 dice mucho más sobre la capacidad de endeudamiento que cualquier declaración del gerente.</li>
+<li><strong>Marketing y negociación internacional:</strong> saber que el inventario de partida son apenas 100 unidades define la urgencia con que la empresa llega a negociar su próxima compra. Quien negocia sin conocer su propia posición de inventario acepta plazos y precios que no necesitaba aceptar.</li>
+<li><strong>Marco legal y normativo:</strong> el plan de cuentas de una sociedad ecuatoriana debe permitir generar los formularios de la Superintendencia de Compañías y los anexos del Servicio de Rentas Internas. Por eso las cuentas de IVA y de retenciones están separadas desde el diseño: no se abren cuando hacen falta, se prevén.</li>
+</ul></div>
+
+<div class="futuro"><span class="rot">Contenido diferido</span>
+<p>La <strong>presentación formal</strong> de estos saldos en un Estado de Situación Financiera —con su separación entre corriente y no corriente, y el activo fijo neto de depreciación— corresponde al <strong>Día 16 (jueves 3 de septiembre de 2026), Unidad 4</strong>. Hoy las cuentas se manejan en listado, sin clasificar en estados financieros.</p></div>
+
+<div class="conclusion"><span class="rot">Idea clave del Tema 1</span>
+<p>Un ejercicio integrador no empieza por registrar: empieza por <strong>entender la empresa</strong>. El plan de cuentas revela el modelo de negocio, y los saldos iniciales anuncian los ajustes que vendrán al cierre. Quien lee bien el punto de partida ya tiene resuelta la mitad del trabajo del 31 de agosto.</p></div>
+
+</div><!-- /t1 -->
+
+<!-- ============================================================
+     PESTAÑA: TEMA 2
+     ============================================================ -->
+<div id="t2" class="panel">
+<h2>Tema 2 — Análisis y reconocimiento de las transacciones de agosto</h2>
+
+<h3>2.1 Los hechos económicos del mes</h3>
+
+<p>Estos son los catorce hechos que ocurrieron en Comercial El Astillero S.A. durante agosto de 2026, con el documento que los respalda. Léalos completos antes de seguir. No están ordenados por dificultad: están ordenados por fecha, como llegan en la realidad.</p>
+
+<div class="tabla-wrap"><table class="tabla">
+<thead><tr><th style="width:8%">Fecha</th><th style="width:44%">Hecho económico</th><th>Documento fuente</th></tr></thead>
+<tbody>
+<tr><td>01/08</td><td>Se abren los libros del mes con los saldos del balance al 31 de julio.</td><td>Balance de situación inicial al 31/07/2026</td></tr>
+<tr><td>02/08</td><td>Se cancela con cheque la totalidad del saldo de proveedores procedente de julio, por 7.200,00.</td><td>Cheque 001-4521, Banco Bolivariano</td></tr>
+<tr><td>04/08</td><td>Se paga a Inmobiliaria Puerto Santa Ana S.A. el arriendo de la bodega de agosto: 900,00 más IVA.</td><td>Factura 001-002-000004417 · Comprobante de retención 001-001-000000451</td></tr>
+<tr><td>05/08</td><td>Se compran a crédito 300 ventiladores VT-16 a 34,00 cada uno a Electro Andes S.A.</td><td>Factura 001-002-000012345 · Comprobante de retención 001-001-000000452</td></tr>
+<tr><td>09/08</td><td>Se venden a crédito 150 ventiladores VT-16 a 52,00 cada uno a Comercial Ríos S.A., que practica sus retenciones.</td><td>Factura 001-001-000000871 · Comprobante de retención recibido 002-001-000003310</td></tr>
+<tr><td>11/08</td><td>Se recibe por transferencia un abono de clientes por 6.000,00.</td><td>Comprobante de ingreso 0087</td></tr>
+<tr><td>12/08</td><td>Se paga la planilla de energía eléctrica de CNEL EP por 240,00.</td><td>Planilla CNEL EP 8842190, débito bancario</td></tr>
+<tr><td>14/08</td><td>Se compran con cheque 150 ventiladores VT-16 a 39,00 cada uno a Electro Andes S.A.</td><td>Factura 001-002-000012908 · Cheque 001-4522 · Comprobante de retención 001-001-000000453</td></tr>
+<tr><td>18/08</td><td>Se venden a crédito 300 ventiladores VT-16 a 52,00 cada uno a Almacenes del Guayas S.A.</td><td>Factura 001-001-000000902 · Comprobante de retención recibido 004-002-000009911</td></tr>
+<tr><td>20/08</td><td>Se paga a Tecnimotor Cía. Ltda. el mantenimiento preventivo del vehículo de reparto: 500,00 más IVA.</td><td>Factura 002-001-000000778 · Comprobante de retención 001-001-000000454</td></tr>
+<tr><td>23/08</td><td>Se compran a crédito 100 ventiladores VT-16 a 40,25 cada uno a Importadora Delta S.A.</td><td>Factura 003-001-000002210 · Comprobante de retención 001-001-000000455</td></tr>
+<tr><td>26/08</td><td>Se pagan honorarios por asesoría legal a Estudio Jurídico Andrade &amp; Asociados Cía. Ltda.: 1.200,00 más IVA.</td><td>Factura 005-001-000000133 · Comprobante de retención 001-001-000000456</td></tr>
+<tr><td>28/08</td><td>Se venden de contado 140 ventiladores VT-16 a 52,00 cada uno a consumidores finales; el dinero se deposita.</td><td>Facturas 001-001-000000903 a 001-001-000000948</td></tr>
+<tr><td>29/08</td><td>Se paga el rol de agosto: sueldos por 4.200,00, con aporte personal del 9,45% y aporte patronal del 11,15%.</td><td>Rol de pagos 08-2026</td></tr>
+</tbody></table></div>
+
+<div class="nota-lateral"><span class="rot">Cuente los asientos, no los hechos</span>
+<p>Catorce hechos no producen catorce asientos. Las tres ventas, por estar la empresa en <strong>sistema permanente</strong>, generan cada una <em>dos</em> asientos: el del ingreso y el del costo. El total del mes será, entonces, de <strong>diecisiete asientos</strong>. Anticipar cuántos asientos exige una lista de hechos es, en sí mismo, un ejercicio de comprensión.</p></div>
+
+<h3>2.2 Las cuatro preguntas del análisis</h3>
+
+<p><strong>Analizar una transacción</strong> es responder, antes de escribir nada, cuatro preguntas en este orden. Si alguna queda sin respuesta, no se registra: se investiga.</p>
+
+<div class="tabla-wrap"><table class="tabla">
+<thead><tr><th style="width:6%">#</th><th style="width:32%">Pregunta</th><th>Qué se decide con ella</th></tr></thead>
+<tbody>
+<tr><td class="ctr">1</td><td>¿Qué recibió y qué entregó la empresa?</td><td>Identifica las cuentas afectadas. Toda transacción tiene al menos dos caras: algo entra y algo sale, o algo entra y nace una obligación.</td></tr>
+<tr><td class="ctr">2</td><td>¿Cada cuenta aumenta o disminuye?</td><td>Determina si va al Debe o al Haber, según la naturaleza de la cuenta. Un activo que aumenta se debita; un pasivo que aumenta se acredita.</td></tr>
+<tr><td class="ctr">3</td><td>¿Qué tratamiento tributario corresponde?</td><td>Define si hay IVA y a qué tarifa, si procede retención en la fuente y a qué porcentaje, y si procede retención de IVA. Aquí se decide el valor efectivamente pagado o cobrado.</td></tr>
+<tr><td class="ctr">4</td><td>¿Hay un segundo asiento?</td><td>En sistema permanente, toda venta arrastra el asiento del costo. También lo arrastran las bajas, las devoluciones y los faltantes.</td></tr>
+</tbody></table></div>
+
+<h3>2.3 Los tres regímenes tributarios que aparecen este mes</h3>
+
+<p>De los catorce hechos, nueve tienen consecuencia tributaria y se agrupan en tres patrones. Aprenda los patrones, no las cifras: las cifras cambian con cada factura, los patrones no.</p>
+
+<h4>Patrón A — Adquisición de bienes</h4>
+<div class="calc-box"><span class="tit">Estructura del cálculo (compra de bienes a una sociedad)</span>
+Base imponible ......................  valor de la mercadería sin impuestos<br>
+IVA 15% .............................  base &times; 0,15<br>
+Retención en la fuente 2% ...........  base &times; 0,02        <span style="color:#c0392b">(sobre la base, nunca sobre el IVA)</span><br>
+Retención del IVA 30% ...............  IVA &times; 0,30<br>
+<b>Valor a pagar al proveedor</b> .........  base + IVA &minus; retención de renta &minus; retención de IVA
+</div>
+<p>Se aplica a las compras del 05/08, 14/08 y 23/08. Las dos retenciones no son gasto de la empresa: son dinero que la compañía deja de entregar al proveedor porque debe entregarlo al Servicio de Rentas Internas. Por eso nacen como <strong>pasivos</strong>.</p>
+
+<h4>Patrón B — Contratación de servicios</h4>
+<div class="calc-box"><span class="tit">Estructura del cálculo (servicios contratados a una sociedad)</span>
+Base imponible ......................  valor del servicio sin impuestos<br>
+IVA 15% .............................  base &times; 0,15<br>
+Retención en la fuente ..............  base &times; porcentaje según el tipo de servicio<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull; arrendamiento de inmuebles .....  10%<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull; servicios profesionales por sociedades ....  5%<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull; porcentaje residual de servicios ....  3%<br>
+Retención del IVA 70% ...............  IVA &times; 0,70        <span style="color:#c0392b">(en servicios es 70%, no 30%)</span><br>
+<b>Valor a pagar al prestador</b> ..........  base + IVA &minus; retención de renta &minus; retención de IVA
+</div>
+<p>Se aplica al arriendo del 04/08 (10%), al mantenimiento del 20/08 (3%) y a los honorarios del 26/08 (5%). El porcentaje de retención en la fuente cambia con el <em>tipo</em> de servicio; el de retención de IVA no: en servicios es siempre 70%.</p>
+
+<h4>Patrón C — Operaciones sin IVA y sin retención</h4>
+<p>Dos hechos del mes no llevan impuesto alguno, y por razones distintas:</p>
+<ul>
+<li>La <strong>planilla de energía eléctrica de CNEL EP</strong> del 12/08: el servicio de energía eléctrica está gravado con tarifa <strong>0%</strong> de IVA, y además CNEL EP es una empresa pública, por lo que no procede retención en la fuente. Se registra el valor total como gasto.</li>
+<li>La <strong>venta a consumidores finales</strong> del 28/08: sí lleva IVA del 15%, pero <strong>no lleva retenciones</strong>, porque las personas naturales que compran para consumo propio no son agentes de retención. La empresa cobra el total y lo deposita.</li>
+</ul>
+
+<div class="alerta"><span class="rot">Cuatro errores que este mes castiga</span>
+<ul>
+<li><strong>Retener dos veces.</strong> El pago del 02/08 cancela facturas de julio cuyas retenciones ya se practicaron entonces. Al pagar un pasivo ya registrado <em>no se retiene otra vez</em>: el asiento es simplemente Cuentas por pagar contra Bancos.</li>
+<li><strong>Calcular la retención de renta sobre el total facturado.</strong> Se calcula sobre la base imponible. Aplicarla sobre base + IVA infla la retención en un 15%.</li>
+<li><strong>Usar 30% de retención de IVA en un servicio.</strong> El 30% es para bienes; en servicios es 70%. Los tres servicios de este mes usan 70%.</li>
+<li><strong>Retener a una empresa pública o a un consumidor final.</strong> Ni CNEL EP recibe retención, ni los compradores del 28/08 la practican a El Astillero.</li>
+</ul></div>
+
+<h3>2.4 Autochequeo antes de jornalizar</h3>
+
+<p>Responda mentalmente y solo después despliegue la respuesta. Si falla alguna, vuelva al apartado 2.3 antes de pasar al Tema 3.</p>
+
+<div class="autocheck"><span class="rot">Verifique su análisis</span>
+
+<div class="preg">1) En la compra del 05/08 (300 unidades a 34,00), ¿cuánto se le paga finalmente a Electro Andes S.A. y por qué esa cifra no es 11.730,00?</div>
+<button class="autocheck-btn" onclick="verResp('r1',this)">Ver respuesta razonada</button>
+<div id="r1" class="autocheck-resp">
+<p>La base es 300 &times; 34,00 = 10.200,00 y el IVA es 1.530,00, de modo que el documento suma 11.730,00. Pero El Astillero es agente de retención: descuenta 2% sobre la base (204,00) y 30% del IVA (459,00). El proveedor recibe <strong>11.067,00</strong> y dos comprobantes de retención que le sirven como crédito tributario. Los 663,00 retenidos no se quedan en la empresa: se declaran y se pagan al Servicio de Rentas Internas el mes siguiente.</p>
+</div>
+
+<div class="preg">2) En la venta del 09/08 a Comercial Ríos S.A., ¿el ingreso de la empresa es 7.800,00 u 8.970,00?</div>
+<button class="autocheck-btn" onclick="verResp('r2',this)">Ver respuesta razonada</button>
+<div id="r2" class="autocheck-resp">
+<p>El <strong>ingreso es 7.800,00</strong>. El IVA de 1.170,00 no es ingreso de la empresa: es un impuesto que se cobra al cliente por cuenta del Estado y que nace como pasivo. Confundir ambos infla las ventas en un 15% y distorsiona todos los márgenes. Y la cuenta por cobrar tampoco es 8.970,00: como el cliente retiene 156,00 de renta y 351,00 de IVA, el saldo a cobrar queda en <strong>8.463,00</strong>, y las retenciones sufridas se registran como activos por 507,00 en conjunto.</p>
+</div>
+
+<div class="preg">3) ¿Por qué el mantenimiento del 20/08 retiene 3% y los honorarios del 26/08 retienen 5%, si ambos son servicios prestados por sociedades?</div>
+<button class="autocheck-btn" onclick="verResp('r3',this)">Ver respuesta razonada</button>
+<div id="r3" class="autocheck-resp">
+<p>Porque la norma no distingue por la forma jurídica del prestador, sino por la <strong>naturaleza del servicio</strong>. Los servicios profesionales prestados por sociedades tienen un porcentaje propio del 5%; el mantenimiento de un vehículo no encaja en ninguna categoría específica y cae en el <strong>porcentaje residual del 3%</strong>. La retención del IVA, en cambio, sí es la misma en los dos casos —70%—, porque ambos son servicios. Un mismo proveedor puede emitirle a usted dos facturas con porcentajes de renta distintos según lo que le venda.</p>
+</div>
+
+<div class="preg">4) La compra del 23/08 es de 100 unidades a 40,25. ¿Qué problema aritmético aparece y cómo se resuelve?</div>
+<button class="autocheck-btn" onclick="verResp('r4',this)">Ver respuesta razonada</button>
+<div id="r4" class="autocheck-resp">
+<p>La base es 4.025,00 y el IVA 603,75. El 30% de retención sobre ese IVA da 181,125, un valor con tres decimales que ninguna moneda admite. Se <strong>redondea a dos decimales</strong>, y como el tercer decimal es 5 se redondea hacia arriba: <strong>181,13</strong>. El centavo de diferencia no se pierde ni descuadra el asiento: se absorbe en la cuenta por pagar al proveedor, que queda en 4.367,12 en lugar de 4.367,125. Todo comprobante emitido en el Ecuador se expresa con dos decimales, y esa es la razón por la que un asiento puede contener un valor que no coincide exactamente con el producto de dos factores.</p>
+</div>
+
+</div>
+
+<div class="carrera-box"><span class="rot">Vinculación con las cuatro áreas de Negocios Internacionales</span>
+<ul>
+<li><strong>Comercio exterior:</strong> analizar un documento antes de registrarlo es exactamente lo que hace un agente de aduana con una factura comercial y un conocimiento de embarque. La pregunta «¿qué recibió y qué entregó la empresa?» es la misma que decide si una mercadería en tránsito ya es un activo de quien la compró o todavía lo es de quien la vendió.</li>
+<li><strong>Finanzas internacionales:</strong> las retenciones convierten una factura de 11.730,00 en un desembolso de 11.067,00. Esa diferencia de 663,00 es flujo de caja que la empresa conserva un mes. Proyectar caja sin considerar retenciones —propias y ajenas— produce presupuestos que nunca se cumplen, y en operaciones internacionales el efecto se multiplica por los impuestos del país de la contraparte.</li>
+<li><strong>Marketing y negociación internacional:</strong> el precio de venta de 52,00 se negocia, pero el costo de 34,00, 39,00 o 40,25 también. Un negociador que sabe que su última compra subió de 34,00 a 40,25 en dieciocho días entiende que su margen se está erosionando y que necesita renegociar volumen o buscar otro proveedor, no bajar el precio.</li>
+<li><strong>Marco legal y normativo:</strong> cada porcentaje aplicado hoy proviene de una resolución identificable —NAC-DGERCGC26-00000009 para renta, NAC-DGERCGC20-00000061 para IVA—. Sostener ante una revisión por qué se retuvo 3% y no 5% exige conocer la fuente, no la costumbre de la oficina.</li>
+</ul></div>
+
+<div class="futuro"><span class="rot">Contenido diferido</span>
+<p>La <strong>declaración mensual</strong> en la que estas retenciones se pagan y el IVA se liquida corresponde a la asignatura de tributación. En este curso las retenciones y el IVA quedan reflejados como saldos de cuentas; su liquidación frente al Servicio de Rentas Internas no forma parte de los asientos de ajuste del <strong>archivo 2 del Día 13</strong>.</p></div>
+
+<div class="conclusion"><span class="rot">Idea clave del Tema 2</span>
+<p>Registrar es la parte mecánica; <strong>analizar es la parte profesional</strong>. Las cuatro preguntas del apartado 2.2 y los tres patrones tributarios del 2.3 resuelven, entre los dos, los catorce hechos del mes. Quien memoriza asientos se pierde con la primera factura distinta; quien domina los patrones registra cualquier factura.</p></div>
+
+</div><!-- /t2 -->
+
+<!-- ============================================================
+     PESTAÑA: TEMA 3 — JORNALIZACIÓN (I)
+     ============================================================ -->
+<div id="t3" class="panel">
+<h2>Tema 3 — Jornalización del mes: asientos 2 al 9</h2>
+
+<p>A partir de aquí cada asiento viene precedido del <strong>desglose completo de su cálculo</strong>. Ese orden no es decorativo: en la práctica primero se calcula y después se escribe. Tape el asiento con la mano, resuelva el desglose en su cuaderno y compare. El asiento de apertura, número 1, quedó desarrollado en el Tema 1.</p>
+
+<div class="definicion"><span class="rot">Recordatorio de forma del asiento</span>
+<p>Las cuentas <strong>deudoras</strong> van al margen izquierdo; las <strong>acreedoras</strong> van indentadas y precedidas de «a)». La fila <strong>SUMAN</strong> cierra con doble borde y debe mostrar el mismo valor en Debe y en Haber. La <strong>glosa</strong>, en cursiva bajo el asiento, empieza siempre con «P/R» —por registro— y cita el documento fuente. Un asiento sin glosa es un asiento que nadie podrá auditar dentro de seis meses.</p></div>
+
+<h3>3.1 Asiento 2 — Pago del saldo de proveedores (02/08)</h3>
+<p>La empresa cancela con cheque los 7.200,00 que arrastraba de julio. No hay compra nueva, no hay IVA y <strong>no hay retención</strong>: las retenciones de esas facturas se practicaron en julio, cuando se registraron. Aquí solo se extingue un pasivo y disminuye un activo.</p>
+<div class="asiento">
+<div class="asiento-header"><span>Asiento N.º 2</span><span>02/08/2026</span></div>
+<table><thead><tr><th style="width:11%">Fecha</th><th style="width:13%">Código</th><th>Detalle</th><th style="width:12%">Parcial</th><th style="width:13%">Debe</th><th style="width:13%">Haber</th></tr></thead><tbody>
+<tr><td>02/08/2026</td><td>2.1.01.01</td><td>Cuentas por pagar proveedores</td><td class="valor">—</td><td class="valor">7.200,00</td><td class="valor">—</td></tr>
+<tr><td></td><td>1.1.02.01</td><td class="cta-acreedora">a) Bancos</td><td class="valor">—</td><td class="valor">—</td><td class="valor">7.200,00</td></tr>
+<tr class="suman"><td></td><td></td><td>SUMAN</td><td class="valor">—</td><td class="valor">7.200,00</td><td class="valor">7.200,00</td></tr>
+</tbody></table>
+<div class="glosa">P/R Cancelación total del saldo de cuentas por pagar proveedores procedente de julio de 2026, mediante cheque 001-4521. Las retenciones correspondientes ya fueron practicadas al registrarse las facturas del mes anterior, por lo que este pago no genera retención alguna.</div>
+</div>
+<div class="alerta"><span class="rot">Error frecuente</span>
+<p>Muchos estudiantes vuelven a retener al momento del pago. Retener dos veces sobre la misma factura genera un pasivo inexistente frente al Servicio de Rentas Internas y deja al proveedor con un comprobante que no le corresponde. La regla es simple: <strong>se retiene cuando se registra la adquisición, no cuando se paga el saldo</strong>.</p></div>
+
+<h3>3.2 Asiento 3 — Arriendo de la bodega (04/08)</h3>
+<p>Servicio de arrendamiento de inmueble prestado por una sociedad. Aplica el patrón B con retención en la fuente del 10% y retención del IVA del 70%.</p>
+<div class="calc-box"><span class="tit">Desglose del cálculo — factura 001-002-000004417</span>
+Base imponible del arriendo ........................ 900,00<br>
+IVA 15%  &rarr;  900,00 &times; 0,15 ................. 135,00<br>
+<span style="color:#8f2418">Retención en la fuente 10%</span>  &rarr;  900,00 &times; 0,10 .. 90,00<br>
+<span style="color:#8f2418">Retención del IVA 70%</span>  &rarr;  135,00 &times; 0,70 ....... 94,50<br>
+<b>Valor pagado con cheque</b>  &rarr;  900,00 + 135,00 &minus; 90,00 &minus; 94,50 = <b>850,50</b>
+</div><div class="asiento">
+<div class="asiento-header"><span>Asiento N.º 3</span><span>04/08/2026</span></div>
+<table><thead><tr><th style="width:11%">Fecha</th><th style="width:13%">Código</th><th>Detalle</th><th style="width:12%">Parcial</th><th style="width:13%">Debe</th><th style="width:13%">Haber</th></tr></thead><tbody>
+<tr><td>04/08/2026</td><td>5.2.01.02</td><td>Gasto de arriendo</td><td class="valor">—</td><td class="valor">900,00</td><td class="valor">—</td></tr>
+<tr><td></td><td>1.1.07.01</td><td>IVA en compras (crédito tributario)</td><td class="valor">—</td><td class="valor">135,00</td><td class="valor">—</td></tr>
+<tr><td></td><td>2.1.03.01</td><td class="cta-acreedora">a) Retención en la fuente de IR por pagar</td><td class="valor">—</td><td class="valor">—</td><td class="valor">90,00</td></tr>
+<tr><td></td><td>2.1.03.02</td><td class="cta-acreedora">a) Retención de IVA por pagar</td><td class="valor">—</td><td class="valor">—</td><td class="valor">94,50</td></tr>
+<tr><td></td><td>1.1.02.01</td><td class="cta-acreedora">a) Bancos</td><td class="valor">—</td><td class="valor">—</td><td class="valor">850,50</td></tr>
+<tr class="suman"><td></td><td></td><td>SUMAN</td><td class="valor">—</td><td class="valor">1.035,00</td><td class="valor">1.035,00</td></tr>
+</tbody></table>
+<div class="glosa">P/R Pago del arriendo de la bodega correspondiente a agosto de 2026, según factura 001-002-000004417 de Inmobiliaria Puerto Santa Ana S.A., con retención en la fuente del 10% por arrendamiento de inmuebles y retención del 70% del IVA por servicios.</div>
+</div>
+<div class="nota-lateral"><span class="rot">Por qué el gasto es 900,00 y no 1.035,00</span>
+<p>El IVA pagado no es gasto: es <strong>crédito tributario</strong>, un activo que la empresa compensará contra el IVA que cobre en sus ventas. Llevar el IVA al gasto es uno de los errores más caros de una contabilidad pequeña, porque además de distorsionar el resultado hace perder el derecho a la compensación.</p></div>
+
+<h3>3.3 Asiento 4 — Compra de 300 unidades a crédito (05/08)</h3>
+<p>Adquisición de bienes a una sociedad. Patrón A: retención en la fuente del 2% y retención del IVA del 30%. La compra es a crédito, de modo que el neto no sale de Bancos sino que se acumula en Cuentas por pagar proveedores.</p>
+<div class="calc-box"><span class="tit">Desglose del cálculo — factura 001-002-000012345</span>
+Cantidad &times; costo unitario  &rarr;  300 u &times; 34,00 ......... 10.200,00<br>
+IVA 15%  &rarr;  10.200,00 &times; 0,15 ............... 1.530,00<br>
+<span style="color:#8f2418">Retención en la fuente 2%</span>  &rarr;  10.200,00 &times; 0,02 . 204,00<br>
+<span style="color:#8f2418">Retención del IVA 30%</span>  &rarr;  1.530,00 &times; 0,30 ..... 459,00<br>
+<b>Saldo a favor del proveedor</b>  &rarr;  10.200,00 + 1.530,00 &minus; 204,00 &minus; 459,00 = <b>11.067,00</b>
+</div><div class="asiento">
+<div class="asiento-header"><span>Asiento N.º 4</span><span>05/08/2026</span></div>
+<table><thead><tr><th style="width:11%">Fecha</th><th style="width:13%">Código</th><th>Detalle</th><th style="width:12%">Parcial</th><th style="width:13%">Debe</th><th style="width:13%">Haber</th></tr></thead><tbody>
+<tr><td>05/08/2026</td><td>1.1.05.01</td><td>Inventario de mercaderías</td><td class="valor">—</td><td class="valor">10.200,00</td><td class="valor">—</td></tr>
+<tr><td></td><td>1.1.07.01</td><td>IVA en compras (crédito tributario)</td><td class="valor">—</td><td class="valor">1.530,00</td><td class="valor">—</td></tr>
+<tr><td></td><td>2.1.03.01</td><td class="cta-acreedora">a) Retención en la fuente de IR por pagar</td><td class="valor">—</td><td class="valor">—</td><td class="valor">204,00</td></tr>
+<tr><td></td><td>2.1.03.02</td><td class="cta-acreedora">a) Retención de IVA por pagar</td><td class="valor">—</td><td class="valor">—</td><td class="valor">459,00</td></tr>
+<tr><td></td><td>2.1.01.01</td><td class="cta-acreedora">a) Cuentas por pagar proveedores</td><td class="valor">—</td><td class="valor">—</td><td class="valor">11.067,00</td></tr>
+<tr class="suman"><td></td><td></td><td>SUMAN</td><td class="valor">—</td><td class="valor">11.730,00</td><td class="valor">11.730,00</td></tr>
+</tbody></table>
+<div class="glosa">P/R Compra de 300 unidades del artículo INV-4501 a 34,00 cada una, según factura 001-002-000012345 de Electro Andes S.A., a crédito, con retención del 2% en la fuente por adquisición de bienes y retención del 30% del IVA.</div>
+</div>
+<div class="ejemplo"><span class="rot">Doble efecto de este asiento</span>
+<p>Este registro alimenta simultáneamente dos sistemas: el <strong>Libro Diario</strong>, con los 10.200,00 que engrosan la cuenta de inventario, y el <strong>Kardex del artículo INV-4501</strong>, con una entrada de 300 unidades a 34,00. Los dos deben decir lo mismo. Cuando no coinciden, el error casi siempre está en haber cargado al inventario un valor que incluía IVA.</p></div>
+
+<h3>3.4 Asientos 5 y 6 — Venta de 150 unidades a crédito (09/08)</h3>
+<p>Primera venta del mes, a otra sociedad que sí practica retenciones. En sistema permanente esta operación produce <strong>dos asientos</strong>: el del ingreso y el del costo.</p>
+<div class="calc-box"><span class="tit">Desglose del cálculo — factura 001-001-000000871</span>
+Cantidad &times; precio de venta  &rarr;  150 u &times; 52,00 ....... 7.800,00<br>
+IVA 15%  &rarr;  7.800,00 &times; 0,15 ................ 1.170,00<br>
+<span style="color:#1e5c39">Retención de renta que nos practican 2%</span> ....... 156,00<br>
+<span style="color:#1e5c39">Retención de IVA que nos practican 30%</span> ........ 351,00<br>
+<b>Cuenta por cobrar</b>  &rarr;  7.800,00 + 1.170,00 &minus; 156,00 &minus; 351,00 = <b>8.463,00</b><br>
+<br>
+<span style="color:#003366">Costo de la mercadería vendida (FIFO, del Kardex):</span><br>
+&nbsp;&nbsp;100 u de la capa a 30,00 .......................... 3.000,00<br>
+&nbsp;&nbsp;&nbsp;50 u de la capa a 34,00 .......................... 1.700,00<br>
+&nbsp;&nbsp;<b>Costo de ventas</b> ................................. <b>4.700,00</b>
+</div><div class="asiento">
+<div class="asiento-header"><span>Asiento N.º 5</span><span>09/08/2026</span></div>
+<table><thead><tr><th style="width:11%">Fecha</th><th style="width:13%">Código</th><th>Detalle</th><th style="width:12%">Parcial</th><th style="width:13%">Debe</th><th style="width:13%">Haber</th></tr></thead><tbody>
+<tr><td>09/08/2026</td><td>1.1.03.01</td><td>Cuentas por cobrar clientes</td><td class="valor">—</td><td class="valor">8.463,00</td><td class="valor">—</td></tr>
+<tr><td></td><td>1.1.08.01</td><td>Anticipo de IR retenido</td><td class="valor">—</td><td class="valor">156,00</td><td class="valor">—</td></tr>
+<tr><td></td><td>1.1.08.02</td><td>Crédito tributario por retenciones de IVA</td><td class="valor">—</td><td class="valor">351,00</td><td class="valor">—</td></tr>
+<tr><td></td><td>4.1.01.01</td><td class="cta-acreedora">a) Ventas</td><td class="valor">—</td><td class="valor">—</td><td class="valor">7.800,00</td></tr>
+<tr><td></td><td>2.1.04.01</td><td class="cta-acreedora">a) IVA en ventas</td><td class="valor">—</td><td class="valor">—</td><td class="valor">1.170,00</td></tr>
+<tr class="suman"><td></td><td></td><td>SUMAN</td><td class="valor">—</td><td class="valor">8.970,00</td><td class="valor">8.970,00</td></tr>
+</tbody></table>
+<div class="glosa">P/R Venta de 150 unidades del artículo INV-4501 a 52,00 cada una, según factura 001-001-000000871 emitida a Comercial Ríos S.A., a crédito, con retenciones recibidas del 2% de impuesto a la renta y del 30% del IVA.</div>
+</div><div class="asiento">
+<div class="asiento-header"><span>Asiento N.º 6</span><span>09/08/2026</span></div>
+<table><thead><tr><th style="width:11%">Fecha</th><th style="width:13%">Código</th><th>Detalle</th><th style="width:12%">Parcial</th><th style="width:13%">Debe</th><th style="width:13%">Haber</th></tr></thead><tbody>
+<tr><td>09/08/2026</td><td>5.1.01.01</td><td>Costo de ventas</td><td class="valor">—</td><td class="valor">4.700,00</td><td class="valor">—</td></tr>
+<tr><td></td><td>1.1.05.01</td><td class="cta-acreedora">a) Inventario de mercaderías</td><td class="valor">—</td><td class="valor">—</td><td class="valor">4.700,00</td></tr>
+<tr class="suman"><td></td><td></td><td>SUMAN</td><td class="valor">—</td><td class="valor">4.700,00</td><td class="valor">4.700,00</td></tr>
+</tbody></table>
+<div class="glosa">P/R Costo de ventas de las 150 unidades despachadas según factura 001-001-000000871, valoradas por el método FIFO en el Kardex del artículo INV-4501 (100 u a 30,00 y 50 u a 34,00).</div>
+</div>
+<div class="alerta"><span class="rot">Los dos asientos son independientes entre sí</span>
+<p>El asiento 5 se calcula con el <strong>precio de venta</strong>; el asiento 6, con el <strong>costo del Kardex</strong>. No hay ninguna relación aritmética entre 8.970,00 y 4.700,00. Un estudiante que intente «cuadrar» el segundo asiento con el primero está buscando una simetría que no existe, y el margen de la operación —7.800,00 de ingreso contra 4.700,00 de costo— desaparecería si los forzara a coincidir.</p></div>
+
+<h3>3.5 Asiento 7 — Cobro parcial de cartera (11/08)</h3>
+<p>Un cliente abona 6.000,00 por transferencia. Es una permuta dentro del activo: sube Bancos y baja Cuentas por cobrar. No hay ingreso, no hay IVA y no hay retención, porque el ingreso y sus impuestos ya se reconocieron cuando se emitió la factura.</p>
+<div class="asiento">
+<div class="asiento-header"><span>Asiento N.º 7</span><span>11/08/2026</span></div>
+<table><thead><tr><th style="width:11%">Fecha</th><th style="width:13%">Código</th><th>Detalle</th><th style="width:12%">Parcial</th><th style="width:13%">Debe</th><th style="width:13%">Haber</th></tr></thead><tbody>
+<tr><td>11/08/2026</td><td>1.1.02.01</td><td>Bancos</td><td class="valor">—</td><td class="valor">6.000,00</td><td class="valor">—</td></tr>
+<tr><td></td><td>1.1.03.01</td><td class="cta-acreedora">a) Cuentas por cobrar clientes</td><td class="valor">—</td><td class="valor">—</td><td class="valor">6.000,00</td></tr>
+<tr class="suman"><td></td><td></td><td>SUMAN</td><td class="valor">—</td><td class="valor">6.000,00</td><td class="valor">6.000,00</td></tr>
+</tbody></table>
+<div class="glosa">P/R Cobro parcial de cuentas por cobrar clientes por transferencia acreditada en la cuenta corriente del Banco Bolivariano, según comprobante de ingreso 0087.</div>
+</div>
+<div class="nota-lateral"><span class="rot">Devengo, otra vez</span>
+<p>Este asiento ilustra por qué el ingreso no se reconoce cuando entra el dinero. La venta que originó esta cartera pudo haberse facturado en julio; el ingreso pertenece a julio, y el cobro de agosto solo cambia la forma del activo. Este mismo principio es el que obliga, al cierre, a practicar los asientos de ajuste.</p></div>
+
+<h3>3.6 Asiento 8 — Planilla de energía eléctrica (12/08)</h3>
+<p>Patrón C. El servicio de energía eléctrica está gravado con tarifa 0% de IVA, y CNEL EP, por su condición de empresa pública, no está sujeta a retención en la fuente. El asiento tiene dos líneas y el valor total va al gasto.</p>
+<div class="asiento">
+<div class="asiento-header"><span>Asiento N.º 8</span><span>12/08/2026</span></div>
+<table><thead><tr><th style="width:11%">Fecha</th><th style="width:13%">Código</th><th>Detalle</th><th style="width:12%">Parcial</th><th style="width:13%">Debe</th><th style="width:13%">Haber</th></tr></thead><tbody>
+<tr><td>12/08/2026</td><td>5.2.01.08</td><td>Gasto servicios básicos</td><td class="valor">—</td><td class="valor">240,00</td><td class="valor">—</td></tr>
+<tr><td></td><td>1.1.02.01</td><td class="cta-acreedora">a) Bancos</td><td class="valor">—</td><td class="valor">—</td><td class="valor">240,00</td></tr>
+<tr class="suman"><td></td><td></td><td>SUMAN</td><td class="valor">—</td><td class="valor">240,00</td><td class="valor">240,00</td></tr>
+</tbody></table>
+<div class="glosa">P/R Pago de la planilla de energía eléctrica de CNEL EP correspondiente a agosto de 2026. El servicio de energía eléctrica está gravado con tarifa 0% de IVA y no procede retención en la fuente por tratarse de una empresa pública.</div>
+</div>
+<div class="alerta"><span class="rot">La trampa que vuelve</span>
+<p>Esta es la misma situación instalada en el Día 6. Un estudiante que registre 240,00 más IVA de 36,00, o que retenga 2% al Estado, comete dos errores en un asiento de dos líneas. Cuando el proveedor es una empresa pública —CNEL EP, Interagua, la Corporación Nacional de Telecomunicaciones—, revise la tarifa del servicio y absténgase de retener.</p></div>
+
+<h3>3.7 Asiento 9 — Compra de 150 unidades con cheque (14/08)</h3>
+<p>Segunda compra del mes. Mismo patrón A que el asiento 4, pero pagada de inmediato con cheque: el neto sale de Bancos y no queda saldo pendiente con el proveedor. Note además que el costo unitario subió de 34,00 a 39,00 en nueve días.</p>
+<div class="calc-box"><span class="tit">Desglose del cálculo — factura 001-002-000012908</span>
+Cantidad &times; costo unitario  &rarr;  150 u &times; 39,00 ......... 5.850,00<br>
+IVA 15%  &rarr;  5.850,00 &times; 0,15 ................. 877,50<br>
+<span style="color:#8f2418">Retención en la fuente 2%</span>  &rarr;  5.850,00 &times; 0,02 ... 117,00<br>
+<span style="color:#8f2418">Retención del IVA 30%</span>  &rarr;  877,50 &times; 0,30 ....... 263,25<br>
+<b>Valor pagado con cheque 001-4522</b>  &rarr;  5.850,00 + 877,50 &minus; 117,00 &minus; 263,25 = <b>6.347,25</b>
+</div><div class="asiento">
+<div class="asiento-header"><span>Asiento N.º 9</span><span>14/08/2026</span></div>
+<table><thead><tr><th style="width:11%">Fecha</th><th style="width:13%">Código</th><th>Detalle</th><th style="width:12%">Parcial</th><th style="width:13%">Debe</th><th style="width:13%">Haber</th></tr></thead><tbody>
+<tr><td>14/08/2026</td><td>1.1.05.01</td><td>Inventario de mercaderías</td><td class="valor">—</td><td class="valor">5.850,00</td><td class="valor">—</td></tr>
+<tr><td></td><td>1.1.07.01</td><td>IVA en compras (crédito tributario)</td><td class="valor">—</td><td class="valor">877,50</td><td class="valor">—</td></tr>
+<tr><td></td><td>2.1.03.01</td><td class="cta-acreedora">a) Retención en la fuente de IR por pagar</td><td class="valor">—</td><td class="valor">—</td><td class="valor">117,00</td></tr>
+<tr><td></td><td>2.1.03.02</td><td class="cta-acreedora">a) Retención de IVA por pagar</td><td class="valor">—</td><td class="valor">—</td><td class="valor">263,25</td></tr>
+<tr><td></td><td>1.1.02.01</td><td class="cta-acreedora">a) Bancos</td><td class="valor">—</td><td class="valor">—</td><td class="valor">6.347,25</td></tr>
+<tr class="suman"><td></td><td></td><td>SUMAN</td><td class="valor">—</td><td class="valor">6.727,50</td><td class="valor">6.727,50</td></tr>
+</tbody></table>
+<div class="glosa">P/R Compra de 150 unidades del artículo INV-4501 a 39,00 cada una, según factura 001-002-000012908 de Electro Andes S.A., pagada con cheque 001-4522, con retención del 2% en la fuente y retención del 30% del IVA.</div>
+</div>
+<div class="ejemplo"><span class="rot">Lo que dice el alza de 34,00 a 39,00</span>
+<p>Un incremento de 14,7% en el costo unitario en nueve días es información de gestión, no solo un dato contable. Con un precio de venta fijo en 52,00, el margen bruto por unidad cae de 18,00 a 13,00. Si la empresa no advierte esto a tiempo, seguirá vendiendo al mismo precio una mercadería que ya no deja lo mismo. El Kardex del Tema 4 hará visible ese deterioro capa por capa.</p></div>
+
+<div class="carrera-box"><span class="rot">Vinculación con las cuatro áreas de Negocios Internacionales</span>
+<ul>
+<li><strong>Comercio exterior:</strong> el asiento 4 muestra cómo entra la mercadería al patrimonio de la empresa. Cuando la compra es una importación, la misma cuenta de inventario recibe además el flete internacional, el seguro y el arancel, y el momento del registro depende del Incoterm pactado. La estructura del asiento no cambia; cambia qué se acumula en el Debe.</li>
+<li><strong>Finanzas internacionales:</strong> comparar el asiento 4 —compra a crédito— con el 9 —compra con cheque— es comparar dos decisiones de financiamiento. La primera conserva 11.067,00 de liquidez durante el plazo del proveedor; la segunda desembolsa 6.347,25 el mismo día. En comercio internacional esa elección se llama negociar términos de pago, y vale tanto como negociar el precio.</li>
+<li><strong>Marketing y negociación internacional:</strong> el asiento 5 fija el precio de venta en 52,00 y el 6 revela que esas unidades costaron 4.700,00. Conocer el margen real por lote es lo que permite conceder descuentos sin destruir la utilidad, y es el dato que un distribuidor extranjero pedirá antes de discutir volúmenes.</li>
+<li><strong>Marco legal y normativo:</strong> cada asiento con retención genera un comprobante numerado que alimenta el anexo transaccional. El asiento 2 demuestra el caso inverso: pagar un pasivo no genera comprobante. Saber cuándo <em>no</em> se emite un documento evita observaciones tributarias tan graves como no emitirlo cuando corresponde.</li>
+</ul></div>
+
+<div class="conclusion"><span class="rot">Idea clave del Tema 3</span>
+<p>Los ocho asientos de esta primera mitad cubren los cinco comportamientos básicos de una compañía comercial: <strong>pagar un pasivo, contratar un servicio, comprar mercadería, vender y cobrar</strong>. Todo lo demás del mes es repetición de estos patrones con cifras distintas. Quien los domina aquí, resuelve la segunda mitad sin ayuda.</p></div>
+
+</div><!-- /t3 -->
+
+<!-- ============================================================
+     PESTAÑA: TEMA 3b — JORNALIZACIÓN (II)
+     ============================================================ -->
+<div id="t3b" class="panel">
+<h2>Tema 3b — Jornalización del mes: asientos 10 al 17</h2>
+
+<p>La segunda mitad del mes repite los patrones ya conocidos y añade dos situaciones nuevas: una venta <strong>sin retenciones</strong> y el <strong>rol de pagos</strong>, que introduce la aportación al Instituto Ecuatoriano de Seguridad Social. Mantenga el mismo método: tape el asiento, resuelva el desglose, compare.</p>
+
+<h3>3.8 Asientos 10 y 11 — Venta de 300 unidades a crédito (18/08)</h3>
+<p>La venta más grande del mes. Mismo patrón que el 09/08: dos asientos, ingreso y costo. Observe que el costo de estas 300 unidades no es proporcional al de las 150 anteriores, porque el Kardex ya consumió la capa barata de 30,00.</p>
+<div class="calc-box"><span class="tit">Desglose del cálculo — factura 001-001-000000902</span>
+Cantidad &times; precio de venta  &rarr;  300 u &times; 52,00 ...... 15.600,00<br>
+IVA 15%  &rarr;  15.600,00 &times; 0,15 .............. 2.340,00<br>
+<span style="color:#1e5c39">Retención de renta que nos practican 2%</span> ...... 312,00<br>
+<span style="color:#1e5c39">Retención de IVA que nos practican 30%</span> ....... 702,00<br>
+<b>Cuenta por cobrar</b>  &rarr;  15.600,00 + 2.340,00 &minus; 312,00 &minus; 702,00 = <b>16.926,00</b><br>
+<br>
+<span style="color:#003366">Costo de la mercadería vendida (FIFO, del Kardex):</span><br>
+&nbsp;&nbsp;250 u de la capa a 34,00 ......................... 8.500,00<br>
+&nbsp;&nbsp;&nbsp;50 u de la capa a 39,00 ......................... 1.950,00<br>
+&nbsp;&nbsp;<b>Costo de ventas</b> ................................ <b>10.450,00</b>
+</div><div class="asiento">
+<div class="asiento-header"><span>Asiento N.º 10</span><span>18/08/2026</span></div>
+<table><thead><tr><th style="width:11%">Fecha</th><th style="width:13%">Código</th><th>Detalle</th><th style="width:12%">Parcial</th><th style="width:13%">Debe</th><th style="width:13%">Haber</th></tr></thead><tbody>
+<tr><td>18/08/2026</td><td>1.1.03.01</td><td>Cuentas por cobrar clientes</td><td class="valor">—</td><td class="valor">16.926,00</td><td class="valor">—</td></tr>
+<tr><td></td><td>1.1.08.01</td><td>Anticipo de IR retenido</td><td class="valor">—</td><td class="valor">312,00</td><td class="valor">—</td></tr>
+<tr><td></td><td>1.1.08.02</td><td>Crédito tributario por retenciones de IVA</td><td class="valor">—</td><td class="valor">702,00</td><td class="valor">—</td></tr>
+<tr><td></td><td>4.1.01.01</td><td class="cta-acreedora">a) Ventas</td><td class="valor">—</td><td class="valor">—</td><td class="valor">15.600,00</td></tr>
+<tr><td></td><td>2.1.04.01</td><td class="cta-acreedora">a) IVA en ventas</td><td class="valor">—</td><td class="valor">—</td><td class="valor">2.340,00</td></tr>
+<tr class="suman"><td></td><td></td><td>SUMAN</td><td class="valor">—</td><td class="valor">17.940,00</td><td class="valor">17.940,00</td></tr>
+</tbody></table>
+<div class="glosa">P/R Venta de 300 unidades del artículo INV-4501 a 52,00 cada una, según factura 001-001-000000902 emitida a Almacenes del Guayas S.A., a crédito, con retenciones recibidas del 2% de impuesto a la renta y del 30% del IVA.</div>
+</div><div class="asiento">
+<div class="asiento-header"><span>Asiento N.º 11</span><span>18/08/2026</span></div>
+<table><thead><tr><th style="width:11%">Fecha</th><th style="width:13%">Código</th><th>Detalle</th><th style="width:12%">Parcial</th><th style="width:13%">Debe</th><th style="width:13%">Haber</th></tr></thead><tbody>
+<tr><td>18/08/2026</td><td>5.1.01.01</td><td>Costo de ventas</td><td class="valor">—</td><td class="valor">10.450,00</td><td class="valor">—</td></tr>
+<tr><td></td><td>1.1.05.01</td><td class="cta-acreedora">a) Inventario de mercaderías</td><td class="valor">—</td><td class="valor">—</td><td class="valor">10.450,00</td></tr>
+<tr class="suman"><td></td><td></td><td>SUMAN</td><td class="valor">—</td><td class="valor">10.450,00</td><td class="valor">10.450,00</td></tr>
+</tbody></table>
+<div class="glosa">P/R Costo de ventas de las 300 unidades despachadas según factura 001-001-000000902, valoradas por el método FIFO en el Kardex del artículo INV-4501 (250 u a 34,00 y 50 u a 39,00).</div>
+</div>
+<div class="ejemplo"><span class="rot">Compare los dos márgenes del mes</span>
+<p>El 09/08 se vendieron 150 unidades por 7.800,00 con un costo de 4.700,00: margen bruto de 3.100,00, es decir 39,7% sobre la venta. El 18/08 se vendieron 300 unidades por 15.600,00 con un costo de 10.450,00: margen de 5.150,00, es decir 33,0%. Se vendió el doble y el margen porcentual cayó casi siete puntos, sin que nadie bajara el precio. La causa está enteramente en el costo de reposición, y solo el método de valuación la hace visible.</p></div>
+
+<h3>3.9 Asiento 12 — Mantenimiento del vehículo (20/08)</h3>
+<p>Servicio contratado a una sociedad que no encaja en ninguna categoría específica de retención: se aplica el <strong>porcentaje residual del 3%</strong> y la retención del IVA del 70% propia de los servicios.</p>
+<div class="calc-box"><span class="tit">Desglose del cálculo — factura 002-001-000000778</span>
+Base imponible del servicio ....................... 500,00<br>
+IVA 15%  &rarr;  500,00 &times; 0,15 ................. 75,00<br>
+<span style="color:#8f2418">Retención en la fuente 3% (residual)</span>  &rarr;  500,00 &times; 0,03 .. 15,00<br>
+<span style="color:#8f2418">Retención del IVA 70%</span>  &rarr;  75,00 &times; 0,70 ...... 52,50<br>
+<b>Valor pagado</b>  &rarr;  500,00 + 75,00 &minus; 15,00 &minus; 52,50 = <b>507,50</b>
+</div><div class="asiento">
+<div class="asiento-header"><span>Asiento N.º 12</span><span>20/08/2026</span></div>
+<table><thead><tr><th style="width:11%">Fecha</th><th style="width:13%">Código</th><th>Detalle</th><th style="width:12%">Parcial</th><th style="width:13%">Debe</th><th style="width:13%">Haber</th></tr></thead><tbody>
+<tr><td>20/08/2026</td><td>5.2.01.10</td><td>Gasto mantenimiento de vehículo</td><td class="valor">—</td><td class="valor">500,00</td><td class="valor">—</td></tr>
+<tr><td></td><td>1.1.07.01</td><td>IVA en compras (crédito tributario)</td><td class="valor">—</td><td class="valor">75,00</td><td class="valor">—</td></tr>
+<tr><td></td><td>2.1.03.01</td><td class="cta-acreedora">a) Retención en la fuente de IR por pagar</td><td class="valor">—</td><td class="valor">—</td><td class="valor">15,00</td></tr>
+<tr><td></td><td>2.1.03.02</td><td class="cta-acreedora">a) Retención de IVA por pagar</td><td class="valor">—</td><td class="valor">—</td><td class="valor">52,50</td></tr>
+<tr><td></td><td>1.1.02.01</td><td class="cta-acreedora">a) Bancos</td><td class="valor">—</td><td class="valor">—</td><td class="valor">507,50</td></tr>
+<tr class="suman"><td></td><td></td><td>SUMAN</td><td class="valor">—</td><td class="valor">575,00</td><td class="valor">575,00</td></tr>
+</tbody></table>
+<div class="glosa">P/R Pago del mantenimiento preventivo del vehículo de reparto, según factura 002-001-000000778 de Tecnimotor Cía. Ltda., con retención del 3% en la fuente por el porcentaje residual de servicios y retención del 70% del IVA.</div>
+</div>
+<div class="nota-lateral"><span class="rot">Mantenimiento no es mejora</span>
+<p>Este desembolso se llevó a gasto porque conserva la capacidad operativa del vehículo, no la aumenta. Si en lugar de un mantenimiento preventivo se hubiera instalado un equipo de refrigeración que extiende la vida útil del vehículo, el valor se habría <strong>capitalizado</strong>, es decir sumado al costo del activo, y se depreciaría a lo largo de los años restantes. Distinguir gasto de capitalización es una decisión de criterio, y de las que más se discuten en una auditoría.</p></div>
+
+<h3>3.10 Asiento 13 — Compra de 100 unidades a crédito (23/08)</h3>
+<p>Tercera compra del mes, al costo unitario más alto del período. Es también el asiento donde aparece el redondeo anunciado en el Tema 2.</p>
+<div class="calc-box"><span class="tit">Desglose del cálculo — factura 003-001-000002210</span>
+Cantidad &times; costo unitario  &rarr;  100 u &times; 40,25 ........ 4.025,00<br>
+IVA 15%  &rarr;  4.025,00 &times; 0,15 ................ 603,75<br>
+<span style="color:#8f2418">Retención en la fuente 2%</span>  &rarr;  4.025,00 &times; 0,02 ... 80,50<br>
+<span style="color:#8f2418">Retención del IVA 30%</span>  &rarr;  603,75 &times; 0,30 = 181,125  &rarr;  redondeado ....... 181,13<br>
+<b>Saldo a favor del proveedor</b>  &rarr;  4.025,00 + 603,75 &minus; 80,50 &minus; 181,13 = <b>4.367,12</b>
+</div><div class="asiento">
+<div class="asiento-header"><span>Asiento N.º 13</span><span>23/08/2026</span></div>
+<table><thead><tr><th style="width:11%">Fecha</th><th style="width:13%">Código</th><th>Detalle</th><th style="width:12%">Parcial</th><th style="width:13%">Debe</th><th style="width:13%">Haber</th></tr></thead><tbody>
+<tr><td>23/08/2026</td><td>1.1.05.01</td><td>Inventario de mercaderías</td><td class="valor">—</td><td class="valor">4.025,00</td><td class="valor">—</td></tr>
+<tr><td></td><td>1.1.07.01</td><td>IVA en compras (crédito tributario)</td><td class="valor">—</td><td class="valor">603,75</td><td class="valor">—</td></tr>
+<tr><td></td><td>2.1.03.01</td><td class="cta-acreedora">a) Retención en la fuente de IR por pagar</td><td class="valor">—</td><td class="valor">—</td><td class="valor">80,50</td></tr>
+<tr><td></td><td>2.1.03.02</td><td class="cta-acreedora">a) Retención de IVA por pagar</td><td class="valor">—</td><td class="valor">—</td><td class="valor">181,13</td></tr>
+<tr><td></td><td>2.1.01.01</td><td class="cta-acreedora">a) Cuentas por pagar proveedores</td><td class="valor">—</td><td class="valor">—</td><td class="valor">4.367,12</td></tr>
+<tr class="suman"><td></td><td></td><td>SUMAN</td><td class="valor">—</td><td class="valor">4.628,75</td><td class="valor">4.628,75</td></tr>
+</tbody></table>
+<div class="glosa">P/R Compra de 100 unidades del artículo INV-4501 a 40,25 cada una, según factura 003-001-000002210 de Importadora Delta S.A., a crédito, con retención del 2% en la fuente y retención del 30% del IVA redondeada a dos decimales.</div>
+</div>
+<div class="alerta"><span class="rot">Qué hacer con el medio centavo</span>
+<p>El cálculo exacto de la retención del IVA arroja 181,125. Como todo comprobante se expresa con dos decimales y el tercer decimal es 5, se redondea hacia arriba: 181,13. La diferencia se absorbe en la <strong>cuenta por pagar</strong>, que queda en 4.367,12, y el asiento sigue cuadrando exactamente en 4.628,75. Nunca se «arregla» un redondeo modificando la base ni el IVA: se ajusta la cuenta que representa el saldo pendiente, porque es la única cifra que aún no está declarada en un documento tributario.</p></div>
+
+<h3>3.11 Asiento 14 — Honorarios profesionales (26/08)</h3>
+<p>Servicios profesionales prestados por una sociedad: retención en la fuente del <strong>5%</strong> y retención del IVA del 70%.</p>
+<div class="calc-box"><span class="tit">Desglose del cálculo — factura 005-001-000000133</span>
+Base imponible de los honorarios .................. 1.200,00<br>
+IVA 15%  &rarr;  1.200,00 &times; 0,15 ............... 180,00<br>
+<span style="color:#8f2418">Retención en la fuente 5%</span>  &rarr;  1.200,00 &times; 0,05 . 60,00<br>
+<span style="color:#8f2418">Retención del IVA 70%</span>  &rarr;  180,00 &times; 0,70 ..... 126,00<br>
+<b>Valor pagado</b>  &rarr;  1.200,00 + 180,00 &minus; 60,00 &minus; 126,00 = <b>1.194,00</b>
+</div><div class="asiento">
+<div class="asiento-header"><span>Asiento N.º 14</span><span>26/08/2026</span></div>
+<table><thead><tr><th style="width:11%">Fecha</th><th style="width:13%">Código</th><th>Detalle</th><th style="width:12%">Parcial</th><th style="width:13%">Debe</th><th style="width:13%">Haber</th></tr></thead><tbody>
+<tr><td>26/08/2026</td><td>5.2.01.11</td><td>Gasto honorarios profesionales</td><td class="valor">—</td><td class="valor">1.200,00</td><td class="valor">—</td></tr>
+<tr><td></td><td>1.1.07.01</td><td>IVA en compras (crédito tributario)</td><td class="valor">—</td><td class="valor">180,00</td><td class="valor">—</td></tr>
+<tr><td></td><td>2.1.03.01</td><td class="cta-acreedora">a) Retención en la fuente de IR por pagar</td><td class="valor">—</td><td class="valor">—</td><td class="valor">60,00</td></tr>
+<tr><td></td><td>2.1.03.02</td><td class="cta-acreedora">a) Retención de IVA por pagar</td><td class="valor">—</td><td class="valor">—</td><td class="valor">126,00</td></tr>
+<tr><td></td><td>1.1.02.01</td><td class="cta-acreedora">a) Bancos</td><td class="valor">—</td><td class="valor">—</td><td class="valor">1.194,00</td></tr>
+<tr class="suman"><td></td><td></td><td>SUMAN</td><td class="valor">—</td><td class="valor">1.380,00</td><td class="valor">1.380,00</td></tr>
+</tbody></table>
+<div class="glosa">P/R Pago de honorarios por asesoría legal en la revisión de contratos de distribución, según factura 005-001-000000133 de Estudio Jurídico Andrade & Asociados Cía. Ltda., con retención del 5% en la fuente por servicios profesionales prestados por sociedades y retención del 70% del IVA.</div>
+</div>
+<div class="nota-lateral"><span class="rot">Tres servicios, tres porcentajes</span>
+<p>En un mismo mes la empresa contrató tres servicios y aplicó tres porcentajes distintos de retención en la fuente: <strong>10%</strong> al arriendo del inmueble, <strong>3%</strong> al mantenimiento y <strong>5%</strong> a los honorarios profesionales. La retención del IVA, en cambio, fue del 70% en los tres. Ese contraste resume toda la lógica del sistema: el porcentaje de renta depende de <em>qué</em> se contrató; el de IVA, de <em>si</em> fue bien o servicio.</p></div>
+
+<h3>3.12 Asientos 15 y 16 — Venta a consumidores finales (28/08)</h3>
+<p>Última venta del mes, la única sin retenciones. Las personas naturales que compran para consumo propio no son agentes de retención, de modo que la empresa cobra el total facturado y lo deposita.</p>
+<div class="calc-box"><span class="tit">Desglose del cálculo — facturas 001-001-000000903 a 000948</span>
+Cantidad &times; precio de venta  &rarr;  140 u &times; 52,00 ....... 7.280,00<br>
+IVA 15%  &rarr;  7.280,00 &times; 0,15 ................ 1.092,00<br>
+Retenciones ....................................... <b>ninguna</b><br>
+<b>Valor cobrado y depositado</b>  &rarr;  7.280,00 + 1.092,00 = <b>8.372,00</b><br>
+<br>
+<span style="color:#003366">Costo de la mercadería vendida (FIFO, del Kardex):</span><br>
+&nbsp;&nbsp;100 u de la capa a 39,00 ......................... 3.900,00<br>
+&nbsp;&nbsp;&nbsp;40 u de la capa a 40,25 ......................... 1.610,00<br>
+&nbsp;&nbsp;<b>Costo de ventas</b> ................................ <b>5.510,00</b>
+</div><div class="asiento">
+<div class="asiento-header"><span>Asiento N.º 15</span><span>28/08/2026</span></div>
+<table><thead><tr><th style="width:11%">Fecha</th><th style="width:13%">Código</th><th>Detalle</th><th style="width:12%">Parcial</th><th style="width:13%">Debe</th><th style="width:13%">Haber</th></tr></thead><tbody>
+<tr><td>28/08/2026</td><td>1.1.02.01</td><td>Bancos</td><td class="valor">—</td><td class="valor">8.372,00</td><td class="valor">—</td></tr>
+<tr><td></td><td>4.1.01.01</td><td class="cta-acreedora">a) Ventas</td><td class="valor">—</td><td class="valor">—</td><td class="valor">7.280,00</td></tr>
+<tr><td></td><td>2.1.04.01</td><td class="cta-acreedora">a) IVA en ventas</td><td class="valor">—</td><td class="valor">—</td><td class="valor">1.092,00</td></tr>
+<tr class="suman"><td></td><td></td><td>SUMAN</td><td class="valor">—</td><td class="valor">8.372,00</td><td class="valor">8.372,00</td></tr>
+</tbody></table>
+<div class="glosa">P/R Venta de 140 unidades del artículo INV-4501 a 52,00 cada una a consumidores finales, según facturas 001-001-000000903 a 001-001-000000948, cobradas y depositadas en la cuenta corriente. Los consumidores finales no son agentes de retención, por lo que no se recibe comprobante de retención alguno.</div>
+</div><div class="asiento">
+<div class="asiento-header"><span>Asiento N.º 16</span><span>28/08/2026</span></div>
+<table><thead><tr><th style="width:11%">Fecha</th><th style="width:13%">Código</th><th>Detalle</th><th style="width:12%">Parcial</th><th style="width:13%">Debe</th><th style="width:13%">Haber</th></tr></thead><tbody>
+<tr><td>28/08/2026</td><td>5.1.01.01</td><td>Costo de ventas</td><td class="valor">—</td><td class="valor">5.510,00</td><td class="valor">—</td></tr>
+<tr><td></td><td>1.1.05.01</td><td class="cta-acreedora">a) Inventario de mercaderías</td><td class="valor">—</td><td class="valor">—</td><td class="valor">5.510,00</td></tr>
+<tr class="suman"><td></td><td></td><td>SUMAN</td><td class="valor">—</td><td class="valor">5.510,00</td><td class="valor">5.510,00</td></tr>
+</tbody></table>
+<div class="glosa">P/R Costo de ventas de las 140 unidades despachadas a consumidores finales, valoradas por el método FIFO en el Kardex del artículo INV-4501 (100 u a 39,00 y 40 u a 40,25).</div>
+</div>
+<div class="alerta"><span class="rot">Que no haya retención no significa que no haya impuesto</span>
+<p>Los 1.092,00 de IVA cobrados a los consumidores finales son un <strong>pasivo</strong> frente al Servicio de Rentas Internas, exactamente igual que en las ventas a sociedades. Lo que cambia es que aquí la empresa recibió el 100% de ese IVA en efectivo, mientras que en las ventas del 09/08 y del 18/08 los clientes le retuvieron el 30% y le entregaron un comprobante en lugar de dinero. Menos retención significa más caja hoy y la misma obligación tributaria mañana.</p></div>
+
+<h3>3.13 Asiento 17 — Rol de pagos de agosto (29/08)</h3>
+<p>El sueldo bruto del personal es 4.200,00. Sobre él operan dos aportaciones al Instituto Ecuatoriano de Seguridad Social con naturalezas distintas: el <strong>aporte personal</strong>, que se descuenta al trabajador y no es gasto de la empresa, y el <strong>aporte patronal</strong>, que sí lo es.</p>
+<div class="calc-box"><span class="tit">Desglose del cálculo — rol de pagos 08-2026</span>
+Sueldos del período ............................... 4.200,00<br>
+<span style="color:#8f2418">Aporte personal IESS 9,45%</span>  &rarr;  4.200,00 &times; 0,0945 ... 396,90<br>
+<span style="color:#004a80">Aporte patronal IESS 11,15%</span>  &rarr;  4.200,00 &times; 0,1115 .. 468,30<br>
+<b>Obligación total con el IESS</b>  &rarr;  396,90 + 468,30 = <b>865,20</b><br>
+<b>Líquido pagado al personal</b>  &rarr;  4.200,00 &minus; 396,90 = <b>3.803,10</b><br>
+<br>
+Comprobación del asiento: Debe = 4.200,00 + 468,30 = 4.668,30<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Haber = 865,20 + 3.803,10 = 4.668,30
+</div><div class="asiento">
+<div class="asiento-header"><span>Asiento N.º 17</span><span>29/08/2026</span></div>
+<table><thead><tr><th style="width:11%">Fecha</th><th style="width:13%">Código</th><th>Detalle</th><th style="width:12%">Parcial</th><th style="width:13%">Debe</th><th style="width:13%">Haber</th></tr></thead><tbody>
+<tr><td>29/08/2026</td><td>5.2.01.01</td><td>Gasto sueldos y salarios</td><td class="valor">—</td><td class="valor">4.200,00</td><td class="valor">—</td></tr>
+<tr><td></td><td>5.2.01.03</td><td>Gasto aporte patronal IESS</td><td class="valor">—</td><td class="valor">468,30</td><td class="valor">—</td></tr>
+<tr><td></td><td>2.1.02.02</td><td class="cta-acreedora">a) IESS por pagar</td><td class="valor">—</td><td class="valor">—</td><td class="valor">865,20</td></tr>
+<tr><td></td><td>1.1.02.01</td><td class="cta-acreedora">a) Bancos</td><td class="valor">—</td><td class="valor">—</td><td class="valor">3.803,10</td></tr>
+<tr class="suman"><td></td><td></td><td>SUMAN</td><td class="valor">—</td><td class="valor">4.668,30</td><td class="valor">4.668,30</td></tr>
+</tbody></table>
+<div class="glosa">P/R Pago del rol de agosto de 2026 del personal de ventas y administración, con retención del aporte personal al IESS del 9,45% y reconocimiento del aporte patronal del 11,15% como gasto del período.</div>
+</div>
+<div class="alerta"><span class="rot">El error clásico del rol de pagos</span>
+<p>El gasto por remuneraciones <strong>no es el líquido pagado</strong>. La empresa gasta 4.200,00 de sueldo más 468,30 de aporte patronal, es decir 4.668,30, aunque solo desembolse 3.803,10 en efectivo. La diferencia son 865,20 que quedan como obligación con el IESS y se pagan al mes siguiente. Quien registra únicamente el líquido subvalúa el costo del personal en más del 20% y proyecta una nómina que no existe.</p></div>
+
+<h3>3.14 Control del Libro Diario del mes</h3>
+<p>Antes de mayorizar conviene una comprobación global. Cada asiento cuadró individualmente; la suma de los diecisiete debe cuadrar también, y ese total es el que después alimentará las columnas de sumas del balance de comprobación.</p>
+<div class="tabla-wrap"><table class="tabla"><thead><tr><th style="width:8%">N.º</th><th style="width:14%">Fecha</th><th>Concepto</th><th style="width:16%">Valor del asiento</th></tr></thead><tbody><tr><td class="ctr">1</td><td>01/08/2026</td><td>Asiento de apertura</td><td class="num">83.740,00</td></tr><tr><td class="ctr">2</td><td>02/08/2026</td><td>Pago del saldo de proveedores del mes anterior</td><td class="num">7.200,00</td></tr><tr><td class="ctr">3</td><td>04/08/2026</td><td>Pago del arriendo de la bodega de agosto</td><td class="num">1.035,00</td></tr><tr><td class="ctr">4</td><td>05/08/2026</td><td>Compra de 300 ventiladores VT-16 a crédito</td><td class="num">11.730,00</td></tr><tr><td class="ctr">5</td><td>09/08/2026</td><td>Venta de 150 ventiladores VT-16 a crédito</td><td class="num">8.970,00</td></tr><tr><td class="ctr">6</td><td>09/08/2026</td><td>Costo de la mercadería vendida el 09/08</td><td class="num">4.700,00</td></tr><tr><td class="ctr">7</td><td>11/08/2026</td><td>Cobro parcial de cartera</td><td class="num">6.000,00</td></tr><tr><td class="ctr">8</td><td>12/08/2026</td><td>Pago de la planilla de energía eléctrica</td><td class="num">240,00</td></tr><tr><td class="ctr">9</td><td>14/08/2026</td><td>Compra de 150 ventiladores VT-16 con cheque</td><td class="num">6.727,50</td></tr><tr><td class="ctr">10</td><td>18/08/2026</td><td>Venta de 300 ventiladores VT-16 a crédito</td><td class="num">17.940,00</td></tr><tr><td class="ctr">11</td><td>18/08/2026</td><td>Costo de la mercadería vendida el 18/08</td><td class="num">10.450,00</td></tr><tr><td class="ctr">12</td><td>20/08/2026</td><td>Pago del mantenimiento del vehículo de reparto</td><td class="num">575,00</td></tr><tr><td class="ctr">13</td><td>23/08/2026</td><td>Compra de 100 ventiladores VT-16 a crédito</td><td class="num">4.628,75</td></tr><tr><td class="ctr">14</td><td>26/08/2026</td><td>Pago de honorarios profesionales</td><td class="num">1.380,00</td></tr><tr><td class="ctr">15</td><td>28/08/2026</td><td>Venta de 140 ventiladores VT-16 a consumidores finales</td><td class="num">8.372,00</td></tr><tr><td class="ctr">16</td><td>28/08/2026</td><td>Costo de la mercadería vendida el 28/08</td><td class="num">5.510,00</td></tr><tr><td class="ctr">17</td><td>29/08/2026</td><td>Rol de pagos del personal — agosto de 2026</td><td class="num">4.668,30</td></tr><tr class="total"><td colspan="3">SUMA DE LOS 17 ASIENTOS DEL MES</td><td class="num">183.866,55</td></tr></tbody></table></div>
+<div class="ejemplo"><span class="rot">Tres cifras que conviene retener antes de mayorizar</span>
+<p>Las <strong>ventas del mes</strong> ascendieron a 7.800,00 + 15.600,00 + 7.280,00 = <strong>30.680,00</strong>, correspondientes a 590 unidades vendidas a 52,00. Las <strong>compras del mes</strong> sumaron 10.200,00 + 5.850,00 + 4.025,00 = <strong>20.075,00</strong>. Y el <strong>costo de ventas</strong> acumulado en los asientos 6, 11 y 16 fue 4.700,00 + 10.450,00 + 5.510,00 = <strong>20.660,00</strong>. La utilidad bruta del período es, entonces, 30.680,00 &minus; 20.660,00 = <strong>10.020,00</strong>. Guarde estas cuatro cifras: reaparecerán en el balance de comprobación del archivo 2.</p></div>
+
+<div class="nota-lateral"><span class="rot">Qué comprueba y qué no comprueba este total</span>
+<p>Comprueba que <strong>ningún asiento quedó descuadrado</strong> y que ninguno se transcribió a medias. No comprueba que las cuentas elegidas sean las correctas, que las tarifas aplicadas sean las vigentes, ni que estén registrados todos los hechos del mes. Esas tres verificaciones son responsabilidad del análisis del Tema 2 y de los ajustes que vienen en el archivo 2.</p></div>
+
+<div class="carrera-box"><span class="rot">Vinculación con las cuatro áreas de Negocios Internacionales</span>
+<ul>
+<li><strong>Comercio exterior:</strong> el asiento 13 registra la compra al costo unitario más alto del mes, 40,25. Cuando ese incremento proviene de un alza del flete marítimo o de un cambio arancelario, el asiento es el primer lugar donde la empresa <em>ve</em> el efecto de una decisión tomada a miles de kilómetros. La contabilidad es el sensor de la cadena de suministro.</li>
+<li><strong>Finanzas internacionales:</strong> el asiento 15 aportó 8.372,00 de caja en un solo día, mientras que el 10, de mayor valor comercial, no aportó ninguno. Comparar ventas por su efecto en caja y no por su monto facturado es la base de la gestión del capital de trabajo, y de la capacidad de una empresa para sostener importaciones a plazo.</li>
+<li><strong>Marketing y negociación internacional:</strong> los márgenes de 39,7% y 33,0% calculados en el apartado 3.8 son el insumo de cualquier política de descuentos. Un cliente que pide 8% de rebaja sobre 52,00 está pidiendo casi una cuarta parte del margen de la segunda venta. Negociar sin ese cálculo es conceder a ciegas.</li>
+<li><strong>Marco legal y normativo:</strong> el asiento 17 involucra tres marcos simultáneos: el laboral, el de seguridad social y el contable. En operaciones internacionales, cada país impone su propio esquema de aportaciones, y la comparación de costos laborales entre filiales exige leer roles de pago con estructuras distintas a esta.</li>
+</ul></div>
+
+<div class="futuro"><span class="rot">Contenido diferido</span>
+<p>Los <strong>asientos de cierre</strong>, que cancelan las cuentas de ingresos y gastos contra el resultado del ejercicio, corresponden al <strong>Día 15 (miércoles 2 de septiembre de 2026), Unidad 4</strong>. Todas las cuentas del grupo 4 y del grupo 5 conservarán su saldo a lo largo de todo el Día 13.</p></div>
+
+<div class="conclusion"><span class="rot">Idea clave del Tema 3b</span>
+<p>Diecisiete asientos, un solo método. Las diferencias entre ellos no vienen de la técnica contable sino de <strong>tres decisiones de lectura</strong>: si el hecho es bien o servicio, si la contraparte retiene o no, y si la operación arrastra un segundo asiento de costo. Resueltas esas tres preguntas, el asiento se escribe solo.</p></div>
+
+</div><!-- /t3b -->
+
+<!-- ============================================================
+     PESTAÑA: TEMA 4 — KARDEX
+     ============================================================ -->
+<div id="t4" class="panel">
+<h2>Tema 4 — El Kardex del artículo INV-4501 y su enlace con el Libro Diario</h2>
+
+<h3>4.1 Qué papel cumple el Kardex en este ejercicio</h3>
+
+<div class="definicion"><span class="rot">Kardex</span>
+<p>Registro auxiliar en el que se controla, <strong>artículo por artículo</strong>, cada entrada y cada salida de inventario con su cantidad, su costo unitario y su costo total, dejando siempre visible la existencia y su valorización. No es un libro principal: es el soporte documental que justifica las cifras de las cuentas <em>Inventario de mercaderías</em> y <em>Costo de ventas</em> del Libro Mayor.</p></div>
+
+<p>En el sistema de inventario permanente que usa Comercial El Astillero S.A., el Kardex y el Libro Diario funcionan como dos relojes que deben marcar la misma hora. Cada compra jornalizada entra al Kardex; cada salida valorada en el Kardex se convierte en el asiento de costo de ventas. Si al final del mes el saldo del Kardex no coincide con el saldo de la cuenta de inventario, uno de los dos está mal, y ninguna cifra del balance es confiable hasta que se encuentre la diferencia.</p>
+
+<p>El método de valuación de la compañía es <strong>FIFO</strong>: las primeras unidades en entrar son las primeras en salir. Esto significa que cada salida consume las capas de costo en el orden en que se formaron, y que la existencia final queda valorada siempre a los costos más recientes.</p>
+
+<h3>4.2 Kardex del artículo INV-4501 «Ventilador de techo VT-16» — agosto de 2026</h3>
+
+<p>Método: primeras en entrar, primeras en salir. Sistema: permanente. Unidad de medida: unidad. Precio de venta vigente: 52,00.</p>
+
+<div class="tabla-wrap"><table class="tabla">
+<thead><tr><th rowspan="2" style="width:8%">Fecha</th><th rowspan="2">Detalle</th><th colspan="3">Entradas</th><th colspan="3">Salidas</th><th colspan="3">Existencias</th></tr><tr><th>Cant.</th><th>C. unit.</th><th>C. total</th><th>Cant.</th><th>C. unit.</th><th>C. total</th><th>Cant.</th><th>C. unit.</th><th>C. total</th></tr></thead><tbody>
+<tr><td>01/08</td><td>Saldo inicial</td><td class="num">100</td><td class="num">30,00</td><td class="num">3.000,00</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">100</td><td class="num">30,00</td><td class="num">3.000,00</td></tr>
+<tr><td>05/08</td><td>Compra s/f 012345</td><td class="num">300</td><td class="num">34,00</td><td class="num">10.200,00</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">400</td><td class="num">30,00 / 34,00</td><td class="num">13.200,00</td></tr>
+<tr><td>09/08</td><td>Venta s/f 000871</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">150</td><td class="num">100&nbsp;u&nbsp;a&nbsp;30,00 + 50&nbsp;u&nbsp;a&nbsp;34,00</td><td class="num">4.700,00</td><td class="num">250</td><td class="num">34,00</td><td class="num">8.500,00</td></tr>
+<tr><td>14/08</td><td>Compra s/f 012908</td><td class="num">150</td><td class="num">39,00</td><td class="num">5.850,00</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">400</td><td class="num">34,00 / 39,00</td><td class="num">14.350,00</td></tr>
+<tr><td>18/08</td><td>Venta s/f 000902</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">300</td><td class="num">250&nbsp;u&nbsp;a&nbsp;34,00 + 50&nbsp;u&nbsp;a&nbsp;39,00</td><td class="num">10.450,00</td><td class="num">100</td><td class="num">39,00</td><td class="num">3.900,00</td></tr>
+<tr><td>23/08</td><td>Compra s/f 002210</td><td class="num">100</td><td class="num">40,25</td><td class="num">4.025,00</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">200</td><td class="num">39,00 / 40,25</td><td class="num">7.925,00</td></tr>
+<tr><td>28/08</td><td>Venta s/f 000903+</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">140</td><td class="num">100&nbsp;u&nbsp;a&nbsp;39,00 + 40&nbsp;u&nbsp;a&nbsp;40,25</td><td class="num">5.510,00</td><td class="num">60</td><td class="num">40,25</td><td class="num">2.415,00</td></tr>
+<tr class="total"><td colspan="2">TOTALES</td><td class="num">—</td><td class="num">—</td><td class="num">20.075,00</td><td class="num">—</td><td class="num">—</td><td class="num">20.660,00</td><td class="num">60</td><td class="num">40,25</td><td class="num">2.415,00</td></tr>
+</tbody></table></div>
+
+<div class="nota-lateral"><span class="rot">Cómo leer la columna de existencias</span>
+<p>Cuando la existencia contiene unidades de dos costos distintos, la columna de costo unitario muestra ambos separados por una barra, y el costo total es la suma de las dos capas, no un promedio. Esa es precisamente la diferencia entre FIFO y promedio ponderado: en FIFO las capas <strong>se mantienen separadas hasta que salen</strong>; en promedio se funden en un costo único cada vez que entra mercadería.</p></div>
+
+<h3>4.3 Lectura del mes, capa por capa</h3>
+
+<div class="tabla-wrap"><table class="tabla">
+<thead><tr><th style="width:10%">Fecha</th><th style="width:44%">Qué ocurrió con las capas</th><th>Consecuencia</th></tr></thead>
+<tbody>
+<tr><td>01/08</td><td>Una sola capa: 100 unidades a 30,00.</td><td>Es el saldo inicial que también aparece en el asiento de apertura por 3.000,00.</td></tr>
+<tr><td>05/08</td><td>Entra una segunda capa de 300 unidades a 34,00. Las dos conviven.</td><td>Existencia de 400 unidades por 13.200,00, con dos costos distintos.</td></tr>
+<tr><td>09/08</td><td>Salen 150 unidades: se agota la capa de 30,00 (100 u) y se toman 50 unidades de la de 34,00.</td><td>Costo de ventas de 4.700,00. Queda una sola capa de 250 unidades a 34,00.</td></tr>
+<tr><td>14/08</td><td>Entra una capa de 150 unidades a 39,00.</td><td>Existencia de 400 unidades por 14.350,00, otra vez con dos costos.</td></tr>
+<tr><td>18/08</td><td>Salen 300 unidades: se agota la capa de 34,00 (250 u) y se toman 50 de la de 39,00.</td><td>Costo de ventas de 10.450,00. Queda una capa de 100 unidades a 39,00.</td></tr>
+<tr><td>23/08</td><td>Entra la última capa: 100 unidades a 40,25.</td><td>Existencia de 200 unidades por 7.925,00.</td></tr>
+<tr><td>28/08</td><td>Salen 140 unidades: se agota la capa de 39,00 (100 u) y se toman 40 de la de 40,25.</td><td>Costo de ventas de 5.510,00. Existencia final: 60 unidades a 40,25 = 2.415,00.</td></tr>
+</tbody></table></div>
+
+<div class="ejemplo"><span class="rot">Lo que el Kardex revela y el Diario no</span>
+<p>El costo unitario de compra subió de 30,00 a 34,00, luego a 39,00 y finalmente a 40,25 en un solo mes: un incremento acumulado del 34,2%. Mientras tanto el precio de venta permaneció en 52,00. El Libro Diario registra esos hechos, pero es el Kardex el que los pone en una sola línea de tiempo y hace evidente que el margen se está estrechando compra tras compra. Por eso el auxiliar de inventarios no es un requisito burocrático: es el instrumento de gestión más inmediato que tiene una empresa comercial.</p></div>
+
+<h3>4.4 La identidad de control</h3>
+
+<div class="formula">Mercadería disponible = Costo de ventas + Inventario final<br>
+23.075,00 = 20.660,00 + 2.415,00</div>
+
+<p>La <strong>mercadería disponible para la venta</strong> es el inventario inicial más todas las compras del período: 3.000,00 + 10.200,00 + 5.850,00 + 4.025,00 = 23.075,00. Toda esa mercadería tuvo solo dos destinos posibles: se vendió —y entonces está en el costo de ventas— o no se vendió —y entonces está en el inventario final—. No hay tercera opción, y por eso la igualdad no puede fallar.</p>
+
+<div class="alerta"><span class="rot">Si esta identidad no cuadra</span>
+<p>Cuando la suma no da, el error está siempre en uno de estos tres puntos: se olvidó registrar una compra en el Kardex, se valoró una salida con un costo que no correspondía a la capa vigente, o se arrastró mal una existencia de una línea a la siguiente. <strong>Nunca se corrige forzando el inventario final</strong>: se rehace la línea donde el arrastre se rompió. Un inventario final «cuadrado a la fuerza» arrastra el error a todos los períodos siguientes.</p></div>
+
+<h3>4.5 El enlace entre el Kardex y los asientos del Diario</h3>
+
+<p>Esta tabla es el puente entre los dos registros. Cada cifra de la columna derecha proviene del Kardex y de ningún otro lugar.</p>
+
+<div class="tabla-wrap"><table class="tabla">
+<thead><tr><th style="width:10%">Fecha</th><th style="width:14%">Asiento</th><th>Movimiento del Kardex</th><th style="width:18%">Valor que entra al Diario</th></tr></thead>
+<tbody>
+<tr><td>05/08</td><td class="ctr">4</td><td>Entrada de 300 u a 34,00 — debita Inventario de mercaderías</td><td class="num">10.200,00</td></tr>
+<tr><td>09/08</td><td class="ctr">6</td><td>Salida de 150 u — debita Costo de ventas y acredita Inventario</td><td class="num">4.700,00</td></tr>
+<tr><td>14/08</td><td class="ctr">9</td><td>Entrada de 150 u a 39,00 — debita Inventario de mercaderías</td><td class="num">5.850,00</td></tr>
+<tr><td>18/08</td><td class="ctr">11</td><td>Salida de 300 u — debita Costo de ventas y acredita Inventario</td><td class="num">10.450,00</td></tr>
+<tr><td>23/08</td><td class="ctr">13</td><td>Entrada de 100 u a 40,25 — debita Inventario de mercaderías</td><td class="num">4.025,00</td></tr>
+<tr><td>28/08</td><td class="ctr">16</td><td>Salida de 140 u — debita Costo de ventas y acredita Inventario</td><td class="num">5.510,00</td></tr>
+<tr class="sub"><td colspan="3">Movimiento neto de la cuenta Inventario de mercaderías: 3.000,00 + 20.075,00 &minus; 20.660,00</td><td class="num">2.415,00</td></tr>
+</tbody></table></div>
+
+<p>Cuando en el archivo 2 se mayorice la cuenta <em>Inventario de mercaderías</em>, su saldo deberá ser exactamente 2.415,00 antes de ajustes. Si no lo es, el error está en la transcripción, no en el método.</p>
+
+<h3>4.6 Qué habría cambiado con costo promedio ponderado</h3>
+
+<p>La compañía aplica FIFO, pero conviene recordar la comparación cerrada el Día 9 sobre este mismo artículo, porque explica por qué la elección del método no es indiferente:</p>
+
+<div class="tabla-wrap"><table class="tabla">
+<thead><tr><th>Método</th><th style="width:20%">Costo de ventas</th><th style="width:20%">Inventario final</th><th style="width:20%">Utilidad bruta</th></tr></thead>
+<tbody>
+<tr><td><strong>FIFO</strong> (el aplicado)</td><td class="num">20.660,00</td><td class="num">2.415,00</td><td class="num">10.020,00</td></tr>
+<tr><td>Promedio ponderado móvil</td><td class="num">20.810,00</td><td class="num">2.265,00</td><td class="num">9.870,00</td></tr>
+<tr><td>Promedio ponderado del período</td><td class="num">20.945,00</td><td class="num">2.130,00</td><td class="num">9.735,00</td></tr>
+</tbody></table></div>
+
+<p>En un mes de costos crecientes, FIFO deja en el inventario final las unidades más caras y lleva al costo de ventas las más baratas: por eso arroja la mayor utilidad bruta y el mayor inventario. La diferencia entre el método más favorable y el menos favorable es de 285,00 en la utilidad de un solo artículo durante un solo mes. Con cientos de artículos y doce meses, esa diferencia decide si una empresa reparte dividendos o no.</p>
+
+<div class="alerta"><span class="rot">Consistencia, no conveniencia</span>
+<p>La NIC 2 admite FIFO y costo promedio ponderado, pero exige aplicar el mismo método a los inventarios de naturaleza y uso similares, y mantenerlo en el tiempo. Cambiar de método porque un año conviene más no es una decisión contable: es un cambio de política que debe justificarse y revelarse. El método UEPS, estudiado en su momento, no es admisible bajo NIIF.</p></div>
+
+<h3>4.7 Autochequeo del Kardex</h3>
+
+<div class="autocheck"><span class="rot">Verifique su lectura del auxiliar</span>
+
+<div class="preg">1) El 18/08 salieron 300 unidades y el costo fue 10.450,00. ¿Por qué no es 300 &times; 34,00 = 10.200,00?</div>
+<button class="autocheck-btn" onclick="verResp('r5',this)">Ver respuesta razonada</button>
+<div id="r5" class="autocheck-resp">
+<p>Porque en la capa de 34,00 solo quedaban <strong>250 unidades</strong>: las otras 50 originales ya habían salido el 09/08. Bajo FIFO, la salida agota primero esa capa (250 &times; 34,00 = 8.500,00) y luego toma 50 unidades de la capa siguiente, la de 39,00 (50 &times; 39,00 = 1.950,00). El total es 10.450,00. Aplicar un solo costo unitario a toda una salida solo es correcto cuando esa salida cabe íntegramente dentro de una capa.</p>
+</div>
+
+<div class="preg">2) El inventario final son 60 unidades. ¿Por qué se valoran a 40,25 y no a 39,00, si la capa de 39,00 fue posterior a la de 34,00?</div>
+<button class="autocheck-btn" onclick="verResp('r6',this)">Ver respuesta razonada</button>
+<div id="r6" class="autocheck-resp">
+<p>Porque la capa de 39,00 se agotó por completo en la salida del 28/08: entraron 150 unidades a 39,00, salieron 50 el 18/08 y las 100 restantes el 28/08. Lo único que sobrevive al cierre son 60 unidades de la última compra, la del 23/08 a 40,25. Es la característica estructural de FIFO: <strong>el inventario final siempre queda valorado a los costos más recientes</strong>, y por eso es el método que más se aproxima al valor de reposición.</p>
+</div>
+
+<div class="preg">3) Si la empresa hubiera comprado el 23/08 no 100 sino 500 unidades, ¿cambiaría el costo de ventas del mes?</div>
+<button class="autocheck-btn" onclick="verResp('r7',this)">Ver respuesta razonada</button>
+<div id="r7" class="autocheck-resp">
+<p>Bajo FIFO, <strong>solo en 1.610,00 de esa última salida y no más</strong>: el 28/08 se tomaron 40 unidades de la capa de 40,25, y esas 40 habrían salido igual. Todo lo demás de la compra habría engrosado el inventario final sin tocar el costo de ventas. Bajo promedio ponderado la respuesta sería distinta: una compra mayor al final del mes habría modificado el costo unitario promedio y, con él, el costo de la salida del 28/08. Esa es la diferencia práctica más importante entre los dos métodos, y la razón por la que el momento de comprar afecta al resultado de manera distinta según el método elegido.</p>
+</div>
+
+</div>
+
+<div class="carrera-box"><span class="rot">Vinculación con las cuatro áreas de Negocios Internacionales</span>
+<ul>
+<li><strong>Comercio exterior:</strong> el Kardex es donde se aterriza el costo de importación. Cada capa de costo de un artículo importado incorpora valor FOB, flete, seguro y arancel de <em>ese</em> embarque, y por eso dos lotes del mismo producto pueden tener costos unitarios muy distintos. Sin Kardex por capas, esa información se pierde en un promedio que oculta cuál embarque fue rentable.</li>
+<li><strong>Finanzas internacionales:</strong> las 60 unidades finales valen 2.415,00 bajo FIFO y 2.130,00 bajo promedio del período. Esa diferencia altera el activo corriente y, con él, todos los indicadores de liquidez que un banco extranjero mira antes de aprobar una línea. El método de valuación no es un tecnicismo: mueve los índices.</li>
+<li><strong>Marketing y negociación internacional:</strong> el alza de 30,00 a 40,25 en un mes es el argumento con el que se sustenta ante un cliente un ajuste de precio, o ante un proveedor una negociación de volumen. Llegar a esa conversación con el Kardex en la mano cambia por completo la posición.</li>
+<li><strong>Marco legal y normativo:</strong> el Kardex es el respaldo que la administración tributaria exige para aceptar el costo de ventas declarado y, llegado el caso, para admitir una pérdida por faltante o por deterioro. Un costo de ventas sin auxiliar que lo sostenga es un gasto no deducible esperando ser observado.</li>
+</ul></div>
+
+<div class="futuro"><span class="rot">Contenido diferido</span>
+<p>Este Kardex todavía no incorpora dos hechos que ocurrirán el 31 de agosto: el <strong>faltante determinado en la toma física</strong> y el <strong>ajuste del inventario al valor neto realizable</strong>. Ambos se practican como asientos de ajuste y se desarrollan en el <strong>archivo 2 del Día 13</strong>, dentro de esta misma Unidad 3. Por eso la existencia final que aquí se muestra —60 unidades a 40,25— es la del auxiliar antes de ajustes.</p></div>
+
+<div class="conclusion"><span class="rot">Idea clave del Tema 4</span>
+<p>El Kardex no acompaña a la contabilidad: <strong>la alimenta</strong>. De él salen los 20.660,00 de costo de ventas y los 2.415,00 de inventario que el Libro Mayor va a mostrar, y en él se ve, antes que en ningún estado financiero, que los costos de compra subieron 34,2% mientras el precio de venta no se movió.</p></div>
+
+</div><!-- /t4 -->
+
+<!-- ============================================================
+     PESTAÑA: EJERCICIO INTERACTIVO
+     ============================================================ -->
+<div id="ejercicio" class="panel">
+<h2>Ejercicio Interactivo — Análisis, cálculo y jornalización</h2>
+
+<p>Este ejercicio trabaja sobre una empresa <strong>distinta</strong> a la del widget, para que usted aplique el método y no recuerde cifras. Resuelva los diez ítems en papel antes de marcar, responda <strong>todos</strong> y solo entonces presione «Verificar respuestas»: recibirá la corrección ítem por ítem con su explicación completa.</p>
+
+<div class="definicion"><span class="rot">Mini-caso: Distribuidora Puerto Nuevo S.A.</span>
+<p>Compañía comercial domiciliada en Guayaquil, dedicada a la venta al por mayor de refrigeradoras. Es agente de retención, lleva inventario permanente y valora por <strong>FIFO</strong>. Controla un solo artículo: REF-3300 «Refrigeradora RF-300», con precio de venta de 390,00 por unidad. Movimientos de agosto de 2026:</p>
+<div class="tabla-wrap"><table class="tabla">
+<thead><tr><th style="width:10%">Fecha</th><th>Operación</th><th style="width:14%">Cantidad</th><th style="width:16%">Costo unitario</th></tr></thead>
+<tbody>
+<tr><td>01/08</td><td>Saldo inicial de inventario</td><td class="ctr">40 u</td><td class="num">250,00</td></tr>
+<tr><td>06/08</td><td>Compra a crédito a Refrimayor S.A. (sociedad)</td><td class="ctr">60 u</td><td class="num">265,00</td></tr>
+<tr><td>08/08</td><td>Pago del servicio de vigilancia a Seguridad Litoral Cía. Ltda. — base 700,00</td><td class="ctr">—</td><td class="num">—</td></tr>
+<tr><td>12/08</td><td>Venta a crédito a Almacenes Ceibos S.A. (sociedad), a 390,00 por unidad</td><td class="ctr">70 u</td><td class="num">—</td></tr>
+<tr><td>15/08</td><td>Pago del arriendo del local a Inmobiliaria del Salado S.A. — base 1.500,00</td><td class="ctr">—</td><td class="num">—</td></tr>
+<tr><td>18/08</td><td>Pago de la planilla de energía eléctrica de CNEL EP por 310,00</td><td class="ctr">—</td><td class="num">—</td></tr>
+<tr><td>20/08</td><td>Compra con cheque a Refrimayor S.A.</td><td class="ctr">50 u</td><td class="num">280,00</td></tr>
+<tr><td>26/08</td><td>Venta de contado a consumidores finales, a 390,00 por unidad</td><td class="ctr">60 u</td><td class="num">—</td></tr>
+<tr><td>29/08</td><td>Rol de pagos: sueldos por 3.000,00</td><td class="ctr">—</td><td class="num">—</td></tr>
+</tbody></table></div>
+<p style="margin-bottom:0">Tarifas vigentes: IVA 15%; retención en la fuente 2% en bienes, 3% residual de servicios, 5% en servicios profesionales prestados por sociedades y 10% en arrendamiento de inmuebles; retención de IVA 30% en bienes y 70% en servicios; aporte personal al IESS 9,45% y aporte patronal 11,15%.</p>
+</div>
+
+<div id="avisoEi" class="aviso">Debe responder los diez ítems antes de verificar. Revise cuáles quedaron en blanco.</div>
+
+<div class="item"><div class="enun"><span class="num-item">1</span>Por la compra del 06/08, ¿qué valor queda registrado como cuenta por pagar a Refrimayor S.A.?</div><div class="opciones"><label><input type="radio" name="ei1" value="a"> <strong>a)</strong> 18.285,00</label><label><input type="radio" name="ei1" value="b"> <strong>b)</strong> 15.900,00</label><label><input type="radio" name="ei1" value="c"> <strong>c)</strong> 17.251,50</label><label><input type="radio" name="ei1" value="d"> <strong>d)</strong> 17.967,00</label></div><div class="feedback" id="fei1"></div></div><div class="item"><div class="enun"><span class="num-item">2</span>En el pago del servicio de vigilancia del 08/08, ¿cuánto se retiene por impuesto a la renta y cuánto por IVA?</div><div class="opciones"><label><input type="radio" name="ei2" value="a"> <strong>a)</strong> Renta 21,00 e IVA 73,50</label><label><input type="radio" name="ei2" value="b"> <strong>b)</strong> Renta 35,00 e IVA 31,50</label><label><input type="radio" name="ei2" value="c"> <strong>c)</strong> Renta 24,15 e IVA 73,50</label><label><input type="radio" name="ei2" value="d"> <strong>d)</strong> Renta 21,00 e IVA 31,50</label></div><div class="feedback" id="fei2"></div></div><div class="item"><div class="enun"><span class="num-item">3</span>De las siguientes cuatro operaciones del mes, ¿en cuál <strong>no</strong> procede practicar retención en la fuente de impuesto a la renta?</div><div class="opciones"><label><input type="radio" name="ei3" value="a"> <strong>a)</strong> La compra del 06/08 a Refrimayor S.A.</label><label><input type="radio" name="ei3" value="b"> <strong>b)</strong> El arriendo del 15/08 a Inmobiliaria del Salado S.A.</label><label><input type="radio" name="ei3" value="c"> <strong>c)</strong> La planilla de energía eléctrica del 18/08 de CNEL EP</label><label><input type="radio" name="ei3" value="d"> <strong>d)</strong> El servicio de vigilancia del 08/08 a Seguridad Litoral Cía. Ltda.</label></div><div class="feedback" id="fei3"></div></div><div class="item"><div class="enun"><span class="num-item">4</span>Por la venta del 12/08 a Almacenes Ceibos S.A., ¿cuál es el valor de la cuenta por cobrar?</div><div class="opciones"><label><input type="radio" name="ei4" value="a"> <strong>a)</strong> 31.395,00</label><label><input type="radio" name="ei4" value="b"> <strong>b)</strong> 27.300,00</label><label><input type="radio" name="ei4" value="c"> <strong>c)</strong> 30.166,50</label><label><input type="radio" name="ei4" value="d"> <strong>d)</strong> 29.620,50</label></div><div class="feedback" id="fei4"></div></div><div class="item"><div class="enun"><span class="num-item">5</span>Aplicando FIFO, ¿cuál es el costo de la mercadería vendida el 26/08?</div><div class="opciones"><label><input type="radio" name="ei5" value="a"> <strong>a)</strong> 16.800,00</label><label><input type="radio" name="ei5" value="b"> <strong>b)</strong> 16.350,00</label><label><input type="radio" name="ei5" value="c"> <strong>c)</strong> 15.900,00</label><label><input type="radio" name="ei5" value="d"> <strong>d)</strong> 17.950,00</label></div><div class="feedback" id="fei5"></div></div><div class="item"><div class="enun"><span class="num-item">6</span>Un auxiliar registró el arriendo del 15/08 debitando «Gasto de arriendo 1.725,00» contra Bancos, retenciones y nada más. ¿Cuál es el error?</div><div class="opciones"><label><input type="radio" name="ei6" value="a"> <strong>a)</strong> Llevó al gasto los 225,00 de IVA, que son crédito tributario; el gasto es 1.500,00</label><label><input type="radio" name="ei6" value="b"> <strong>b)</strong> Debió retener 3% en lugar de 10%</label><label><input type="radio" name="ei6" value="c"> <strong>c)</strong> No corresponde retención de IVA en el arrendamiento de inmuebles</label><label><input type="radio" name="ei6" value="d"> <strong>d)</strong> El arriendo debió registrarse como activo diferido y no como gasto</label></div><div class="feedback" id="fei6"></div></div><div class="item"><div class="enun"><span class="num-item">7</span>Por el rol de pagos del 29/08, ¿cuál es el gasto total por remuneraciones del período y cuál el líquido pagado al personal?</div><div class="opciones"><label><input type="radio" name="ei7" value="a"> <strong>a)</strong> Gasto 3.000,00 y líquido 2.716,50</label><label><input type="radio" name="ei7" value="b"> <strong>b)</strong> Gasto 2.716,50 y líquido 2.716,50</label><label><input type="radio" name="ei7" value="c"> <strong>c)</strong> Gasto 3.334,50 y líquido 2.716,50</label><label><input type="radio" name="ei7" value="d"> <strong>d)</strong> Gasto 3.618,00 y líquido 3.000,00</label></div><div class="feedback" id="fei7"></div></div><div class="item"><div class="enun"><span class="num-item">8</span>Aplicando la identidad de control del inventario, ¿cuál es el valor del inventario final al 31/08 y cuál el de la mercadería disponible?</div><div class="opciones"><label><input type="radio" name="ei8" value="a"> <strong>a)</strong> Inventario final 5.600,00 y disponible 39.900,00</label><label><input type="radio" name="ei8" value="b"> <strong>b)</strong> Inventario final 5.600,00 y disponible 29.900,00</label><label><input type="radio" name="ei8" value="c"> <strong>c)</strong> Inventario final 5.000,00 y disponible 39.900,00</label><label><input type="radio" name="ei8" value="d"> <strong>d)</strong> Inventario final 8.400,00 y disponible 39.900,00</label></div><div class="feedback" id="fei8"></div></div><div class="item"><div class="enun"><span class="num-item">9</span>En la venta del 26/08 a consumidores finales, ¿qué valor cobra la empresa y qué retenciones recibe?</div><div class="opciones"><label><input type="radio" name="ei9" value="a"> <strong>a)</strong> Cobra 23.400,00 y recibe retenciones por 1.521,00</label><label><input type="radio" name="ei9" value="b"> <strong>b)</strong> Cobra 23.400,00 y no recibe retenciones</label><label><input type="radio" name="ei9" value="c"> <strong>c)</strong> Cobra 25.389,00 y recibe retenciones por 1.521,00</label><label><input type="radio" name="ei9" value="d"> <strong>d)</strong> Cobra 26.910,00 y no recibe retenciones</label></div><div class="feedback" id="fei9"></div></div><div class="item"><div class="enun"><span class="num-item">10</span>La empresa desea saber cuántos asientos generó el mes en el Libro Diario, sin contar el asiento de apertura. ¿Cuántos son y por qué?</div><div class="opciones"><label><input type="radio" name="ei10" value="a"> <strong>a)</strong> Ocho, uno por cada operación de la lista</label><label><input type="radio" name="ei10" value="b"> <strong>b)</strong> Diez, porque las dos ventas generan cada una un asiento adicional de costo</label><label><input type="radio" name="ei10" value="c"> <strong>c)</strong> Nueve, porque solo la venta a crédito arrastra asiento de costo</label><label><input type="radio" name="ei10" value="d"> <strong>d)</strong> Doce, porque cada compra también arrastra un asiento de costo</label></div><div class="feedback" id="fei10"></div></div>
+
+<button class="btn" onclick="verificarEi()">Verificar respuestas</button>
+<button class="btn btn-sec" onclick="reiniciarEi()">Reiniciar</button>
+
+<div id="resEi" class="resultado">
+  <div class="nota" id="notaEi"></div>
+  <div class="barra"><div class="barra-relleno" id="barraEi"></div></div>
+  <p id="msgEi"></p>
+</div>
+
+<div class="solucion"><span class="rot">Solución completa desarrollada del mini-caso</span>
+
+<p><strong>1. Kardex FIFO del artículo REF-3300</strong></p>
+<div class="tabla-wrap"><table class="tabla">
+<thead><tr><th style="width:9%">Fecha</th><th>Detalle</th><th>Entradas</th><th>Salidas</th><th>Existencia</th></tr></thead>
+<tbody>
+<tr><td>01/08</td><td>Saldo inicial</td><td class="num">40 u a 250,00 = 10.000,00</td><td class="num">—</td><td class="num">40 u — 10.000,00</td></tr>
+<tr><td>06/08</td><td>Compra</td><td class="num">60 u a 265,00 = 15.900,00</td><td class="num">—</td><td class="num">100 u — 25.900,00</td></tr>
+<tr><td>12/08</td><td>Venta</td><td class="num">—</td><td class="num">40 u a 250,00 + 30 u a 265,00 = 17.950,00</td><td class="num">30 u — 7.950,00</td></tr>
+<tr><td>20/08</td><td>Compra</td><td class="num">50 u a 280,00 = 14.000,00</td><td class="num">—</td><td class="num">80 u — 21.950,00</td></tr>
+<tr><td>26/08</td><td>Venta</td><td class="num">—</td><td class="num">30 u a 265,00 + 30 u a 280,00 = 16.350,00</td><td class="num">20 u — 5.600,00</td></tr>
+<tr class="total"><td colspan="2">Comprobación</td><td class="num">Disponible 39.900,00</td><td class="num">Costo de ventas 34.300,00</td><td class="num">Inventario final 5.600,00</td></tr>
+</tbody></table></div>
+<p>34.300,00 + 5.600,00 = 39.900,00. La identidad cuadra.</p>
+
+<p><strong>2. Desgloses tributarios del mes</strong></p>
+<div class="calc-box"><span class="tit">Compra del 06/08 — bienes</span>
+Base 60 u &times; 265,00 ............ 15.900,00<br>
+IVA 15% ......................... 2.385,00<br>
+Retención en la fuente 2% ....... &minus;318,00<br>
+Retención del IVA 30% ........... &minus;715,50<br>
+<b>Cuenta por pagar</b> ............... <b>17.251,50</b></div>
+<div class="calc-box"><span class="tit">Vigilancia del 08/08 — servicio, porcentaje residual</span>
+Base ............................ 700,00<br>
+IVA 15% ......................... 105,00<br>
+Retención en la fuente 3% ....... &minus;21,00<br>
+Retención del IVA 70% ........... &minus;73,50<br>
+<b>Valor pagado</b> ................... <b>710,50</b></div>
+<div class="calc-box"><span class="tit">Venta del 12/08 — a sociedad, con retenciones recibidas</span>
+Base 70 u &times; 390,00 ............ 27.300,00<br>
+IVA 15% ......................... 4.095,00<br>
+Retención de renta recibida 2% .. &minus;546,00<br>
+Retención de IVA recibida 30% ... &minus;1.228,50<br>
+<b>Cuenta por cobrar</b> .............. <b>29.620,50</b><br>
+Costo de ventas del mismo día (FIFO) ... 17.950,00</div>
+<div class="calc-box"><span class="tit">Arriendo del 15/08 — inmueble, sociedad</span>
+Base ............................ 1.500,00<br>
+IVA 15% ......................... 225,00<br>
+Retención en la fuente 10% ...... &minus;150,00<br>
+Retención del IVA 70% ........... &minus;157,50<br>
+<b>Valor pagado</b> ................... <b>1.417,50</b><br>
+Gasto reconocido: 1.500,00 &nbsp;·&nbsp; Crédito tributario: 225,00</div>
+<div class="calc-box"><span class="tit">Energía eléctrica del 18/08 — CNEL EP</span>
+Valor de la planilla ............ 310,00<br>
+IVA ............................. 0,00 &nbsp;<span style="color:#8f2418">(tarifa 0%)</span><br>
+Retención en la fuente .......... 0,00 &nbsp;<span style="color:#8f2418">(empresa pública)</span><br>
+<b>Gasto y desembolso</b> ............. <b>310,00</b></div>
+<div class="calc-box"><span class="tit">Venta del 26/08 — consumidores finales</span>
+Base 60 u &times; 390,00 ............ 23.400,00<br>
+IVA 15% ......................... 3.510,00<br>
+Retenciones ..................... <b>ninguna</b><br>
+<b>Valor cobrado</b> .................. <b>26.910,00</b><br>
+Costo de ventas del mismo día (FIFO) ... 16.350,00</div>
+<div class="calc-box"><span class="tit">Rol de pagos del 29/08</span>
+Sueldos ......................... 3.000,00<br>
+Aporte personal 9,45% ........... &minus;283,50 &nbsp;<span style="color:#33424f">(descuento al trabajador)</span><br>
+Aporte patronal 11,15% .......... +334,50 &nbsp;<span style="color:#33424f">(gasto de la empresa)</span><br>
+<b>Gasto total por remuneraciones</b> .. <b>3.334,50</b><br>
+<b>IESS por pagar</b> .................. <b>618,00</b><br>
+<b>Líquido pagado al personal</b> ...... <b>2.716,50</b></div>
+
+<p><strong>3. Recuento de asientos</strong></p>
+<p>Ocho operaciones del mes más dos asientos de costo de ventas —uno por cada venta, porque la empresa lleva inventario permanente— dan <strong>diez asientos</strong>, sin contar el de apertura. Anticipar este número antes de jornalizar es una forma rápida de comprobar que no se olvidó ninguna consecuencia de las operaciones.</p>
+
+<p><strong>4. Resumen del resultado bruto del mini-caso</strong></p>
+<p>Ventas del mes: 27.300,00 + 23.400,00 = <strong>50.700,00</strong>. Costo de ventas: 17.950,00 + 16.350,00 = <strong>34.300,00</strong>. Utilidad bruta: <strong>16.400,00</strong>, equivalente al 32,3% sobre ventas. Ese porcentaje es el que la empresa debe cuidar en cada negociación, y el que se erosiona cuando el costo unitario sube de 250,00 a 280,00 sin que el precio de venta se mueva.</p>
+</div>
+
+</div><!-- /ejercicio -->
+
+<!-- ============================================================
+     PESTAÑA: CUESTIONARIO
+     ============================================================ -->
+<div id="cuestionario" class="panel">
+<h2>Cuestionario de evaluación</h2>
+
+<p>Diez preguntas de opción múltiple: <strong>siete teóricas</strong>, que se responden con el contenido de este widget, y <strong>tres de análisis de caso</strong>, con datos propios que no aparecen en ninguna otra pestaña. Responda todas y luego presione «Verificar respuestas».</p>
+
+<div id="avisoQi" class="aviso">Debe responder las diez preguntas antes de verificar. Revise cuáles quedaron en blanco.</div>
+
+<div class="item"><div class="enun"><span class="num-item">1</span>¿Qué distingue a un ejercicio integrador de un ejercicio temático? <span class="badge badge-teorica">Teórica</span></div><div class="opciones"><label><input type="radio" name="qi1" value="a"> <strong>a)</strong> Que utiliza cifras más grandes y por lo tanto es más difícil de calcular.</label><label><input type="radio" name="qi1" value="b"> <strong>b)</strong> Que recorre todos los pasos del proceso contable sobre una misma entidad y período, partiendo de documentos fuente y sin que ningún paso venga resuelto.</label><label><input type="radio" name="qi1" value="c"> <strong>c)</strong> Que se resuelve en grupo, mientras que el temático es individual.</label><label><input type="radio" name="qi1" value="d"> <strong>d)</strong> Que solo se aplica a compañías comerciales, porque las de servicios no tienen inventario.</label></div><div class="feedback" id="fqi1"></div></div><div class="item"><div class="enun"><span class="num-item">2</span>Las cuentas «(–) Depreciación acumulada vehículos» y «(–) Deterioro acumulado de cuentas por cobrar» tienen código que empieza con 1, propio del activo. ¿En qué columna del balance de comprobación aparecen y por qué? <span class="badge badge-teorica">Teórica</span></div><div class="opciones"><label><input type="radio" name="qi2" value="a"> <strong>a)</strong> En el Debe, porque todo lo que empieza con 1 es activo y el activo es deudor.</label><label><input type="radio" name="qi2" value="b"> <strong>b)</strong> En cualquiera de las dos, según convenga para que el balance cuadre.</label><label><input type="radio" name="qi2" value="c"> <strong>c)</strong> En el Haber, porque son cuentas de valuación: restan del activo bruto sin borrarlo, y por eso su saldo es acreedor.</label><label><input type="radio" name="qi2" value="d"> <strong>d)</strong> En el Debe durante el período y en el Haber solo al cierre del ejercicio.</label></div><div class="feedback" id="fqi2"></div></div><div class="item"><div class="enun"><span class="num-item">3</span>En el sistema de inventario permanente, ¿por qué cada venta genera dos asientos? <span class="badge badge-teorica">Teórica</span></div><div class="opciones"><label><input type="radio" name="qi3" value="a"> <strong>a)</strong> Porque un asiento reconoce el ingreso al precio de venta y el otro reconoce el costo de la mercadería entregada, tomado del Kardex; son hechos distintos con bases de medición distintas.</label><label><input type="radio" name="qi3" value="b"> <strong>b)</strong> Porque uno registra el IVA y el otro registra las retenciones.</label><label><input type="radio" name="qi3" value="c"> <strong>c)</strong> Porque el primero es provisional y el segundo lo confirma al cierre del mes.</label><label><input type="radio" name="qi3" value="d"> <strong>d)</strong> Porque así lo exige la Superintendencia de Compañías para las sociedades anónimas.</label></div><div class="feedback" id="fqi3"></div></div><div class="item"><div class="enun"><span class="num-item">4</span>Una factura por adquisición de bienes muestra base imponible 2.000,00 e IVA 300,00. ¿Sobre qué valor se calcula la retención en la fuente del impuesto a la renta? <span class="badge badge-teorica">Teórica</span></div><div class="opciones"><label><input type="radio" name="qi4" value="a"> <strong>a)</strong> Sobre 2.300,00, que es el total del comprobante.</label><label><input type="radio" name="qi4" value="b"> <strong>b)</strong> Sobre 300,00, que es el valor del impuesto.</label><label><input type="radio" name="qi4" value="c"> <strong>c)</strong> Sobre el valor que finalmente se pague al proveedor.</label><label><input type="radio" name="qi4" value="d"> <strong>d)</strong> Sobre 2.000,00, es decir sobre la base imponible, nunca sobre el IVA.</label></div><div class="feedback" id="fqi4"></div></div><div class="item"><div class="enun"><span class="num-item">5</span>Una empresa contrata un servicio de mantenimiento a una sociedad y adquiere mercadería a otra sociedad. ¿Qué porcentajes de retención de IVA corresponden? <span class="badge badge-teorica">Teórica</span></div><div class="opciones"><label><input type="radio" name="qi5" value="a"> <strong>a)</strong> 30% en ambos casos, porque el proveedor es sociedad en los dos.</label><label><input type="radio" name="qi5" value="b"> <strong>b)</strong> 70% en el servicio y 30% en la adquisición de bienes.</label><label><input type="radio" name="qi5" value="c"> <strong>c)</strong> 70% en ambos casos, porque la empresa es agente de retención.</label><label><input type="radio" name="qi5" value="d"> <strong>d)</strong> 100% en el servicio y 30% en los bienes.</label></div><div class="feedback" id="fqi5"></div></div><div class="item"><div class="enun"><span class="num-item">6</span>La identidad «Mercadería disponible = Costo de ventas + Inventario final» no cuadra en un Kardex. ¿Cuál es el procedimiento correcto? <span class="badge badge-teorica">Teórica</span></div><div class="opciones"><label><input type="radio" name="qi6" value="a"> <strong>a)</strong> Ajustar el inventario final hasta que la igualdad se cumpla.</label><label><input type="radio" name="qi6" value="b"> <strong>b)</strong> Cambiar de método de valuación, porque FIFO no siempre cuadra.</label><label><input type="radio" name="qi6" value="c"> <strong>c)</strong> Rehacer la línea donde se rompió el arrastre, porque el error está en una compra no registrada, en una salida mal valorada o en una existencia mal trasladada.</label><label><input type="radio" name="qi6" value="d"> <strong>d)</strong> Registrar la diferencia como gasto del período y continuar.</label></div><div class="feedback" id="fqi6"></div></div><div class="item"><div class="enun"><span class="num-item">7</span>Una venta se factura por 7.800,00 más IVA de 1.170,00. ¿Cuál es el ingreso del período y por qué? <span class="badge badge-teorica">Teórica</span></div><div class="opciones"><label><input type="radio" name="qi7" value="a"> <strong>a)</strong> El ingreso es 7.800,00; el IVA es un impuesto cobrado por cuenta del Estado y nace como pasivo, no como ingreso.</label><label><input type="radio" name="qi7" value="b"> <strong>b)</strong> El ingreso es 8.970,00, porque es el valor total facturado al cliente.</label><label><input type="radio" name="qi7" value="c"> <strong>c)</strong> El ingreso es 8.970,00 si la venta es de contado y 7.800,00 si es a crédito.</label><label><input type="radio" name="qi7" value="d"> <strong>d)</strong> El ingreso es el valor efectivamente cobrado después de las retenciones del cliente.</label></div><div class="feedback" id="fqi7"></div></div><div class="item"><div class="enun"><span class="num-item">8</span>Importadora Costa Verde S.A., agente de retención, compra a crédito mercadería a otra sociedad por una base imponible de 8.400,00, con IVA del 15%. ¿Qué saldo queda a favor del proveedor? <span class="badge badge-caso">Análisis de caso</span></div><div class="opciones"><label><input type="radio" name="qi8" value="a"> <strong>a)</strong> 9.660,00</label><label><input type="radio" name="qi8" value="b"> <strong>b)</strong> 8.400,00</label><label><input type="radio" name="qi8" value="c"> <strong>c)</strong> 9.492,00</label><label><input type="radio" name="qi8" value="d"> <strong>d)</strong> 9.114,00</label></div><div class="feedback" id="fqi8"></div></div><div class="item"><div class="enun"><span class="num-item">9</span>Comercial Las Peñas S.A. valora por FIFO. Inicia el mes con 200 unidades a 12,00, compra 300 unidades a 15,00 y vende 400 unidades. ¿Cuál es el costo de esa venta y cuál el inventario final? <span class="badge badge-caso">Análisis de caso</span></div><div class="opciones"><label><input type="radio" name="qi9" value="a"> <strong>a)</strong> Costo 4.800,00 e inventario final 2.100,00</label><label><input type="radio" name="qi9" value="b"> <strong>b)</strong> Costo 5.400,00 e inventario final 1.500,00</label><label><input type="radio" name="qi9" value="c"> <strong>c)</strong> Costo 6.000,00 e inventario final 900,00</label><label><input type="radio" name="qi9" value="d"> <strong>d)</strong> Costo 5.520,00 e inventario final 1.380,00</label></div><div class="feedback" id="fqi9"></div></div><div class="item"><div class="enun"><span class="num-item">10</span>Textiles del Guayas S.A. paga a una firma auditora —una sociedad— honorarios por servicios profesionales con base imponible de 2.000,00 más IVA del 15%. ¿Cuánto desembolsa y cuánto retiene en total? <span class="badge badge-caso">Análisis de caso</span></div><div class="opciones"><label><input type="radio" name="qi10" value="a"> <strong>a)</strong> Desembolsa 2.300,00 y no retiene, porque el prestador es una sociedad.</label><label><input type="radio" name="qi10" value="b"> <strong>b)</strong> Desembolsa 2.240,00 y retiene 60,00 de renta.</label><label><input type="radio" name="qi10" value="c"> <strong>c)</strong> Desembolsa 1.990,00 y retiene 310,00: 100,00 de renta al 5% y 210,00 de IVA al 70%.</label><label><input type="radio" name="qi10" value="d"> <strong>d)</strong> Desembolsa 2.110,00 y retiene 190,00: 100,00 de renta al 5% y 90,00 de IVA al 30%.</label></div><div class="feedback" id="fqi10"></div></div>
+
+<button class="btn" onclick="verificarQi()">Verificar respuestas</button>
+<button class="btn btn-sec" onclick="reiniciarQi()">Reiniciar</button>
+
+<div id="resQi" class="resultado">
+  <div class="nota" id="notaQi"></div>
+  <div class="barra"><div class="barra-relleno" id="barraQi"></div></div>
+  <p id="msgQi"></p>
+</div>
+
+<div class="nota-lateral"><span class="rot">Cómo usar la calificación</span>
+<p>La nota no es el objetivo; el objetivo es identificar dónde se rompe su razonamiento. Lea la explicación de <strong>todas</strong> las preguntas, incluidas las que acertó: en varias de ellas la explicación aclara por qué los distractores son plausibles, y esa es la parte que se transfiere al examen y al ejercicio del archivo 2.</p></div>
+
+</div><!-- /cuestionario -->
+
+<!-- ============================================================
+     PESTAÑA: ACTIVIDAD CON IA
+     ============================================================ -->
+<div id="ia" class="panel">
+<h2>Actividad con Inteligencia Artificial</h2>
+
+<p>Esta actividad se puede ejecutar sin costo en <strong>Claude</strong> (<a href="https://claude.ai" target="_blank" rel="noopener">claude.ai</a>), que dispone de un plan gratuito suficiente para el trabajo que se pide. La secuencia es siempre la misma y el orden importa: <strong>usted resuelve primero, después consulta, y al final audita</strong>. Una inteligencia artificial consultada antes de pensar reemplaza el aprendizaje; consultada después de pensar, lo multiplica.</p>
+
+<h3>Tiempo 1 — Resuelva usted, en papel</h3>
+
+<p>Comercial El Astillero S.A. está evaluando una oferta de su proveedor: <strong>si compra 400 unidades del artículo INV-4501 en un solo pedido, el costo unitario baja de 40,25 a 37,00</strong>, pero debe pagar de contado y el pedido llegaría el 2 de septiembre. Con los datos del widget, calcule en papel, sin ayuda de nadie:</p>
+
+<ol>
+<li>El desembolso total de esa compra: base, IVA, retención en la fuente del 2%, retención del IVA del 30% y valor neto a pagar.</li>
+<li>Cuánto ahorraría la empresa frente a comprar esas mismas 400 unidades a 40,25.</li>
+<li>El saldo de Bancos con que la empresa cerró agosto —lo encontrará en el archivo 2 del Día 13, o puede estimarlo sumando y restando los movimientos de los asientos 1 a 17— y si ese saldo alcanza para pagar de contado.</li>
+<li>Bajo FIFO, qué efecto tendría esa compra sobre el costo de ventas de septiembre en comparación con seguir comprando lotes pequeños a 40,25.</li>
+</ol>
+
+<div class="nota-lateral"><span class="rot">Antes de seguir</span>
+<p>Escriba sus cuatro respuestas en una hoja, con los cálculos visibles. Si pasa al Tiempo 2 sin haberlas escrito, la actividad pierde todo su valor formativo y usted terminará copiando en lugar de aprendiendo. Nadie va a revisar esa hoja: es para usted.</p></div>
+
+<h3>Tiempo 2 — Corrija el prompt antes de enviarlo</h3>
+
+<p>El siguiente prompt tiene <strong>cuatro errores deliberados</strong>: dos de datos y dos de criterio contable o tributario. Encuéntrelos <em>usted</em>, corríjalos y solo entonces envíelo. Si lo envía tal como está, la inteligencia artificial le devolverá un cálculo impecable sobre premisas equivocadas, que es exactamente el riesgo profesional que esta actividad quiere enseñarle a evitar.</p>
+
+<div class="calc-box"><span class="tit">Prompt con errores — no lo copie tal cual</span>
+Actúa como contador general en Ecuador. Comercial El Astillero S.A., sociedad<br>
+obligada a llevar contabilidad y agente de retención, va a comprar 400 unidades<br>
+de un electrodoméstico a 37,00 cada una, de contado, a un proveedor que es<br>
+sociedad. Calcula el desembolso considerando IVA del 12%, retención en la<br>
+fuente del 3% por adquisición de bienes y retención del 70% del IVA. Considera<br>
+además que el IVA pagado es un gasto del período y que la mercadería debe<br>
+registrarse por el valor total del comprobante. La empresa valora su inventario<br>
+por el método UEPS. Presenta el asiento contable completo.
+</div>
+
+<div class="autocheck"><span class="rot">Compruebe su corrección</span>
+<div class="preg">¿Encontró los cuatro errores? Despliegue solo después de haberlos listado por escrito.</div>
+<button class="autocheck-btn" onclick="verResp('r8',this)">Ver los cuatro errores</button>
+<div id="r8" class="autocheck-resp">
+<ol>
+<li><strong>IVA del 12%.</strong> La tarifa general vigente en el curso es del <strong>15%</strong>. Un IVA mal parametrizado arrastra el error a la retención del IVA y al valor a pagar.</li>
+<li><strong>Retención del 3% por adquisición de bienes.</strong> En bienes la retención en la fuente es del <strong>2%</strong>; el 3% es el porcentaje residual de servicios. Y la retención del IVA en bienes es del <strong>30%</strong>, no del 70%: ese es el porcentaje de servicios. El prompt confunde el régimen de bienes con el de servicios.</li>
+<li><strong>«El IVA pagado es un gasto del período» y «la mercadería se registra por el valor total del comprobante».</strong> Son dos formas del mismo error de criterio: el IVA es <strong>crédito tributario</strong>, un activo, y el inventario se registra por la base imponible, sin IVA. Aceptar esta premisa infla el inventario y destruye el crédito tributario.</li>
+<li><strong>Método UEPS.</strong> No es admitido por las NIIF y la empresa valora por <strong>FIFO</strong>. Pedir un cálculo bajo UEPS produce cifras que ningún estado financiero ecuatoriano podría presentar.</li>
+</ol>
+<p>Reescriba el prompt con IVA 15%, retención en la fuente 2%, retención de IVA 30%, IVA como crédito tributario, inventario por la base imponible y método FIFO. Añada al final: <em>«Presenta el desglose línea por línea antes del asiento y no redondees a más de dos decimales.»</em></p>
+</div>
+</div>
+
+<h3>Tiempo 3 — Audite la respuesta de la inteligencia artificial</h3>
+
+<p>Envíe su prompt corregido y, cuando reciba la respuesta, <strong>no la acepte</strong>. Audítela con esta lista, del mismo modo en que un supervisor revisa el trabajo de un asistente:</p>
+
+<div class="tabla-wrap"><table class="tabla">
+<thead><tr><th style="width:6%">#</th><th style="width:38%">Punto a verificar</th><th>Qué buscar concretamente</th></tr></thead>
+<tbody>
+<tr><td class="ctr">1</td><td>Base imponible</td><td>400 &times; 37,00 = 14.800,00. Si aparece otra cifra, el modelo cambió un dato del enunciado.</td></tr>
+<tr><td class="ctr">2</td><td>IVA</td><td>14.800,00 &times; 0,15 = 2.220,00, y debe estar en una cuenta de activo, no de gasto.</td></tr>
+<tr><td class="ctr">3</td><td>Retención en la fuente</td><td>14.800,00 &times; 0,02 = 296,00, calculada sobre la base y no sobre el total.</td></tr>
+<tr><td class="ctr">4</td><td>Retención del IVA</td><td>2.220,00 &times; 0,30 = 666,00. Si aparece 1.554,00, aplicó el 70% de servicios.</td></tr>
+<tr><td class="ctr">5</td><td>Valor neto</td><td>14.800,00 + 2.220,00 &minus; 296,00 &minus; 666,00 = 16.058,00.</td></tr>
+<tr><td class="ctr">6</td><td>Cuadre del asiento</td><td>Debe 17.020,00 y Haber 17.020,00. Sume usted las columnas: no confíe en que el modelo lo hizo.</td></tr>
+<tr><td class="ctr">7</td><td>Glosa</td><td>Debe existir, empezar con «P/R» y citar el documento fuente. Los modelos suelen omitirla.</td></tr>
+<tr><td class="ctr">8</td><td>Cita normativa</td><td>Si el modelo respalda su respuesta citando numerales o incisos internos de la NIC 2, exíjale que reformule la referencia de manera descriptiva —«dentro del contenido de la NIC 2 se especifica que…»— y que identifique las resoluciones por su número, que sí es un dato verificable.</td></tr>
+</tbody></table></div>
+
+<div class="alerta"><span class="rot">El error que casi nunca falta</span>
+<p>Pregunte además: <em>«¿el ahorro de 3,25 por unidad justifica inmovilizar caja en 400 unidades cuando las ventas del mes fueron de 590 unidades?»</em>. Los modelos responden bien a los cálculos y mal a las preguntas de criterio, porque el criterio exige conocer la empresa. Compare la respuesta con la suya del Tiempo 1: ahí es donde usted comprobará si ya piensa como contador o todavía como calculadora.</p></div>
+
+<h3>Producto a entregar</h3>
+
+<div class="ejemplo"><span class="rot">Una página, cuatro secciones</span>
+<ol>
+<li><strong>Su cálculo del Tiempo 1</strong>, tal como lo escribió, incluidos los errores si los hubo.</li>
+<li><strong>Los cuatro errores del prompt</strong>, identificados por usted, y el prompt corregido que finalmente envió.</li>
+<li><strong>La respuesta de la inteligencia artificial</strong> y su auditoría con los ocho puntos, indicando cuáles pasó y cuáles no.</li>
+<li><strong>Su conclusión de criterio</strong>: ¿compraría o no las 400 unidades? Fundamente con cifras, no con opiniones.</li>
+</ol>
+<p style="margin-bottom:0"><strong>Criterio de evaluación.</strong> Un trabajo que solo transcribe la respuesta del modelo, aunque sea correcta, no acredita aprendizaje. Lo que se evalúa es la <em>distancia</em> entre el Tiempo 1 y el Tiempo 3: qué detectó usted que el modelo no detectó, y qué corrigió del modelo con fundamento propio. Un estudiante que encuentra un error real en la respuesta de la inteligencia artificial y lo demuestra con el cálculo obtiene la calificación máxima, aunque su cálculo inicial haya tenido fallas.</p></div>
+
+</div><!-- /ia -->
+
+<!-- ============================================================
+     PESTAÑA: REFLEXIÓN
+     ============================================================ -->
+<div id="reflexion" class="panel">
+<h2>Reflexión</h2>
+
+<p>Antes de las preguntas, un encuadre que conviene repetir. <strong>Negocios Internacionales es mucho más amplio que «negociar».</strong> La carrera se lee habitualmente como si consistiera en sentarse en una mesa a conseguir un buen precio, y esa es apenas una de sus tareas. Un profesional de esta carrera analiza costos, lee estados financieros extranjeros redactados con otras normas y en otras monedas, diseña y sostiene cadenas de abastecimiento, gestiona riesgo cambiario, aplica normativa aduanera y tributaria, y sustenta sus decisiones ante bancos, socios, auditores y autoridades. Todo lo que usted hizo hoy —analizar un documento, decidir una retención, valorar un inventario, cuadrar un asiento— pertenece de lleno a ese oficio.</p>
+
+<h3>Preguntas para pensar y escribir</h3>
+
+<p>No tienen respuesta correcta. Escríbalas: pensar sin escribir se parece demasiado a no pensar.</p>
+
+<div class="item">
+<div class="enun"><span class="num-item">1</span>Mire el ventilador de techo, el refrigerador o el televisor que hay en su casa.</div>
+<p>Ese aparato tiene, en la contabilidad de alguien, un número. Alguien lo registró como inventario a un costo unitario exacto, lo llevó en un Kardex, lo dio de baja el día que se vendió y calculó el margen que dejó. Antes de eso, alguien más lo registró al salir de una fábrica, al embarcarlo, al nacionalizarlo. <strong>¿Cuántas manos tocaron ese aparato antes de la suya, y cuántas de ellas tuvieron que ponerle un número para que la siguiente pudiera confiar en él?</strong></p>
+</div>
+
+<div class="item">
+<div class="enun"><span class="num-item">2</span>De esa cadena a la información.</div>
+<p>El fabricante, el exportador, el naviero, el agente de aduana, el importador, el distribuidor, el minorista y usted forman una cadena de al menos ocho actores que no se conocen entre sí y que, sin embargo, se entregan mercadería y dinero. <strong>¿Qué es exactamente lo que hace posible que un actor confíe en el siguiente sin conocerlo? ¿Y qué pasaría en esa cadena si uno de ellos llevara sus cifras sin ajustar, como el balance preliminar del Día 12?</strong></p>
+</div>
+
+<div class="item">
+<div class="enun"><span class="num-item">3</span>Del costo de 40,25 a una decisión.</div>
+<p>Hoy usted vio que el costo unitario del artículo INV-4501 subió 34,2% en un mes mientras el precio de venta se mantuvo en 52,00. <strong>Si usted fuera el gerente de Comercial El Astillero S.A., ¿qué haría con esa información y en qué orden: subir el precio, cambiar de proveedor, comprar más volumen, reducir gastos, o algo distinto? ¿Qué dato adicional le haría falta para decidir con tranquilidad?</strong></p>
+</div>
+
+<div class="item">
+<div class="enun"><span class="num-item">4</span>Exploración vocacional.</div>
+<p>Negocios Internacionales tiene cuatro grandes áreas: <strong>comercio exterior</strong>, <strong>finanzas internacionales</strong>, <strong>marketing y negociación internacional</strong>, y <strong>marco legal y normativo</strong>. Hoy las cuatro aparecieron en el mismo caso. <strong>¿En cuál de ellas se imagina trabajando dentro de cinco años, y por qué esa y no otra? ¿Qué de lo que hizo hoy le resultó más natural, y qué le costó más?</strong> Sea honesto: lo que le cuesta también informa, y a veces informa más.</p>
+</div>
+
+<div class="item">
+<div class="enun"><span class="num-item">5</span>Inteligencia emocional.</div>
+<p>Un ejercicio integrador produce, casi siempre, un momento de bloqueo: un asiento que no cuadra, un Kardex que no arrastra, una retención que no se sabe cuál aplicar. <strong>¿Qué sintió usted cuando llegó a ese punto hoy? ¿Qué hizo: volvió atrás, siguió adelante, lo dejó, buscó ayuda? ¿Y qué le dice esa reacción sobre cómo enfrenta usted los problemas que no se resuelven al primer intento?</strong> Un contador que se paraliza ante un descuadre no dura en el oficio; uno que aprende a tolerar la incomodidad mientras busca el error, sí.</p>
+</div>
+
+<div class="item">
+<div class="enun"><span class="num-item">6</span>Autoconocimiento y confianza.</div>
+<p>En la actividad con inteligencia artificial se le pidió resolver primero y consultar después. <strong>¿Cumplió ese orden, o consultó antes porque le daba más seguridad? ¿Qué le costaría a usted, en la práctica, sostener su propio criterio frente a una respuesta que suena muy segura pero que usted sospecha equivocada?</strong> Esa es, con el tiempo, la competencia que más distingue a un profesional de un ejecutor.</p>
+</div>
+
+<div class="nota-lateral"><span class="rot">Una última observación</span>
+<p>El trabajo de hoy no terminó. El archivo 2 del Día 13 toma estos diecisiete asientos y los lleva hasta los saldos ajustados, cerrando la Unidad 3. Vaya a él con la hoja de cálculos de este archivo al lado: va a necesitarla.</p></div>
+
+</div><!-- /reflexion -->
+
+<!-- ============================================================
+     PESTAÑA: BIBLIOGRAFÍA
+     ============================================================ -->
+<div id="biblio" class="panel">
+<h2>Bibliografía</h2>
+
+<p>Referencias en formato APA, séptima edición. Se recomienda verificar disponibilidad y datos de edición en el repositorio digital de la Universidad de Guayaquil o en Google Scholar antes de citarlas en un trabajo evaluado.</p>
+
+<div class="biblio-grid">
+<div class="biblio-card"><span class="tipo">Bibliografía básica del sílabo</span>
+<p>Zapata Sánchez, P. (2011). <em>Laboratorio de contabilidad general</em> (7.ª ed.). McGraw-Hill Interamericana.</p></div>
+
+<div class="biblio-card"><span class="tipo">Bibliografía complementaria</span>
+<p>Zapata Sánchez, P. (2017). <em>Contabilidad general: con base en Normas Internacionales de Información Financiera</em> (8.ª ed.). Alfaomega.</p></div>
+
+<div class="biblio-card"><span class="tipo">Bibliografía básica del sílabo</span>
+<p>Moreno Fernández, J. A. (2014). <em>Contabilidad básica</em> (4.ª ed.). Grupo Editorial Patria.</p></div>
+
+<div class="biblio-card"><span class="tipo">Bibliografía básica del sílabo</span>
+<p>Vite Rangel, V. T. (s. f.). <em>Contabilidad general</em>. Editorial Digital UNID. https://elibro.net/es/ereader/uguayaquil/41179</p></div>
+
+<div class="biblio-card"><span class="tipo">Norma internacional</span>
+<p>IFRS Foundation. (s. f.). <em>Norma Internacional de Contabilidad 2: Inventarios</em>. https://www.ifrs.org</p></div>
+
+<div class="biblio-card"><span class="tipo">Norma internacional</span>
+<p>IFRS Foundation. (s. f.). <em>Norma Internacional de Contabilidad 1: Presentación de estados financieros</em>. https://www.ifrs.org</p></div>
+
+<div class="biblio-card"><span class="tipo">Normativa nacional</span>
+<p>Servicio de Rentas Internas. (s. f.). <em>Normativa tributaria vigente: Ley de Régimen Tributario Interno y su reglamento de aplicación</em>. https://www.sri.gob.ec</p></div>
+
+<div class="biblio-card"><span class="tipo">Organismo de control</span>
+<p>Superintendencia de Compañías, Valores y Seguros. (s. f.). <em>Normativa contable y formularios para la presentación de estados financieros bajo NIIF</em>. https://www.supercias.gob.ec</p></div>
+
+<div class="biblio-card"><span class="tipo">Organismo de control</span>
+<p>Instituto Ecuatoriano de Seguridad Social. (s. f.). <em>Tasas de aportación al Seguro General Obligatorio</em>. https://www.iess.gob.ec</p></div>
+</div>
+
+<div class="nota-lateral"><span class="rot">Nota sobre las referencias normativas</span>
+<p>Las normas internacionales y la normativa tributaria y laboral ecuatoriana se actualizan de manera continua. Por esa razón se citan por su fuente institucional y no por una fecha de edición fija: siempre debe consultarse la versión vigente a la fecha del trabajo. Al citarlas en un informe profesional, indique además la fecha de consulta. Las resoluciones aplicadas en este widget —NAC-DGERCGC26-00000009 para la retención en la fuente del impuesto a la renta, vigente desde el 1 de marzo de 2026, y NAC-DGERCGC20-00000061 para las retenciones del IVA— se identifican por su número, que sí es un dato verificable y estable.</p></div>
+
+</div><!-- /biblio -->
+
+<div class="footer">
+Universidad de Guayaquil · Facultad de Ciencias Administrativas · Carrera de Negocios Internacionales<br>
+Contabilidad General · Unidad 3 · Día 13 — Ejercicio integrador de una compañía comercial, Parte I · Lunes 31 de agosto de 2026<br>
+Material de estudio autónomo. Continúa en el archivo 2: mayorización, balance de comprobación preliminar, asientos de ajuste y saldos ajustados.
+</div>
+
+</div><!-- /container -->
+
+<script>
+/* ============================================================
+   1. NAVEGACIÓN POR PESTAÑAS
+   ============================================================ */
+function showTab(id, btn){
+  var paneles = document.querySelectorAll('.panel');
+  for(var i=0;i<paneles.length;i++){ paneles[i].classList.remove('active'); }
+  var botones = document.querySelectorAll('.tab');
+  for(var j=0;j<botones.length;j++){ botones[j].classList.remove('active'); }
+  document.getElementById(id).classList.add('active');
+  if(btn){ btn.classList.add('active'); }
+  window.scrollTo(0,0);
+}
+
+/* ============================================================
+   2. ACORDEÓN DEL REPASO
+   ============================================================ */
+function toggleAc(id, btn){
+  var p = document.getElementById(id);
+  var f = btn.querySelector('.flecha');
+  if(p.classList.contains('abierto')){
+    p.classList.remove('abierto');
+    f.innerHTML = '&#9654;';
+  } else {
+    p.classList.add('abierto');
+    f.innerHTML = '&#9660;';
+  }
+}
+
+/* ============================================================
+   3. AUTOCHEQUEOS (revelar respuesta razonada)
+   ============================================================ */
+function verResp(id, btn){
+  var r = document.getElementById(id);
+  if(r.classList.contains('visible')){
+    r.classList.remove('visible');
+    btn.textContent = 'Ver respuesta razonada';
+  } else {
+    r.classList.add('visible');
+    btn.textContent = 'Ocultar respuesta';
+  }
+}
+
+/* ============================================================
+   4. EJERCICIO INTERACTIVO
+   ============================================================ */
+var eiClaves = {
+  ei1:'c', ei2:'a', ei3:'c', ei4:'d', ei5:'b',
+  ei6:'a', ei7:'c', ei8:'a', ei9:'d', ei10:'b'
+};
+var eiExplica = {
+  ei1:'La respuesta correcta es 17.251,50. Base 60 u × 265,00 = 15.900,00; IVA 15% = 2.385,00; retención en la fuente 2% sobre la base = 318,00; retención del IVA 30% = 715,50. El saldo a favor del proveedor es 15.900,00 + 2.385,00 − 318,00 − 715,50 = 17.251,50. Quien responde 18.285,00 olvidó las dos retenciones; quien responde 15.900,00 omitió el IVA; 17.967,00 resulta de descontar solo la retención de IVA.',
+  ei2:'La respuesta correcta es renta 21,00 e IVA 73,50. La vigilancia es un servicio que no encaja en ninguna categoría específica, de modo que se aplica el porcentaje residual del 3% sobre la base: 700,00 × 0,03 = 21,00. Y como es servicio, la retención del IVA es del 70%: 105,00 × 0,70 = 73,50. La opción con 31,50 aplica el 30% de bienes, y la de 24,15 calcula el 3% sobre base más IVA en lugar de sobre la base.',
+  ei3:'La respuesta correcta es la planilla de energía eléctrica de CNEL EP. Los pagos a empresas públicas no están sujetos a retención en la fuente, y además el servicio de energía eléctrica está gravado con tarifa 0% de IVA: el asiento tiene solo dos líneas por 310,00. Las otras tres operaciones sí generan retención: 2% en la compra de bienes, 10% en el arrendamiento de inmueble y 3% en el servicio de vigilancia.',
+  ei4:'La respuesta correcta es 29.620,50. Base 70 u × 390,00 = 27.300,00; IVA 15% = 4.095,00; el cliente, que es sociedad, retiene 2% de renta (546,00) y 30% del IVA (1.228,50). La cuenta por cobrar es 27.300,00 + 4.095,00 − 546,00 − 1.228,50 = 29.620,50, y las retenciones sufridas se registran como activos. Responder 31.395,00 ignora las retenciones; 27.300,00 confunde el ingreso con la cuenta por cobrar.',
+  ei5:'La respuesta correcta es 16.350,00. Antes del 26/08 la existencia era de 30 unidades a 265,00 más 50 unidades a 280,00. Bajo FIFO la salida de 60 unidades agota primero la capa de 265,00 (30 × 265,00 = 7.950,00) y toma 30 unidades de la de 280,00 (30 × 280,00 = 8.400,00): total 16.350,00. La opción 16.800,00 aplica 280,00 a las sesenta unidades; 17.950,00 es el costo de la venta anterior.',
+  ei6:'La respuesta correcta es que llevó al gasto los 225,00 de IVA. El IVA pagado en la compra de un bien o servicio es crédito tributario, un activo que se compensa con el IVA cobrado en ventas; nunca es gasto. El gasto de arriendo es 1.500,00, la base imponible. Las retenciones del asiento sí eran correctas: 10% de renta por arrendamiento de inmuebles y 70% del IVA por tratarse de un servicio.',
+  ei7:'La respuesta correcta es gasto 3.334,50 y líquido 2.716,50. El gasto de la empresa es el sueldo íntegro 3.000,00 más el aporte patronal de 11,15% (334,50). El aporte personal de 9,45% (283,50) no es gasto: se descuenta al trabajador, de modo que el líquido pagado es 3.000,00 − 283,50 = 2.716,50, y la obligación con el IESS asciende a 283,50 + 334,50 = 618,00. Registrar solo el líquido subvalúa el costo de personal en más del 20%.',
+  ei8:'La respuesta correcta es inventario final 5.600,00 y disponible 39.900,00. La mercadería disponible es el inventario inicial más las compras: 10.000,00 + 15.900,00 + 14.000,00 = 39.900,00. El costo de ventas del mes fue 17.950,00 + 16.350,00 = 34.300,00, de modo que el inventario final es 39.900,00 − 34.300,00 = 5.600,00, que corresponde a 20 unidades a 280,00. La opción 29.900,00 olvida la compra del 20/08.',
+  ei9:'La respuesta correcta es que cobra 26.910,00 y no recibe retenciones. La base es 60 u × 390,00 = 23.400,00 y el IVA 3.510,00, de modo que el cobro total es 26.910,00. Los consumidores finales no son agentes de retención, por lo que no entregan comprobante alguno. Atención: que no haya retención no significa que no haya IVA; los 3.510,00 son un pasivo frente al Servicio de Rentas Internas exactamente igual que en una venta a otra sociedad.',
+  ei10:'La respuesta correcta es diez asientos. Las ocho operaciones del mes generan ocho asientos, y las dos ventas —la del 12/08 y la del 26/08— arrastran cada una un asiento adicional por el costo de la mercadería vendida, porque la empresa lleva inventario permanente. Las compras no arrastran asiento de costo: el costo se reconoce cuando la mercadería sale, no cuando entra. Anticipar el número de asientos antes de jornalizar es una forma rápida de detectar consecuencias olvidadas.'
+};
+function verificarEi(){
+  var faltan = false;
+  for(var k in eiClaves){
+    if(!document.querySelector('input[name="'+k+'"]:checked')){ faltan = true; }
+  }
+  var aviso = document.getElementById('avisoEi');
+  if(faltan){ aviso.classList.add('visible'); document.getElementById('resEi').classList.remove('visible'); return; }
+  aviso.classList.remove('visible');
+  var correctas = 0, total = 0;
+  for(var k2 in eiClaves){
+    total++;
+    var sel = document.querySelector('input[name="'+k2+'"]:checked').value;
+    var fb = document.getElementById('f'+k2);
+    fb.classList.add('visible');
+    fb.classList.remove('ok'); fb.classList.remove('mal');
+    if(sel === eiClaves[k2]){
+      correctas++;
+      fb.classList.add('ok');
+      fb.innerHTML = '<span class="vered">Correcto.</span>' + eiExplica[k2];
+    } else {
+      fb.classList.add('mal');
+      fb.innerHTML = '<span class="vered">Revise este ítem.</span>' + eiExplica[k2];
+    }
+  }
+  var pct = Math.round(correctas*100/total);
+  document.getElementById('notaEi').textContent = correctas + ' de ' + total + ' correctas (' + pct + '%)';
+  var msg;
+  if(pct === 100){ msg = 'Dominio completo del análisis, del cálculo tributario y del Kardex. Pase al Cuestionario.'; }
+  else if(pct >= 80){ msg = 'Muy buen manejo. Revise los ítems fallados y rehaga el cálculo en papel antes de seguir.'; }
+  else if(pct >= 60){ msg = 'Base correcta con vacíos puntuales. Vuelva a los Temas 2 y 3 y repita el ejercicio.'; }
+  else if(pct >= 40){ msg = 'Conviene releer los Temas 2, 3 y 3b completos antes de repetir. No avance todavía al Cuestionario.'; }
+  else { msg = 'Retome el widget desde el Repaso. Los patrones tributarios del Tema 2 son la base de todo lo demás.'; }
+  document.getElementById('msgEi').textContent = msg;
+  document.getElementById('resEi').classList.add('visible');
+  var barra = document.getElementById('barraEi');
+  barra.style.width = '0%';
+  setTimeout(function(){ barra.style.width = pct + '%'; }, 60);
+}
+function reiniciarEi(){
+  for(var k in eiClaves){
+    var ops = document.getElementsByName(k);
+    for(var i=0;i<ops.length;i++){ ops[i].checked = false; }
+    var fb = document.getElementById('f'+k);
+    fb.classList.remove('visible'); fb.classList.remove('ok'); fb.classList.remove('mal');
+    fb.innerHTML = '';
+  }
+  document.getElementById('resEi').classList.remove('visible');
+  document.getElementById('avisoEi').classList.remove('visible');
+  document.getElementById('barraEi').style.width = '0%';
+}
+
+/* ============================================================
+   5. CUESTIONARIO
+   ============================================================ */
+var qiClaves = {
+  qi1:'b', qi2:'c', qi3:'a', qi4:'d', qi5:'b',
+  qi6:'c', qi7:'a', qi8:'d', qi9:'b', qi10:'c'
+};
+var qiExplica = {
+  qi1:'Lo distintivo no es el tamaño de las cifras ni la modalidad de trabajo, sino que el punto de partida son los documentos fuente y el de llegada los saldos ajustados, sin que ningún paso venga resuelto. Un ejercicio temático evalúa si usted sabe ejecutar un procedimiento; un integrador evalúa si sabe decidir cuál procedimiento aplicar cuando nadie se lo dice. Y se aplica a cualquier tipo de empresa, no solo a las comerciales.',
+  qi2:'Aparecen en el Haber. Son cuentas de valuación o correctoras: pertenecen al activo por su ubicación en el plan de cuentas, pero su saldo es acreedor porque su función es restar del activo bruto sin borrarlo. El valor neto —activo menos su cuenta correctora— se calcula para presentar el Estado de Situación Financiera, pero el balance de comprobación muestra las dos cuentas por separado. Nunca se cambia de columna para forzar un cuadre.',
+  qi3:'Porque son dos hechos distintos con bases de medición distintas: el ingreso se mide al precio de venta pactado con el cliente, y el costo se mide con el valor que el Kardex asignó a esas unidades según el método de valuación. No hay relación aritmética entre ambos, y esa diferencia es precisamente el margen bruto de la operación. El IVA y las retenciones van dentro del primer asiento, no en el segundo.',
+  qi4:'Sobre 2.000,00, la base imponible. La retención en la fuente del impuesto a la renta se calcula siempre sobre el valor del bien o servicio, nunca sobre el IVA ni sobre el total del comprobante. Aplicarla sobre 2.300,00 infla la retención en un 15% y genera una obligación tributaria que no corresponde, además de un perjuicio al proveedor.',
+  qi5:'70% en el servicio y 30% en la adquisición de bienes. El porcentaje de retención del IVA depende de la naturaleza de la operación —bien o servicio— y no de la forma jurídica del proveedor. El porcentaje de retención en la fuente del impuesto a la renta, en cambio, sí varía según el tipo de servicio: 3% residual, 5% en servicios profesionales prestados por sociedades y 10% en arrendamiento de inmuebles.',
+  qi6:'Se rehace la línea donde se rompió el arrastre. La igualdad no puede fallar porque toda la mercadería disponible tuvo solo dos destinos posibles: se vendió o quedó en existencia. Cuando no cuadra, el error está en una compra no registrada en el auxiliar, en una salida valorada con un costo que no correspondía a la capa vigente, o en una existencia mal trasladada de una línea a la siguiente. Forzar el inventario final arrastra el error a todos los períodos siguientes.',
+  qi7:'El ingreso es 7.800,00. El IVA de 1.170,00 se cobra al cliente por cuenta del Estado y nace como pasivo frente al Servicio de Rentas Internas; no incrementa el patrimonio de la empresa. Confundirlos infla las ventas en un 15% y distorsiona todos los márgenes. Tampoco depende de la forma de pago ni del valor efectivamente cobrado: el ingreso se reconoce por devengo, cuando la venta ocurre.',
+  qi8:'La respuesta correcta es 9.114,00. Base 8.400,00; IVA 15% = 1.260,00; retención en la fuente 2% sobre la base = 168,00; retención del IVA 30% = 378,00. El saldo a favor del proveedor es 8.400,00 + 1.260,00 − 168,00 − 378,00 = 9.114,00. La opción 9.660,00 es el total facturado sin retenciones y 9.492,00 descuenta solo una de las dos.',
+  qi9:'La respuesta correcta es costo 5.400,00 e inventario final 1.500,00. Bajo FIFO la salida de 400 unidades agota primero las 200 unidades a 12,00 (2.400,00) y toma 200 unidades de la capa de 15,00 (3.000,00): total 5.400,00. Quedan 100 unidades a 15,00, es decir 1.500,00. Comprobación: disponible 2.400,00 + 4.500,00 = 6.900,00 = 5.400,00 + 1.500,00. La opción 5.520,00 corresponde a un costo promedio ponderado, que no es el método aplicado.',
+  qi10:'La respuesta correcta es que desembolsa 1.990,00 y retiene 310,00. Se trata de servicios profesionales prestados por una sociedad: retención en la fuente del 5% sobre la base (2.000,00 × 0,05 = 100,00) y retención del IVA del 70% por ser servicio (300,00 × 0,70 = 210,00). El desembolso es 2.000,00 + 300,00 − 100,00 − 210,00 = 1.990,00. La opción con 90,00 aplica el 30% de bienes a un servicio, y la primera supone erróneamente que a las sociedades no se les retiene.'
+};
+function verificarQi(){
+  var faltan = false;
+  for(var k in qiClaves){
+    if(!document.querySelector('input[name="'+k+'"]:checked')){ faltan = true; }
+  }
+  var aviso = document.getElementById('avisoQi');
+  if(faltan){ aviso.classList.add('visible'); document.getElementById('resQi').classList.remove('visible'); return; }
+  aviso.classList.remove('visible');
+  var correctas = 0, total = 0;
+  for(var k2 in qiClaves){
+    total++;
+    var sel = document.querySelector('input[name="'+k2+'"]:checked').value;
+    var fb = document.getElementById('f'+k2);
+    fb.classList.add('visible');
+    fb.classList.remove('ok'); fb.classList.remove('mal');
+    if(sel === qiClaves[k2]){
+      correctas++;
+      fb.classList.add('ok');
+      fb.innerHTML = '<span class="vered">Correcto.</span>' + qiExplica[k2];
+    } else {
+      fb.classList.add('mal');
+      fb.innerHTML = '<span class="vered">Revise esta pregunta.</span>' + qiExplica[k2];
+    }
+  }
+  var pct = Math.round(correctas*100/total);
+  var emoji;
+  if(pct === 100){ emoji = ' 🏆'; }
+  else if(pct >= 80){ emoji = ' 🎯'; }
+  else if(pct >= 60){ emoji = ' 📘'; }
+  else if(pct >= 40){ emoji = ' ⚠️'; }
+  else { emoji = ' 📖'; }
+  document.getElementById('notaQi').textContent = 'Calificación: ' + correctas + '/10  ·  ' + pct + '%' + emoji;
+  var msg;
+  if(pct === 100){ msg = 'Dominio completo de la primera mitad del Día 13. Puede pasar al archivo 2 con seguridad.'; }
+  else if(pct >= 80){ msg = 'Muy buen desempeño. Revise las preguntas falladas con su explicación y continúe con el archivo 2.'; }
+  else if(pct >= 60){ msg = 'Comprensión razonable con vacíos identificables. Vuelva a los Temas 2 y 3 antes de seguir.'; }
+  else if(pct >= 40){ msg = 'Conviene rehacer el widget desde el Tema 2 y resolver de nuevo el Ejercicio Interactivo antes de repetir.'; }
+  else { msg = 'Retome desde el Repaso, en especial los bloques de tratamiento tributario y de Kardex, y avance tema por tema sin saltar.'; }
+  document.getElementById('msgQi').textContent = msg;
+  document.getElementById('resQi').classList.add('visible');
+  var barra = document.getElementById('barraQi');
+  barra.style.width = '0%';
+  setTimeout(function(){ barra.style.width = pct + '%'; }, 60);
+}
+function reiniciarQi(){
+  for(var k in qiClaves){
+    var ops = document.getElementsByName(k);
+    for(var i=0;i<ops.length;i++){ ops[i].checked = false; }
+    var fb = document.getElementById('f'+k);
+    fb.classList.remove('visible'); fb.classList.remove('ok'); fb.classList.remove('mal');
+    fb.innerHTML = '';
+  }
+  document.getElementById('resQi').classList.remove('visible');
+  document.getElementById('avisoQi').classList.remove('visible');
+  document.getElementById('barraQi').style.width = '0%';
+}
+</script>
+
+</body>
+</html>

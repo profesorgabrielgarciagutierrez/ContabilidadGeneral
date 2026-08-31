@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Día 13 — Ejercicio integrador de una compañía comercial (II): de la mayorización a los saldos ajustados</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+
+/* ============ BASE ============ */
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Source Sans 3',sans-serif;font-size:17px;line-height:1.75;color:#1c2733;background:#eef2f6}
+.container{max-width:1180px;margin:0 auto;background:#fff;box-shadow:0 0 28px rgba(0,0,0,.10)}
+h1,h2,h3,h4{font-family:'Lora',serif;line-height:1.3}
+p{margin-bottom:15px;text-align:justify}
+ul,ol{margin:0 0 15px 26px}
+li{margin-bottom:9px;text-align:justify}
+strong{font-weight:700;color:#00264d}
+em{font-style:italic}
+
+/* ============ ENCABEZADO ============ */
+.header{background:#003366;color:#fff;padding:30px 26px 26px}
+.header h1{font-size:1.85em;color:#fff;margin-bottom:8px}
+.header .inst{font-size:.95em;color:#cfe4f7;letter-spacing:.4px;text-transform:uppercase;font-weight:600}
+.header .sub{font-size:1.02em;color:#eaf4ff;margin-top:10px}
+.header .meta{margin-top:16px;display:flex;flex-wrap:wrap;gap:9px}
+.header .chip{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.42);color:#fff;padding:5px 13px;border-radius:16px;font-size:.83em;font-weight:600}
+
+/* ============ PESTAÑAS ============ */
+.tabs{background:#87CEEB;display:flex;overflow-x:auto;white-space:nowrap;border-bottom:3px solid #003366;-webkit-overflow-scrolling:touch}
+.tab{background:transparent;border:none;color:#000;font-family:'Source Sans 3',sans-serif;font-size:.92em;font-weight:600;padding:14px 17px;cursor:pointer;flex:0 0 auto;border-right:1px solid rgba(0,51,102,.20);transition:background .15s}
+.tab:hover{background:rgba(255,255,255,.55)}
+.tab.active{background:#fff;color:#003366;font-weight:700}
+.panel{display:none;padding:30px 30px 46px}
+.panel.active{display:block}
+.panel h2{font-size:1.6em;color:#003366;border-bottom:3px solid #87CEEB;padding-bottom:9px;margin-bottom:20px}
+.panel h3{font-size:1.24em;color:#004a80;margin:26px 0 12px}
+.panel h4{font-size:1.06em;color:#00264d;margin:18px 0 9px}
+
+/* ============ RECUADROS ============ */
+.definicion{background:#eaf3fb;border-left:6px solid #003366;padding:16px 20px;margin:18px 0;border-radius:0 7px 7px 0}
+.definicion .rot{font-family:'Lora',serif;font-weight:700;color:#003366;display:block;margin-bottom:6px;font-size:1.03em}
+.ejemplo{background:#fffaf0;border-left:6px solid #d99500;padding:16px 20px;margin:18px 0;border-radius:0 7px 7px 0}
+.ejemplo .rot{font-family:'Lora',serif;font-weight:700;color:#a06d00;display:block;margin-bottom:6px;font-size:1.03em}
+.alerta{background:#fdecea;border-left:6px solid #c0392b;padding:16px 20px;margin:18px 0;border-radius:0 7px 7px 0}
+.alerta .rot{font-family:'Lora',serif;font-weight:700;color:#9b2d20;display:block;margin-bottom:6px;font-size:1.03em}
+.nota-lateral{background:#f4f6f8;border:1px dashed #8b9aa8;padding:14px 18px;margin:18px 0;border-radius:7px;font-size:.96em;color:#33424f}
+.nota-lateral .rot{font-weight:700;color:#33424f;display:block;margin-bottom:5px}
+.formula{background:#00264d;color:#eaf4ff;padding:17px 20px;margin:18px 0;border-radius:8px;font-family:'Courier New',monospace;font-size:1.02em;text-align:center;line-height:1.9;overflow-x:auto}
+.formula b{color:#87CEEB}
+.conclusion{background:#e8f5ec;border:2px solid #2e7d4f;border-radius:9px;padding:17px 21px;margin:24px 0 8px}
+.conclusion .rot{font-family:'Lora',serif;font-weight:700;color:#1e5c39;display:block;margin-bottom:6px;font-size:1.06em}
+.carrera-box{background:#f0faf3;border:2px dashed #2e7d4f;border-radius:9px;padding:17px 21px;margin:22px 0}
+.carrera-box .rot{font-family:'Lora',serif;font-weight:700;color:#1e5c39;display:block;margin-bottom:9px;font-size:1.05em}
+.carrera-box ul{margin:0 0 0 22px}
+.carrera-box li{margin-bottom:8px}
+.futuro{background:#f3eefc;border-left:6px solid #6b3fa0;padding:16px 20px;margin:18px 0;border-radius:0 7px 7px 0}
+.futuro .rot{font-family:'Lora',serif;font-weight:700;color:#54308a;display:block;margin-bottom:6px;font-size:1.03em}
+.destacado{background:#fff3cd;padding:2px 6px;border-radius:4px;font-weight:600}
+.calc-box{background:#f7f9fb;border:1px solid #c3d2df;border-radius:8px;padding:15px 19px;margin:16px 0;font-family:'Courier New',monospace;font-size:.95em;line-height:1.85;overflow-x:auto}
+.calc-box .tit{font-family:'Source Sans 3',sans-serif;font-weight:700;color:#003366;display:block;margin-bottom:8px;font-size:1.05em}
+
+/* ============ ACORDEÓN (REPASO) ============ */
+.acordeon{margin:14px 0}
+.acordeon-btn{width:100%;text-align:left;background:#eaf3fb;border:1px solid #b7d2e8;border-radius:7px;padding:14px 18px;font-family:'Lora',serif;font-size:1.06em;font-weight:600;color:#003366;cursor:pointer;margin-bottom:8px;transition:background .15s}
+.acordeon-btn:hover{background:#dcecf9}
+.acordeon-btn .flecha{display:inline-block;margin-right:10px;color:#00264d;font-size:.85em}
+.acordeon-panel{display:none;border:1px solid #d6e3ee;border-top:none;border-radius:0 0 7px 7px;padding:6px 22px 16px;margin:-10px 0 14px;background:#fcfdfe}
+.acordeon-panel.abierto{display:block}
+.puente{background:#003366;color:#eaf4ff;border-radius:9px;padding:19px 23px;margin:26px 0 6px}
+.puente .rot{font-family:'Lora',serif;font-weight:700;color:#87CEEB;display:block;margin-bottom:7px;font-size:1.1em}
+.puente p{color:#eaf4ff}
+
+/* ============ TABLAS GENERALES ============ */
+.tabla-wrap{overflow-x:auto;margin:18px 0}
+table.tabla{width:100%;border-collapse:collapse;font-size:.93em;background:#fff}
+table.tabla th{background:#003366;color:#fff;padding:10px 11px;text-align:left;font-weight:600;border:1px solid #002347}
+table.tabla td{padding:9px 11px;border:1px solid #cfdae5;vertical-align:top}
+table.tabla tr:nth-child(even) td{background:#f7fafc}
+table.tabla td.num{text-align:right;font-family:'Courier New',monospace;white-space:nowrap}
+table.tabla td.ctr{text-align:center}
+table.tabla tr.total td{font-weight:700;background:#e8eff6 !important;border-top:3px double #003366}
+table.tabla tr.sub td{font-weight:700;background:#eaf3fb !important}
+table.tabla .sec{background:#dbe8f4 !important;font-weight:700;color:#00264d}
+
+/* ============ ASIENTOS CONTABLES ============ */
+.asiento{margin:22px 0;border:2px solid #003366;border-radius:8px;overflow:hidden}
+.asiento-header{background:#003366;color:#fff;padding:9px 15px;font-family:'Lora',serif;font-weight:700;font-size:1.0em;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.asiento table{width:100%;border-collapse:collapse;font-size:.93em}
+.asiento th{background:#dbe8f4;color:#00264d;padding:8px 10px;text-align:left;font-weight:700;border-bottom:2px solid #003366;font-size:.9em}
+.asiento td{padding:7px 10px;border-bottom:1px solid #e2e9f0}
+.asiento td.valor{text-align:right;font-family:'Courier New',monospace;white-space:nowrap}
+.asiento td.cta-acreedora{padding-left:36px}
+.asiento tr.suman td{font-weight:700;border-top:3px double #003366;background:#f2f6fa}
+.glosa{padding:11px 15px;background:#f7f9fb;font-style:italic;font-size:.92em;color:#3a4a58;border-top:1px solid #dde5ec}
+
+/* ============ MAYOR EN T ============ */
+.mayor-grid{display:flex;flex-wrap:wrap;gap:16px;margin:18px 0}
+.mayor-t{flex:1 1 300px;border:2px solid #003366;border-radius:7px;overflow:hidden;min-width:260px}
+.mayor-t .tit{background:#003366;color:#fff;padding:7px 11px;font-weight:700;font-size:.92em;text-align:center;font-family:'Lora',serif}
+.mayor-t table{width:100%;border-collapse:collapse;font-size:.87em}
+.mayor-t th{background:#dbe8f4;color:#00264d;padding:5px 8px;width:50%;border:1px solid #b7cadd;text-align:center;font-size:.9em}
+.mayor-t td{padding:4px 8px;border:1px solid #e2e9f0;font-family:'Courier New',monospace;font-size:.95em}
+.mayor-t td:first-child{border-right:2px solid #003366}
+.mayor-t tr.saldo td{font-weight:700;background:#eef4fa;border-top:2px solid #003366;font-family:'Source Sans 3',sans-serif}
+
+/* ============ AUTOCHEQUEO ============ */
+.autocheck{background:#fffaf0;border:2px solid #d99500;border-radius:9px;padding:18px 22px;margin:24px 0}
+.autocheck .rot{font-family:'Lora',serif;font-weight:700;color:#a06d00;display:block;margin-bottom:10px;font-size:1.1em}
+.autocheck .preg{font-weight:600;color:#00264d;margin:14px 0 7px}
+.autocheck-btn{background:#d99500;color:#fff;border:none;border-radius:6px;padding:7px 15px;font-family:'Source Sans 3',sans-serif;font-size:.88em;font-weight:600;cursor:pointer}
+.autocheck-btn:hover{background:#b87d00}
+.autocheck-resp{display:none;margin-top:10px;background:#fff;border-left:5px solid #2e7d4f;padding:12px 16px;border-radius:0 6px 6px 0;font-size:.96em}
+.autocheck-resp.visible{display:block}
+
+/* ============ EJERCICIO Y CUESTIONARIO ============ */
+.item{background:#fbfcfd;border:1px solid #cfdae5;border-radius:9px;padding:19px 22px;margin:20px 0}
+.item .enun{font-weight:600;color:#00264d;margin-bottom:12px}
+.item .num-item{display:inline-block;background:#003366;color:#fff;border-radius:50%;width:29px;height:29px;line-height:29px;text-align:center;font-weight:700;margin-right:9px;font-size:.9em}
+.badge{display:inline-block;font-size:.72em;font-weight:700;padding:3px 10px;border-radius:12px;margin-left:8px;vertical-align:middle;letter-spacing:.3px}
+.badge-teorica{background:#dbe8f4;color:#003366;border:1px solid #8fb4d4}
+.badge-caso{background:#fdebd0;color:#8a5a00;border:1px solid #e0b060}
+.opciones{margin:10px 0 0}
+.opciones label{display:block;padding:9px 13px;margin-bottom:7px;background:#fff;border:1px solid #d6dfe8;border-radius:6px;cursor:pointer;transition:background .12s;font-size:.97em}
+.opciones label:hover{background:#eef4fa}
+.opciones input{margin-right:9px}
+.feedback{display:none;margin-top:12px;padding:13px 17px;border-radius:7px;font-size:.95em}
+.feedback.visible{display:block}
+.feedback.ok{background:#e8f5ec;border-left:5px solid #2e7d4f;color:#1e5c39}
+.feedback.mal{background:#fdecea;border-left:5px solid #c0392b;color:#8f2418}
+.feedback .vered{font-weight:700;display:block;margin-bottom:5px}
+.btn{background:#003366;color:#fff;border:none;border-radius:7px;padding:13px 27px;font-family:'Source Sans 3',sans-serif;font-size:1em;font-weight:600;cursor:pointer;margin:8px 8px 8px 0}
+.btn:hover{background:#00264d}
+.btn-sec{background:#6b7c8c}
+.btn-sec:hover{background:#55636f}
+.resultado{display:none;margin:22px 0;padding:22px 25px;border-radius:10px;background:#eaf3fb;border:2px solid #003366}
+.resultado.visible{display:block}
+.resultado .nota{font-family:'Lora',serif;font-size:1.5em;font-weight:700;color:#003366;margin-bottom:10px}
+.barra{background:#d6e3ee;border-radius:12px;height:26px;overflow:hidden;margin:12px 0}
+.barra-relleno{height:100%;width:0;background:linear-gradient(90deg,#2e7d4f,#87CEEB);transition:width 1.1s ease-out;border-radius:12px}
+.aviso{display:none;background:#fdecea;border-left:5px solid #c0392b;color:#8f2418;padding:12px 17px;border-radius:0 7px 7px 0;margin:14px 0;font-weight:600}
+.aviso.visible{display:block}
+.solucion{background:#f0faf3;border:2px solid #2e7d4f;border-radius:9px;padding:19px 23px;margin:26px 0}
+.solucion .rot{font-family:'Lora',serif;font-weight:700;color:#1e5c39;display:block;margin-bottom:9px;font-size:1.12em}
+
+/* ============ BIBLIOGRAFÍA ============ */
+.biblio-grid{display:flex;flex-wrap:wrap;gap:16px;margin:18px 0}
+.biblio-card{flex:1 1 330px;background:#fbfcfd;border:1px solid #cfdae5;border-left:6px solid #003366;border-radius:0 8px 8px 0;padding:16px 19px;min-width:280px}
+.biblio-card .tipo{font-size:.75em;font-weight:700;color:#004a80;text-transform:uppercase;letter-spacing:.6px;display:block;margin-bottom:6px}
+.biblio-card p{font-size:.93em;margin-bottom:0;text-align:left}
+
+/* ============ PIE ============ */
+.footer{background:#00264d;color:#b9d3ea;padding:22px 26px;font-size:.86em;text-align:center}
+
+/* ============ RESPONSIVO ============ */
+@media (max-width:760px){
+  body{font-size:16px}
+  .panel{padding:20px 15px 36px}
+  .header{padding:22px 16px}
+  .header h1{font-size:1.4em}
+  .tab{padding:12px 13px;font-size:.86em}
+  .asiento td.cta-acreedora{padding-left:22px}
+  .mayor-t{flex:1 1 100%}
+  .biblio-card{flex:1 1 100%}
+  table.tabla{font-size:.85em}
+  p,li{text-align:left}
+}
+
+/* ============ BADGE DE FAMILIA DE AJUSTE (13B) ============ */
+.badge-familia{background:#f3eefc;color:#54308a;border:1px solid #b79ede}
+
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ============================================================
+     ENCABEZADO INSTITUCIONAL
+     ============================================================ -->
+<div class="header">
+  <div class="inst">Universidad de Guayaquil · Facultad de Ciencias Administrativas · Carrera de Negocios Internacionales</div>
+  <h1>Día 13 · Ejercicio integrador de una compañía comercial — Parte II</h1>
+  <div class="sub">De la mayorización a los saldos ajustados: Libro Mayor, balance de comprobación preliminar, asientos de ajuste y balance ajustado · Caso Comercial El Astillero S.A., agosto de 2026 · Cierre de la Unidad 3</div>
+  <div class="meta">
+    <span class="chip">Contabilidad General</span>
+    <span class="chip">Unidad 3 · NIC 2 Inventarios y el proceso contable (II parte)</span>
+    <span class="chip">Lunes 31 de agosto de 2026</span>
+    <span class="chip">Archivo 2 de 2</span>
+    <span class="chip">Cierre de la Unidad 3</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     MENÚ DE PESTAÑAS
+     ============================================================ -->
+<div class="tabs">
+  <button class="tab active" onclick="showTab('repaso',this)">Repaso</button>
+  <button class="tab" onclick="showTab('t1',this)">Tema 1 · Mayorización</button>
+  <button class="tab" onclick="showTab('t2',this)">Tema 2 · Balance preliminar</button>
+  <button class="tab" onclick="showTab('t3',this)">Tema 3 · Asientos de ajuste</button>
+  <button class="tab" onclick="showTab('t4',this)">Tema 4 · Hoja de trabajo y balance ajustado</button>
+  <button class="tab" onclick="showTab('t5',this)">Tema 5 · Cierre de la Unidad 3</button>
+  <button class="tab" onclick="showTab('ejercicio',this)">Ejercicio Interactivo</button>
+  <button class="tab" onclick="showTab('cuestionario',this)">Cuestionario</button>
+  <button class="tab" onclick="showTab('ia',this)">Actividad con IA</button>
+  <button class="tab" onclick="showTab('reflexion',this)">Reflexión</button>
+  <button class="tab" onclick="showTab('biblio',this)">Bibliografía</button>
+</div>
+
+<!-- ============================================================
+     PESTAÑA: REPASO
+     ============================================================ -->
+<div id="repaso" class="panel">
+<h2>Repaso: lo que trae el archivo 1 y lo que aportan los días previos</h2>
+
+<p>Este archivo continúa exactamente donde terminó el archivo 1 del Día 13. Si usted no lo trabajó, empiece por él: aquí se dan por hechos los diecisiete asientos del mes y el Kardex del artículo INV-4501. Los cuatro bloques siguientes recuperan lo indispensable.</p>
+
+<div class="acordeon">
+
+<button class="acordeon-btn" onclick="toggleAc('ac1',this)"><span class="flecha">&#9654;</span>Archivo 1 — La empresa, su plan de cuentas y sus saldos iniciales</button>
+<div id="ac1" class="acordeon-panel">
+<p><strong>Comercial El Astillero S.A.</strong> es una compañía anónima de Guayaquil dedicada al comercio al por menor de electrodomésticos. Es agente de retención, lleva <em>inventario permanente</em> y valora por <strong>FIFO</strong>. El período analizado es agosto de 2026 y el artículo bajo control de Kardex es el INV-4501 «Ventilador de techo VT-16», con precio de venta de 52,00.</p>
+<p>Abrió el mes con estos saldos, que sumaron 83.740,00 en cada columna: Caja 1.200,00 · Bancos 28.500,00 · Cuentas por cobrar 9.400,00 · Inventario 3.000,00 · Arriendos pagados por anticipado 3.000,00 · Seguros pagados por anticipado 1.440,00 · Muebles y enseres 9.600,00 · Equipo de computación 3.600,00 · Vehículos 24.000,00, contra Deterioro acumulado de cuentas por cobrar 120,00 · las tres depreciaciones acumuladas 1.920,00, 1.200,00 y 4.800,00 · Cuentas por pagar proveedores 7.200,00 · Préstamo bancario 12.000,00 · Capital social 50.000,00 y Resultados acumulados 6.500,00.</p>
+<p>Quedó advertido allí que <strong>cinco de esos saldos anunciaban un ajuste</strong>: el arriendo prepagado, el seguro prepagado, las tres depreciaciones acumuladas, el préstamo que devenga interés y la cartera sujeta a deterioro. Hoy se practican.</p>
+</div>
+
+<button class="acordeon-btn" onclick="toggleAc('ac2',this)"><span class="flecha">&#9654;</span>Archivo 1 — Los diecisiete asientos del mes</button>
+<div id="ac2" class="acordeon-panel">
+<p>Catorce hechos económicos produjeron diecisiete asientos, porque las tres ventas —al llevarse inventario permanente— arrastran cada una un asiento de costo.</p>
+<div class="tabla-wrap"><table class="tabla">
+<thead><tr><th style="width:8%">N.º</th><th style="width:12%">Fecha</th><th>Concepto</th><th style="width:16%">Valor</th></tr></thead>
+<tbody>
+<tr><td class="ctr">1</td><td>01/08</td><td>Asiento de apertura</td><td class="num">83.740,00</td></tr>
+<tr><td class="ctr">2</td><td>02/08</td><td>Pago del saldo de proveedores del mes anterior</td><td class="num">7.200,00</td></tr>
+<tr><td class="ctr">3</td><td>04/08</td><td>Arriendo de la bodega — retención 10% y 70% del IVA</td><td class="num">1.035,00</td></tr>
+<tr><td class="ctr">4</td><td>05/08</td><td>Compra de 300 u a 34,00 a crédito</td><td class="num">11.730,00</td></tr>
+<tr><td class="ctr">5</td><td>09/08</td><td>Venta de 150 u a 52,00 a crédito</td><td class="num">8.970,00</td></tr>
+<tr><td class="ctr">6</td><td>09/08</td><td>Costo de ventas FIFO de esa venta</td><td class="num">4.700,00</td></tr>
+<tr><td class="ctr">7</td><td>11/08</td><td>Cobro parcial de cartera</td><td class="num">6.000,00</td></tr>
+<tr><td class="ctr">8</td><td>12/08</td><td>Energía eléctrica CNEL EP — 0% IVA, sin retención</td><td class="num">240,00</td></tr>
+<tr><td class="ctr">9</td><td>14/08</td><td>Compra de 150 u a 39,00 con cheque</td><td class="num">6.727,50</td></tr>
+<tr><td class="ctr">10</td><td>18/08</td><td>Venta de 300 u a 52,00 a crédito</td><td class="num">17.940,00</td></tr>
+<tr><td class="ctr">11</td><td>18/08</td><td>Costo de ventas FIFO de esa venta</td><td class="num">10.450,00</td></tr>
+<tr><td class="ctr">12</td><td>20/08</td><td>Mantenimiento del vehículo — retención residual 3%</td><td class="num">575,00</td></tr>
+<tr><td class="ctr">13</td><td>23/08</td><td>Compra de 100 u a 40,25 a crédito</td><td class="num">4.628,75</td></tr>
+<tr><td class="ctr">14</td><td>26/08</td><td>Honorarios profesionales — retención 5%</td><td class="num">1.380,00</td></tr>
+<tr><td class="ctr">15</td><td>28/08</td><td>Venta de 140 u a consumidores finales, de contado</td><td class="num">8.372,00</td></tr>
+<tr><td class="ctr">16</td><td>28/08</td><td>Costo de ventas FIFO de esa venta</td><td class="num">5.510,00</td></tr>
+<tr><td class="ctr">17</td><td>29/08</td><td>Rol de pagos de agosto</td><td class="num">4.668,30</td></tr>
+<tr class="total"><td colspan="3">SUMA DE LOS ASIENTOS DEL MES</td><td class="num">183.866,55</td></tr>
+</tbody></table></div>
+</div>
+
+<button class="acordeon-btn" onclick="toggleAc('ac3',this)"><span class="flecha">&#9654;</span>Archivo 1 — El Kardex del artículo INV-4501</button>
+<div id="ac3" class="acordeon-panel">
+<p>Bajo FIFO, el auxiliar del artículo cerró agosto así: mercadería disponible <strong>23.075,00</strong> (inventario inicial 3.000,00 más compras por 20.075,00), costo de ventas <strong>20.660,00</strong> e inventario final <strong>2.415,00</strong>, equivalente a <strong>60 unidades a 40,25</strong>, que es la capa de la última compra.</p>
+<div class="formula">Mercadería disponible = Costo de ventas + Inventario final<br>23.075,00 = 20.660,00 + 2.415,00</div>
+<p>Los costos unitarios de compra subieron de 30,00 a 34,00, luego a 39,00 y finalmente a 40,25 —un 34,2% en un mes— mientras el precio de venta permaneció en 52,00. Las ventas del período sumaron <strong>30.680,00</strong> por 590 unidades, de modo que la utilidad bruta antes de ajustes es 30.680,00 &minus; 20.660,00 = <strong>10.020,00</strong>.</p>
+<div class="alerta"><span class="rot">Pendiente que hoy se resuelve</span>
+<p>El Kardex del archivo 1 <strong>no incorporaba</strong> dos hechos del 31 de agosto: el faltante determinado en la toma física y la comparación del costo con el valor neto realizable. Ambos se practican hoy como asientos de ajuste.</p></div>
+</div>
+
+<button class="acordeon-btn" onclick="toggleAc('ac4',this)"><span class="flecha">&#9654;</span>Días 5, 11 y 12 — Mayorización, ajustes y balance ajustado</button>
+<div id="ac4" class="acordeon-panel">
+<p><strong>Mayorizar</strong> es trasladar cada valor jornalizado a la cuenta individual que le corresponde en el Libro Mayor. La representación didáctica de una cuenta es la <em>cuenta T</em>: el nombre arriba, los débitos a la izquierda, los créditos a la derecha y el saldo como diferencia entre ambos lados. El <strong>balance de comprobación preliminar</strong> lista todas las cuentas del mayor con sus sumas y sus saldos, y comprueba únicamente la igualdad aritmética.</p>
+<p>Los <strong>asientos de ajuste</strong> se practican al cierre para que los saldos reflejen la realidad económica, en aplicación del principio de devengo. Se clasifican en cuatro familias:</p>
+<div class="tabla-wrap"><table class="tabla">
+<thead><tr><th style="width:20%">Familia</th><th>Qué caracteriza al hecho</th><th style="width:32%">Ejemplos vistos el Día 11</th></tr></thead>
+<tbody>
+<tr><td><strong>Acumulación</strong></td><td>El hecho ya ocurrió, pero no hay documento ni movimiento de dinero todavía.</td><td>Intereses causados y no pagados, sueldos devengados.</td></tr>
+<tr><td><strong>Diferimiento</strong></td><td>El dinero ya se movió, pero el gasto o el ingreso todavía no se consume.</td><td>Arriendo pagado por anticipado, seguros prepagados, suministros.</td></tr>
+<tr><td><strong>Estimación</strong></td><td>El valor no se conoce con exactitud y debe calcularse con una técnica razonable y consistente.</td><td>Depreciación, deterioro de cartera, ajuste del inventario al VNR.</td></tr>
+<tr><td><strong>Comprobación</strong></td><td>Al verificar se detecta un hecho real no registrado o registrado mal.</td><td>Notas de débito bancarias, faltantes en la toma física.</td></tr>
+</tbody></table></div>
+<p>El Día 12 se construyeron tres balances de comprobación ajustados sobre empresas de modelos distintos, y allí quedó formulada la <strong>regla de control de sumas</strong>: el total ajustado equivale al total preliminar más el importe de los ajustes, menos los movimientos que van en sentido contrario a la naturaleza de la cuenta. También quedó demostrado que, en los tres casos, el resultado real fue inferior al aparente: <strong>una empresa que no ajusta se ve mejor de lo que está</strong>.</p>
+</div>
+
+</div><!-- /acordeon -->
+
+<div class="puente"><span class="rot">Puente hacia el trabajo de hoy</span>
+<p>Usted llega con diecisiete asientos correctos y un auxiliar de inventarios cuadrado. Eso todavía no es información financiera: es materia prima. Nadie puede decir, mirando el Libro Diario, cuánto dinero tiene la empresa en el banco, cuánto le deben, cuánto debe ni cuánto ganó.</p>
+<p>El trabajo de hoy convierte esa materia prima en cinco documentos encadenados: el <strong>Libro Mayor</strong>, el <strong>balance de comprobación preliminar</strong>, los <strong>asientos de ajuste</strong>, la <strong>hoja de trabajo</strong> y el <strong>balance de comprobación ajustado</strong>. Con el último de ellos se cierra la Unidad 3, y con él empieza, mañana, la Unidad 4.</p>
+</div>
+
+</div><!-- /repaso -->
+
+<!-- ============================================================
+     PESTAÑA: TEMA 1 — MAYORIZACIÓN
+     ============================================================ -->
+<div id="t1" class="panel">
+<h2>Tema 1 — Mayorización: del Libro Diario al Libro Mayor</h2>
+
+<h3>1.1 Qué es mayorizar y por qué no se puede saltar este paso</h3>
+
+<div class="definicion"><span class="rot">Mayorización</span>
+<p>Tercer paso del proceso contable. Consiste en <strong>trasladar cada valor jornalizado a la cuenta individual que le corresponde</strong> en el Libro Mayor, conservando el lado —Debe o Haber— en que fue registrado en el asiento. El Libro Mayor no crea información nueva: reorganiza la del Diario, que está ordenada por fecha, para presentarla ordenada por cuenta.</p></div>
+
+<p>El Libro Diario y el Libro Mayor contienen exactamente los mismos valores, pero responden preguntas distintas. El Diario responde <em>«¿qué pasó el 18 de agosto?»</em>. El Mayor responde <em>«¿cuánto tiene la empresa en el banco?»</em>. Ninguna de las dos preguntas se puede contestar bien con el libro equivocado: buscar el saldo de Bancos recorriendo diecisiete asientos es posible, pero es exactamente el trabajo que la mayorización evita.</p>
+
+<div class="formula">Saldo de una cuenta = suma del Debe &minus; suma del Haber</div>
+
+<p>Si el resultado es positivo, el saldo es <strong>deudor</strong>; si es negativo, <strong>acreedor</strong>. Las cuentas de activo, costo y gasto tienen normalmente saldo deudor; las de pasivo, patrimonio e ingreso, saldo acreedor. Las cuentas de valuación —las que llevan «(–)» delante del nombre— son la excepción deliberada: pertenecen al activo y su saldo es acreedor.</p>
+
+<div class="alerta"><span class="rot">Tres errores de mayorización que descuadran el balance</span>
+<ul>
+<li><strong>Cambiar de lado.</strong> Un valor que estaba en el Haber del asiento y se traslada al Debe de la cuenta produce un descuadre igual al doble del valor. Si su balance está descuadrado en una cifra par, divídala entre dos y busque ese valor: casi siempre aparece.</li>
+<li><strong>Trasladar a la cuenta equivocada.</strong> Este error <strong>no descuadra nada</strong> y por eso es el más peligroso. El balance cuadra perfectamente con una cifra en la cuenta que no era.</li>
+<li><strong>Omitir un asiento completo.</strong> Tampoco descuadra, porque falta en los dos lados. Por eso el recuento de asientos del archivo 1 —diecisiete, ni más ni menos— es una verificación real y no una formalidad.</li>
+</ul></div>
+
+<h3>1.2 El Libro Mayor de Comercial El Astillero S.A. al 31 de agosto de 2026</h3>
+
+<p>Cada cuenta T recoge los movimientos de los diecisiete asientos del mes. El número entre paréntesis identifica el asiento del que proviene cada valor, de modo que usted puede recorrer el camino inverso —del Mayor al Diario— en cualquier momento. Esa trazabilidad es lo que hace auditable una contabilidad.</p>
+
+<h4>Cuentas de activo</h4><div class="mayor-grid"><div class="mayor-t"><div class="tit">Caja<br><span style="font-weight:400;font-size:.9em">1.1.01.01</span></div><table><thead><tr><th>Debe</th><th>Haber</th></tr></thead><tbody><tr><td>(1)&nbsp;&nbsp;1.200,00</td><td></td></tr><tr class="saldo"><td>Σ 1.200,00</td><td>Σ 0,00</td></tr><tr class="saldo"><td colspan="2">Saldo deudor: 1.200,00</td></tr></tbody></table></div><div class="mayor-t"><div class="tit">Bancos<br><span style="font-weight:400;font-size:.9em">1.1.02.01</span></div><table><thead><tr><th>Debe</th><th>Haber</th></tr></thead><tbody><tr><td>(1)&nbsp;&nbsp;28.500,00</td><td>(2)&nbsp;&nbsp;7.200,00</td></tr><tr><td>(7)&nbsp;&nbsp;6.000,00</td><td>(3)&nbsp;&nbsp;850,50</td></tr><tr><td>(15)&nbsp;&nbsp;8.372,00</td><td>(8)&nbsp;&nbsp;240,00</td></tr><tr><td></td><td>(9)&nbsp;&nbsp;6.347,25</td></tr><tr><td></td><td>(12)&nbsp;&nbsp;507,50</td></tr><tr><td></td><td>(14)&nbsp;&nbsp;1.194,00</td></tr><tr><td></td><td>(17)&nbsp;&nbsp;3.803,10</td></tr><tr class="saldo"><td>Σ 42.872,00</td><td>Σ 20.142,35</td></tr><tr class="saldo"><td colspan="2">Saldo deudor: 22.729,65</td></tr></tbody></table></div><div class="mayor-t"><div class="tit">Cuentas por cobrar clientes<br><span style="font-weight:400;font-size:.9em">1.1.03.01</span></div><table><thead><tr><th>Debe</th><th>Haber</th></tr></thead><tbody><tr><td>(1)&nbsp;&nbsp;9.400,00</td><td>(7)&nbsp;&nbsp;6.000,00</td></tr><tr><td>(5)&nbsp;&nbsp;8.463,00</td><td></td></tr><tr><td>(10)&nbsp;&nbsp;16.926,00</td><td></td></tr><tr class="saldo"><td>Σ 34.789,00</td><td>Σ 6.000,00</td></tr><tr class="saldo"><td colspan="2">Saldo deudor: 28.789,00</td></tr></tbody></table></div><div class="mayor-t"><div class="tit">(–) Deterioro acumulado de cuentas por cobrar<br><span style="font-weight:400;font-size:.9em">1.1.03.99</span></div><table><thead><tr><th>Debe</th><th>Haber</th></tr></thead><tbody><tr><td></td><td>(1)&nbsp;&nbsp;120,00</td></tr><tr class="saldo"><td>Σ 0,00</td><td>Σ 120,00</td></tr><tr class="saldo"><td colspan="2">Saldo acreedor: 120,00</td></tr></tbody></table></div><div class="mayor-t"><div class="tit">Inventario de mercaderías<br><span style="font-weight:400;font-size:.9em">1.1.05.01</span></div><table><thead><tr><th>Debe</th><th>Haber</th></tr></thead><tbody><tr><td>(1)&nbsp;&nbsp;3.000,00</td><td>(6)&nbsp;&nbsp;4.700,00</td></tr><tr><td>(4)&nbsp;&nbsp;10.200,00</td><td>(11)&nbsp;&nbsp;10.450,00</td></tr><tr><td>(9)&nbsp;&nbsp;5.850,00</td><td>(16)&nbsp;&nbsp;5.510,00</td></tr><tr><td>(13)&nbsp;&nbsp;4.025,00</td><td></td></tr><tr class="saldo"><td>Σ 23.075,00</td><td>Σ 20.660,00</td></tr><tr class="saldo"><td colspan="2">Saldo deudor: 2.415,00</td></tr></tbody></table></div><div class="mayor-t"><div class="tit">Arriendos pagados por anticipado<br><span style="font-weight:400;font-size:.9em">1.1.06.01</span></div><table><thead><tr><th>Debe</th><th>Haber</th></tr></thead><tbody><tr><td>(1)&nbsp;&nbsp;3.000,00</td><td></td></tr><tr class="saldo"><td>Σ 3.000,00</td><td>Σ 0,00</td></tr><tr class="saldo"><td colspan="2">Saldo deudor: 3.000,00</td></tr></tbody></table></div><div class="mayor-t"><div class="tit">Seguros pagados por anticipado<br><span style="font-weight:400;font-size:.9em">1.1.06.02</span></div><table><thead><tr><th>Debe</th><th>Haber</th></tr></thead><tbody><tr><td>(1)&nbsp;&nbsp;1.440,00</td><td></td></tr><tr class="saldo"><td>Σ 1.440,00</td><td>Σ 0,00</td></tr><tr class="saldo"><td colspan="2">Saldo deudor: 1.440,00</td></tr></tbody></table></div><div class="mayor-t"><div class="tit">IVA en compras (crédito tributario)<br><span style="font-weight:400;font-size:.9em">1.1.07.01</span></div><table><thead><tr><th>Debe</th><th>Haber</th></tr></thead><tbody><tr><td>(3)&nbsp;&nbsp;135,00</td><td></td></tr><tr><td>(4)&nbsp;&nbsp;1.530,00</td><td></td></tr><tr><td>(9)&nbsp;&nbsp;877,50</td><td></td></tr><tr><td>(12)&nbsp;&nbsp;75,00</td><td></td></tr><tr><td>(13)&nbsp;&nbsp;603,75</td><td></td></tr><tr><td>(14)&nbsp;&nbsp;180,00</td><td></td></tr><tr class="saldo"><td>Σ 3.401,25</td><td>Σ 0,00</td></tr><tr class="saldo"><td colspan="2">Saldo deudor: 3.401,25</td></tr></tbody></table></div><div class="mayor-t"><div class="tit">Anticipo de IR retenido<br><span style="font-weight:400;font-size:.9em">1.1.08.01</span></div><table><thead><tr><th>Debe</th><th>Haber</th></tr></thead><tbody><tr><td>(5)&nbsp;&nbsp;156,00</td><td></td></tr><tr><td>(10)&nbsp;&nbsp;312,00</td><td></td></tr><tr class="saldo"><td>Σ 468,00</td><td>Σ 0,00</td></tr><tr class="saldo"><td colspan="2">Saldo deudor: 468,00</td></tr></tbody></table></div><div class="mayor-t"><div class="tit">Crédito tributario por retenciones de IVA<br><span style="font-weight:400;font-size:.9em">1.1.08.02</span></div><table><thead><tr><th>Debe</th><th>Haber</th></tr></thead><tbody><tr><td>(5)&nbsp;&nbsp;351,00</td><td></td></tr><tr><td>(10)&nbsp;&nbsp;702,00</td><td></td></tr><tr class="saldo"><td>Σ 1.053,00</td><td>Σ 0,00</td></tr><tr class="saldo"><td colspan="2">Saldo deudor: 1.053,00</td></tr></tbody></table></div><div class="mayor-t"><div class="tit">Muebles y enseres<br><span style="font-weight:400;font-size:.9em">1.2.01.05</span></div><table><thead><tr><th>Debe</th><th>Haber</th></tr></thead><tbody><tr><td>(1)&nbsp;&nbsp;9.600,00</td><td></td></tr><tr class="saldo"><td>Σ 9.600,00</td><td>Σ 0,00</td></tr><tr class="saldo"><td colspan="2">Saldo deudor: 9.600,00</td></tr></tbody></table></div><div class="mayor-t"><div class="tit">(–) Depreciación acumulada muebles y enseres<br><span style="font-weight:400;font-size:.9em">1.2.01.95</span></div><table><thead><tr><th>Debe</th><th>Haber</th></tr></thead><tbody><tr><td></td><td>(1)&nbsp;&nbsp;1.920,00</td></tr><tr class="saldo"><td>Σ 0,00</td><td>Σ 1.920,00</td></tr><tr class="saldo"><td colspan="2">Saldo acreedor: 1.920,00</td></tr></tbody></table></div><div class="mayor-t"><div class="tit">Equipo de computación<br><span style="font-weight:400;font-size:.9em">1.2.01.06</span></div><table><thead><tr><th>Debe</th><th>Haber</th></tr></thead><tbody><tr><td>(1)&nbsp;&nbsp;3.600,00</td><td></td></tr><tr class="saldo"><td>Σ 3.600,00</td><td>Σ 0,00</td></tr><tr class="saldo"><td colspan="2">Saldo deudor: 3.600,00</td></tr></tbody></table></div><div class="mayor-t"><div class="tit">(–) Depreciación acumulada equipo de computación<br><span style="font-weight:400;font-size:.9em">1.2.01.96</span></div><table><thead><tr><th>Debe</th><th>Haber</th></tr></thead><tbody><tr><td></td><td>(1)&nbsp;&nbsp;1.200,00</td></tr><tr class="saldo"><td>Σ 0,00</td><td>Σ 1.200,00</td></tr><tr class="saldo"><td colspan="2">Saldo acreedor: 1.200,00</td></tr></tbody></table></div><div class="mayor-t"><div class="tit">Vehículos<br><span style="font-weight:400;font-size:.9em">1.2.01.07</span></div><table><thead><tr><th>Debe</th><th>Haber</th></tr></thead><tbody><tr><td>(1)&nbsp;&nbsp;24.000,00</td><td></td></tr><tr class="saldo"><td>Σ 24.000,00</td><td>Σ 0,00</td></tr><tr class="saldo"><td colspan="2">Saldo deudor: 24.000,00</td></tr></tbody></table></div><div class="mayor-t"><div class="tit">(–) Depreciación acumulada vehículos<br><span style="font-weight:400;font-size:.9em">1.2.01.97</span></div><table><thead><tr><th>Debe</th><th>Haber</th></tr></thead><tbody><tr><td></td><td>(1)&nbsp;&nbsp;4.800,00</td></tr><tr class="saldo"><td>Σ 0,00</td><td>Σ 4.800,00</td></tr><tr class="saldo"><td colspan="2">Saldo acreedor: 4.800,00</td></tr></tbody></table></div></div>
+<h4>Cuentas de pasivo y patrimonio</h4><div class="mayor-grid"><div class="mayor-t"><div class="tit">Cuentas por pagar proveedores<br><span style="font-weight:400;font-size:.9em">2.1.01.01</span></div><table><thead><tr><th>Debe</th><th>Haber</th></tr></thead><tbody><tr><td>(2)&nbsp;&nbsp;7.200,00</td><td>(1)&nbsp;&nbsp;7.200,00</td></tr><tr><td></td><td>(4)&nbsp;&nbsp;11.067,00</td></tr><tr><td></td><td>(13)&nbsp;&nbsp;4.367,12</td></tr><tr class="saldo"><td>Σ 7.200,00</td><td>Σ 22.634,12</td></tr><tr class="saldo"><td colspan="2">Saldo acreedor: 15.434,12</td></tr></tbody></table></div><div class="mayor-t"><div class="tit">IESS por pagar<br><span style="font-weight:400;font-size:.9em">2.1.02.02</span></div><table><thead><tr><th>Debe</th><th>Haber</th></tr></thead><tbody><tr><td></td><td>(17)&nbsp;&nbsp;865,20</td></tr><tr class="saldo"><td>Σ 0,00</td><td>Σ 865,20</td></tr><tr class="saldo"><td colspan="2">Saldo acreedor: 865,20</td></tr></tbody></table></div><div class="mayor-t"><div class="tit">Retención en la fuente de IR por pagar<br><span style="font-weight:400;font-size:.9em">2.1.03.01</span></div><table><thead><tr><th>Debe</th><th>Haber</th></tr></thead><tbody><tr><td></td><td>(3)&nbsp;&nbsp;90,00</td></tr><tr><td></td><td>(4)&nbsp;&nbsp;204,00</td></tr><tr><td></td><td>(9)&nbsp;&nbsp;117,00</td></tr><tr><td></td><td>(12)&nbsp;&nbsp;15,00</td></tr><tr><td></td><td>(13)&nbsp;&nbsp;80,50</td></tr><tr><td></td><td>(14)&nbsp;&nbsp;60,00</td></tr><tr class="saldo"><td>Σ 0,00</td><td>Σ 566,50</td></tr><tr class="saldo"><td colspan="2">Saldo acreedor: 566,50</td></tr></tbody></table></div><div class="mayor-t"><div class="tit">Retención de IVA por pagar<br><span style="font-weight:400;font-size:.9em">2.1.03.02</span></div><table><thead><tr><th>Debe</th><th>Haber</th></tr></thead><tbody><tr><td></td><td>(3)&nbsp;&nbsp;94,50</td></tr><tr><td></td><td>(4)&nbsp;&nbsp;459,00</td></tr><tr><td></td><td>(9)&nbsp;&nbsp;263,25</td></tr><tr><td></td><td>(12)&nbsp;&nbsp;52,50</td></tr><tr><td></td><td>(13)&nbsp;&nbsp;181,13</td></tr><tr><td></td><td>(14)&nbsp;&nbsp;126,00</td></tr><tr class="saldo"><td>Σ 0,00</td><td>Σ 1.176,38</td></tr><tr class="saldo"><td colspan="2">Saldo acreedor: 1.176,38</td></tr></tbody></table></div><div class="mayor-t"><div class="tit">IVA en ventas<br><span style="font-weight:400;font-size:.9em">2.1.04.01</span></div><table><thead><tr><th>Debe</th><th>Haber</th></tr></thead><tbody><tr><td></td><td>(5)&nbsp;&nbsp;1.170,00</td></tr><tr><td></td><td>(10)&nbsp;&nbsp;2.340,00</td></tr><tr><td></td><td>(15)&nbsp;&nbsp;1.092,00</td></tr><tr class="saldo"><td>Σ 0,00</td><td>Σ 4.602,00</td></tr><tr class="saldo"><td colspan="2">Saldo acreedor: 4.602,00</td></tr></tbody></table></div><div class="mayor-t"><div class="tit">Préstamo bancario por pagar<br><span style="font-weight:400;font-size:.9em">2.2.01.01</span></div><table><thead><tr><th>Debe</th><th>Haber</th></tr></thead><tbody><tr><td></td><td>(1)&nbsp;&nbsp;12.000,00</td></tr><tr class="saldo"><td>Σ 0,00</td><td>Σ 12.000,00</td></tr><tr class="saldo"><td colspan="2">Saldo acreedor: 12.000,00</td></tr></tbody></table></div><div class="mayor-t"><div class="tit">Capital social<br><span style="font-weight:400;font-size:.9em">3.1.01.01</span></div><table><thead><tr><th>Debe</th><th>Haber</th></tr></thead><tbody><tr><td></td><td>(1)&nbsp;&nbsp;50.000,00</td></tr><tr class="saldo"><td>Σ 0,00</td><td>Σ 50.000,00</td></tr><tr class="saldo"><td colspan="2">Saldo acreedor: 50.000,00</td></tr></tbody></table></div><div class="mayor-t"><div class="tit">Resultados acumulados<br><span style="font-weight:400;font-size:.9em">3.4.01.01</span></div><table><thead><tr><th>Debe</th><th>Haber</th></tr></thead><tbody><tr><td></td><td>(1)&nbsp;&nbsp;6.500,00</td></tr><tr class="saldo"><td>Σ 0,00</td><td>Σ 6.500,00</td></tr><tr class="saldo"><td colspan="2">Saldo acreedor: 6.500,00</td></tr></tbody></table></div></div>
+<h4>Cuentas de ingresos, costos y gastos</h4><div class="mayor-grid"><div class="mayor-t"><div class="tit">Ventas<br><span style="font-weight:400;font-size:.9em">4.1.01.01</span></div><table><thead><tr><th>Debe</th><th>Haber</th></tr></thead><tbody><tr><td></td><td>(5)&nbsp;&nbsp;7.800,00</td></tr><tr><td></td><td>(10)&nbsp;&nbsp;15.600,00</td></tr><tr><td></td><td>(15)&nbsp;&nbsp;7.280,00</td></tr><tr class="saldo"><td>Σ 0,00</td><td>Σ 30.680,00</td></tr><tr class="saldo"><td colspan="2">Saldo acreedor: 30.680,00</td></tr></tbody></table></div><div class="mayor-t"><div class="tit">Costo de ventas<br><span style="font-weight:400;font-size:.9em">5.1.01.01</span></div><table><thead><tr><th>Debe</th><th>Haber</th></tr></thead><tbody><tr><td>(6)&nbsp;&nbsp;4.700,00</td><td></td></tr><tr><td>(11)&nbsp;&nbsp;10.450,00</td><td></td></tr><tr><td>(16)&nbsp;&nbsp;5.510,00</td><td></td></tr><tr class="saldo"><td>Σ 20.660,00</td><td>Σ 0,00</td></tr><tr class="saldo"><td colspan="2">Saldo deudor: 20.660,00</td></tr></tbody></table></div><div class="mayor-t"><div class="tit">Gasto sueldos y salarios<br><span style="font-weight:400;font-size:.9em">5.2.01.01</span></div><table><thead><tr><th>Debe</th><th>Haber</th></tr></thead><tbody><tr><td>(17)&nbsp;&nbsp;4.200,00</td><td></td></tr><tr class="saldo"><td>Σ 4.200,00</td><td>Σ 0,00</td></tr><tr class="saldo"><td colspan="2">Saldo deudor: 4.200,00</td></tr></tbody></table></div><div class="mayor-t"><div class="tit">Gasto de arriendo<br><span style="font-weight:400;font-size:.9em">5.2.01.02</span></div><table><thead><tr><th>Debe</th><th>Haber</th></tr></thead><tbody><tr><td>(3)&nbsp;&nbsp;900,00</td><td></td></tr><tr class="saldo"><td>Σ 900,00</td><td>Σ 0,00</td></tr><tr class="saldo"><td colspan="2">Saldo deudor: 900,00</td></tr></tbody></table></div><div class="mayor-t"><div class="tit">Gasto aporte patronal IESS<br><span style="font-weight:400;font-size:.9em">5.2.01.03</span></div><table><thead><tr><th>Debe</th><th>Haber</th></tr></thead><tbody><tr><td>(17)&nbsp;&nbsp;468,30</td><td></td></tr><tr class="saldo"><td>Σ 468,30</td><td>Σ 0,00</td></tr><tr class="saldo"><td colspan="2">Saldo deudor: 468,30</td></tr></tbody></table></div><div class="mayor-t"><div class="tit">Gasto servicios básicos<br><span style="font-weight:400;font-size:.9em">5.2.01.08</span></div><table><thead><tr><th>Debe</th><th>Haber</th></tr></thead><tbody><tr><td>(8)&nbsp;&nbsp;240,00</td><td></td></tr><tr class="saldo"><td>Σ 240,00</td><td>Σ 0,00</td></tr><tr class="saldo"><td colspan="2">Saldo deudor: 240,00</td></tr></tbody></table></div><div class="mayor-t"><div class="tit">Gasto mantenimiento de vehículo<br><span style="font-weight:400;font-size:.9em">5.2.01.10</span></div><table><thead><tr><th>Debe</th><th>Haber</th></tr></thead><tbody><tr><td>(12)&nbsp;&nbsp;500,00</td><td></td></tr><tr class="saldo"><td>Σ 500,00</td><td>Σ 0,00</td></tr><tr class="saldo"><td colspan="2">Saldo deudor: 500,00</td></tr></tbody></table></div><div class="mayor-t"><div class="tit">Gasto honorarios profesionales<br><span style="font-weight:400;font-size:.9em">5.2.01.11</span></div><table><thead><tr><th>Debe</th><th>Haber</th></tr></thead><tbody><tr><td>(14)&nbsp;&nbsp;1.200,00</td><td></td></tr><tr class="saldo"><td>Σ 1.200,00</td><td>Σ 0,00</td></tr><tr class="saldo"><td colspan="2">Saldo deudor: 1.200,00</td></tr></tbody></table></div></div>
+
+<h3>1.3 Lectura de tres cuentas que conviene mirar de cerca</h3>
+
+<div class="ejemplo"><span class="rot">Inventario de mercaderías</span>
+<p>Sumas: 23.075,00 en el Debe y 20.660,00 en el Haber; saldo deudor de <strong>2.415,00</strong>. El Debe recoge el inventario inicial y las tres compras; el Haber, los tres asientos de costo de ventas. Ese saldo <strong>coincide exactamente con la existencia final del Kardex</strong>, y esa coincidencia no es casualidad: es la prueba de que el auxiliar y la contabilidad principal están sincronizados. Si difirieran, habría que detener todo y encontrar la diferencia antes de continuar.</p></div>
+
+<div class="ejemplo"><span class="rot">Cuentas por pagar proveedores</span>
+<p>Sumas: 7.200,00 en el Debe y 22.634,12 en el Haber; saldo acreedor de <strong>15.434,12</strong>. El Debe corresponde al pago del saldo de julio; el Haber, a las dos compras a crédito, la del 05/08 por 11.067,00 y la del 23/08 por 4.367,12. La compra del 14/08 no aparece aquí porque se pagó con cheque: entró y salió el mismo día, sin pasar por el pasivo.</p></div>
+
+<div class="ejemplo"><span class="rot">Bancos</span>
+<p>Sumas: 42.872,00 en el Debe y 20.142,35 en el Haber; saldo deudor de <strong>22.729,65</strong>. Es la cuenta con más movimientos del mes: nueve. Fíjese en que el saldo bajó respecto de los 28.500,00 iniciales pese a que la empresa vendió 30.680,00. La razón es que 25.389,00 de esas ventas fueron a crédito y todavía no se han cobrado. <strong>Vender no es cobrar</strong>, y esa distancia es la que quiebra empresas rentables.</p></div>
+
+<div class="nota-lateral"><span class="rot">Un detalle que suele pasarse por alto</span>
+<p>Las cuentas <em>Caja</em>, <em>Muebles y enseres</em>, <em>Equipo de computación</em>, <em>Vehículos</em>, <em>Préstamo bancario por pagar</em>, <em>Capital social</em> y <em>Resultados acumulados</em> tienen un solo movimiento: el del asiento de apertura. No es un error ni un descuido del ejercicio: hay cuentas que simplemente no se mueven en un mes ordinario. Sin embargo, cuatro de ellas <strong>sí van a moverse hoy</strong>, cuando se practiquen los ajustes.</p></div>
+
+<div class="carrera-box"><span class="rot">Vinculación con las cuatro áreas de Negocios Internacionales</span>
+<ul>
+<li><strong>Comercio exterior:</strong> la cuenta <em>Inventario de mercaderías</em> es la que un verificador aduanero o un auditor de origen contrasta contra los registros físicos. Cuando la mercadería es importada, ese mismo saldo debe poder descomponerse por embarque y por partida arancelaria, y la mayorización es el punto donde esa trazabilidad se conserva o se pierde.</li>
+<li><strong>Finanzas internacionales:</strong> el saldo de <em>Bancos</em> de 22.729,65 frente a <em>Cuentas por cobrar</em> de 28.789,00 describe una empresa cuyo dinero está mayoritariamente en manos de sus clientes. Ese perfil determina si puede o no abrir una carta de crédito para importar, y es lo primero que un analista bancario extrae del Mayor.</li>
+<li><strong>Marketing y negociación internacional:</strong> el saldo acreedor de <em>Cuentas por pagar proveedores</em> de 15.434,12 es, en la práctica, financiamiento gratuito otorgado por los proveedores. Conocer su magnitud y su plazo es lo que permite negociar descuentos por pronto pago con criterio, comparando el descuento contra el costo de perder ese plazo.</li>
+<li><strong>Marco legal y normativo:</strong> las cuentas <em>Retención en la fuente de IR por pagar</em> y <em>Retención de IVA por pagar</em> concentran lo que la empresa debe declarar y pagar al Servicio de Rentas Internas. Sus saldos deben coincidir, comprobante por comprobante, con el anexo transaccional; el Mayor es donde esa conciliación empieza.</li>
+</ul></div>
+
+<div class="futuro"><span class="rot">Contenido diferido</span>
+<p>Las cuentas de ingresos, costos y gastos que aquí aparecen con saldo <strong>conservarán ese saldo durante todo el Día 13</strong>. Su cancelación contra el resultado del ejercicio se practica mediante los <strong>asientos de cierre contable</strong>, que corresponden al <strong>Día 15 (miércoles 2 de septiembre de 2026), Unidad 4</strong>.</p></div>
+
+<div class="conclusion"><span class="rot">Idea clave del Tema 1</span>
+<p>Mayorizar no agrega información: la <strong>vuelve legible</strong>. El mismo dato que en el Diario respondía «qué pasó ese día», en el Mayor responde «cuánto hay en esta cuenta». Y dos de los tres errores típicos de este paso no descuadran nada, razón por la cual el cuadre del balance de comprobación —que viene a continuación— comprueba mucho menos de lo que la mayoría de los estudiantes cree.</p></div>
+
+</div><!-- /t1 -->
+
+<!-- ============================================================
+     PESTAÑA: TEMA 2 — BALANCE PRELIMINAR
+     ============================================================ -->
+<div id="t2" class="panel">
+<h2>Tema 2 — El balance de comprobación preliminar al 31 de agosto de 2026</h2>
+
+<h3>2.1 Qué es y para qué sirve</h3>
+
+<div class="definicion"><span class="rot">Balance de comprobación preliminar</span>
+<p>Listado de <strong>todas</strong> las cuentas del Libro Mayor con sus sumas y sus saldos a una fecha determinada, elaborado <em>antes</em> de practicar los asientos de ajuste. Su nombre lo dice: es un instrumento de <strong>comprobación</strong> aritmética del trabajo de jornalización y mayorización, no un estado financiero ni un informe para terceros.</p></div>
+
+<p>Se llama <strong>preliminar</strong> porque recoge únicamente los hechos que dejaron documento externo durante el período: facturas, cheques, comprobantes de retención, planillas, roles. Todo lo que ocurrió sin generar documento —el tiempo que consumió el arriendo prepagado, el desgaste del vehículo, el interés que corrió sobre el préstamo— todavía no está en él.</p>
+
+<h3>2.2 Estructura: sumas y saldos</h3>
+
+<p>La versión completa del documento tiene <strong>cuatro columnas de valores</strong>. Las dos primeras, de <em>sumas</em>, reproducen los totales del Debe y del Haber de cada cuenta del Mayor. Las dos últimas, de <em>saldos</em>, muestran la diferencia entre ambas, colocada en la columna que corresponda según predomine el Debe o el Haber.</p>
+
+<div class="tabla-wrap"><table class="tabla">
+<thead><tr><th rowspan="2" style="width:11%">Código</th><th rowspan="2">Cuenta</th><th colspan="2">Sumas</th><th colspan="2">Saldos</th></tr><tr><th style="width:12%">Debe</th><th style="width:12%">Haber</th><th style="width:12%">Deudor</th><th style="width:12%">Acreedor</th></tr></thead><tbody>
+<tr><td>1.1.01.01</td><td>Caja</td><td class="num">1.200,00</td><td class="num">—</td><td class="num">1.200,00</td><td class="num">—</td></tr>
+<tr><td>1.1.02.01</td><td>Bancos</td><td class="num">42.872,00</td><td class="num">20.142,35</td><td class="num">22.729,65</td><td class="num">—</td></tr>
+<tr><td>1.1.03.01</td><td>Cuentas por cobrar clientes</td><td class="num">34.789,00</td><td class="num">6.000,00</td><td class="num">28.789,00</td><td class="num">—</td></tr>
+<tr><td>1.1.03.99</td><td>(–) Deterioro acumulado de cuentas por cobrar</td><td class="num">—</td><td class="num">120,00</td><td class="num">—</td><td class="num">120,00</td></tr>
+<tr><td>1.1.05.01</td><td>Inventario de mercaderías</td><td class="num">23.075,00</td><td class="num">20.660,00</td><td class="num">2.415,00</td><td class="num">—</td></tr>
+<tr><td>1.1.06.01</td><td>Arriendos pagados por anticipado</td><td class="num">3.000,00</td><td class="num">—</td><td class="num">3.000,00</td><td class="num">—</td></tr>
+<tr><td>1.1.06.02</td><td>Seguros pagados por anticipado</td><td class="num">1.440,00</td><td class="num">—</td><td class="num">1.440,00</td><td class="num">—</td></tr>
+<tr><td>1.1.07.01</td><td>IVA en compras (crédito tributario)</td><td class="num">3.401,25</td><td class="num">—</td><td class="num">3.401,25</td><td class="num">—</td></tr>
+<tr><td>1.1.08.01</td><td>Anticipo de IR retenido</td><td class="num">468,00</td><td class="num">—</td><td class="num">468,00</td><td class="num">—</td></tr>
+<tr><td>1.1.08.02</td><td>Crédito tributario por retenciones de IVA</td><td class="num">1.053,00</td><td class="num">—</td><td class="num">1.053,00</td><td class="num">—</td></tr>
+<tr><td>1.2.01.05</td><td>Muebles y enseres</td><td class="num">9.600,00</td><td class="num">—</td><td class="num">9.600,00</td><td class="num">—</td></tr>
+<tr><td>1.2.01.95</td><td>(–) Depreciación acumulada muebles y enseres</td><td class="num">—</td><td class="num">1.920,00</td><td class="num">—</td><td class="num">1.920,00</td></tr>
+<tr><td>1.2.01.06</td><td>Equipo de computación</td><td class="num">3.600,00</td><td class="num">—</td><td class="num">3.600,00</td><td class="num">—</td></tr>
+<tr><td>1.2.01.96</td><td>(–) Depreciación acumulada equipo de computación</td><td class="num">—</td><td class="num">1.200,00</td><td class="num">—</td><td class="num">1.200,00</td></tr>
+<tr><td>1.2.01.07</td><td>Vehículos</td><td class="num">24.000,00</td><td class="num">—</td><td class="num">24.000,00</td><td class="num">—</td></tr>
+<tr><td>1.2.01.97</td><td>(–) Depreciación acumulada vehículos</td><td class="num">—</td><td class="num">4.800,00</td><td class="num">—</td><td class="num">4.800,00</td></tr>
+<tr><td>2.1.01.01</td><td>Cuentas por pagar proveedores</td><td class="num">7.200,00</td><td class="num">22.634,12</td><td class="num">—</td><td class="num">15.434,12</td></tr>
+<tr><td>2.1.02.02</td><td>IESS por pagar</td><td class="num">—</td><td class="num">865,20</td><td class="num">—</td><td class="num">865,20</td></tr>
+<tr><td>2.1.03.01</td><td>Retención en la fuente de IR por pagar</td><td class="num">—</td><td class="num">566,50</td><td class="num">—</td><td class="num">566,50</td></tr>
+<tr><td>2.1.03.02</td><td>Retención de IVA por pagar</td><td class="num">—</td><td class="num">1.176,38</td><td class="num">—</td><td class="num">1.176,38</td></tr>
+<tr><td>2.1.04.01</td><td>IVA en ventas</td><td class="num">—</td><td class="num">4.602,00</td><td class="num">—</td><td class="num">4.602,00</td></tr>
+<tr><td>2.2.01.01</td><td>Préstamo bancario por pagar</td><td class="num">—</td><td class="num">12.000,00</td><td class="num">—</td><td class="num">12.000,00</td></tr>
+<tr><td>3.1.01.01</td><td>Capital social</td><td class="num">—</td><td class="num">50.000,00</td><td class="num">—</td><td class="num">50.000,00</td></tr>
+<tr><td>3.4.01.01</td><td>Resultados acumulados</td><td class="num">—</td><td class="num">6.500,00</td><td class="num">—</td><td class="num">6.500,00</td></tr>
+<tr><td>4.1.01.01</td><td>Ventas</td><td class="num">—</td><td class="num">30.680,00</td><td class="num">—</td><td class="num">30.680,00</td></tr>
+<tr><td>5.1.01.01</td><td>Costo de ventas</td><td class="num">20.660,00</td><td class="num">—</td><td class="num">20.660,00</td><td class="num">—</td></tr>
+<tr><td>5.2.01.01</td><td>Gasto sueldos y salarios</td><td class="num">4.200,00</td><td class="num">—</td><td class="num">4.200,00</td><td class="num">—</td></tr>
+<tr><td>5.2.01.02</td><td>Gasto de arriendo</td><td class="num">900,00</td><td class="num">—</td><td class="num">900,00</td><td class="num">—</td></tr>
+<tr><td>5.2.01.03</td><td>Gasto aporte patronal IESS</td><td class="num">468,30</td><td class="num">—</td><td class="num">468,30</td><td class="num">—</td></tr>
+<tr><td>5.2.01.08</td><td>Gasto servicios básicos</td><td class="num">240,00</td><td class="num">—</td><td class="num">240,00</td><td class="num">—</td></tr>
+<tr><td>5.2.01.10</td><td>Gasto mantenimiento de vehículo</td><td class="num">500,00</td><td class="num">—</td><td class="num">500,00</td><td class="num">—</td></tr>
+<tr><td>5.2.01.11</td><td>Gasto honorarios profesionales</td><td class="num">1.200,00</td><td class="num">—</td><td class="num">1.200,00</td><td class="num">—</td></tr>
+<tr class="total"><td colspan="2">SUMAN</td><td class="num">183.866,55</td><td class="num">183.866,55</td><td class="num">129.864,20</td><td class="num">129.864,20</td></tr>
+</tbody></table></div>
+
+<div class="nota-lateral"><span class="rot">Dos igualdades, no una</span>
+<p>El documento cuadra dos veces y por razones distintas. Las <strong>sumas</strong> igualan en 183.866,55 porque cada asiento se registró con partida doble: es la suma de los diecisiete asientos del mes. Los <strong>saldos</strong> igualan en 129.864,20 porque cada cuenta se saldó correctamente. Un error de traslado descuadraría los saldos pero no necesariamente las sumas, y por eso conviene revisar las cuatro columnas y no solo las dos últimas.</p></div>
+
+<h3>2.3 Qué comprueba realmente</h3>
+
+<div class="tabla-wrap"><table class="tabla">
+<thead><tr><th style="width:46%">Sí comprueba</th><th>No comprueba</th></tr></thead>
+<tbody>
+<tr><td>Que ningún asiento quedó descuadrado.</td><td>Que las cuentas elegidas sean las correctas. Debitar «Gasto de arriendo» en lugar de «Arriendos pagados por anticipado» cuadra igual.</td></tr>
+<tr><td>Que ningún valor se trasladó al lado equivocado del Mayor.</td><td>Que estén registrados <em>todos</em> los hechos del período. Un asiento omitido por completo no descuadra nada.</td></tr>
+<tr><td>Que las sumas de cada cuenta se calcularon bien.</td><td>Que los valores sean los correctos. Registrar 3.400,00 en lugar de 34.000,00 en ambos lados cuadra perfectamente.</td></tr>
+<tr><td>Que la ecuación contable se mantiene en términos aritméticos.</td><td>Que los saldos reflejen la realidad económica al cierre. Para eso existen los ajustes.</td></tr>
+</tbody></table></div>
+
+<div class="alerta"><span class="rot">La ilusión del cuadre</span>
+<p>Este balance cuadra en 129.864,20 y, sin embargo, <strong>ninguna de sus cifras de resultado es todavía confiable</strong>. El arriendo del local aparece íntegro como activo aunque un mes ya se consumió; los vehículos figuran con la depreciación de julio; el préstamo no muestra el interés de agosto; la cartera no refleja el riesgo de incobrabilidad; y el inventario está valorado al costo sin haberse comparado con su valor neto realizable ni con el conteo físico. Un balance cuadrado y equivocado es perfectamente posible: es, de hecho, el caso más frecuente.</p></div>
+
+<h3>2.4 El resultado aparente y por qué no hay que creerle</h3>
+
+<p>Con las cuentas de ingresos y gastos que hoy figuran en el preliminar, un lector apresurado calcularía:</p>
+
+<div class="calc-box"><span class="tit">Resultado aparente al 31/08/2026, antes de ajustes</span>
+Ventas ................................................ 30.680,00<br>
+&minus; Costo de ventas ...................................... 20.660,00<br>
+<b>= Utilidad bruta</b> ...................................... <b>10.020,00</b><br>
+<br>
+&minus; Gasto sueldos y salarios ............................. 4.200,00<br>
+&minus; Gasto de arriendo .................................... 900,00<br>
+&minus; Gasto aporte patronal IESS ........................... 468,30<br>
+&minus; Gasto servicios básicos .............................. 240,00<br>
+&minus; Gasto mantenimiento de vehículo ...................... 500,00<br>
+&minus; Gasto honorarios profesionales ....................... 1.200,00<br>
+<b>= Resultado aparente</b> .................................. <b>2.511,70</b>
+</div>
+
+<p>Esa cifra de 2.511,70 es la que un gerente vería si cerrara el mes hoy, y es la que usaría para decidir si retira utilidades, si amplía el inventario o si concede un descuento. En el Tema 4 se verá cuánto queda de ella después de los ajustes. Adelantar el resultado no tendría sentido: lo importante es que usted haga primero los ajustes y descubra la diferencia por su cuenta.</p>
+
+<h3>2.5 Los hechos que faltan, uno por uno</h3>
+
+<p>Al 31 de agosto, la contadora de Comercial El Astillero S.A. reúne la siguiente <strong>información adicional</strong>, que no generó documento externo durante el mes o que se detectó al verificar. Léala completa antes de pasar al Tema 3 e intente identificar, para cada punto, a qué familia de ajuste pertenece.</p>
+
+<div class="tabla-wrap"><table class="tabla">
+<thead><tr><th style="width:6%">#</th><th>Información adicional al 31 de agosto de 2026</th></tr></thead>
+<tbody>
+<tr><td class="ctr">a</td><td>El arriendo del local comercial fue pagado el 1 de julio de 2026 por seis meses. Al 1 de agosto quedaban cinco meses pendientes, por 3.000,00. Corresponde reconocer el consumo de agosto.</td></tr>
+<tr><td class="ctr">b</td><td>La póliza multirriesgo fue contratada el 1 de mayo de 2026 con vigencia de doce meses. Al 1 de agosto quedaban ocho meses pendientes, por 1.440,00. Corresponde reconocer el devengo de agosto.</td></tr>
+<tr><td class="ctr">c</td><td>La compañía deprecia por línea recta y sin valor residual: muebles y enseres a diez años, equipo de computación a tres años y vehículos a cinco años.</td></tr>
+<tr><td class="ctr">d</td><td>El préstamo bancario de 12.000,00 devenga interés del 12% anual, pagadero por trimestres vencidos. En agosto no hubo pago, pero el interés del mes se causó.</td></tr>
+<tr><td class="ctr">e</td><td>La política de la compañía estima el deterioro de la cartera en el 1% de las ventas a crédito del período, con el límite acumulado del 10% de la cartera pendiente.</td></tr>
+<tr><td class="ctr">f</td><td>El acta de toma física del artículo INV-4501, levantada el 31 de agosto, registra <strong>58 unidades</strong> en bodega. El Kardex muestra 60.</td></tr>
+<tr><td class="ctr">g</td><td>A fin de mes entró al mercado un modelo sustituto del ventilador VT-16. El precio estimado de venta bajó a 45,00 por unidad y los costos estimados necesarios para venderlo ascienden a 6,00 por unidad.</td></tr>
+<tr><td class="ctr">h</td><td>El estado de cuenta del Banco Bolivariano al 31 de agosto muestra la nota de débito 3312, no registrada, por comisión de manejo de cuenta de 45,00 y emisión de chequera de 17,00.</td></tr>
+</tbody></table></div>
+
+<div class="autocheck"><span class="rot">Clasifique antes de continuar</span>
+<div class="preg">Sin mirar el Tema 3: ¿a qué familia pertenece cada uno de los ocho puntos?</div>
+<button class="autocheck-btn" onclick="verResp('r1',this)">Ver respuesta razonada</button>
+<div id="r1" class="autocheck-resp">
+<ul>
+<li><strong>Diferimiento (a, b):</strong> en ambos el dinero salió antes y se registró un activo; ahora se traslada a resultados la porción consumida en agosto.</li>
+<li><strong>Estimación (c, e, g):</strong> ninguno de los tres valores se conoce con exactitud. La depreciación depende de una vida útil estimada; el deterioro de cartera, de una política de riesgo; el ajuste al valor neto realizable, de un precio de venta estimado y de costos de venta también estimados.</li>
+<li><strong>Acumulación (d):</strong> el interés ya se causó por el simple paso del tiempo, pero no hay documento ni desembolso todavía.</li>
+<li><strong>Comprobación (f, h):</strong> ambos aparecieron al verificar contra una fuente externa a la contabilidad: el conteo físico en un caso, el estado de cuenta bancario en el otro.</li>
+</ul>
+<p>Note que la información adicional está redactada como llega en la realidad —en prosa, sin etiquetas— y que clasificarla es parte del trabajo profesional, no un paso previo que alguien le entregue resuelto.</p>
+</div>
+</div>
+
+<div class="carrera-box"><span class="rot">Vinculación con las cuatro áreas de Negocios Internacionales</span>
+<ul>
+<li><strong>Comercio exterior:</strong> el punto <em>g</em> —la entrada de un modelo sustituto que derrumba el precio de venta— es el riesgo característico de quien comercializa bienes importados con ciclos de vida cortos. El balance preliminar no lo ve; solo el ajuste al valor neto realizable lo hace visible antes de que la mercadería se vuelva invendible.</li>
+<li><strong>Finanzas internacionales:</strong> el punto <em>d</em> muestra que un préstamo genera costo aunque no haya pago. En operaciones internacionales ocurre lo mismo con los intereses de una carta de crédito o con las diferencias de cambio: se devengan aunque no se liquiden, y quien solo mira los desembolsos subestima sistemáticamente el costo del financiamiento.</li>
+<li><strong>Marketing y negociación internacional:</strong> el resultado aparente de 2.511,70 es exactamente el tipo de cifra que se lleva por error a una mesa de negociación. Conceder un descuento del 5% sobre ventas de 30.680,00 significa ceder 1.534,00, más de la mitad de ese resultado aparente y bastante más que el resultado real.</li>
+<li><strong>Marco legal y normativo:</strong> el punto <em>e</em> aplica un criterio de estimación que tiene además consecuencias tributarias, porque el gasto por deterioro de cartera es deducible dentro de límites establecidos. Documentar la política y respetar el límite es lo que permite sostener la deducción ante una revisión.</li>
+</ul></div>
+
+<div class="conclusion"><span class="rot">Idea clave del Tema 2</span>
+<p>El balance de comprobación preliminar comprueba <strong>aritmética, no verdad</strong>. Cuadra en 129.864,20 y aun así omite ocho hechos reales del mes. Su valor no está en lo que confirma, sino en que ordena todos los saldos en un solo documento para que los ajustes puedan practicarse sobre una base completa.</p></div>
+
+</div><!-- /t2 -->
+
+<!-- ============================================================
+     PESTAÑA: TEMA 3 — ASIENTOS DE AJUSTE
+     ============================================================ -->
+<div id="t3" class="panel">
+<h2>Tema 3 — Los ocho asientos de ajuste al 31 de agosto de 2026</h2>
+
+<p>Los ajustes continúan la numeración del Libro Diario: son los asientos <strong>18 al 25</strong>, todos con fecha 31 de agosto de 2026. No son un libro aparte ni un anexo: se jornalizan y se mayorizan exactamente igual que los del mes, y por eso deben cumplir la partida doble uno por uno.</p>
+
+<div class="definicion"><span class="rot">Asiento de ajuste</span>
+<p>Registro practicado al cierre del período para que los saldos contables reflejen la <strong>realidad económica</strong> y no solamente lo documentado por transacciones externas. Responde al <em>principio de devengo</em>: los ingresos y los gastos se reconocen cuando ocurren, no cuando se cobran o se pagan.</p></div>
+
+<h3>3.1 Asiento 18 — Consumo del arriendo del local pagado por anticipado</h3><p><span class="badge badge-familia">Familia: Diferimiento</span></p><div class="calc-box"><span class="tit">Desglose del cálculo</span>3.000,00 corresponden a cinco meses (agosto a diciembre) → 3.000,00 ÷ 5 = 600,00 consumidos en agosto.</div><div class="asiento">
+<div class="asiento-header"><span>Asiento N.º 18</span><span>31/08/2026</span></div>
+<table><thead><tr><th style="width:11%">Fecha</th><th style="width:13%">Código</th><th>Detalle</th><th style="width:12%">Parcial</th><th style="width:13%">Debe</th><th style="width:13%">Haber</th></tr></thead><tbody>
+<tr><td>31/08/2026</td><td>5.2.01.02</td><td>Gasto de arriendo</td><td class="valor">—</td><td class="valor">600,00</td><td class="valor">—</td></tr>
+<tr><td></td><td>1.1.06.01</td><td class="cta-acreedora">a) Arriendos pagados por anticipado</td><td class="valor">—</td><td class="valor">—</td><td class="valor">600,00</td></tr>
+<tr class="suman"><td></td><td></td><td>SUMAN</td><td class="valor">—</td><td class="valor">600,00</td><td class="valor">600,00</td></tr>
+</tbody></table>
+<div class="glosa">P/R Ajuste por el consumo del mes de agosto del arriendo del local comercial pagado por anticipado el 1 de julio de 2026 por cinco meses, según contrato de arrendamiento vigente.</div>
+</div><div class="nota-lateral"><span class="rot">Por qué cinco meses y no seis</span><p>El contrato cubrió seis meses desde el 1 de julio, pero julio ya se consumió y se ajustó en su momento. El saldo que llegó a agosto —3.000,00— representa solo los cinco meses que quedaban. Dividir 3.600,00 entre seis daría el mismo valor mensual por casualidad; dividir el <strong>saldo vigente</strong> entre los <strong>meses pendientes</strong> es el procedimiento correcto y funciona siempre, incluso cuando el contrato empezó a mitad de mes o cuando hubo pagos parciales.</p></div>
+<h3>3.2 Asiento 19 — Devengo de la póliza de seguro pagada por anticipado</h3><p><span class="badge badge-familia">Familia: Diferimiento</span></p><div class="calc-box"><span class="tit">Desglose del cálculo</span>Saldo del activo 1.440,00 = ocho meses pendientes (agosto a marzo) → 1.440,00 ÷ 8 = 180,00 devengados en agosto.</div><div class="asiento">
+<div class="asiento-header"><span>Asiento N.º 19</span><span>31/08/2026</span></div>
+<table><thead><tr><th style="width:11%">Fecha</th><th style="width:13%">Código</th><th>Detalle</th><th style="width:12%">Parcial</th><th style="width:13%">Debe</th><th style="width:13%">Haber</th></tr></thead><tbody>
+<tr><td>31/08/2026</td><td>5.2.01.12</td><td>Gasto de seguros</td><td class="valor">—</td><td class="valor">180,00</td><td class="valor">—</td></tr>
+<tr><td></td><td>1.1.06.02</td><td class="cta-acreedora">a) Seguros pagados por anticipado</td><td class="valor">—</td><td class="valor">—</td><td class="valor">180,00</td></tr>
+<tr class="suman"><td></td><td></td><td>SUMAN</td><td class="valor">—</td><td class="valor">180,00</td><td class="valor">180,00</td></tr>
+</tbody></table>
+<div class="glosa">P/R Ajuste por el devengo del mes de agosto de la póliza multirriesgo contratada el 1 de mayo de 2026 con vigencia de doce meses.</div>
+</div><div class="nota-lateral"><span class="rot">Diferimiento, no acumulación</span><p>El seguro y el arriendo pertenecen a la misma familia porque en ambos el dinero salió primero y el consumo llega después. La prueba está en la cuenta acreditada: se acredita un <strong>activo</strong> que disminuye, no un pasivo que nace. Cuando el ajuste acredita un pasivo, la familia es acumulación.</p></div>
+<h3>3.3 Asiento 20 — Depreciación de propiedad, planta y equipo del mes</h3><p><span class="badge badge-familia">Familia: Estimación</span></p><div class="calc-box"><span class="tit">Desglose del cálculo</span>Muebles y enseres 9.600,00 ÷ 120 meses = 80,00 · Equipo de computación 3.600,00 ÷ 36 meses = 100,00 · Vehículos 24.000,00 ÷ 60 meses = 400,00. Total 580,00.</div><div class="asiento">
+<div class="asiento-header"><span>Asiento N.º 20</span><span>31/08/2026</span></div>
+<table><thead><tr><th style="width:11%">Fecha</th><th style="width:13%">Código</th><th>Detalle</th><th style="width:12%">Parcial</th><th style="width:13%">Debe</th><th style="width:13%">Haber</th></tr></thead><tbody>
+<tr><td>31/08/2026</td><td>5.2.02.01</td><td>Gasto depreciación de propiedad, planta y equipo</td><td class="valor">—</td><td class="valor">580,00</td><td class="valor">—</td></tr>
+<tr><td></td><td>1.2.01.95</td><td class="cta-acreedora">a) (–) Depreciación acumulada muebles y enseres</td><td class="valor">—</td><td class="valor">—</td><td class="valor">80,00</td></tr>
+<tr><td></td><td>1.2.01.96</td><td class="cta-acreedora">a) (–) Depreciación acumulada equipo de computación</td><td class="valor">—</td><td class="valor">—</td><td class="valor">100,00</td></tr>
+<tr><td></td><td>1.2.01.97</td><td class="cta-acreedora">a) (–) Depreciación acumulada vehículos</td><td class="valor">—</td><td class="valor">—</td><td class="valor">400,00</td></tr>
+<tr class="suman"><td></td><td></td><td>SUMAN</td><td class="valor">—</td><td class="valor">580,00</td><td class="valor">580,00</td></tr>
+</tbody></table>
+<div class="glosa">P/R Ajuste por la depreciación del mes de agosto de 2026 de muebles y enseres, equipo de computación y vehículos, calculada por el método de línea recta sin valor residual.</div>
+</div><div class="alerta"><span class="rot">Los tres errores clásicos de la depreciación</span><ul><li><strong>Acreditar el activo en lugar de la depreciación acumulada.</strong> El costo histórico del vehículo sigue siendo 24.000,00; lo que crece es la cuenta correctora. Acreditar «Vehículos» borraría el dato del costo y haría imposible calcular la depreciación de los meses siguientes.</li><li><strong>Depreciar el terreno.</strong> Esta empresa no tiene terrenos, pero conviene recordarlo: los terrenos se consideran de vida útil ilimitada y no se deprecian.</li><li><strong>Usar un solo porcentaje para todo.</strong> Cada clase de activo tiene su propia vida útil: diez años los muebles, tres el equipo de computación, cinco los vehículos. Aplicar el mismo porcentaje a todos produce una cifra que parece razonable y no lo es.</li></ul></div>
+<h3>3.4 Asiento 21 — Intereses devengados del préstamo bancario</h3><p><span class="badge badge-familia">Familia: Acumulación</span></p><div class="calc-box"><span class="tit">Desglose del cálculo</span>Capital 12.000,00 × 12% anual = 1.440,00 al año → 1.440,00 ÷ 12 = 120,00 por el mes de agosto.</div><div class="asiento">
+<div class="asiento-header"><span>Asiento N.º 21</span><span>31/08/2026</span></div>
+<table><thead><tr><th style="width:11%">Fecha</th><th style="width:13%">Código</th><th>Detalle</th><th style="width:12%">Parcial</th><th style="width:13%">Debe</th><th style="width:13%">Haber</th></tr></thead><tbody>
+<tr><td>31/08/2026</td><td>5.3.01.01</td><td>Gasto interés bancario</td><td class="valor">—</td><td class="valor">120,00</td><td class="valor">—</td></tr>
+<tr><td></td><td>2.1.05.01</td><td class="cta-acreedora">a) Intereses por pagar</td><td class="valor">—</td><td class="valor">—</td><td class="valor">120,00</td></tr>
+<tr class="suman"><td></td><td></td><td>SUMAN</td><td class="valor">—</td><td class="valor">120,00</td><td class="valor">120,00</td></tr>
+</tbody></table>
+<div class="glosa">P/R Ajuste por los intereses devengados y no pagados del préstamo bancario al 31 de agosto de 2026, según tabla de amortización del Banco Bolivariano.</div>
+</div><div class="ejemplo"><span class="rot">El gasto que nadie facturó</span><p>Nadie envió una factura por estos 120,00 y no salió un solo dólar de la cuenta corriente. Sin embargo, el dinero del banco estuvo trabajando para la empresa durante los treinta y un días de agosto, y ese uso tiene un precio. Reconocerlo ahora es lo que impide que el trimestre en que sí se pague el interés cargue con un gasto que en realidad pertenecía a tres meses distintos.</p></div>
+<h3>3.5 Asiento 22 — Deterioro estimado de las cuentas por cobrar</h3><p><span class="badge badge-familia">Familia: Estimación</span></p><div class="calc-box"><span class="tit">Desglose del cálculo</span>Ventas a crédito de agosto 7.800,00 + 15.600,00 = 23.400,00 × 1% = 234,00. Control del límite: cartera al 31/08 de 28.789,00 × 10% = 2.878,90; deterioro acumulado 120,00 + 234,00 = 354,00, inferior al límite.</div><div class="asiento">
+<div class="asiento-header"><span>Asiento N.º 22</span><span>31/08/2026</span></div>
+<table><thead><tr><th style="width:11%">Fecha</th><th style="width:13%">Código</th><th>Detalle</th><th style="width:12%">Parcial</th><th style="width:13%">Debe</th><th style="width:13%">Haber</th></tr></thead><tbody>
+<tr><td>31/08/2026</td><td>5.2.02.02</td><td>Gasto deterioro de cuentas por cobrar</td><td class="valor">—</td><td class="valor">234,00</td><td class="valor">—</td></tr>
+<tr><td></td><td>1.1.03.99</td><td class="cta-acreedora">a) (–) Deterioro acumulado de cuentas por cobrar</td><td class="valor">—</td><td class="valor">—</td><td class="valor">234,00</td></tr>
+<tr class="suman"><td></td><td></td><td>SUMAN</td><td class="valor">—</td><td class="valor">234,00</td><td class="valor">234,00</td></tr>
+</tbody></table>
+<div class="glosa">P/R Ajuste por la estimación del 1% sobre los créditos comerciales concedidos durante el mes de agosto de 2026, conforme al criterio adoptado por la compañía y al límite acumulado del 10% de la cartera.</div>
+</div><div class="nota-lateral"><span class="rot">Control del límite</span><p>La política de la compañía estima el deterioro en el 1% de las ventas a crédito del período, con el límite acumulado del 10% de la cartera pendiente. Las ventas a crédito de agosto fueron 7.800,00 y 15.600,00, es decir 23.400,00; su 1% son 234,00. El deterioro acumulado pasa de 120,00 a 354,00, muy por debajo del límite de 2.878,90. Note que la cuenta acreditada es una <strong>cuenta de valuación</strong>: la cartera bruta sigue siendo 28.789,00, y el deterioro se presenta por separado.</p></div>
+<h3>3.6 Asiento 23 — Faltante de inventario determinado en la toma física</h3><p><span class="badge badge-familia">Familia: Comprobación</span></p><div class="calc-box"><span class="tit">Desglose del cálculo</span>Kardex al 31/08: 60 unidades · Conteo físico: 58 unidades · Faltante 2 unidades × 40,25 (capa FIFO vigente) = 80,50.</div><div class="asiento">
+<div class="asiento-header"><span>Asiento N.º 23</span><span>31/08/2026</span></div>
+<table><thead><tr><th style="width:11%">Fecha</th><th style="width:13%">Código</th><th>Detalle</th><th style="width:12%">Parcial</th><th style="width:13%">Debe</th><th style="width:13%">Haber</th></tr></thead><tbody>
+<tr><td>31/08/2026</td><td>5.2.02.04</td><td>Pérdida por faltante de inventario</td><td class="valor">—</td><td class="valor">80,50</td><td class="valor">—</td></tr>
+<tr><td></td><td>1.1.05.01</td><td class="cta-acreedora">a) Inventario de mercaderías</td><td class="valor">—</td><td class="valor">—</td><td class="valor">80,50</td></tr>
+<tr class="suman"><td></td><td></td><td>SUMAN</td><td class="valor">—</td><td class="valor">80,50</td><td class="valor">80,50</td></tr>
+</tbody></table>
+<div class="glosa">P/R Ajuste por el faltante de dos unidades del artículo INV-4501 determinado en el acta de toma física de inventario del 31 de agosto de 2026, valorado al costo de la última capa FIFO.</div>
+</div><div class="alerta"><span class="rot">El faltante no se esconde en el costo de ventas</span><p>Dos unidades desaparecieron sin que hubiera una venta que las respaldara. Cargarlas a <em>Costo de ventas</em> sería cómodo y estaría mal: distorsionaría el margen bruto y ocultaría un problema de control interno detrás de una cifra que nadie mira con lupa. Se reconocen en una cuenta propia, <em>Pérdida por faltante de inventario</em>, precisamente para que sean visibles. Y se valoran al costo de la capa FIFO vigente —40,25—, porque son las unidades que efectivamente estaban en bodega.</p><p>Después de este ajuste, el Kardex y la contabilidad vuelven a coincidir: 58 unidades a 40,25 son 2.334,50, que es el nuevo saldo de la cuenta de inventario.</p></div>
+<h3>3.7 Asiento 24 — Ajuste del inventario al valor neto realizable</h3><p><span class="badge badge-familia">Familia: Estimación</span></p><div class="calc-box"><span class="tit">Desglose del cálculo</span>Existencia ajustada 58 u × costo 40,25 = 2.334,50 · VNR unitario = precio estimado de venta 45,00 − costos estimados de venta 6,00 = 39,00 → 58 u × 39,00 = 2.262,00 · Deterioro = 2.334,50 − 2.262,00 = 72,50.</div><div class="asiento">
+<div class="asiento-header"><span>Asiento N.º 24</span><span>31/08/2026</span></div>
+<table><thead><tr><th style="width:11%">Fecha</th><th style="width:13%">Código</th><th>Detalle</th><th style="width:12%">Parcial</th><th style="width:13%">Debe</th><th style="width:13%">Haber</th></tr></thead><tbody>
+<tr><td>31/08/2026</td><td>5.2.02.03</td><td>Pérdida por deterioro de inventarios</td><td class="valor">—</td><td class="valor">72,50</td><td class="valor">—</td></tr>
+<tr><td></td><td>1.1.05.99</td><td class="cta-acreedora">a) (–) Deterioro acumulado de inventarios</td><td class="valor">—</td><td class="valor">—</td><td class="valor">72,50</td></tr>
+<tr class="suman"><td></td><td></td><td>SUMAN</td><td class="valor">—</td><td class="valor">72,50</td><td class="valor">72,50</td></tr>
+</tbody></table>
+<div class="glosa">P/R Ajuste por deterioro del artículo INV-4501 al 31 de agosto de 2026. Dentro del contenido de la NIC 2 se establece que los inventarios se miden al menor valor entre el costo y el valor neto realizable; el valor neto realizable resultó inferior al costo por la entrada al mercado de un modelo sustituto.</div>
+</div><div class="ejemplo"><span class="rot">La comparación que exige la NIC 2</span><p>Dentro del contenido de la NIC 2 se establece que los inventarios se miden al <strong>menor valor entre el costo y el valor neto realizable</strong>. Aquí el costo es 40,25 por unidad y el valor neto realizable resultó de 39,00, de modo que el inventario está registrado por encima de lo que la empresa puede recuperar vendiéndolo. La diferencia se reconoce como pérdida del período, no cuando la mercadería se venda.</p><p>Fíjese en el orden: primero se corrigió la <strong>cantidad</strong> con el faltante, y solo después se ajustó el <strong>valor</strong> de las unidades que realmente quedaron. Invertir el orden llevaría a deteriorar dos unidades inexistentes y produciría un ajuste de 75,00 en lugar de 72,50.</p></div>
+<h3>3.8 Asiento 25 — Nota de débito bancaria no registrada</h3><p><span class="badge badge-familia">Familia: Comprobación</span></p><div class="calc-box"><span class="tit">Desglose del cálculo</span>Estado de cuenta del Banco Bolivariano al 31/08/2026: nota de débito 3312 por comisión de manejo 45,00 y emisión de chequera 17,00 = 62,00.</div><div class="asiento">
+<div class="asiento-header"><span>Asiento N.º 25</span><span>31/08/2026</span></div>
+<table><thead><tr><th style="width:11%">Fecha</th><th style="width:13%">Código</th><th>Detalle</th><th style="width:12%">Parcial</th><th style="width:13%">Debe</th><th style="width:13%">Haber</th></tr></thead><tbody>
+<tr><td>31/08/2026</td><td>5.2.01.09</td><td>Gasto servicios bancarios</td><td class="valor">—</td><td class="valor">62,00</td><td class="valor">—</td></tr>
+<tr><td></td><td>1.1.02.01</td><td class="cta-acreedora">a) Bancos</td><td class="valor">—</td><td class="valor">—</td><td class="valor">62,00</td></tr>
+<tr class="suman"><td></td><td></td><td>SUMAN</td><td class="valor">—</td><td class="valor">62,00</td><td class="valor">62,00</td></tr>
+</tbody></table>
+<div class="glosa">P/R Ajuste por la nota de débito bancaria de comisiones por manejo de cuenta y emisión de chequera del mes de agosto de 2026, detectada en la conciliación del estado de cuenta del Banco Bolivariano y no registrada oportunamente.</div>
+</div><div class="nota-lateral"><span class="rot">Comprobación contra una fuente externa</span><p>Este ajuste no nació de un cálculo sino de una comparación: el saldo que la empresa creía tener en el banco no era el que el banco decía. Las comisiones se debitan automáticamente y rara vez llegan acompañadas de un aviso. Por eso la conciliación bancaria es un procedimiento de cierre obligatorio y no una tarea opcional: es el único momento en que la contabilidad se contrasta con un registro que la empresa no controla.</p></div>
+
+<h3>3.9 Los ocho ajustes, clasificados por familia</h3>
+
+<div class="tabla-wrap"><table class="tabla">
+<thead><tr><th style="width:18%">Familia</th><th style="width:8%">N.º</th><th>Ajustes practicados hoy</th></tr></thead>
+<tbody><tr><td><strong>Acumulación</strong></td><td class="ctr">1</td><td>Intereses devengados del préstamo bancario (120,00)</td></tr><tr><td><strong>Diferimiento</strong></td><td class="ctr">2</td><td>Consumo del arriendo del local pagado por anticipado (600,00) · Devengo de la póliza de seguro pagada por anticipado (180,00)</td></tr><tr><td><strong>Estimación</strong></td><td class="ctr">3</td><td>Depreciación de propiedad, planta y equipo del mes (580,00) · Deterioro estimado de las cuentas por cobrar (234,00) · Ajuste del inventario al valor neto realizable (72,50)</td></tr><tr><td><strong>Comprobación</strong></td><td class="ctr">2</td><td>Faltante de inventario determinado en la toma física (80,50) · Nota de débito bancaria no registrada (62,00)</td></tr>
+<tr class="total"><td>TOTAL</td><td class="ctr">8</td><td class="num">1.929,00</td></tr>
+</tbody></table></div>
+
+<div class="ejemplo"><span class="rot">Lo que dice la distribución</span>
+<p>La <strong>estimación</strong> es la familia más numerosa, y no por azar: toda empresa con activos fijos, con ventas a crédito y con inventario sujeto a obsolescencia los tiene. La <strong>comprobación</strong> es la más reveladora, porque no depende de un cálculo sino de la calidad del control interno: si nadie hubiera contado el inventario ni conciliado el banco, esos dos ajustes no existirían y el balance habría cuadrado igual, con dos errores adentro.</p></div>
+
+<div class="alerta"><span class="rot">Los siete ajustes que este mes no correspondían</span>
+<p>Un ejercicio integrador también se evalúa por lo que <em>no</em> se registra. Aquí no procedían: ajuste por sueldos devengados y no pagados —el rol de agosto se pagó el 29—; ajuste por ingresos cobrados por anticipado —la empresa no recibió anticipos de clientes—; ajuste por servicios recibidos sin factura; reclasificación de importaciones en tránsito —El Astillero compra a distribuidores nacionales—; ajuste por diferencia de cambio; provisión de beneficios sociales, que se liquida al cierre del ejercicio anual y no mensualmente; y liquidación mensual del IVA. <strong>Inventar un ajuste que no corresponde es tan grave como omitir uno que sí correspondía</strong>, y en un examen se penaliza igual.</p></div>
+
+<div class="futuro"><span class="rot">Contenido diferido</span>
+<p>La <strong>liquidación del IVA del mes</strong> —la compensación entre el IVA en ventas de 4.602,00 y el IVA en compras de 3.401,25, junto con el crédito por las retenciones de IVA recibidas de 1.053,00— corresponde a la declaración tributaria mensual y no forma parte de los asientos de ajuste contables de este ejercicio. Por esa razón, las cuentas <em>IVA en compras</em>, <em>IVA en ventas</em>, <em>Anticipo de IR retenido</em> y <em>Crédito tributario por retenciones de IVA</em> conservan su saldo en el balance ajustado del Tema 4.</p></div>
+
+<div class="carrera-box"><span class="rot">Vinculación con las cuatro áreas de Negocios Internacionales</span>
+<ul>
+<li><strong>Comercio exterior:</strong> el ajuste 24 responde a la entrada de un producto sustituto al mercado, que es el riesgo estructural de importar bienes de ciclo corto. Reconocer el deterioro a tiempo permite decidir una liquidación de existencias mientras todavía hay demanda; ocultarlo solo traslada una pérdida mayor al mes siguiente.</li>
+<li><strong>Finanzas internacionales:</strong> los ajustes 21 y 25 —intereses devengados y comisiones bancarias— muestran que el costo financiero real de una empresa nunca coincide con lo que aparece en su cuenta corriente. Al comparar el costo de financiamiento entre un banco local y uno del exterior, esas partidas devengadas y no pagadas son precisamente las que hacen la diferencia.</li>
+<li><strong>Marketing y negociación internacional:</strong> el ajuste 23, el faltante de dos unidades, tiene un valor pequeño y una lectura grande: hay mermas que el margen debe absorber. Un negociador que fija precios sin considerar mermas, deterioro y depreciación está regalando margen que su contabilidad todavía no le ha mostrado.</li>
+<li><strong>Marco legal y normativo:</strong> los ajustes 20, 22 y 24 tienen efectos tributarios directos, porque su deducibilidad está condicionada a límites y a respaldo documental —tablas de vida útil, política de cartera, acta de toma física, sustento del valor neto realizable—. La diferencia entre un gasto deducible y uno rechazado casi nunca está en el cálculo: está en el papel que lo sostiene.</li>
+</ul></div>
+
+<div class="conclusion"><span class="rot">Idea clave del Tema 3</span>
+<p>Los ocho ajustes suman 1.929,00 y ninguno provino de una factura. Todos nacieron de tres fuentes distintas: el <strong>paso del tiempo</strong>, una <strong>estimación técnica</strong> o una <strong>verificación contra una fuente externa</strong>. Esa es la razón por la que el proceso contable no termina con la última transacción del mes.</p></div>
+
+</div><!-- /t3 -->
+
+<!-- ============================================================
+     PESTAÑA: TEMA 4 — HOJA DE TRABAJO Y BALANCE AJUSTADO
+     ============================================================ -->
+<div id="t4" class="panel">
+<h2>Tema 4 — Hoja de trabajo y balance de comprobación ajustado</h2>
+
+<h3>4.1 La hoja de trabajo de tres secciones</h3>
+
+<div class="definicion"><span class="rot">Hoja de trabajo</span>
+<p>Papel de trabajo —no un libro contable— en el que se colocan, uno al lado del otro, el <strong>balance preliminar</strong>, los <strong>ajustes</strong> y el <strong>balance ajustado</strong>, cuenta por cuenta. Permite ver de un vistazo qué cuentas cambiaron, en cuánto y por qué, y detectar un ajuste mal aplicado antes de que contamine el documento final.</p></div>
+
+<p>Se lee de izquierda a derecha y línea por línea: al saldo preliminar de cada cuenta se le suma el movimiento del ajuste que le corresponda, respetando la columna, y el resultado es el saldo ajustado. Las cuentas que no recibieron ningún ajuste atraviesan la hoja sin cambio, y eso también es información: son las cuentas cuya cifra ya era definitiva.</p>
+
+<div class="tabla-wrap"><table class="tabla">
+<thead><tr><th rowspan="2" style="width:10%">Código</th><th rowspan="2">Cuenta</th><th colspan="2">Balance preliminar</th><th colspan="2">Ajustes</th><th colspan="2">Balance ajustado</th></tr><tr><th>Debe</th><th>Haber</th><th>Debe</th><th>Haber</th><th>Debe</th><th>Haber</th></tr></thead><tbody>
+<tr><td>1.1.01.01</td><td>Caja</td><td class="num">1.200,00</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">1.200,00</td><td class="num">—</td></tr>
+<tr><td>1.1.02.01</td><td>Bancos</td><td class="num">22.729,65</td><td class="num">—</td><td class="num">—</td><td class="num">62,00</td><td class="num">22.667,65</td><td class="num">—</td></tr>
+<tr><td>1.1.03.01</td><td>Cuentas por cobrar clientes</td><td class="num">28.789,00</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">28.789,00</td><td class="num">—</td></tr>
+<tr><td>1.1.03.99</td><td>(–) Deterioro acumulado de cuentas por cobrar</td><td class="num">—</td><td class="num">120,00</td><td class="num">—</td><td class="num">234,00</td><td class="num">—</td><td class="num">354,00</td></tr>
+<tr><td>1.1.05.01</td><td>Inventario de mercaderías</td><td class="num">2.415,00</td><td class="num">—</td><td class="num">—</td><td class="num">80,50</td><td class="num">2.334,50</td><td class="num">—</td></tr>
+<tr><td>1.1.05.99</td><td>(–) Deterioro acumulado de inventarios</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">72,50</td><td class="num">—</td><td class="num">72,50</td></tr>
+<tr><td>1.1.06.01</td><td>Arriendos pagados por anticipado</td><td class="num">3.000,00</td><td class="num">—</td><td class="num">—</td><td class="num">600,00</td><td class="num">2.400,00</td><td class="num">—</td></tr>
+<tr><td>1.1.06.02</td><td>Seguros pagados por anticipado</td><td class="num">1.440,00</td><td class="num">—</td><td class="num">—</td><td class="num">180,00</td><td class="num">1.260,00</td><td class="num">—</td></tr>
+<tr><td>1.1.07.01</td><td>IVA en compras (crédito tributario)</td><td class="num">3.401,25</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">3.401,25</td><td class="num">—</td></tr>
+<tr><td>1.1.08.01</td><td>Anticipo de IR retenido</td><td class="num">468,00</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">468,00</td><td class="num">—</td></tr>
+<tr><td>1.1.08.02</td><td>Crédito tributario por retenciones de IVA</td><td class="num">1.053,00</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">1.053,00</td><td class="num">—</td></tr>
+<tr><td>1.2.01.05</td><td>Muebles y enseres</td><td class="num">9.600,00</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">9.600,00</td><td class="num">—</td></tr>
+<tr><td>1.2.01.95</td><td>(–) Depreciación acumulada muebles y enseres</td><td class="num">—</td><td class="num">1.920,00</td><td class="num">—</td><td class="num">80,00</td><td class="num">—</td><td class="num">2.000,00</td></tr>
+<tr><td>1.2.01.06</td><td>Equipo de computación</td><td class="num">3.600,00</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">3.600,00</td><td class="num">—</td></tr>
+<tr><td>1.2.01.96</td><td>(–) Depreciación acumulada equipo de computación</td><td class="num">—</td><td class="num">1.200,00</td><td class="num">—</td><td class="num">100,00</td><td class="num">—</td><td class="num">1.300,00</td></tr>
+<tr><td>1.2.01.07</td><td>Vehículos</td><td class="num">24.000,00</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">24.000,00</td><td class="num">—</td></tr>
+<tr><td>1.2.01.97</td><td>(–) Depreciación acumulada vehículos</td><td class="num">—</td><td class="num">4.800,00</td><td class="num">—</td><td class="num">400,00</td><td class="num">—</td><td class="num">5.200,00</td></tr>
+<tr><td>2.1.01.01</td><td>Cuentas por pagar proveedores</td><td class="num">—</td><td class="num">15.434,12</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">15.434,12</td></tr>
+<tr><td>2.1.02.02</td><td>IESS por pagar</td><td class="num">—</td><td class="num">865,20</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">865,20</td></tr>
+<tr><td>2.1.03.01</td><td>Retención en la fuente de IR por pagar</td><td class="num">—</td><td class="num">566,50</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">566,50</td></tr>
+<tr><td>2.1.03.02</td><td>Retención de IVA por pagar</td><td class="num">—</td><td class="num">1.176,38</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">1.176,38</td></tr>
+<tr><td>2.1.04.01</td><td>IVA en ventas</td><td class="num">—</td><td class="num">4.602,00</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">4.602,00</td></tr>
+<tr><td>2.1.05.01</td><td>Intereses por pagar</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">120,00</td><td class="num">—</td><td class="num">120,00</td></tr>
+<tr><td>2.2.01.01</td><td>Préstamo bancario por pagar</td><td class="num">—</td><td class="num">12.000,00</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">12.000,00</td></tr>
+<tr><td>3.1.01.01</td><td>Capital social</td><td class="num">—</td><td class="num">50.000,00</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">50.000,00</td></tr>
+<tr><td>3.4.01.01</td><td>Resultados acumulados</td><td class="num">—</td><td class="num">6.500,00</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">6.500,00</td></tr>
+<tr><td>4.1.01.01</td><td>Ventas</td><td class="num">—</td><td class="num">30.680,00</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">30.680,00</td></tr>
+<tr><td>5.1.01.01</td><td>Costo de ventas</td><td class="num">20.660,00</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">20.660,00</td><td class="num">—</td></tr>
+<tr><td>5.2.01.01</td><td>Gasto sueldos y salarios</td><td class="num">4.200,00</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">4.200,00</td><td class="num">—</td></tr>
+<tr><td>5.2.01.02</td><td>Gasto de arriendo</td><td class="num">900,00</td><td class="num">—</td><td class="num">600,00</td><td class="num">—</td><td class="num">1.500,00</td><td class="num">—</td></tr>
+<tr><td>5.2.01.03</td><td>Gasto aporte patronal IESS</td><td class="num">468,30</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">468,30</td><td class="num">—</td></tr>
+<tr><td>5.2.01.08</td><td>Gasto servicios básicos</td><td class="num">240,00</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">240,00</td><td class="num">—</td></tr>
+<tr><td>5.2.01.09</td><td>Gasto servicios bancarios</td><td class="num">—</td><td class="num">—</td><td class="num">62,00</td><td class="num">—</td><td class="num">62,00</td><td class="num">—</td></tr>
+<tr><td>5.2.01.10</td><td>Gasto mantenimiento de vehículo</td><td class="num">500,00</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">500,00</td><td class="num">—</td></tr>
+<tr><td>5.2.01.11</td><td>Gasto honorarios profesionales</td><td class="num">1.200,00</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">1.200,00</td><td class="num">—</td></tr>
+<tr><td>5.2.01.12</td><td>Gasto de seguros</td><td class="num">—</td><td class="num">—</td><td class="num">180,00</td><td class="num">—</td><td class="num">180,00</td><td class="num">—</td></tr>
+<tr><td>5.2.02.01</td><td>Gasto depreciación de propiedad, planta y equipo</td><td class="num">—</td><td class="num">—</td><td class="num">580,00</td><td class="num">—</td><td class="num">580,00</td><td class="num">—</td></tr>
+<tr><td>5.2.02.02</td><td>Gasto deterioro de cuentas por cobrar</td><td class="num">—</td><td class="num">—</td><td class="num">234,00</td><td class="num">—</td><td class="num">234,00</td><td class="num">—</td></tr>
+<tr><td>5.2.02.03</td><td>Pérdida por deterioro de inventarios</td><td class="num">—</td><td class="num">—</td><td class="num">72,50</td><td class="num">—</td><td class="num">72,50</td><td class="num">—</td></tr>
+<tr><td>5.2.02.04</td><td>Pérdida por faltante de inventario</td><td class="num">—</td><td class="num">—</td><td class="num">80,50</td><td class="num">—</td><td class="num">80,50</td><td class="num">—</td></tr>
+<tr><td>5.3.01.01</td><td>Gasto interés bancario</td><td class="num">—</td><td class="num">—</td><td class="num">120,00</td><td class="num">—</td><td class="num">120,00</td><td class="num">—</td></tr>
+<tr class="total"><td colspan="2">SUMAN</td><td class="num">129.864,20</td><td class="num">129.864,20</td><td class="num">1.929,00</td><td class="num">1.929,00</td><td class="num">130.870,70</td><td class="num">130.870,70</td></tr>
+</tbody></table></div>
+
+<div class="nota-lateral"><span class="rot">Cómo verificar una hoja de trabajo sin rehacerla</span>
+<p>Los seis totales inferiores deben cumplir tres igualdades: las dos columnas del preliminar entre sí (129.864,20), las dos de ajustes entre sí (1.929,00) y las dos del ajustado entre sí (130.870,70). Si las tres se cumplen, ningún ajuste quedó descuadrado ni se traspapeló. Si falla la tercera y las dos primeras están bien, el error está en la suma horizontal de alguna línea.</p></div>
+
+<h3>4.2 Control anticipado de sumas</h3>
+
+<p>Antes de escribir el balance ajustado conviene <strong>predecir</strong> su total. Si el documento no llega a la cifra prevista, hay un error, y se sabe antes de terminar en lugar de después.</p>
+
+<div class="formula">
+Total ajustado = Total preliminar + Total de ajustes &minus; Movimientos contrarios a la naturaleza<br>
+130.870,70 = 129.864,20 + 1.929,00 &minus; 922,50
+</div>
+
+<p>Los 922,50 que se restan son los créditos aplicados a cuentas de saldo deudor, es decir los ajustes que <strong>disminuyen</strong> una cuenta en lugar de aumentarla:</p>
+
+<div class="tabla-wrap"><table class="tabla">
+<thead><tr><th style="width:10%">Ajuste</th><th>Cuenta de saldo deudor que disminuye</th><th style="width:18%">Valor</th></tr></thead>
+<tbody>
+<tr><td class="ctr">18</td><td>Arriendos pagados por anticipado</td><td class="num">600,00</td></tr>
+<tr><td class="ctr">19</td><td>Seguros pagados por anticipado</td><td class="num">180,00</td></tr>
+<tr><td class="ctr">23</td><td>Inventario de mercaderías</td><td class="num">80,50</td></tr>
+<tr><td class="ctr">25</td><td>Bancos</td><td class="num">62,00</td></tr>
+<tr class="total"><td colspan="2">TOTAL DE DISMINUCIONES</td><td class="num">922,50</td></tr>
+</tbody></table></div>
+
+<div class="ejemplo"><span class="rot">Por qué el balance solo creció 1.006,50 si los ajustes sumaron 1.929,00</span>
+<p>Porque cuatro de los ocho ajustes no agregaron nada al total: en ellos, lo que un gasto sumó en la columna del Debe, un activo lo restó en esa misma columna. Los ajustes 18, 19, 23 y 25 trasladaron valor <em>dentro</em> del mismo lado del balance. Los otros cuatro —20, 21, 22 y 24— sí lo hicieron crecer, porque en ellos nació un gasto en el Debe y, simultáneamente, un pasivo o una cuenta de valuación en el Haber. <strong>El tamaño de un ajuste no dice nada sobre su efecto en el total</strong>, y el efecto en el total no dice nada sobre su importancia.</p></div>
+
+<h3>4.3 Balance de comprobación ajustado al 31 de agosto de 2026</h3>
+
+<p>Comercial El Astillero S.A. — expresado en dólares de los Estados Unidos de América.</p>
+
+<div class="tabla-wrap"><table class="tabla">
+<thead><tr><th style="width:13%">Código</th><th>Cuenta</th><th style="width:16%">Debe</th><th style="width:16%">Haber</th></tr></thead><tbody>
+<tr><td class="sec" colspan="4">ACTIVO</td></tr>
+<tr><td>1.1.01.01</td><td>Caja</td><td class="num">1.200,00</td><td class="num">—</td></tr>
+<tr><td>1.1.02.01</td><td>Bancos</td><td class="num">22.667,65</td><td class="num">—</td></tr>
+<tr><td>1.1.03.01</td><td>Cuentas por cobrar clientes</td><td class="num">28.789,00</td><td class="num">—</td></tr>
+<tr><td>1.1.03.99</td><td>(–) Deterioro acumulado de cuentas por cobrar</td><td class="num">—</td><td class="num">354,00</td></tr>
+<tr><td>1.1.05.01</td><td>Inventario de mercaderías</td><td class="num">2.334,50</td><td class="num">—</td></tr>
+<tr><td>1.1.05.99</td><td>(–) Deterioro acumulado de inventarios</td><td class="num">—</td><td class="num">72,50</td></tr>
+<tr><td>1.1.06.01</td><td>Arriendos pagados por anticipado</td><td class="num">2.400,00</td><td class="num">—</td></tr>
+<tr><td>1.1.06.02</td><td>Seguros pagados por anticipado</td><td class="num">1.260,00</td><td class="num">—</td></tr>
+<tr><td>1.1.07.01</td><td>IVA en compras (crédito tributario)</td><td class="num">3.401,25</td><td class="num">—</td></tr>
+<tr><td>1.1.08.01</td><td>Anticipo de IR retenido</td><td class="num">468,00</td><td class="num">—</td></tr>
+<tr><td>1.1.08.02</td><td>Crédito tributario por retenciones de IVA</td><td class="num">1.053,00</td><td class="num">—</td></tr>
+<tr><td>1.2.01.05</td><td>Muebles y enseres</td><td class="num">9.600,00</td><td class="num">—</td></tr>
+<tr><td>1.2.01.95</td><td>(–) Depreciación acumulada muebles y enseres</td><td class="num">—</td><td class="num">2.000,00</td></tr>
+<tr><td>1.2.01.06</td><td>Equipo de computación</td><td class="num">3.600,00</td><td class="num">—</td></tr>
+<tr><td>1.2.01.96</td><td>(–) Depreciación acumulada equipo de computación</td><td class="num">—</td><td class="num">1.300,00</td></tr>
+<tr><td>1.2.01.07</td><td>Vehículos</td><td class="num">24.000,00</td><td class="num">—</td></tr>
+<tr><td>1.2.01.97</td><td>(–) Depreciación acumulada vehículos</td><td class="num">—</td><td class="num">5.200,00</td></tr>
+<tr><td class="sec" colspan="4">PASIVO</td></tr>
+<tr><td>2.1.01.01</td><td>Cuentas por pagar proveedores</td><td class="num">—</td><td class="num">15.434,12</td></tr>
+<tr><td>2.1.02.02</td><td>IESS por pagar</td><td class="num">—</td><td class="num">865,20</td></tr>
+<tr><td>2.1.03.01</td><td>Retención en la fuente de IR por pagar</td><td class="num">—</td><td class="num">566,50</td></tr>
+<tr><td>2.1.03.02</td><td>Retención de IVA por pagar</td><td class="num">—</td><td class="num">1.176,38</td></tr>
+<tr><td>2.1.04.01</td><td>IVA en ventas</td><td class="num">—</td><td class="num">4.602,00</td></tr>
+<tr><td>2.1.05.01</td><td>Intereses por pagar</td><td class="num">—</td><td class="num">120,00</td></tr>
+<tr><td>2.2.01.01</td><td>Préstamo bancario por pagar</td><td class="num">—</td><td class="num">12.000,00</td></tr>
+<tr><td class="sec" colspan="4">PATRIMONIO</td></tr>
+<tr><td>3.1.01.01</td><td>Capital social</td><td class="num">—</td><td class="num">50.000,00</td></tr>
+<tr><td>3.4.01.01</td><td>Resultados acumulados</td><td class="num">—</td><td class="num">6.500,00</td></tr>
+<tr><td class="sec" colspan="4">INGRESOS</td></tr>
+<tr><td>4.1.01.01</td><td>Ventas</td><td class="num">—</td><td class="num">30.680,00</td></tr>
+<tr><td class="sec" colspan="4">COSTOS Y GASTOS</td></tr>
+<tr><td>5.1.01.01</td><td>Costo de ventas</td><td class="num">20.660,00</td><td class="num">—</td></tr>
+<tr><td>5.2.01.01</td><td>Gasto sueldos y salarios</td><td class="num">4.200,00</td><td class="num">—</td></tr>
+<tr><td>5.2.01.02</td><td>Gasto de arriendo</td><td class="num">1.500,00</td><td class="num">—</td></tr>
+<tr><td>5.2.01.03</td><td>Gasto aporte patronal IESS</td><td class="num">468,30</td><td class="num">—</td></tr>
+<tr><td>5.2.01.08</td><td>Gasto servicios básicos</td><td class="num">240,00</td><td class="num">—</td></tr>
+<tr><td>5.2.01.09</td><td>Gasto servicios bancarios</td><td class="num">62,00</td><td class="num">—</td></tr>
+<tr><td>5.2.01.10</td><td>Gasto mantenimiento de vehículo</td><td class="num">500,00</td><td class="num">—</td></tr>
+<tr><td>5.2.01.11</td><td>Gasto honorarios profesionales</td><td class="num">1.200,00</td><td class="num">—</td></tr>
+<tr><td>5.2.01.12</td><td>Gasto de seguros</td><td class="num">180,00</td><td class="num">—</td></tr>
+<tr><td>5.2.02.01</td><td>Gasto depreciación de propiedad, planta y equipo</td><td class="num">580,00</td><td class="num">—</td></tr>
+<tr><td>5.2.02.02</td><td>Gasto deterioro de cuentas por cobrar</td><td class="num">234,00</td><td class="num">—</td></tr>
+<tr><td>5.2.02.03</td><td>Pérdida por deterioro de inventarios</td><td class="num">72,50</td><td class="num">—</td></tr>
+<tr><td>5.2.02.04</td><td>Pérdida por faltante de inventario</td><td class="num">80,50</td><td class="num">—</td></tr>
+<tr><td>5.3.01.01</td><td>Gasto interés bancario</td><td class="num">120,00</td><td class="num">—</td></tr>
+<tr class="total"><td colspan="2">SUMAN</td><td class="num">130.870,70</td><td class="num">130.870,70</td></tr>
+</tbody></table></div>
+
+<h3>4.4 Qué cambió con los ajustes</h3>
+
+<p>El documento pasó de treinta y dos cuentas con saldo a cuarenta y uno. Aparecieron <strong>nueve cuentas nuevas</strong> y cambió el saldo de <strong>otras nueve</strong> que ya existían:</p>
+
+<div class="tabla-wrap"><table class="tabla">
+<thead><tr><th style="width:44%">Cuentas que aparecen por primera vez</th><th>Cuentas cuyo saldo cambió</th></tr></thead>
+<tbody>
+<tr><td>(–) Deterioro acumulado de inventarios · Intereses por pagar · Gasto servicios bancarios · Gasto de seguros · Gasto depreciación de propiedad, planta y equipo · Gasto deterioro de cuentas por cobrar · Pérdida por deterioro de inventarios · Pérdida por faltante de inventario · Gasto interés bancario</td><td>Bancos (22.729,65 → 22.667,65) · Inventario de mercaderías (2.415,00 → 2.334,50) · Arriendos pagados por anticipado (3.000,00 → 2.400,00) · Seguros pagados por anticipado (1.440,00 → 1.260,00) · (–) Deterioro acumulado de cuentas por cobrar (120,00 → 354,00) · las tres depreciaciones acumuladas (1.920,00 → 2.000,00; 1.200,00 → 1.300,00; 4.800,00 → 5.200,00) · Gasto de arriendo (900,00 → 1.500,00)</td></tr>
+</tbody></table></div>
+
+<div class="alerta"><span class="rot">Cuentas que deliberadamente no cambiaron</span>
+<p><em>Ventas</em> sigue en 30.680,00 y <em>Costo de ventas</em> en 20.660,00. Ningún ajuste los tocó, y eso es correcto: la utilidad bruta del período —10.020,00— quedó determinada por las transacciones del mes y por el Kardex, no por los ajustes. El faltante y el deterioro del inventario se llevaron a cuentas propias, precisamente para no contaminar el margen bruto con hechos que no son ventas.</p></div>
+
+<h3>4.5 El resultado real frente al resultado aparente</h3>
+
+<div class="calc-box"><span class="tit">Comprobación de razonabilidad al 31/08/2026</span>
+Ventas ....................................................... 30.680,00<br>
+&minus; Costo de ventas ............................................. 20.660,00<br>
+<b>= Utilidad bruta</b> ............................................. <b>10.020,00</b><br>
+<br>
+&minus; Gasto sueldos y salarios .................................... 4.200,00<br>
+&minus; Gasto de arriendo (900,00 del mes + 600,00 del ajuste) ...... 1.500,00<br>
+&minus; Gasto aporte patronal IESS .................................. 468,30<br>
+&minus; Gasto servicios básicos ..................................... 240,00<br>
+&minus; Gasto servicios bancarios ................................... 62,00<br>
+&minus; Gasto mantenimiento de vehículo ............................. 500,00<br>
+&minus; Gasto honorarios profesionales .............................. 1.200,00<br>
+&minus; Gasto de seguros ............................................ 180,00<br>
+&minus; Gasto depreciación de propiedad, planta y equipo ............ 580,00<br>
+&minus; Gasto deterioro de cuentas por cobrar ....................... 234,00<br>
+&minus; Pérdida por deterioro de inventarios ........................ 72,50<br>
+&minus; Pérdida por faltante de inventario .......................... 80,50<br>
+&minus; Gasto interés bancario ...................................... 120,00<br>
+<b>= Resultado real del período</b> ................................. <b>582,70</b>
+</div>
+
+<div class="tabla-wrap"><table class="tabla">
+<thead><tr><th>Concepto</th><th style="width:22%">Antes de ajustar</th><th style="width:22%">Después de ajustar</th><th style="width:16%">Variación</th></tr></thead>
+<tbody>
+<tr><td>Total del balance de comprobación</td><td class="num">129.864,20</td><td class="num">130.870,70</td><td class="num">+1.006,50</td></tr>
+<tr><td>Utilidad bruta</td><td class="num">10.020,00</td><td class="num">10.020,00</td><td class="num">0,00</td></tr>
+<tr><td>Total de gastos operativos y financieros</td><td class="num">7.508,30</td><td class="num">9.437,30</td><td class="num">+1.929,00</td></tr>
+<tr class="total"><td>Resultado del período</td><td class="num">2.511,70</td><td class="num">582,70</td><td class="num">&minus;1.929,00</td></tr>
+</tbody></table></div>
+
+<div class="alerta"><span class="rot">La conclusión incómoda, otra vez</span>
+<p>El resultado cayó de 2.511,70 a 582,70: una disminución del 76,8%. La utilidad aparente era más de cuatro veces la real. Un gerente que hubiera repartido 2.500,00 confiando en el preliminar habría retirado cuatro veces lo que la empresa efectivamente ganó, descapitalizándola sin darse cuenta.</p>
+<p>Y observe la razón estructural: <strong>los ocho ajustes fueron gastos, ninguno fue ingreso</strong>. Eso no es casualidad ni pesimismo contable. La mayoría de los hechos que no dejan documento son consumos —de tiempo, de vida útil, de valor de la cartera, de valor del inventario— y los consumos son gastos. Por eso una empresa que no ajusta siempre se ve mejor de lo que está.</p></div>
+
+<h3>4.6 Autochequeo del balance ajustado</h3>
+
+<div class="autocheck"><span class="rot">Verifique su comprensión del documento</span>
+
+<div class="preg">1) El inventario aparece en el Debe por 2.334,50 y el deterioro en el Haber por 72,50. ¿Cuánto vale realmente el inventario y por qué no figura esa cifra en el balance?</div>
+<button class="autocheck-btn" onclick="verResp('r2',this)">Ver respuesta razonada</button>
+<div id="r2" class="autocheck-resp">
+<p>El valor neto es 2.334,50 &minus; 72,50 = <strong>2.262,00</strong>, que corresponde a 58 unidades a su valor neto realizable de 39,00. No figura como una sola cifra porque el balance de comprobación presenta <strong>todas las cuentas por separado</strong>, incluidas las de valuación: mostrar solo el neto haría perder el dato del costo y el de la corrección, que son informaciones distintas. La presentación neta corresponde al Estado de Situación Financiera, que es materia del Día 16.</p>
+</div>
+
+<div class="preg">2) ¿Por qué el saldo de Bancos disminuyó por un ajuste, si los ajustes no mueven dinero?</div>
+<button class="autocheck-btn" onclick="verResp('r3',this)">Ver respuesta razonada</button>
+<div id="r3" class="autocheck-resp">
+<p>Porque el dinero <strong>ya se había movido</strong>: el banco debitó los 62,00 de comisiones durante agosto y la empresa no se enteró hasta conciliar. El ajuste 25 no ordena un pago, sino que <em>reconoce</em> uno que ya ocurrió. Esa es la característica de la familia de comprobación: no crea el hecho, lo incorpora tardíamente. Si la empresa no conciliara, su saldo contable seguiría siendo 62,00 más alto que el real indefinidamente.</p>
+</div>
+
+<div class="preg">3) La utilidad bruta no cambió con los ajustes, pero el inventario sí. ¿Es coherente?</div>
+<button class="autocheck-btn" onclick="verResp('r4',this)">Ver respuesta razonada</button>
+<div id="r4" class="autocheck-resp">
+<p>Sí, y es deliberado. La utilidad bruta compara <em>ventas</em> con <em>costo de las unidades vendidas</em>, y ninguno de los dos se modificó: se vendieron 590 unidades y su costo FIFO fue 20.660,00. El faltante de dos unidades y el deterioro de las 58 restantes afectan a mercadería que <strong>no se vendió</strong>, de modo que se reconocen como pérdidas separadas y no como mayor costo de ventas. Mezclarlas dentro del costo de ventas distorsionaría el margen del negocio y ocultaría dos problemas distintos —uno de control interno y otro de mercado— dentro de una cifra operativa.</p>
+</div>
+
+</div>
+
+<div class="carrera-box"><span class="rot">Vinculación con las cuatro áreas de Negocios Internacionales</span>
+<ul>
+<li><strong>Comercio exterior:</strong> el balance ajustado es el documento del que salen las cifras de inventario y de costo de ventas que se declaran en anexos y que se contrastan con las importaciones registradas. Una empresa que importa y cuyo costo de ventas no guarda relación con sus nacionalizaciones tiene una inconsistencia que aparece justo aquí, antes que en ningún otro lugar.</li>
+<li><strong>Finanzas internacionales:</strong> el total ajustado de 130.870,70 y el resultado real de 582,70 son los datos con los que se calculan los índices de liquidez, endeudamiento y rentabilidad que un banco corresponsal o un proveedor extranjero exigen antes de conceder crédito. Presentar el preliminar en lugar del ajustado no es un atajo: es una declaración inexacta.</li>
+<li><strong>Marketing y negociación internacional:</strong> con un resultado real de 582,70 sobre ventas de 30.680,00, el margen neto de esta empresa es inferior al 2%. Cualquier descuento superior al 2% sobre el precio de lista la lleva a pérdida. Ese es el número que un negociador debe tener en la cabeza, y no el margen bruto del 32,7%, que es el que casi todos usan por error.</li>
+<li><strong>Marco legal y normativo:</strong> el balance ajustado es la base sobre la que se calculan la participación de trabajadores y el impuesto a la renta, y el punto de partida de los estados financieros que se presentan a la Superintendencia de Compañías. La trazabilidad entre cada ajuste, su documento de respaldo y el saldo final es lo que permite sostener esas cifras ante una revisión.</li>
+</ul></div>
+
+<div class="futuro"><span class="rot">Contenido diferido</span>
+<p>El cálculo mostrado en el apartado 4.5 es una <strong>comprobación de razonabilidad</strong>, no un estado financiero. La forma correcta de presentar ese resultado —con sus subtotales de utilidad bruta, gastos operativos, gastos financieros, participación de trabajadores e impuesto a la renta— corresponde al <strong>Día 14 (martes 1 de septiembre de 2026), Unidad 4</strong>. La separación de estas cuarenta y un cuentas en dos estados financieros se hace los <strong>Días 14 y 16</strong>, y la cancelación de las cuentas de resultado, el <strong>Día 15</strong>.</p></div>
+
+<div class="conclusion"><span class="rot">Idea clave del Tema 4</span>
+<p>El balance de comprobación ajustado es el <strong>punto de llegada del proceso contable y el punto de partida de los estados financieros</strong>. En este caso costó ocho asientos que no provinieron de ninguna factura, y transformó una utilidad aparente de 2.511,70 en un resultado real de 582,70. Esa diferencia de 1.929,00 es, exactamente, el valor de ajustar.</p></div>
+
+</div><!-- /t4 -->
+
+<!-- ============================================================
+     PESTAÑA: TEMA 5 — CIERRE DE LA UNIDAD 3
+     ============================================================ -->
+<div id="t5" class="panel">
+<h2>Tema 5 — Cierre de la Unidad 3 y puente hacia la Unidad 4</h2>
+
+<h3>5.1 Los siete días de la Unidad 3, en una sola línea de tiempo</h3>
+
+<p>La Unidad 3 —«NIC 2 Inventarios y el proceso contable (II parte)»— se desarrolló en siete días de clase. Cada uno aportó una pieza, y hoy las siete se usaron juntas por primera vez.</p>
+
+<div class="tabla-wrap"><table class="tabla">
+<thead><tr><th style="width:8%">Día</th><th style="width:14%">Fecha</th><th style="width:34%">Contenido</th><th>Pieza que aportó al ejercicio de hoy</th></tr></thead>
+<tbody>
+<tr><td class="ctr">7</td><td>Mié 19 ago</td><td>Fundamentos de inventarios, NIC 2, sistemas de contabilización</td><td>La decisión de llevar <strong>inventario permanente</strong>, que es la razón por la que cada venta produjo dos asientos.</td></tr>
+<tr><td class="ctr">8</td><td>Jue 20 ago</td><td>Métodos de valuación: costo, valor razonable y valor neto realizable; introducción a FIFO</td><td>La comparación entre costo y VNR, que hoy se convirtió en el ajuste 24.</td></tr>
+<tr><td class="ctr">9</td><td>Vie 21 ago</td><td>FIFO extendido y costo promedio ponderado</td><td>El artículo INV-4501 y sus cifras: disponible 23.075,00, costo de ventas 20.660,00, inventario final 2.415,00.</td></tr>
+<tr><td class="ctr">10</td><td>Mié 26 ago</td><td>Registro en Kardex, práctica con ambos métodos</td><td>El auxiliar por capas y la identidad de control que lo verifica.</td></tr>
+<tr><td class="ctr">11</td><td>Jue 27 ago</td><td>Asientos de ajuste (II parte del proceso contable)</td><td>Las cuatro familias con las que hoy se clasificaron los ocho ajustes.</td></tr>
+<tr><td class="ctr">12</td><td>Vie 28 ago</td><td>Balance de comprobación ajustado, práctica sobre tres modelos de empresa</td><td>El método en seis pasos, la hoja de trabajo y la regla de control de sumas.</td></tr>
+<tr class="sub"><td class="ctr">13</td><td>Lun 31 ago</td><td>Ejercicio integrador de una compañía comercial hasta saldos ajustados</td><td>La aplicación de las seis piezas anteriores sobre una sola empresa y un solo mes.</td></tr>
+</tbody></table></div>
+
+<h3>5.2 El proceso contable completo, tal como quedó recorrido</h3>
+
+<div class="formula">
+Documento fuente &rarr; <b>análisis</b> &rarr; <b>Libro Diario</b> &rarr; <b>Libro Mayor</b><br>
+&rarr; <b>balance de comprobación preliminar</b> &rarr; <b>asientos de ajuste</b><br>
+&rarr; <b>hoja de trabajo</b> &rarr; <b>balance de comprobación ajustado</b>
+</div>
+
+<div class="tabla-wrap"><table class="tabla">
+<thead><tr><th style="width:6%">#</th><th style="width:30%">Paso</th><th style="width:20%">Dónde se hizo hoy</th><th>Resultado obtenido</th></tr></thead>
+<tbody>
+<tr><td class="ctr">1</td><td>Análisis y reconocimiento</td><td>Archivo 1, Tema 2</td><td>14 hechos económicos clasificados en tres patrones tributarios</td></tr>
+<tr><td class="ctr">2</td><td>Jornalización</td><td>Archivo 1, Temas 3 y 3b</td><td>17 asientos que suman 183.866,55</td></tr>
+<tr><td class="ctr">3</td><td>Control auxiliar de inventarios</td><td>Archivo 1, Tema 4</td><td>Kardex FIFO con costo de ventas 20.660,00 e inventario final 2.415,00</td></tr>
+<tr><td class="ctr">4</td><td>Mayorización</td><td>Archivo 2, Tema 1</td><td>32 cuentas del Libro Mayor con saldo</td></tr>
+<tr><td class="ctr">5</td><td>Balance de comprobación preliminar</td><td>Archivo 2, Tema 2</td><td>Documento cuadrado en 129.864,20</td></tr>
+<tr><td class="ctr">6</td><td>Asientos de ajuste</td><td>Archivo 2, Tema 3</td><td>8 ajustes por 1.929,00, distribuidos en las cuatro familias</td></tr>
+<tr><td class="ctr">7</td><td>Hoja de trabajo y balance ajustado</td><td>Archivo 2, Tema 4</td><td>Documento cuadrado en 130.870,70 con 41 cuentas</td></tr>
+</tbody></table></div>
+
+<h3>5.3 Las tres identidades que verifican toda la unidad</h3>
+
+<div class="formula">
+1) Mercadería disponible = Costo de ventas + Inventario final<br>
+23.075,00 = 20.660,00 + 2.415,00<br><br>
+2) Total ajustado = Total preliminar + Ajustes &minus; Movimientos contrarios<br>
+130.870,70 = 129.864,20 + 1.929,00 &minus; 922,50<br><br>
+3) Suma de saldos deudores = Suma de saldos acreedores<br>
+130.870,70 = 130.870,70
+</div>
+
+<p>Las tres se cumplieron. Ninguna de ellas garantiza que el trabajo esté <em>bien</em> —recuerde que elegir la cuenta equivocada u omitir un asiento completo no descuadra nada—, pero si alguna falla, el trabajo está con seguridad <em>mal</em>. Son condiciones necesarias y no suficientes, y así hay que usarlas: como filtros rápidos, no como certificados de calidad.</p>
+
+<h3>5.4 Los ocho errores que la Unidad 3 enseñó a evitar</h3>
+
+<div class="tabla-wrap"><table class="tabla">
+<thead><tr><th style="width:38%">Error</th><th>Por qué ocurre y cómo se evita</th></tr></thead>
+<tbody>
+<tr><td>Cargar el IVA al inventario o al gasto</td><td>Se confunde el total del comprobante con la base imponible. El IVA pagado es crédito tributario, un activo; el inventario se registra por la base.</td></tr>
+<tr><td>Calcular la retención de renta sobre el total facturado</td><td>Se aplica el porcentaje a base más IVA. Siempre se calcula sobre la base imponible.</td></tr>
+<tr><td>Aplicar 30% de retención de IVA a un servicio</td><td>Se memoriza un solo porcentaje. En bienes es 30%; en servicios, 70%.</td></tr>
+<tr><td>Retener a una empresa pública o al pagar un pasivo ya registrado</td><td>Se retiene por rutina. Los pagos a empresas públicas no llevan retención, y la retención se practica al registrar la adquisición, no al pagar el saldo.</td></tr>
+<tr><td>Valorar una salida del Kardex con un solo costo unitario</td><td>Se olvida que la capa vigente puede no alcanzar. Bajo FIFO la salida se descompone en tantas capas como haga falta.</td></tr>
+<tr><td>Acreditar el activo en lugar de la depreciación acumulada</td><td>Se busca «bajar» el activo directamente. La cuenta de valuación conserva el costo histórico y acumula el consumo por separado.</td></tr>
+<tr><td>Llevar el faltante de inventario al costo de ventas</td><td>Es cómodo y oculta un problema de control interno dentro de una cifra operativa. Va a una cuenta de pérdida propia.</td></tr>
+<tr><td>Cerrar el mes con el balance preliminar</td><td>Se confunde cuadre con verdad. En este caso, habría reportado 2.511,70 cuando el resultado real fue 582,70.</td></tr>
+</tbody></table></div>
+
+<h3>5.5 Lo que deliberadamente no se hizo hoy</h3>
+
+<div class="futuro"><span class="rot">Contenido diferido a la Unidad 4</span>
+<ul>
+<li><strong>No se separaron las cuentas en dos estados financieros.</strong> Activos, pasivos, patrimonio, ingresos, costos y gastos siguen mezclados en un solo listado de cuarenta y un cuentas. La separación corresponde al <strong>Día 14</strong> para el estado de resultados y al <strong>Día 16</strong> para el estado de situación financiera.</li>
+<li><strong>No se cancelaron las cuentas de resultado.</strong> <em>Ventas</em>, <em>Costo de ventas</em> y los trece gastos conservan su saldo. Cancelarlos contra el resultado del ejercicio es el trabajo del <strong>Día 15</strong>.</li>
+<li><strong>No se calcularon la participación de trabajadores ni el impuesto a la renta.</strong> El resultado de 582,70 es un resultado <em>antes</em> de esas partidas y se presentó solo como comprobación de razonabilidad.</li>
+<li><strong>No se presentó el inventario neto ni el activo fijo neto.</strong> El balance de comprobación muestra las cuentas de valuación por separado, que es lo correcto en este documento. La presentación neta es del <strong>Día 16</strong>.</li>
+<li><strong>No se liquidó el IVA del mes.</strong> Corresponde a la declaración tributaria, no a los ajustes contables.</li>
+</ul></div>
+
+<h3>5.6 Hoja de ruta hasta el final del período</h3>
+
+<div class="tabla-wrap"><table class="tabla">
+<thead><tr><th style="width:8%">Día</th><th style="width:18%">Fecha</th><th style="width:12%">Unidad</th><th>Contenido</th></tr></thead>
+<tbody>
+<tr><td class="ctr">14</td><td>Martes 1 de septiembre</td><td class="ctr">Unidad 4</td><td>Estado de Resultado Integral: estructura e importancia. Las cuentas de ingresos, costos y gastos del balance ajustado se organizan en un estado financiero formal.</td></tr>
+<tr><td class="ctr">15</td><td>Miércoles 2 de septiembre</td><td class="ctr">Unidad 4</td><td>Asientos de cierre contable: cómo se cancelan las cuentas de resultado contra el resultado del ejercicio.</td></tr>
+<tr><td class="ctr">16</td><td>Jueves 3 de septiembre</td><td class="ctr">Unidad 4</td><td>Estado de Situación Financiera: estructura, importancia y elaboración, a partir de las cuentas de activo, pasivo y patrimonio del balance ajustado.</td></tr>
+<tr><td class="ctr">17</td><td>Viernes 4 de septiembre</td><td class="ctr">Unidad 4</td><td>Ejercicio integrador de una empresa de servicios, con ambos estados financieros completos.</td></tr>
+<tr><td class="ctr">18</td><td>Lunes 7 de septiembre</td><td class="ctr">Unidad 4</td><td>Ejercicio integrador de una compañía comercial y comparativo entre servicios y comercio. Cierre de la Unidad 4.</td></tr>
+<tr class="sub"><td class="ctr">—</td><td>8 y 9 de septiembre</td><td class="ctr">—</td><td>Exámenes del segundo parcial.</td></tr>
+</tbody></table></div>
+
+<div class="ejemplo"><span class="rot">Lo que usted ya sabe hacer al terminar la Unidad 3</span>
+<p>Recibir un fajo de documentos fuente de una compañía comercial y devolver, sin ayuda, un balance de comprobación ajustado y cuadrado, con su Kardex, su tratamiento tributario completo y sus asientos de ajuste clasificados. Eso es, literalmente, el trabajo de cierre mensual de un asistente contable en cualquier empresa del país. Lo que falta —los dos estados financieros— es la <em>presentación</em> de ese trabajo, y es lo que viene ahora.</p></div>
+
+<div class="carrera-box"><span class="rot">Vinculación con las cuatro áreas de Negocios Internacionales</span>
+<ul>
+<li><strong>Comercio exterior:</strong> la Unidad 3 enseñó a seguir una mercadería desde que entra al inventario hasta que sale valorada al costo. Esa trazabilidad es la misma que exige una verificación de origen, un reclamo de garantía a un proveedor extranjero o una devolución de tributos por reexportación.</li>
+<li><strong>Finanzas internacionales:</strong> el balance ajustado de 130.870,70 es la base de todos los indicadores que se comparan entre empresas y entre países. Comparar dos compañías cuando una ajustó y la otra no es comparar cifras que no significan lo mismo, y ese es el error de análisis más costoso que existe.</li>
+<li><strong>Marketing y negociación internacional:</strong> el recorrido de hoy mostró que el margen bruto del 32,7% se reduce a un margen neto inferior al 2% una vez que aparecen los gastos que ninguna factura anuncia. Negociar sobre el margen bruto es la forma más frecuente de perder dinero creyendo que se está ganando.</li>
+<li><strong>Marco legal y normativo:</strong> los ocho ajustes de hoy tienen efectos tributarios y de control societario, y todos ellos requieren respaldo documental —contratos, tablas de vida útil, actas de toma física, estados de cuenta bancarios, sustento del valor neto realizable—. La contabilidad no se defiende con explicaciones, se defiende con papeles.</li>
+</ul></div>
+
+<div class="conclusion"><span class="rot">Idea clave del Tema 5 y de la Unidad 3</span>
+<p>La Unidad 3 empezó preguntando <em>cómo se mide un inventario</em> y termina respondiendo <em>cómo se construye información financiera confiable</em>. Entre una cosa y la otra hay siete pasos, tres identidades de control y ocho errores clásicos. El balance de comprobación ajustado de 130.870,70 que usted acaba de construir no es un ejercicio escolar: es el documento con el que, a partir de mañana, se elaboran los estados financieros de cualquier compañía comercial del país.</p></div>
+
+</div><!-- /t5 -->
+
+<!-- ============================================================
+     PESTAÑA: EJERCICIO INTERACTIVO
+     ============================================================ -->
+<div id="ejercicio" class="panel">
+<h2>Ejercicio Interactivo — Ajustes, control de sumas y balance ajustado</h2>
+
+<p>El ejercicio trabaja sobre una empresa <strong>distinta</strong> a la del widget. Resuelva los diez ítems en papel, responda <strong>todos</strong> y solo entonces presione «Verificar respuestas».</p>
+
+<div class="definicion"><span class="rot">Mini-caso: Distribuidora Nueve de Octubre S.A.</span>
+<p>Compañía comercial de Guayaquil, sistema de inventario permanente, método FIFO. Su <strong>balance de comprobación preliminar al 31 de agosto de 2026 cuadra en 214.500,00</strong>. Antes de emitir el balance ajustado, la contadora reúne la siguiente información adicional:</p>
+<div class="tabla-wrap"><table class="tabla">
+<thead><tr><th style="width:6%">#</th><th>Información adicional al 31 de agosto de 2026</th></tr></thead>
+<tbody>
+<tr><td class="ctr">a</td><td>La cuenta <em>Arriendos pagados por anticipado</em> tiene un saldo de 8.400,00, que corresponde a siete meses pendientes de consumo, de agosto a febrero.</td></tr>
+<tr><td class="ctr">b</td><td>La cuenta <em>Seguros pagados por anticipado</em> tiene un saldo de 2.700,00, que corresponde a nueve meses pendientes de devengo.</td></tr>
+<tr><td class="ctr">c</td><td>La propiedad, planta y equipo está compuesta por: terreno 40.000,00; edificio 96.000,00, a veinte años; maquinaria 36.000,00, a diez años. Se deprecia por línea recta, sin valor residual.</td></tr>
+<tr><td class="ctr">d</td><td>El préstamo bancario de 30.000,00 devenga interés del 10% anual, pagadero por semestres vencidos. En agosto no hubo pago.</td></tr>
+<tr><td class="ctr">e</td><td>La política de la compañía estima el deterioro de la cartera en el 1% de las ventas a crédito del período, que en agosto fueron 42.000,00.</td></tr>
+<tr><td class="ctr">f</td><td>El Kardex del artículo principal muestra 150 unidades a un costo de 22,50; el acta de toma física registra 146 unidades.</td></tr>
+<tr><td class="ctr">g</td><td>El precio estimado de venta de ese artículo bajó a 25,00 por unidad y los costos estimados de venta ascienden a 4,00 por unidad.</td></tr>
+<tr><td class="ctr">h</td><td>El estado de cuenta bancario muestra una nota de débito por comisiones de 55,00, no registrada.</td></tr>
+</tbody></table></div>
+</div>
+
+<div id="avisoEi" class="aviso">Debe responder los diez ítems antes de verificar. Revise cuáles quedaron en blanco.</div>
+
+<div class="item"><div class="enun"><span class="num-item">1</span>Por el punto <strong>a</strong>, ¿cuál es el gasto de arriendo del mes y cuál el saldo del activo después del ajuste?</div><div class="opciones"><label><input type="radio" name="ei1" value="a"> <strong>a)</strong> Gasto 8.400,00 y saldo 0,00</label><label><input type="radio" name="ei1" value="b"> <strong>b)</strong> Gasto 1.200,00 y saldo 7.200,00</label><label><input type="radio" name="ei1" value="c"> <strong>c)</strong> Gasto 1.400,00 y saldo 7.000,00</label><label><input type="radio" name="ei1" value="d"> <strong>d)</strong> Gasto 7.200,00 y saldo 1.200,00</label></div><div class="feedback" id="fei1"></div></div><div class="item"><div class="enun"><span class="num-item">2</span>Por el punto <strong>c</strong>, ¿cuál es la depreciación total del mes?</div><div class="opciones"><label><input type="radio" name="ei2" value="a"> <strong>a)</strong> 1.033,33</label><label><input type="radio" name="ei2" value="b"> <strong>b)</strong> 866,67</label><label><input type="radio" name="ei2" value="c"> <strong>c)</strong> 700,00</label><label><input type="radio" name="ei2" value="d"> <strong>d)</strong> 1.100,00</label></div><div class="feedback" id="fei2"></div></div><div class="item"><div class="enun"><span class="num-item">3</span>Por el punto <strong>d</strong>, ¿cuál es el interés devengado de agosto y qué cuenta se acredita?</div><div class="opciones"><label><input type="radio" name="ei3" value="a"> <strong>a)</strong> 250,00, y se acredita Intereses por pagar</label><label><input type="radio" name="ei3" value="b"> <strong>b)</strong> 250,00, y se acredita Bancos</label><label><input type="radio" name="ei3" value="c"> <strong>c)</strong> 3.000,00, y se acredita Intereses por pagar</label><label><input type="radio" name="ei3" value="d"> <strong>d)</strong> 1.500,00, y se acredita Préstamo bancario por pagar</label></div><div class="feedback" id="fei3"></div></div><div class="item"><div class="enun"><span class="num-item">4</span>Por el punto <strong>e</strong>, ¿cuál es el valor del ajuste por deterioro de cartera?</div><div class="opciones"><label><input type="radio" name="ei4" value="a"> <strong>a)</strong> 4.200,00</label><label><input type="radio" name="ei4" value="b"> <strong>b)</strong> 2.145,00</label><label><input type="radio" name="ei4" value="c"> <strong>c)</strong> 145,00</label><label><input type="radio" name="ei4" value="d"> <strong>d)</strong> 420,00</label></div><div class="feedback" id="fei4"></div></div><div class="item"><div class="enun"><span class="num-item">5</span>Por el punto <strong>f</strong>, ¿cuál es el valor del faltante y a qué cuenta se lleva?</div><div class="opciones"><label><input type="radio" name="ei5" value="a"> <strong>a)</strong> 90,00, a Costo de ventas</label><label><input type="radio" name="ei5" value="b"> <strong>b)</strong> 90,00, a Pérdida por faltante de inventario</label><label><input type="radio" name="ei5" value="c"> <strong>c)</strong> 112,50, a Pérdida por faltante de inventario</label><label><input type="radio" name="ei5" value="d"> <strong>d)</strong> 3.375,00, a Costo de ventas</label></div><div class="feedback" id="fei5"></div></div><div class="item"><div class="enun"><span class="num-item">6</span>Por el punto <strong>g</strong>, y considerando que el faltante ya se ajustó, ¿cuál es el deterioro del inventario al valor neto realizable?</div><div class="opciones"><label><input type="radio" name="ei6" value="a"> <strong>a)</strong> 225,00</label><label><input type="radio" name="ei6" value="b"> <strong>b)</strong> 511,00</label><label><input type="radio" name="ei6" value="c"> <strong>c)</strong> 146,00</label><label><input type="radio" name="ei6" value="d"> <strong>d)</strong> 219,00</label></div><div class="feedback" id="fei6"></div></div><div class="item"><div class="enun"><span class="num-item">7</span>Aplicando la regla de control de sumas, ¿en cuánto cuadrará el balance de comprobación ajustado?</div><div class="opciones"><label><input type="radio" name="ei7" value="a"> <strong>a)</strong> 217.734,00</label><label><input type="radio" name="ei7" value="b"> <strong>b)</strong> 214.500,00</label><label><input type="radio" name="ei7" value="c"> <strong>c)</strong> 216.089,00</label><label><input type="radio" name="ei7" value="d"> <strong>d)</strong> 212.855,00</label></div><div class="feedback" id="fei7"></div></div><div class="item"><div class="enun"><span class="num-item">8</span>¿A qué familia pertenecen, respectivamente, los ajustes de los puntos <strong>d</strong>, <strong>b</strong> y <strong>h</strong>?</div><div class="opciones"><label><input type="radio" name="ei8" value="a"> <strong>a)</strong> Acumulación, diferimiento y comprobación</label><label><input type="radio" name="ei8" value="b"> <strong>b)</strong> Diferimiento, acumulación y estimación</label><label><input type="radio" name="ei8" value="c"> <strong>c)</strong> Estimación, diferimiento y acumulación</label><label><input type="radio" name="ei8" value="d"> <strong>d)</strong> Comprobación, estimación y diferimiento</label></div><div class="feedback" id="fei8"></div></div><div class="item"><div class="enun"><span class="num-item">9</span>En el ajuste por depreciación del edificio, ¿qué cuenta se acredita y por qué?</div><div class="opciones"><label><input type="radio" name="ei9" value="a"> <strong>a)</strong> Edificio, porque el activo pierde valor y debe disminuir en libros</label><label><input type="radio" name="ei9" value="b"> <strong>b)</strong> Gasto depreciación, porque es la contrapartida natural del activo</label><label><input type="radio" name="ei9" value="c"> <strong>c)</strong> (–) Depreciación acumulada edificio, porque es una cuenta de valuación que acumula el consumo sin borrar el costo histórico</label><label><input type="radio" name="ei9" value="d"> <strong>d)</strong> Resultados acumulados, porque la depreciación afecta al patrimonio</label></div><div class="feedback" id="fei9"></div></div><div class="item"><div class="enun"><span class="num-item">10</span>Los ocho ajustes de este mini-caso, ¿qué efecto conjunto tienen sobre el resultado del período?</div><div class="opciones"><label><input type="radio" name="ei10" value="a"> <strong>a)</strong> Lo aumentan en 3.234,00, porque los ajustes incrementan el total del balance</label><label><input type="radio" name="ei10" value="b"> <strong>b)</strong> Lo disminuyen en 3.234,00, porque los ocho reconocen gastos y ninguno reconoce ingreso</label><label><input type="radio" name="ei10" value="c"> <strong>c)</strong> Lo disminuyen en 1.589,00, que es el crecimiento neto del balance</label><label><input type="radio" name="ei10" value="d"> <strong>d)</strong> No lo modifican, porque los ajustes solo reclasifican cuentas de balance</label></div><div class="feedback" id="fei10"></div></div>
+
+<button class="btn" onclick="verificarEi()">Verificar respuestas</button>
+<button class="btn btn-sec" onclick="reiniciarEi()">Reiniciar</button>
+
+<div id="resEi" class="resultado">
+  <div class="nota" id="notaEi"></div>
+  <div class="barra"><div class="barra-relleno" id="barraEi"></div></div>
+  <p id="msgEi"></p>
+</div>
+
+<div class="solucion"><span class="rot">Solución completa desarrollada del mini-caso</span>
+
+<p><strong>1. Cálculo de los ocho ajustes</strong></p>
+<div class="calc-box"><span class="tit">Hoja de cálculo previa</span>
+a) Arriendo: 8.400,00 ÷ 7 meses pendientes .................... <b>1.200,00</b> &nbsp;<span style="color:#33424f">(diferimiento)</span><br>
+b) Seguro: 2.700,00 ÷ 9 meses pendientes ...................... <b>300,00</b> &nbsp;<span style="color:#33424f">(diferimiento)</span><br>
+c) Depreciación: edificio 96.000,00 ÷ 240 meses = 400,00<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;maquinaria 36.000,00 ÷ 120 meses = 300,00<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;terreno: no se deprecia ......... <b>700,00</b> &nbsp;<span style="color:#33424f">(estimación)</span><br>
+d) Interés: 30.000,00 × 10% ÷ 12 ............................. <b>250,00</b> &nbsp;<span style="color:#33424f">(acumulación)</span><br>
+e) Deterioro de cartera: 42.000,00 × 1% ...................... <b>420,00</b> &nbsp;<span style="color:#33424f">(estimación)</span><br>
+f) Faltante: (150 &minus; 146) × 22,50 ............................ <b>90,00</b> &nbsp;<span style="color:#33424f">(comprobación)</span><br>
+g) VNR: 146 u × 22,50 = 3.285,00 · VNR unitario 25,00 &minus; 4,00 = 21,00<br>
+&nbsp;&nbsp;&nbsp;&nbsp;146 u × 21,00 = 3.066,00 &rarr; deterioro 3.285,00 &minus; 3.066,00 .. <b>219,00</b> &nbsp;<span style="color:#33424f">(estimación)</span><br>
+h) Nota de débito bancaria ................................... <b>55,00</b> &nbsp;<span style="color:#33424f">(comprobación)</span><br>
+<b>TOTAL DE AJUSTES</b> ........................................... <b>3.234,00</b>
+</div>
+
+<p><strong>2. Control anticipado de sumas</strong></p>
+<div class="calc-box"><span class="tit">Predicción del total ajustado</span>
+Total preliminar ............................................. 214.500,00<br>
++ Total de ajustes ........................................... &nbsp;&nbsp;3.234,00<br>
+&minus; Disminuciones sobre cuentas de saldo deudor:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Arriendos pagados por anticipado ....... 1.200,00<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Seguros pagados por anticipado ......... &nbsp;&nbsp;300,00<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Inventario de mercaderías .............. &nbsp;&nbsp;&nbsp;90,00<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Bancos ................................. &nbsp;&nbsp;&nbsp;55,00<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<b>Subtotal</b> ............................... <b>1.645,00</b> ..... &minus;1.645,00<br>
+<b>= TOTAL DEL BALANCE AJUSTADO</b> ............................... <b>216.089,00</b>
+</div>
+
+<p><strong>3. Los ocho ajustes por familia</strong></p>
+<div class="tabla-wrap"><table class="tabla">
+<thead><tr><th style="width:22%">Familia</th><th style="width:10%">N.º</th><th>Ajustes</th><th style="width:16%">Valor</th></tr></thead>
+<tbody>
+<tr><td><strong>Acumulación</strong></td><td class="ctr">1</td><td>Interés devengado del préstamo (d)</td><td class="num">250,00</td></tr>
+<tr><td><strong>Diferimiento</strong></td><td class="ctr">2</td><td>Arriendo consumido (a) · Seguro devengado (b)</td><td class="num">1.500,00</td></tr>
+<tr><td><strong>Estimación</strong></td><td class="ctr">3</td><td>Depreciación (c) · Deterioro de cartera (e) · Ajuste al VNR (g)</td><td class="num">1.339,00</td></tr>
+<tr><td><strong>Comprobación</strong></td><td class="ctr">2</td><td>Faltante en toma física (f) · Nota de débito bancaria (h)</td><td class="num">145,00</td></tr>
+<tr class="total"><td colspan="3">TOTAL</td><td class="num">3.234,00</td></tr>
+</tbody></table></div>
+
+<p><strong>4. Efecto sobre el resultado</strong></p>
+<p>Los ocho ajustes reconocen gastos y ninguno reconoce ingreso, de modo que el resultado del período <strong>disminuye en 3.234,00</strong>. No se confunda con el crecimiento del balance, que fue de 216.089,00 &minus; 214.500,00 = 1.589,00: esa cifra mide el efecto sobre el <em>total del documento</em>, no sobre la utilidad. Son dos preguntas distintas y casi nunca tienen la misma respuesta.</p>
+
+<p><strong>5. El orden importa</strong></p>
+<p>El ajuste del punto <strong>g</strong> se calcula sobre 146 unidades y no sobre 150, porque el faltante del punto <strong>f</strong> ya corrigió la cantidad. Si se invirtiera el orden, el deterioro sería 150 × (22,50 &minus; 21,00) = 225,00 en lugar de 219,00, y se estaría deteriorando mercadería que no existe. <strong>Primero se corrige la cantidad, después el valor.</strong></p>
+</div>
+
+</div><!-- /ejercicio -->
+
+<!-- ============================================================
+     PESTAÑA: CUESTIONARIO
+     ============================================================ -->
+<div id="cuestionario" class="panel">
+<h2>Cuestionario de evaluación</h2>
+
+<p>Diez preguntas: <strong>siete teóricas</strong>, que se responden con el contenido de este widget, y <strong>tres de análisis de caso</strong>, con datos propios. Responda todas y luego presione «Verificar respuestas».</p>
+
+<div id="avisoQi" class="aviso">Debe responder las diez preguntas antes de verificar. Revise cuáles quedaron en blanco.</div>
+
+<div class="item"><div class="enun"><span class="num-item">1</span>¿Cuál es la diferencia esencial entre el balance de comprobación preliminar y el ajustado? <span class="badge badge-teorica">Teórica</span></div><div class="opciones"><label><input type="radio" name="qi1" value="a"> <strong>a)</strong> El preliminar se hace a mano y el ajustado en hoja de trabajo.</label><label><input type="radio" name="qi1" value="b"> <strong>b)</strong> El ajustado siempre tiene un total mayor que el preliminar.</label><label><input type="radio" name="qi1" value="c"> <strong>c)</strong> El preliminar recoge solo lo documentado por transacciones externas; el ajustado incorpora además los hechos devengados, estimados y comprobados al cierre.</label><label><input type="radio" name="qi1" value="d"> <strong>d)</strong> El preliminar incluye las cuentas de resultado y el ajustado solo las de balance.</label></div><div class="feedback" id="fqi1"></div></div><div class="item"><div class="enun"><span class="num-item">2</span>De los siguientes errores de mayorización, ¿cuál <strong>no</strong> descuadra el balance de comprobación y por eso resulta el más peligroso? <span class="badge badge-teorica">Teórica</span></div><div class="opciones"><label><input type="radio" name="qi2" value="a"> <strong>a)</strong> Trasladar un valor del Haber del asiento al Debe de la cuenta.</label><label><input type="radio" name="qi2" value="b"> <strong>b)</strong> Trasladar el valor correcto a una cuenta equivocada.</label><label><input type="radio" name="qi2" value="c"> <strong>c)</strong> Sumar mal la columna del Debe de una cuenta T.</label><label><input type="radio" name="qi2" value="d"> <strong>d)</strong> Registrar un asiento con Debe y Haber distintos.</label></div><div class="feedback" id="fqi2"></div></div><div class="item"><div class="enun"><span class="num-item">3</span>Un balance preliminar cuadra en 300.000,00. Se practican ajustes por 8.000,00, de los cuales 2.500,00 son créditos aplicados a cuentas de saldo deudor. ¿En cuánto cuadrará el ajustado? <span class="badge badge-teorica">Teórica</span></div><div class="opciones"><label><input type="radio" name="qi3" value="a"> <strong>a)</strong> 308.000,00</label><label><input type="radio" name="qi3" value="b"> <strong>b)</strong> 310.500,00</label><label><input type="radio" name="qi3" value="c"> <strong>c)</strong> 302.500,00</label><label><input type="radio" name="qi3" value="d"> <strong>d)</strong> 305.500,00</label></div><div class="feedback" id="fqi3"></div></div><div class="item"><div class="enun"><span class="num-item">4</span>Una empresa reconoce al cierre los intereses causados y no pagados de un préstamo, y en el mismo cierre traslada a gasto la parte consumida de un seguro prepagado. ¿A qué familias pertenecen, en ese orden? <span class="badge badge-teorica">Teórica</span></div><div class="opciones"><label><input type="radio" name="qi4" value="a"> <strong>a)</strong> Acumulación y diferimiento.</label><label><input type="radio" name="qi4" value="b"> <strong>b)</strong> Diferimiento y acumulación.</label><label><input type="radio" name="qi4" value="c"> <strong>c)</strong> Estimación y comprobación.</label><label><input type="radio" name="qi4" value="d"> <strong>d)</strong> Acumulación y estimación.</label></div><div class="feedback" id="fqi4"></div></div><div class="item"><div class="enun"><span class="num-item">5</span>La toma física revela un faltante de inventario. ¿Por qué no debe registrarse contra la cuenta Costo de ventas? <span class="badge badge-teorica">Teórica</span></div><div class="opciones"><label><input type="radio" name="qi5" value="a"> <strong>a)</strong> Porque el costo de ventas ya está cerrado al momento de la toma física.</label><label><input type="radio" name="qi5" value="b"> <strong>b)</strong> Porque el faltante no representa una disminución del inventario.</label><label><input type="radio" name="qi5" value="c"> <strong>c)</strong> Porque distorsionaría el margen bruto y ocultaría un problema de control interno detrás de una cifra operativa; se reconoce en una cuenta de pérdida propia.</label><label><input type="radio" name="qi5" value="d"> <strong>d)</strong> Porque los faltantes solo se registran al cierre del ejercicio anual.</label></div><div class="feedback" id="fqi5"></div></div><div class="item"><div class="enun"><span class="num-item">6</span>En el balance de comprobación ajustado, el inventario aparece en el Debe por 2.334,50 y el deterioro acumulado de inventarios en el Haber por 72,50. ¿Por qué no se presenta directamente el neto de 2.262,00? <span class="badge badge-teorica">Teórica</span></div><div class="opciones"><label><input type="radio" name="qi6" value="a"> <strong>a)</strong> Porque el neto solo se calcula cuando la mercadería se vende.</label><label><input type="radio" name="qi6" value="b"> <strong>b)</strong> Porque el balance de comprobación presenta todas las cuentas por separado, incluidas las de valuación; la presentación neta corresponde al Estado de Situación Financiera.</label><label><input type="radio" name="qi6" value="c"> <strong>c)</strong> Porque el deterioro es un gasto y no puede restarse de un activo.</label><label><input type="radio" name="qi6" value="d"> <strong>d)</strong> Porque el neto descuadraría el documento.</label></div><div class="feedback" id="fqi6"></div></div><div class="item"><div class="enun"><span class="num-item">7</span>¿Cuál de las siguientes tareas <strong>no</strong> forma parte del trabajo que termina en el balance de comprobación ajustado? <span class="badge badge-teorica">Teórica</span></div><div class="opciones"><label><input type="radio" name="qi7" value="a"> <strong>a)</strong> Practicar los asientos de ajuste y mayorizarlos.</label><label><input type="radio" name="qi7" value="b"> <strong>b)</strong> Verificar que la suma de saldos deudores iguale la de acreedores.</label><label><input type="radio" name="qi7" value="c"> <strong>c)</strong> Elaborar la hoja de trabajo de tres secciones.</label><label><input type="radio" name="qi7" value="d"> <strong>d)</strong> Cancelar las cuentas de ingresos y gastos contra el resultado del ejercicio.</label></div><div class="feedback" id="fqi7"></div></div><div class="item"><div class="enun"><span class="num-item">8</span>Comercial Los Ceibos S.A. tiene un balance preliminar que cuadra en 158.000,00. Practica ajustes por 4.500,00, de los cuales 1.700,00 corresponden a créditos aplicados a cuentas de saldo deudor. ¿En cuánto cuadrará su balance ajustado? <span class="badge badge-caso">Análisis de caso</span></div><div class="opciones"><label><input type="radio" name="qi8" value="a"> <strong>a)</strong> 160.800,00</label><label><input type="radio" name="qi8" value="b"> <strong>b)</strong> 162.500,00</label><label><input type="radio" name="qi8" value="c"> <strong>c)</strong> 156.300,00</label><label><input type="radio" name="qi8" value="d"> <strong>d)</strong> 159.700,00</label></div><div class="feedback" id="fqi8"></div></div><div class="item"><div class="enun"><span class="num-item">9</span>Importadora del Pacífico S.A. tiene una cartera de 60.000,00 al cierre y un deterioro acumulado previo de 480,00. Sus ventas a crédito del mes fueron 52.000,00 y su política estima el deterioro en el 1% de esas ventas, con límite acumulado del 10% de la cartera. ¿Cuál es el ajuste y cuál el deterioro acumulado resultante? <span class="badge badge-caso">Análisis de caso</span></div><div class="opciones"><label><input type="radio" name="qi9" value="a"> <strong>a)</strong> Ajuste 600,00 y acumulado 1.080,00</label><label><input type="radio" name="qi9" value="b"> <strong>b)</strong> Ajuste 120,00 y acumulado 600,00</label><label><input type="radio" name="qi9" value="c"> <strong>c)</strong> Ajuste 520,00 y acumulado 1.000,00</label><label><input type="radio" name="qi9" value="d"> <strong>d)</strong> No procede ajuste, porque ya se superó el límite</label></div><div class="feedback" id="fqi9"></div></div><div class="item"><div class="enun"><span class="num-item">10</span>Almacenes Sauces S.A. tiene al cierre 240 unidades a un costo de 18,00 cada una. El precio estimado de venta bajó a 19,00 y los costos estimados de venta son de 2,50 por unidad. ¿Qué ajuste corresponde? <span class="badge badge-caso">Análisis de caso</span></div><div class="opciones"><label><input type="radio" name="qi10" value="a"> <strong>a)</strong> Ninguno, porque el precio de venta de 19,00 sigue siendo mayor que el costo de 18,00</label><label><input type="radio" name="qi10" value="b"> <strong>b)</strong> Deterioro de 360,00, porque el valor neto realizable de 16,50 es inferior al costo de 18,00</label><label><input type="radio" name="qi10" value="c"> <strong>c)</strong> Deterioro de 240,00, calculado sobre la diferencia entre 19,00 y 18,00</label><label><input type="radio" name="qi10" value="d"> <strong>d)</strong> Un ingreso de 360,00, porque el inventario se revalúa al precio de mercado</label></div><div class="feedback" id="fqi10"></div></div>
+
+<button class="btn" onclick="verificarQi()">Verificar respuestas</button>
+<button class="btn btn-sec" onclick="reiniciarQi()">Reiniciar</button>
+
+<div id="resQi" class="resultado">
+  <div class="nota" id="notaQi"></div>
+  <div class="barra"><div class="barra-relleno" id="barraQi"></div></div>
+  <p id="msgQi"></p>
+</div>
+
+<div class="nota-lateral"><span class="rot">Antes del examen del segundo parcial</span>
+<p>Las preguntas 3 y 8 usan la misma regla con datos distintos: si acertó una y falló la otra, el problema no es de comprensión sino de lectura del enunciado. Vuelva sobre ellas con lápiz y escriba la fórmula antes de reemplazar los valores. Es exactamente el tipo de error que más puntos cuesta en un examen.</p></div>
+
+</div><!-- /cuestionario -->
+
+<!-- ============================================================
+     PESTAÑA: ACTIVIDAD CON IA
+     ============================================================ -->
+<div id="ia" class="panel">
+<h2>Actividad con Inteligencia Artificial</h2>
+
+<p>La actividad se puede ejecutar sin costo en <strong>Claude</strong> (<a href="https://claude.ai" target="_blank" rel="noopener">claude.ai</a>), cuyo plan gratuito basta para este trabajo. El orden es siempre el mismo y no se puede alterar: <strong>usted resuelve, después consulta, y al final audita</strong>. Hoy la exigencia sube, porque va a pedirle a la inteligencia artificial que haga algo que hace mal por naturaleza: <em>decidir qué ajustes corresponden y cuáles no</em>.</p>
+
+<h3>Tiempo 1 — Resuelva usted, en papel</h3>
+
+<p>Tome el caso de <strong>Distribuidora Nueve de Octubre S.A.</strong> del Ejercicio Interactivo de este mismo archivo —balance preliminar de 214.500,00 y ocho puntos de información adicional— y agregue tres datos más que la contadora encontró al final del día:</p>
+
+<ol>
+<li>La compañía recibió el 20 de agosto un <strong>anticipo de un cliente por 5.000,00</strong> por mercadería que se entregará en septiembre. El auxiliar lo registró como Ventas.</li>
+<li>El <strong>rol de agosto se pagó el 29</strong>, completo, sin dejar saldo pendiente.</li>
+<li>La empresa tiene un <strong>terreno</strong> valorado en 40.000,00 y un contrato de arriendo de bodega firmado en agosto, cuyo primer pago vence el 5 de septiembre.</li>
+</ol>
+
+<p>Con esa información, escriba en papel: <strong>(i)</strong> qué ajuste corresponde por el anticipo del cliente y por qué; <strong>(ii)</strong> qué ajustes <em>no</em> corresponden entre los tres datos nuevos, y la razón de cada uno; <strong>(iii)</strong> cómo cambia el total del balance ajustado respecto de los 216.089,00 que usted calculó en el ejercicio.</p>
+
+<div class="nota-lateral"><span class="rot">Antes de seguir</span>
+<p>La parte (ii) es la más importante y la que nadie practica. Un ejercicio integrador se evalúa tanto por los ajustes que se registran como por los que se dejan de registrar con fundamento. Escriba sus tres respuestas antes de pasar al Tiempo 2.</p></div>
+
+<h3>Tiempo 2 — Corrija el prompt antes de enviarlo</h3>
+
+<p>El prompt siguiente tiene <strong>cuatro errores deliberados</strong>: dos de dato y dos de criterio. Encuéntrelos usted, corríjalos y solo entonces envíelo.</p>
+
+<div class="calc-box"><span class="tit">Prompt con errores — no lo copie tal cual</span>
+Actúa como contador general en Ecuador bajo NIIF. Una compañía comercial tiene<br>
+un balance de comprobación preliminar que cuadra en 214.500,00. Al cierre se<br>
+determina lo siguiente: el terreno de 40.000,00 se deprecia a veinte años; el<br>
+inventario tiene 150 unidades a 22,50 de costo y su valor neto realizable es de<br>
+21,00, pero como el inventario todavía no se ha vendido no corresponde<br>
+reconocer deterioro; se recibió un anticipo de cliente de 5.000,00 que ya fue<br>
+registrado como Ventas y debe permanecer así porque el dinero ya ingresó; y el<br>
+préstamo de 30.000,00 al 10% anual no genera gasto en agosto porque el pago es<br>
+semestral. Calcula el balance de comprobación ajustado.
+</div>
+
+<div class="autocheck"><span class="rot">Compruebe su corrección</span>
+<div class="preg">¿Encontró los cuatro errores? Despliegue solo después de haberlos listado por escrito.</div>
+<button class="autocheck-btn" onclick="verResp('r5',this)">Ver los cuatro errores</button>
+<div id="r5" class="autocheck-resp">
+<ol>
+<li><strong>«El terreno se deprecia a veinte años.»</strong> Los terrenos se consideran de vida útil ilimitada y <strong>no se deprecian</strong>. El prompt introduce un gasto que no existe y, además, deteriora un activo que no pierde capacidad de servicio por el uso.</li>
+<li><strong>«Como el inventario todavía no se ha vendido no corresponde reconocer deterioro.»</strong> Es exactamente al revés. Dentro del contenido de la NIC 2 se establece que los inventarios se miden al menor valor entre el costo y el valor neto realizable, y la pérdida se reconoce <strong>cuando el valor cae, no cuando la mercadería se vende</strong>. Además falta el dato del faltante: el deterioro debe calcularse sobre las unidades que realmente existen.</li>
+<li><strong>«El anticipo debe permanecer como Ventas porque el dinero ya ingresó.»</strong> Confunde cobro con devengo. El ingreso se reconoce cuando se transfiere el control de la mercadería, no cuando entra el dinero. Corresponde un ajuste que debita <em>Ventas</em> por 5.000,00 y acredita <em>Anticipos de clientes</em>, una cuenta de <strong>pasivo</strong>: la empresa debe mercadería, no la ha vendido.</li>
+<li><strong>«El préstamo no genera gasto en agosto porque el pago es semestral.»</strong> El interés se devenga por el paso del tiempo, con independencia de la fecha de pago. Corresponde reconocer 30.000,00 × 10% ÷ 12 = 250,00 como gasto y como <em>Intereses por pagar</em>.</li>
+</ol>
+<p>Reescriba el prompt indicando que el terreno no se deprecia, que el inventario debe medirse al menor entre costo y valor neto realizable después de ajustar el faltante, que el anticipo de cliente es un pasivo y no un ingreso, y que el interés se devenga mensualmente. Añada al final: <em>«Presenta la hoja de trabajo de tres secciones y aplica la regla de control de sumas para verificar el total antes de mostrarlo.»</em></p>
+</div>
+</div>
+
+<h3>Tiempo 3 — Audite la respuesta de la inteligencia artificial</h3>
+
+<div class="tabla-wrap"><table class="tabla">
+<thead><tr><th style="width:6%">#</th><th style="width:36%">Punto a verificar</th><th>Qué buscar concretamente</th></tr></thead>
+<tbody>
+<tr><td class="ctr">1</td><td>Ajustes que no corresponden</td><td>Que <strong>no</strong> aparezcan: depreciación del terreno, ajuste por sueldos devengados —el rol se pagó— ni ajuste por el arriendo de bodega, cuyo primer pago vence en septiembre.</td></tr>
+<tr><td class="ctr">2</td><td>Anticipo del cliente</td><td>Debe debitar Ventas y acreditar un pasivo. Si lo deja como ingreso o lo lleva a patrimonio, está mal.</td></tr>
+<tr><td class="ctr">3</td><td>Orden de los ajustes de inventario</td><td>Primero el faltante (cantidad), después el valor neto realizable (valor). El deterioro debe ser 219,00 y no 225,00.</td></tr>
+<tr><td class="ctr">4</td><td>Partida doble por ajuste</td><td>Sume usted el Debe y el Haber de cada asiento. Un modelo puede presentar un asiento con tres líneas y una suma que no cuadra.</td></tr>
+<tr><td class="ctr">5</td><td>Regla de control de sumas</td><td>Que identifique correctamente cuáles créditos van sobre cuentas de saldo deudor y los reste. Es el paso que más se omite.</td></tr>
+<tr><td class="ctr">6</td><td>Cuentas de valuación</td><td>Que las depreciaciones acumuladas y los deterioros aparezcan en el Haber, y no restados directamente del activo.</td></tr>
+<tr><td class="ctr">7</td><td>Cuadre final</td><td>Que las dos columnas del ajustado sean iguales. Verifique la suma con calculadora: no acepte el total que el modelo afirma.</td></tr>
+<tr><td class="ctr">8</td><td>Cita normativa</td><td>Si respalda su respuesta citando numerales o incisos internos de la NIC 2, exíjale que reformule la referencia de manera descriptiva y que identifique las resoluciones por su número.</td></tr>
+</tbody></table></div>
+
+<div class="alerta"><span class="rot">La pregunta que separa el cálculo del criterio</span>
+<p>Termine preguntándole: <em>«¿qué ajustes decidiste NO practicar y por qué?»</em>. Un modelo que solo enumera lo que hizo no está razonando; uno que puede justificar sus omisiones sí. Compare esa respuesta con su parte (ii) del Tiempo 1: ahí está la medida real de lo que usted aprendió en esta unidad.</p></div>
+
+<h3>Producto a entregar</h3>
+
+<div class="ejemplo"><span class="rot">Una página, cuatro secciones</span>
+<ol>
+<li><strong>Sus tres respuestas del Tiempo 1</strong>, tal como las escribió, con los cálculos visibles.</li>
+<li><strong>Los cuatro errores del prompt</strong>, identificados por usted, y el prompt corregido que envió.</li>
+<li><strong>La auditoría de la respuesta</strong> con los ocho puntos, indicando cuáles pasó y cuáles no.</li>
+<li><strong>Un párrafo de cierre</strong>: ¿en qué se equivocó usted y en qué se equivocó el modelo? Si coincidieron en el error, ¿por qué cree que fue?</li>
+</ol>
+<p style="margin-bottom:0"><strong>Criterio de evaluación.</strong> Se evalúa la <em>distancia</em> entre el Tiempo 1 y el Tiempo 3: qué detectó usted que el modelo no detectó, y qué corrigió del modelo con fundamento propio. Un trabajo que transcribe la respuesta del modelo, aunque sea correcta, no acredita aprendizaje. Un trabajo que encuentra y demuestra un error real de la inteligencia artificial obtiene la calificación máxima, aunque el cálculo inicial del estudiante haya tenido fallas.</p></div>
+
+</div><!-- /ia -->
+
+<!-- ============================================================
+     PESTAÑA: REFLEXIÓN
+     ============================================================ -->
+<div id="reflexion" class="panel">
+<h2>Reflexión</h2>
+
+<p>Antes de las preguntas, el encuadre de siempre, que hoy vale más que nunca. <strong>Negocios Internacionales es mucho más amplio que «negociar».</strong> La carrera se lee habitualmente como si consistiera en sentarse en una mesa a conseguir un buen precio, y esa es apenas una de sus tareas. Un profesional de esta carrera analiza costos, lee estados financieros extranjeros redactados con otras normas y en otras monedas, diseña y sostiene cadenas de abastecimiento, gestiona riesgo cambiario, aplica normativa aduanera y tributaria, y sustenta sus decisiones ante bancos, socios, auditores y autoridades. Nada de lo que usted hizo en estos dos archivos fue contabilidad «por cumplir un requisito»: fue construir la información con la que todo lo anterior se decide.</p>
+
+<h3>Preguntas para pensar y escribir</h3>
+
+<p>No tienen respuesta correcta. Escríbalas.</p>
+
+<div class="item">
+<div class="enun"><span class="num-item">1</span>Empiece por algo que usted tenga guardado.</div>
+<p>Piense en un objeto que compró hace tiempo y todavía conserva: una bicicleta, un teléfono, unos audífonos, un par de zapatos. Hoy no vale lo que le costó. Usted lo sabe sin haber hecho ningún cálculo. <strong>¿Cómo sabe cuánto vale hoy? ¿Y si tuviera que ponerle un número exacto para venderlo mañana, en qué se basaría?</strong> Eso que usted acaba de hacer con la cabeza es, exactamente, lo que hicieron los ajustes 20 y 24 de este archivo.</p>
+</div>
+
+<div class="item">
+<div class="enun"><span class="num-item">2</span>De ese objeto a una cadena de personas.</div>
+<p>Para que ese objeto llegara a sus manos hubo un fabricante, un exportador, un transportista, un importador, un distribuidor y un vendedor. Ninguno conocía a los otros dos que venían después. Todos entregaron mercadería o dinero confiando en información que no podían verificar personalmente. <strong>¿Qué pasaría en esa cadena si uno de ellos reportara la utilidad aparente de 2.511,70 en lugar de la real de 582,70? ¿A quién le costaría, y en qué momento se descubriría?</strong></p>
+</div>
+
+<div class="item">
+<div class="enun"><span class="num-item">3</span>La cifra que casi engaña.</div>
+<p>El balance preliminar de Comercial El Astillero S.A. cuadraba perfectamente y estaba equivocado. <strong>¿Qué otras cosas en su vida cuadran y sin embargo no son verdad? ¿Un presupuesto personal que no incluye el desgaste del celular, un plan de estudio que no cuenta el cansancio, una promesa que no considera el tiempo real que toma cumplirla?</strong> El principio de devengo no es una regla contable: es una forma de no engañarse.</p>
+</div>
+
+<div class="item">
+<div class="enun"><span class="num-item">4</span>Exploración vocacional.</div>
+<p>Negocios Internacionales tiene cuatro grandes áreas: <strong>comercio exterior</strong>, <strong>finanzas internacionales</strong>, <strong>marketing y negociación internacional</strong>, y <strong>marco legal y normativo</strong>. En estos dos archivos las cuatro aparecieron sobre el mismo caso. <strong>¿En cuál se imagina trabajando dentro de cinco años? ¿Qué parte del trabajo de hoy —analizar documentos, calcular impuestos, valorar inventario, estimar deterioros, decidir qué ajuste no corresponde— le resultó más natural, y cuál le pesó más?</strong> Lo que le pesa también informa, y a veces informa mejor.</p>
+</div>
+
+<div class="item">
+<div class="enun"><span class="num-item">5</span>Inteligencia emocional: el descuadre.</div>
+<p>Casi con seguridad, en algún punto de estos dos archivos su balance no cuadró, o su Kardex arrastró mal, o un ajuste le dio distinto. <strong>¿Qué sintió en ese momento? ¿Cuánto tiempo pasó antes de encontrar el error, y qué hizo mientras tanto: revisó con calma, empezó de cero, se frustró, lo dejó para después?</strong> En contabilidad el error siempre está y siempre se puede encontrar; lo que varía es la tolerancia de cada persona a buscarlo. Esa tolerancia se entrena, y es una competencia profesional tan real como saber calcular una retención.</p>
+</div>
+
+<div class="item">
+<div class="enun"><span class="num-item">6</span>Autoconocimiento: qué tipo de profesional está siendo.</div>
+<p>Hoy terminó una unidad completa. <strong>¿Trabajó estos dos archivos con papel y lápiz, resolviendo antes de mirar, o fue leyendo las respuestas y asintiendo?</strong> Sea honesto con usted mismo: nadie más lo va a saber, y sin embargo el examen del segundo parcial sí lo va a notar. Y una pregunta más difícil: <strong>si tuviera que sostener ante un gerente que la utilidad real es 582,70 y no 2.511,70, ¿se sentiría capaz de defenderlo con los papeles en la mano?</strong> Esa capacidad —sostener una cifra incómoda con fundamento— es la que define a un profesional de la información financiera.</p>
+</div>
+
+<div class="nota-lateral"><span class="rot">Cierre de la Unidad 3</span>
+<p>Con este archivo termina la Unidad 3. Mañana, martes 1 de septiembre, empieza la Unidad 4 con el Estado de Resultado Integral, construido sobre el mismo balance ajustado que usted acaba de terminar. Guarde sus hojas de cálculo: van a servir.</p></div>
+
+</div><!-- /reflexion -->
+
+<!-- ============================================================
+     PESTAÑA: BIBLIOGRAFÍA
+     ============================================================ -->
+<div id="biblio" class="panel">
+<h2>Bibliografía</h2>
+
+<p>Referencias en formato APA, séptima edición. Se recomienda verificar disponibilidad y datos de edición en el repositorio digital de la Universidad de Guayaquil o en Google Scholar antes de citarlas en un trabajo evaluado.</p>
+
+<div class="biblio-grid">
+<div class="biblio-card"><span class="tipo">Bibliografía básica del sílabo</span>
+<p>Zapata Sánchez, P. (2011). <em>Laboratorio de contabilidad general</em> (7.ª ed.). McGraw-Hill Interamericana.</p></div>
+
+<div class="biblio-card"><span class="tipo">Bibliografía complementaria</span>
+<p>Zapata Sánchez, P. (2017). <em>Contabilidad general: con base en Normas Internacionales de Información Financiera</em> (8.ª ed.). Alfaomega.</p></div>
+
+<div class="biblio-card"><span class="tipo">Bibliografía básica del sílabo</span>
+<p>Moreno Fernández, J. A. (2014). <em>Contabilidad básica</em> (4.ª ed.). Grupo Editorial Patria.</p></div>
+
+<div class="biblio-card"><span class="tipo">Bibliografía básica del sílabo</span>
+<p>Vite Rangel, V. T. (s. f.). <em>Contabilidad general</em>. Editorial Digital UNID. https://elibro.net/es/ereader/uguayaquil/41179</p></div>
+
+<div class="biblio-card"><span class="tipo">Norma internacional</span>
+<p>IFRS Foundation. (s. f.). <em>Norma Internacional de Contabilidad 1: Presentación de estados financieros</em>. https://www.ifrs.org</p></div>
+
+<div class="biblio-card"><span class="tipo">Norma internacional</span>
+<p>IFRS Foundation. (s. f.). <em>Norma Internacional de Contabilidad 2: Inventarios</em>. https://www.ifrs.org</p></div>
+
+<div class="biblio-card"><span class="tipo">Norma internacional</span>
+<p>IFRS Foundation. (s. f.). <em>Norma Internacional de Contabilidad 16: Propiedades, planta y equipo</em>. https://www.ifrs.org</p></div>
+
+<div class="biblio-card"><span class="tipo">Normativa nacional</span>
+<p>Servicio de Rentas Internas. (s. f.). <em>Normativa tributaria vigente: Ley de Régimen Tributario Interno y su reglamento de aplicación</em>. https://www.sri.gob.ec</p></div>
+
+<div class="biblio-card"><span class="tipo">Organismo de control</span>
+<p>Superintendencia de Compañías, Valores y Seguros. (s. f.). <em>Normativa contable y formularios para la presentación de estados financieros bajo NIIF</em>. https://www.supercias.gob.ec</p></div>
+</div>
+
+<div class="nota-lateral"><span class="rot">Nota sobre las referencias normativas</span>
+<p>Las normas internacionales y la normativa tributaria y laboral ecuatoriana se actualizan de manera continua. Por esa razón se citan por su fuente institucional y no por una fecha de edición fija: siempre debe consultarse la versión vigente a la fecha del trabajo. Al citarlas en un informe profesional, indique además la fecha de consulta. Las resoluciones aplicadas en este caso —NAC-DGERCGC26-00000009 para la retención en la fuente del impuesto a la renta, vigente desde el 1 de marzo de 2026, y NAC-DGERCGC20-00000061 para las retenciones del IVA— se identifican por su número, que sí es un dato verificable y estable.</p></div>
+
+</div><!-- /biblio -->
+
+<div class="footer">
+Universidad de Guayaquil · Facultad de Ciencias Administrativas · Carrera de Negocios Internacionales<br>
+Contabilidad General · Unidad 3 · Día 13 — Ejercicio integrador de una compañía comercial, Parte II · Lunes 31 de agosto de 2026<br>
+Cierre de la Unidad 3. Continúa el Día 14 (martes 1 de septiembre de 2026) con el Estado de Resultado Integral, Unidad 4.
+</div>
+
+</div><!-- /container -->
+
+<script>
+/* ============================================================
+   1. NAVEGACIÓN POR PESTAÑAS
+   ============================================================ */
+function showTab(id, btn){
+  var paneles = document.querySelectorAll('.panel');
+  for(var i=0;i<paneles.length;i++){ paneles[i].classList.remove('active'); }
+  var botones = document.querySelectorAll('.tab');
+  for(var j=0;j<botones.length;j++){ botones[j].classList.remove('active'); }
+  document.getElementById(id).classList.add('active');
+  if(btn){ btn.classList.add('active'); }
+  window.scrollTo(0,0);
+}
+
+/* ============================================================
+   2. ACORDEÓN DEL REPASO
+   ============================================================ */
+function toggleAc(id, btn){
+  var p = document.getElementById(id);
+  var f = btn.querySelector('.flecha');
+  if(p.classList.contains('abierto')){
+    p.classList.remove('abierto');
+    f.innerHTML = '&#9654;';
+  } else {
+    p.classList.add('abierto');
+    f.innerHTML = '&#9660;';
+  }
+}
+
+/* ============================================================
+   3. AUTOCHEQUEOS (revelar respuesta razonada)
+   ============================================================ */
+function verResp(id, btn){
+  var r = document.getElementById(id);
+  if(r.classList.contains('visible')){
+    r.classList.remove('visible');
+    btn.textContent = 'Ver respuesta razonada';
+  } else {
+    r.classList.add('visible');
+    btn.textContent = 'Ocultar respuesta';
+  }
+}
+
+/* ============================================================
+   4. EJERCICIO INTERACTIVO
+   ============================================================ */
+var eiClaves = {
+  ei1:'b', ei2:'c', ei3:'a', ei4:'d', ei5:'b',
+  ei6:'d', ei7:'c', ei8:'a', ei9:'c', ei10:'b'
+};
+var eiExplica = {
+  ei1:'La respuesta correcta es gasto 1.200,00 y saldo 7.200,00. El saldo de 8.400,00 corresponde a siete meses pendientes, de modo que el consumo mensual es 8.400,00 ÷ 7 = 1.200,00 y el activo conserva los seis meses restantes, es decir 7.200,00. Responder 8.400,00 y saldo cero llevaría a gasto todo el contrato de una vez; la opción de 1.400,00 divide entre seis meses en lugar de siete.',
+  ei2:'La respuesta correcta es 700,00. Edificio 96.000,00 ÷ 240 meses = 400,00; maquinaria 36.000,00 ÷ 120 meses = 300,00; terreno: 0,00, porque se considera de vida útil ilimitada y no se deprecia. Las opciones 1.033,33 y 866,67 incluyen indebidamente el terreno, y 1.100,00 aplica a la maquinaria una vida útil demasiado corta.',
+  ei3:'La respuesta correcta es 250,00, acreditando Intereses por pagar. El cálculo es 30.000,00 × 10% = 3.000,00 al año, dividido entre doce meses. Se acredita un pasivo porque el interés se causó pero no se pagó; acreditar Bancos supondría un desembolso que no ocurrió, y acreditar el préstamo confundiría capital con interés.',
+  ei4:'La respuesta correcta es 420,00: el 1% de las ventas a crédito del período, 42.000,00. La opción 4.200,00 aplica el 10%; 2.145,00 no corresponde a ninguna base del enunciado. Recuerde además que la contrapartida es una cuenta de valuación —(–) Deterioro acumulado de cuentas por cobrar—, de saldo acreedor, y que la cartera bruta no se modifica.',
+  ei5:'La respuesta correcta es 90,00, a Pérdida por faltante de inventario. Faltan 4 unidades (150 − 146) valoradas al costo de 22,50, es decir 90,00. Llevarlas a Costo de ventas distorsionaría el margen bruto y ocultaría un problema de control interno; por eso se reconocen en una cuenta de pérdida propia y visible. La opción 3.375,00 corresponde al inventario completo según el Kardex.',
+  ei6:'La respuesta correcta es 219,00. El faltante ya corrigió la cantidad, de modo que el ajuste se calcula sobre 146 unidades: costo 146 × 22,50 = 3.285,00; valor neto realizable unitario 25,00 − 4,00 = 21,00, de modo que 146 × 21,00 = 3.066,00; la diferencia es 219,00. La opción 225,00 es el error clásico: aplicar el deterioro a las 150 unidades del Kardex, es decir deteriorar cuatro unidades que ya no existen. Primero se corrige la cantidad, después el valor.',
+  ei7:'La respuesta correcta es 216.089,00. Se aplica la regla de control de sumas: 214.500,00 + 3.234,00 − 1.645,00. Los 1.645,00 son los créditos aplicados a cuentas de saldo deudor: arriendo prepagado 1.200,00, seguro prepagado 300,00, inventario 90,00 y bancos 55,00. La opción 217.734,00 olvida restar esas disminuciones, y 214.500,00 supone que los ajustes no afectan el total.',
+  ei8:'La respuesta correcta es acumulación, diferimiento y comprobación. El interés del préstamo ya se causó por el paso del tiempo pero no hay documento ni desembolso: es acumulación. El seguro prepagado tiene el dinero ya desembolsado y el consumo pendiente: es diferimiento. La nota de débito bancaria apareció al contrastar la contabilidad con una fuente externa, el estado de cuenta: es comprobación.',
+  ei9:'La respuesta correcta es (–) Depreciación acumulada edificio. Es una cuenta de valuación de saldo acreedor que acumula el consumo del activo sin borrar su costo histórico. Acreditar directamente la cuenta Edificio haría perder el dato del costo y volvería imposible calcular la depreciación de los meses siguientes. El gasto va al Debe, no al Haber, y el patrimonio no se toca en un asiento de ajuste por depreciación.',
+  ei10:'La respuesta correcta es que lo disminuyen en 3.234,00. Los ocho ajustes reconocen gastos y ninguno reconoce ingreso, de modo que el resultado cae por el importe total de los ajustes. No hay que confundirlo con el crecimiento del balance, que fue de 1.589,00: esa cifra mide el efecto sobre el total del documento, no sobre la utilidad. Son dos preguntas distintas y casi nunca tienen la misma respuesta.'
+};
+function verificarEi(){
+  var faltan = false;
+  for(var k in eiClaves){
+    if(!document.querySelector('input[name="'+k+'"]:checked')){ faltan = true; }
+  }
+  var aviso = document.getElementById('avisoEi');
+  if(faltan){ aviso.classList.add('visible'); document.getElementById('resEi').classList.remove('visible'); return; }
+  aviso.classList.remove('visible');
+  var correctas = 0, total = 0;
+  for(var k2 in eiClaves){
+    total++;
+    var sel = document.querySelector('input[name="'+k2+'"]:checked').value;
+    var fb = document.getElementById('f'+k2);
+    fb.classList.add('visible');
+    fb.classList.remove('ok'); fb.classList.remove('mal');
+    if(sel === eiClaves[k2]){
+      correctas++;
+      fb.classList.add('ok');
+      fb.innerHTML = '<span class="vered">Correcto.</span>' + eiExplica[k2];
+    } else {
+      fb.classList.add('mal');
+      fb.innerHTML = '<span class="vered">Revise este ítem.</span>' + eiExplica[k2];
+    }
+  }
+  var pct = Math.round(correctas*100/total);
+  document.getElementById('notaEi').textContent = correctas + ' de ' + total + ' correctas (' + pct + '%)';
+  var msg;
+  if(pct === 100){ msg = 'Dominio completo del cálculo de ajustes y de la regla de control de sumas. Pase al Cuestionario.'; }
+  else if(pct >= 80){ msg = 'Muy buen manejo. Revise los ítems fallados y confirme el cálculo en papel antes de seguir.'; }
+  else if(pct >= 60){ msg = 'Base correcta con vacíos puntuales. Vuelva a los Temas 3 y 4 y repita el ejercicio.'; }
+  else if(pct >= 40){ msg = 'Conviene releer los Temas 2, 3 y 4 completos antes de repetir. No avance todavía al Cuestionario.'; }
+  else { msg = 'Retome el widget desde el Repaso, en especial el bloque de las cuatro familias de ajustes.'; }
+  document.getElementById('msgEi').textContent = msg;
+  document.getElementById('resEi').classList.add('visible');
+  var barra = document.getElementById('barraEi');
+  barra.style.width = '0%';
+  setTimeout(function(){ barra.style.width = pct + '%'; }, 60);
+}
+function reiniciarEi(){
+  for(var k in eiClaves){
+    var ops = document.getElementsByName(k);
+    for(var i=0;i<ops.length;i++){ ops[i].checked = false; }
+    var fb = document.getElementById('f'+k);
+    fb.classList.remove('visible'); fb.classList.remove('ok'); fb.classList.remove('mal');
+    fb.innerHTML = '';
+  }
+  document.getElementById('resEi').classList.remove('visible');
+  document.getElementById('avisoEi').classList.remove('visible');
+  document.getElementById('barraEi').style.width = '0%';
+}
+
+/* ============================================================
+   5. CUESTIONARIO
+   ============================================================ */
+var qiClaves = {
+  qi1:'c', qi2:'b', qi3:'d', qi4:'a', qi5:'c',
+  qi6:'b', qi7:'d', qi8:'a', qi9:'c', qi10:'b'
+};
+var qiExplica = {
+  qi1:'La diferencia es de contenido, no de forma ni de tamaño. El preliminar recoge solo lo jornalizado a partir de documentos externos durante el período; el ajustado incorpora además los hechos devengados, estimados y comprobados al cierre. Ambos incluyen todas las cuentas, de balance y de resultado, y el total del ajustado puede ser mayor, menor o igual según el signo de los ajustes.',
+  qi2:'Trasladar el valor correcto a una cuenta equivocada no descuadra nada: el Debe y el Haber siguen siendo iguales y el balance cuadra perfectamente con la cifra en el lugar que no era. Los otros tres errores sí producen descuadre y por eso se detectan solos. Esa es la razón por la que el cuadre del balance de comprobación comprueba mucho menos de lo que la mayoría cree.',
+  qi3:'La respuesta correcta es 305.500,00. Se aplica 300.000,00 + 8.000,00 − 2.500,00. Los créditos aplicados a cuentas de saldo deudor no agregan nada al total, porque en la misma columna del Debe el gasto nuevo suma y el activo consumido resta. Quien responde 308.000,00 olvidó la resta; 310.500,00 suma las disminuciones en lugar de restarlas.',
+  qi4:'Acumulación y diferimiento, en ese orden. El interés causado y no pagado es acumulación: el hecho ocurrió pero no hay documento ni movimiento de dinero. El seguro prepagado es diferimiento: el dinero ya salió y ahora se traslada a resultados la porción consumida. La prueba rápida está en la cuenta acreditada: si se acredita un pasivo que nace, es acumulación; si se acredita un activo que disminuye, es diferimiento.',
+  qi5:'Porque distorsionaría el margen bruto y ocultaría un problema de control interno detrás de una cifra operativa que nadie revisa con detalle. El faltante corresponde a mercadería que no se vendió, de modo que reconocerlo dentro del costo de ventas mezclaría dos hechos de naturaleza distinta. Se registra en una cuenta de pérdida propia, precisamente para que sea visible y se investigue.',
+  qi6:'Porque el balance de comprobación presenta todas las cuentas por separado, incluidas las de valuación. Mostrar solo el neto haría perder dos informaciones distintas: el costo de la mercadería y la corrección aplicada. La presentación neta corresponde al Estado de Situación Financiera, que es materia del Día 16. Y el neto no descuadraría nada: simplemente ocultaría información.',
+  qi7:'Cancelar las cuentas de ingresos y gastos contra el resultado del ejercicio no forma parte de este trabajo: es el asiento de cierre, que corresponde al Día 15, dentro de la Unidad 4. En el balance de comprobación ajustado las cuentas de resultado conservan íntegramente su saldo. Las otras tres tareas sí pertenecen al proceso que termina en el balance ajustado.',
+  qi8:'La respuesta correcta es 160.800,00: 158.000,00 + 4.500,00 − 1.700,00. La opción 162.500,00 omite restar los créditos aplicados a cuentas de saldo deudor, y 156.300,00 resta los ajustes en lugar de sumarlos. Es exactamente la misma regla de la pregunta 3 con datos distintos: si acertó una y falló la otra, revise su lectura del enunciado antes que su comprensión del concepto.',
+  qi9:'La respuesta correcta es ajuste 520,00 y acumulado 1.000,00. El 1% de las ventas a crédito del período (52.000,00) es 520,00, y el deterioro acumulado pasa de 480,00 a 1.000,00. El límite del 10% de la cartera son 6.000,00, de modo que no se supera y el ajuste procede íntegro. La opción 600,00 aplica el porcentaje a la cartera en lugar de a las ventas a crédito.',
+  qi10:'La respuesta correcta es un deterioro de 360,00. El valor neto realizable es el precio estimado de venta menos los costos estimados de venta: 19,00 − 2,50 = 16,50, inferior al costo de 18,00. El ajuste es 240 × (18,00 − 16,50) = 360,00. Responder que no procede ajuste confunde el precio de venta con el valor neto realizable, que es precisamente el error que la comparación busca evitar; y en ningún caso se reconoce un ingreso, porque el inventario no se revalúa al alza.'
+};
+function verificarQi(){
+  var faltan = false;
+  for(var k in qiClaves){
+    if(!document.querySelector('input[name="'+k+'"]:checked')){ faltan = true; }
+  }
+  var aviso = document.getElementById('avisoQi');
+  if(faltan){ aviso.classList.add('visible'); document.getElementById('resQi').classList.remove('visible'); return; }
+  aviso.classList.remove('visible');
+  var correctas = 0, total = 0;
+  for(var k2 in qiClaves){
+    total++;
+    var sel = document.querySelector('input[name="'+k2+'"]:checked').value;
+    var fb = document.getElementById('f'+k2);
+    fb.classList.add('visible');
+    fb.classList.remove('ok'); fb.classList.remove('mal');
+    if(sel === qiClaves[k2]){
+      correctas++;
+      fb.classList.add('ok');
+      fb.innerHTML = '<span class="vered">Correcto.</span>' + qiExplica[k2];
+    } else {
+      fb.classList.add('mal');
+      fb.innerHTML = '<span class="vered">Revise esta pregunta.</span>' + qiExplica[k2];
+    }
+  }
+  var pct = Math.round(correctas*100/total);
+  var emoji;
+  if(pct === 100){ emoji = ' 🏆'; }
+  else if(pct >= 80){ emoji = ' 🎯'; }
+  else if(pct >= 60){ emoji = ' 📘'; }
+  else if(pct >= 40){ emoji = ' ⚠️'; }
+  else { emoji = ' 📖'; }
+  document.getElementById('notaQi').textContent = 'Calificación: ' + correctas + '/10  ·  ' + pct + '%' + emoji;
+  var msg;
+  if(pct === 100){ msg = 'Dominio completo de la Unidad 3. Puede explicarle a otra persona cómo se construye un balance de comprobación ajustado, que es la prueba real de que lo aprendió.'; }
+  else if(pct >= 80){ msg = 'Muy buen desempeño. Revise las preguntas falladas con su explicación y quedará listo para la Unidad 4.'; }
+  else if(pct >= 60){ msg = 'Comprensión razonable con vacíos identificables. Vuelva a los Temas 3 y 4 y relea el balance ajustado completo.'; }
+  else if(pct >= 40){ msg = 'Conviene rehacer el widget desde el Tema 2 y resolver de nuevo el Ejercicio Interactivo antes de repetir el cuestionario.'; }
+  else { msg = 'Retome desde el Repaso, en especial el bloque de las cuatro familias de ajustes, y avance tema por tema sin saltar.'; }
+  document.getElementById('msgQi').textContent = msg;
+  document.getElementById('resQi').classList.add('visible');
+  var barra = document.getElementById('barraQi');
+  barra.style.width = '0%';
+  setTimeout(function(){ barra.style.width = pct + '%'; }, 60);
+}
+function reiniciarQi(){
+  for(var k in qiClaves){
+    var ops = document.getElementsByName(k);
+    for(var i=0;i<ops.length;i++){ ops[i].checked = false; }
+    var fb = document.getElementById('f'+k);
+    fb.classList.remove('visible'); fb.classList.remove('ok'); fb.classList.remove('mal');
+    fb.innerHTML = '';
+  }
+  document.getElementById('resQi').classList.remove('visible');
+  document.getElementById('avisoQi').classList.remove('visible');
+  document.getElementById('barraQi').style.width = '0%';
+}
+</script>
+
+</body>
+</html>

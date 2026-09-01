@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Día 14 · Estado de Resultado Integral: estructura e importancia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --azul-oscuro:#003366;
+    --celeste:#87CEEB;
+    --verde:#2e7d32;
+    --verde-bg:#eef7ee;
+    --rojo:#b3261e;
+    --rojo-bg:#fdecea;
+    --amarillo-bg:#fff8e1;
+    --gris-borde:#c9d6e3;
+    --gris-fondo:#f5f8fb;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; padding:0;
+    font-family:'Source Sans 3', Arial, sans-serif;
+    color:#1a1a1a;
+    background:#eef2f6;
+    line-height:1.6;
+  }
+  h1,h2,h3,h4{ font-family:'Lora', Georgia, serif; color:var(--azul-oscuro); }
+  .contenedor{ max-width:1000px; margin:0 auto; background:#fff; min-height:100vh; box-shadow:0 0 18px rgba(0,0,0,.08); }
+
+  header.encabezado{
+    background:var(--azul-oscuro); color:#fff; padding:22px 28px;
+  }
+  header.encabezado .institucion{ font-size:.82rem; letter-spacing:.03em; opacity:.92; margin:0 0 4px 0; }
+  header.encabezado h1{ color:#fff; margin:0 0 6px 0; font-size:1.5rem; }
+  header.encabezado .meta{ font-size:.95rem; opacity:.95; }
+  header.encabezado .meta strong{ color:#fff; }
+
+  nav.menu-pestanas{
+    display:flex; overflow-x:auto; background:var(--celeste);
+    border-bottom:3px solid var(--azul-oscuro); position:sticky; top:0; z-index:50;
+  }
+  nav.menu-pestanas button{
+    flex:0 0 auto; padding:13px 18px; border:none; background:transparent;
+    color:#0a0a0a; font-family:'Source Sans 3',sans-serif; font-weight:600; font-size:.92rem;
+    cursor:pointer; white-space:nowrap; border-right:1px solid rgba(0,51,102,.15);
+    transition:background .15s;
+  }
+  nav.menu-pestanas button:hover{ background:#a6dcf2; }
+  nav.menu-pestanas button.activa{
+    background:#fff; color:var(--azul-oscuro); font-weight:700;
+    box-shadow:inset 0 -3px 0 var(--azul-oscuro);
+  }
+
+  main{ padding:26px 30px 50px 30px; }
+  .panel{ display:none; }
+  .panel.activo{ display:block; }
+  .panel h2{ font-size:1.35rem; border-bottom:2px solid var(--celeste); padding-bottom:8px; margin-top:0;}
+  .panel h3{ font-size:1.12rem; margin-top:26px; }
+
+  /* ---- Recuadros obligatorios ---- */
+  .definicion{ background:#eaf2fb; border-left:5px solid var(--azul-oscuro); padding:14px 18px; margin:16px 0; border-radius:4px; }
+  .definicion strong.etiqueta{ display:block; color:var(--azul-oscuro); font-family:'Lora',serif; margin-bottom:4px; }
+  .ejemplo{ background:#f4f0fb; border-left:5px solid #6a4c93; padding:14px 18px; margin:16px 0; border-radius:4px; }
+  .ejemplo strong.etiqueta{ display:block; color:#6a4c93; font-family:'Lora',serif; margin-bottom:4px; }
+  .nota-lateral{ background:#f0f0f0; border-left:5px solid #666; padding:12px 18px; margin:16px 0; border-radius:4px; font-size:.94rem; }
+  .formula{ background:#fff; border:1.5px dashed var(--azul-oscuro); padding:12px 18px; margin:16px 0; border-radius:4px; font-family:'Lora',serif; text-align:center; font-size:1.02rem; }
+  .carrera-box{ background:var(--verde-bg); border:1.5px dashed var(--verde); padding:14px 18px; margin:18px 0; border-radius:6px; }
+  .carrera-box strong.etiqueta{ display:block; color:var(--verde); font-family:'Lora',serif; margin-bottom:6px; }
+  .carrera-box ul{ margin:6px 0 0 0; padding-left:20px; }
+  .carrera-box li{ margin-bottom:4px; }
+  .futuro{ background:#eef4fb; border:1.5px solid #7391b5; padding:14px 18px; margin:16px 0; border-radius:6px; }
+  .futuro strong.etiqueta{ display:block; color:#2c4a6b; font-family:'Lora',serif; margin-bottom:4px; }
+  .conclusion{ background:var(--azul-oscuro); color:#fff; padding:16px 20px; margin:22px 0 10px 0; border-radius:6px; }
+  .conclusion strong.etiqueta{ display:block; font-family:'Lora',serif; margin-bottom:6px; color:#cfe4fb; }
+  .alerta{ background:var(--amarillo-bg); border-left:5px solid #b8860b; padding:14px 18px; margin:16px 0; border-radius:4px; }
+  .alerta strong.etiqueta{ display:block; color:#8a6300; font-family:'Lora',serif; margin-bottom:4px; }
+
+  /* ---- Acordeón Repaso ---- */
+  .acordeon-item{ border:1px solid var(--gris-borde); border-radius:6px; margin-bottom:10px; overflow:hidden; }
+  .acordeon-cabecera{
+    display:flex; justify-content:space-between; align-items:center;
+    background:var(--gris-fondo); padding:12px 16px; cursor:pointer; font-weight:700; color:var(--azul-oscuro);
+  }
+  .acordeon-cabecera .flecha{ transition:transform .2s; font-size:.85rem; }
+  .acordeon-cabecera.abierto .flecha{ transform:rotate(90deg); }
+  .acordeon-contenido{ max-height:0; overflow:hidden; transition:max-height .3s ease; padding:0 18px; background:#fff; }
+  .acordeon-contenido.abierto{ max-height:3000px; padding:14px 18px 18px 18px; }
+
+  /* ---- Tablas contables ---- */
+  table.tabla-eri{ width:100%; border-collapse:collapse; margin:14px 0; font-size:.94rem; }
+  table.tabla-eri caption{ background:var(--azul-oscuro); color:#fff; padding:8px; font-weight:700; text-align:left; padding-left:14px; border-radius:4px 4px 0 0; }
+  table.tabla-eri th, table.tabla-eri td{ border:1px solid var(--gris-borde); padding:7px 10px; }
+  table.tabla-eri th{ background:#eaf2fb; color:var(--azul-oscuro); text-align:left; }
+  table.tabla-eri td.valor{ text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  table.tabla-eri tr.subtotal td{ font-weight:700; background:#f5f8fb; }
+  table.tabla-eri tr.resultado td{ font-weight:700; background:#dcebfa; border-top:2px double var(--azul-oscuro); }
+  table.tabla-eri tr.deduccion td{ color:var(--rojo); }
+  table.tabla-eri tr.pendiente td{ color:#888; font-style:italic; }
+  .scroll-tabla{ overflow-x:auto; }
+
+  /* asiento contable */
+  table.libro-diario{ width:100%; border-collapse:collapse; margin:14px 0; font-size:.9rem; }
+  table.libro-diario thead th{ background:var(--azul-oscuro); color:#fff; padding:7px 8px; text-align:center; }
+  table.libro-diario td, table.libro-diario th{ border:1px solid var(--gris-borde); padding:6px 8px; }
+  table.libro-diario td.num{ text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  table.libro-diario td.haber{ padding-left:26px; }
+  table.libro-diario tr.suman td{ border-top:3px double var(--azul-oscuro); font-weight:700; }
+  table.libro-diario td.glosa{ font-style:italic; font-size:.86rem; }
+
+  /* ---- Ejercicio / Cuestionario ---- */
+  .item-pregunta{ border:1px solid var(--gris-borde); border-radius:8px; padding:16px; margin-bottom:16px; background:#fbfcfe; }
+  .item-pregunta .enunciado{ font-weight:600; margin-bottom:10px; }
+  .badge{ display:inline-block; font-size:.72rem; font-weight:700; padding:2px 9px; border-radius:12px; margin-left:8px; vertical-align:middle; }
+  .badge.teorica{ background:#d6e9ff; color:var(--azul-oscuro); }
+  .badge.analisis{ background:#ffe3c2; color:#8a4b00; }
+  .opciones{ display:flex; flex-direction:column; gap:8px; }
+  .opcion{ display:flex; align-items:flex-start; gap:8px; padding:9px 12px; border:1px solid var(--gris-borde); border-radius:6px; cursor:pointer; }
+  .opcion:hover{ background:#f0f6fc; }
+  .opcion input{ margin-top:3px; }
+  .feedback{ margin-top:10px; padding:10px 12px; border-radius:6px; font-size:.92rem; display:none; }
+  .feedback.mostrar{ display:block; }
+  .feedback.ok{ background:var(--verde-bg); border-left:4px solid var(--verde); color:#1b4d1e; }
+  .feedback.mal{ background:var(--rojo-bg); border-left:4px solid var(--rojo); color:#7a1a14; }
+  .opcion.correcta-marca{ border-color:var(--verde); background:var(--verde-bg); }
+  .opcion.incorrecta-marca{ border-color:var(--rojo); background:var(--rojo-bg); }
+
+  .barra-contenedor{ background:#e0e6ec; border-radius:20px; overflow:hidden; height:26px; margin:14px 0; }
+  .barra-relleno{ height:100%; width:0%; background:linear-gradient(90deg,#1e5fa8,#2e8b57); display:flex; align-items:center; justify-content:flex-end; padding-right:10px; color:#fff; font-weight:700; font-size:.85rem; transition:width 1.1s ease; }
+  .resultado-final{ text-align:center; font-size:1.15rem; font-weight:700; margin:14px 0; }
+
+  .btn{ background:var(--azul-oscuro); color:#fff; border:none; padding:11px 22px; border-radius:6px; font-weight:700; cursor:pointer; font-size:.95rem; margin-right:10px; }
+  .btn:hover{ background:#004a91; }
+  .btn.secundario{ background:#fff; color:var(--azul-oscuro); border:2px solid var(--azul-oscuro); }
+  .btn.secundario:hover{ background:#eaf2fb; }
+  .alerta-envio{ background:var(--rojo-bg); color:var(--rojo); border:1px solid var(--rojo); padding:10px 14px; border-radius:6px; margin:12px 0; display:none; font-weight:600; }
+  .alerta-envio.mostrar{ display:block; }
+
+  .solucion-caja{ background:var(--gris-fondo); border:1px solid var(--gris-borde); border-radius:8px; padding:16px 18px; margin-top:20px; }
+  .solucion-caja h4{ margin-top:0; }
+
+  /* ---- Reflexión / IA ---- */
+  .reflexion-pregunta{ background:#fff; border:1px solid var(--gris-borde); border-left:5px solid #6a4c93; padding:14px 18px; margin:14px 0; border-radius:4px; }
+  .reflexion-pregunta strong{ color:#6a4c93; }
+  textarea.respuesta-libre{ width:100%; min-height:70px; margin-top:8px; padding:9px; border:1px solid var(--gris-borde); border-radius:6px; font-family:inherit; font-size:.94rem; resize:vertical; }
+  .prompt-ia{ background:#0d1b2a; color:#e6f0fa; padding:14px 16px; border-radius:6px; font-family:'Courier New',monospace; font-size:.86rem; white-space:pre-wrap; margin:12px 0; }
+  .prompt-error{ border:1.5px dashed #b3261e; }
+
+  /* ---- Bibliografía ---- */
+  .grid-biblio{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:16px; }
+  .tarjeta-biblio{ background:#fff; border:1px solid var(--gris-borde); border-left:5px solid var(--azul-oscuro); border-radius:6px; padding:14px 16px; font-size:.92rem; }
+  .tarjeta-biblio .tipo{ display:inline-block; font-size:.7rem; font-weight:700; background:#eaf2fb; color:var(--azul-oscuro); padding:2px 8px; border-radius:10px; margin-bottom:6px; }
+  footer.pie{ text-align:center; font-size:.82rem; color:#666; padding:20px; }
+
+  @media (max-width:640px){
+    main{ padding:18px 14px 40px 14px; }
+    .grid-biblio{ grid-template-columns:1fr; }
+    header.encabezado{ padding:16px 16px; }
+    table.tabla-eri, table.libro-diario{ font-size:.82rem; }
+  }
+</style>
+</head>
+<body>
+<div class="contenedor">
+
+<header class="encabezado">
+  <p class="institucion">Universidad de Guayaquil · Facultad de Ciencias Administrativas · Carrera de Negocios Internacionales</p>
+  <h1>Contabilidad General</h1>
+  <p class="meta"><strong>Día 14</strong> · Martes 1 de septiembre de 2026 · 4 horas · <strong>Unidad 4</strong> — Estado de Resultado Integral: estructura e importancia</p>
+</header>
+
+<nav class="menu-pestanas" id="menu-pestanas">
+  <button class="pestana-btn activa" data-tab="repaso" onclick="showTab('repaso')">Repaso</button>
+  <button class="pestana-btn" data-tab="tema1" onclick="showTab('tema1')">Tema 1</button>
+  <button class="pestana-btn" data-tab="tema2" onclick="showTab('tema2')">Tema 2</button>
+  <button class="pestana-btn" data-tab="tema3" onclick="showTab('tema3')">Tema 3</button>
+  <button class="pestana-btn" data-tab="ejercicio" onclick="showTab('ejercicio')">Ejercicio Interactivo</button>
+  <button class="pestana-btn" data-tab="cuestionario" onclick="showTab('cuestionario')">Cuestionario</button>
+  <button class="pestana-btn" data-tab="ia" onclick="showTab('ia')">Actividad con IA</button>
+  <button class="pestana-btn" data-tab="reflexion" onclick="showTab('reflexion')">Reflexión</button>
+  <button class="pestana-btn" data-tab="bibliografia" onclick="showTab('bibliografia')">Bibliografía</button>
+</nav>
+
+<main>
+
+<!-- ============================= REPASO ============================= -->
+<section id="panel-repaso" class="panel activo">
+  <h2>Repaso — lo recorrido antes de hoy</h2>
+  <p>La Unidad 3 completa (Días 7 a 13) construyó todo lo que hoy vamos a <strong>presentar formalmente</strong>: sabemos cuánto costó lo que se vendió, sabemos qué ajustes hacían falta y sabemos, desde el Día 13, el resultado del mes de Comercial El Astillero S.A. Hoy ese resultado deja de ser una cifra suelta al pie de una hoja de trabajo y se convierte en un <strong>estado financiero formal</strong>.</p>
+
+  <div class="acordeon-item">
+    <div class="acordeon-cabecera" onclick="toggleAcordeon(this)">
+      <span>Días 7-8 — Inicio de la Unidad 3: inventarios y su medición</span>
+      <span class="flecha">▶</span>
+    </div>
+    <div class="acordeon-contenido">
+      <p>El Día 7 definimos qué es un inventario según la <strong>NIC 2</strong>, distinguimos el <strong>sistema permanente</strong> (registra el costo de venta en cada transacción, el que usa todo este curso) del <strong>sistema periódico</strong>, y recorrimos la cadena de valor de cuatro tipos de empresa (comercial, industrial, servicios, extractiva) hasta llegar a un caso de importación.</p>
+      <p>El Día 8 trabajamos el Caso A — <strong>Comercial El Astillero S.A.</strong> — con una importación de licuadoras para distinguir tres formas de medir un inventario: el <strong>Costo</strong> histórico, el <strong>Valor Razonable (VR)</strong> de mercado y el <strong>Valor Neto Realizable (VNR)</strong>. La NIC 2 obliga a registrar el inventario al <strong>menor valor entre el costo y el VNR</strong>. Ahí se introdujo, por primera vez, el método <strong>FIFO</strong> (primeras entradas, primeras salidas).</p>
+    </div>
+  </div>
+
+  <div class="acordeon-item">
+    <div class="acordeon-cabecera" onclick="toggleAcordeon(this)">
+      <span>Día 9 — FIFO extendido y costo promedio ponderado</span>
+      <span class="flecha">▶</span>
+    </div>
+    <div class="acordeon-contenido">
+      <p>Con el artículo <strong>INV-4501 «Ventilador de techo VT-16»</strong> (650 unidades disponibles por 23.075,00 en agosto) comparamos cuatro métodos de valuación de salidas: FIFO, promedio móvil, promedio del período y UEPS (este último solo de forma ilustrativa, porque las NIIF no lo admiten). Bajo <strong>FIFO — el método que usa el curso —</strong> el costo de ventas del mes fue <strong>20.660,00</strong> y el inventario final quedó en <strong>2.415,00</strong> (60 unidades a 40,25).</p>
+      <p>Esas mismas 650 unidades y esos mismos movimientos reaparecieron, con los nombres de las fechas de agosto, en el caso integrador de El Astillero S.A. que cerró la unidad.</p>
+    </div>
+  </div>
+
+  <div class="acordeon-item">
+    <div class="acordeon-cabecera" onclick="toggleAcordeon(this)">
+      <span>Días 10-12 — Kardex, ajustes y balance de comprobación ajustado</span>
+      <span class="flecha">▶</span>
+    </div>
+    <div class="acordeon-contenido">
+      <p>El Día 10 formalizamos el <strong>Kardex</strong> bajo FIFO y promedio móvil, con la identidad de control «disponible = costo de ventas + inventario final». El Día 11 clasificamos los <strong>asientos de ajuste</strong> en cuatro familias — <strong>acumulación, diferimiento, estimación y comprobación</strong> — y el Día 12 aprendimos el <strong>método en seis pasos</strong> para llegar de un balance de comprobación <em>preliminar</em> a uno <em>ajustado</em>, con la regla de control: <em>ajustado = preliminar + ajustes − movimientos contrarios a la naturaleza de la cuenta</em>.</p>
+    </div>
+  </div>
+
+  <div class="acordeon-item">
+    <div class="acordeon-cabecera" onclick="toggleAcordeon(this)">
+      <span>Día 13 — Cierre de la Unidad 3: El Astillero S.A., agosto 2026</span>
+      <span class="flecha">▶</span>
+    </div>
+    <div class="acordeon-contenido">
+      <p>El Día 13 aplicamos todo lo anterior de punta a punta sobre <strong>Comercial El Astillero S.A.</strong>: registramos 14 hechos económicos de agosto (17 asientos, porque cada venta arrastra su asiento de costo), obtuvimos un <strong>balance de comprobación preliminar de 129.864,20</strong> con un resultado aparente de 2.511,70, y luego aplicamos <strong>8 asientos de ajuste</strong> (arriendo y seguro consumidos, depreciación, interés del préstamo, deterioro de cartera, un faltante detectado en la toma física de inventario, un ajuste al valor neto realizable y una nota de débito bancaria) por un total de 1.929,00.</p>
+      <p>El <strong>balance de comprobación ajustado cerró en 130.870,70</strong> (41 cuentas) y el resultado del mes cambió de 2.511,70 a un <strong>resultado real de 582,70</strong> — una caída del 76,8% frente al resultado aparente. Esa cifra quedó anotada como pendiente de un paso más: todavía no la habíamos presentado en el formato formal que exige la normativa. Ese paso es exactamente el contenido de hoy.</p>
+    </div>
+  </div>
+
+  <div class="futuro">
+    <strong class="etiqueta">Puente hacia el Día 14</strong>
+    El balance de comprobación ajustado del Día 13 contiene, mezcladas entre activos y pasivos, todas las cuentas de ingresos y gastos que generaron el resultado de 582,70. Hoy vamos a <strong>extraer solo esas cuentas</strong>, ordenarlas según la estructura que exige la NIC 1 y presentarlas como el segundo estado financiero formal del curso: el <strong>Estado de Resultado Integral (ERI)</strong>. El primero fue el Estado de Situación Financiera, cuya estructura se adelantó en el Día 3; su elaboración completa para El Astillero llega recién el <strong>Día 16</strong>.
+  </div>
+</section>
+
+<!-- ============================= TEMA 1 ============================= -->
+<section id="panel-tema1" class="panel">
+  <h2>Tema 1 — El Estado de Resultado Integral: qué es y por qué importa</h2>
+
+  <div class="definicion">
+    <strong class="etiqueta">Definición</strong>
+    El <strong>Estado de Resultado Integral (ERI)</strong> es el estado financiero que resume, para un <strong>período de tiempo determinado</strong> (un mes, un trimestre, un año), todos los <strong>ingresos</strong> que una entidad obtuvo por sus actividades ordinarias y todos los <strong>gastos y costos</strong> en que incurrió para obtenerlos, con el fin de mostrar si la entidad generó una <strong>utilidad</strong> o una <strong>pérdida</strong> en ese período. La NIC 1 <em>Presentación de Estados Financieros</em> es la norma que regula su contenido mínimo y su forma de presentación.
+  </div>
+
+  <p>Es fundamental fijar una diferencia que ya se mencionó en el Día 3 pero que hoy cobra todo su sentido: el <strong>Estado de Situación Financiera (ESF)</strong> es una <strong>fotografía</strong> — muestra los saldos de activo, pasivo y patrimonio <em>en una fecha exacta</em> (por ejemplo, «al 31 de agosto de 2026»). El <strong>Estado de Resultado Integral</strong>, en cambio, es una <strong>película</strong> — muestra el movimiento de ingresos y gastos <em>durante todo un período</em> (por ejemplo, «del 1 al 31 de agosto de 2026»). Por eso el encabezado de un ESF siempre dice «al», y el encabezado de un ERI siempre dice «del … al …» o «correspondiente al mes de…».</p>
+
+  <h3>¿Por qué se llama «integral» y no solo «Estado de Resultados»?</h3>
+  <p>Durante años, en Ecuador y en gran parte de Latinoamérica, este estado se conoció simplemente como <strong>«Estado de Resultados»</strong> o «Estado de Pérdidas y Ganancias», y muchos profesionales y sistemas contables todavía usan ese nombre en el lenguaje cotidiano. Las NIIF actuales exigen el nombre <strong>«Estado de Resultado Integral»</strong> porque, además de la <strong>utilidad neta del ejercicio</strong> (el resultado que surge de ingresos menos gastos, el mismo tipo de cálculo que hicimos el Día 13), un estado financiero completo bajo NIIF puede incluir un segundo bloque llamado <strong>Otro Resultado Integral (ORI)</strong>: partidas de ganancia o pérdida que la norma permite —o exige— reconocer <strong>sin que pasen por la utilidad del ejercicio</strong>, y que se registran directamente contra el patrimonio. El Tema 2 explica en detalle qué contiene ese bloque y por qué El Astillero S.A., como la mayoría de las pequeñas y medianas empresas ecuatorianas, no suele tener partidas de este tipo en su operación normal.</p>
+
+  <div class="ejemplo">
+    <strong class="etiqueta">Ejemplo — quién usa el ERI y para qué</strong>
+    <p>Un banco ecuatoriano que evalúa un crédito para El Astillero S.A. no solo revisa cuántos activos tiene la empresa (eso está en el ESF); revisa <strong>si el negocio genera utilidad de forma sostenida</strong> mes a mes, porque de esa utilidad depende la capacidad real de pagar el crédito. El Servicio de Rentas Internas (SRI) usa el ERI para verificar la <strong>base imponible</strong> sobre la que se calculan el 15% de participación a trabajadores y el impuesto a la renta. Un proveedor que evalúa dar crédito a 60 días revisa si los márgenes del negocio son saludables antes de exponerse. Y el propio gerente de El Astillero usa el ERI, mes a mes, para saber si el negocio está mejorando o deteriorándose — exactamente lo que ocurrió entre el resultado aparente (2.511,70) y el resultado real (582,70) del Día 13: sin el ERI bien construido, la gerencia habría creído que el mes fue casi cinco veces más rentable de lo que realmente fue.</p>
+  </div>
+
+  <h3>Importancia para la toma de decisiones</h3>
+  <p>El ERI no es un simple requisito de forma: es la herramienta que permite responder preguntas de gestión que ningún otro estado financiero contesta por sí solo: ¿el negocio es rentable o solo parece serlo por el volumen de ventas? ¿Qué porcentaje de cada dólar vendido se queda como utilidad después de cubrir el costo de lo vendido? ¿Los gastos de operación están creciendo más rápido que las ventas? ¿Cuánto de la utilidad se pierde en gastos financieros por el nivel de endeudamiento? Estas preguntas se responden con los <strong>márgenes</strong> que construiremos en el Tema 3, todos calculados directamente sobre las líneas del ERI.</p>
+
+  <div class="alerta">
+    <strong class="etiqueta">Error frecuente</strong>
+    Confundir «tener muchas ventas» con «ser rentable». Una empresa puede vender 30.680,00 en un mes —como El Astillero en agosto— y aun así quedarse con una utilidad de apenas 582,70 (1,90% de esas ventas) si sus costos y gastos no están controlados. El ERI es precisamente el estado que hace visible esa diferencia entre <em>volumen</em> y <em>rentabilidad</em>.
+  </div>
+
+  <div class="carrera-box">
+    <strong class="etiqueta">Conexión con Negocios Internacionales</strong>
+    <ul>
+      <li><strong>Comercio exterior:</strong> un exportador ecuatoriano presenta su ERI a bancos y aseguradoras de crédito a la exportación para calificar como sujeto de financiamiento de sus embarques.</li>
+      <li><strong>Finanzas internacionales:</strong> los márgenes del ERI (bruto, operativo, neto) son el primer dato que un inversionista extranjero revisa antes de aportar capital o conceder un préstamo transfronterizo.</li>
+      <li><strong>Marketing y negociación internacional:</strong> negociar mejores condiciones de pago o de precio con un proveedor o cliente del exterior exige conocer el margen real del negocio; negociar «a ciegas» sobre el resultado aparente, sin ajustes, puede comprometer la rentabilidad real de la operación.</li>
+      <li><strong>Marco legal y normativo:</strong> el ERI es la base para el cálculo del 15% de participación a trabajadores (Código del Trabajo) y del impuesto a la renta (normativa tributaria), obligaciones que toda empresa que opera en Ecuador —incluida una que exporta o importa— debe cumplir.</li>
+    </ul>
+  </div>
+
+  <div class="conclusion">
+    <strong class="etiqueta">Idea clave</strong>
+    El Estado de Resultado Integral mide el desempeño de un negocio <strong>durante un período</strong>, no en un instante; se llama «integral» porque, bajo NIIF, puede incorporar partidas de Otro Resultado Integral además de la utilidad del ejercicio; y su verdadero valor no es contable sino <strong>gerencial</strong>: sin él, decisiones de crédito, inversión, negociación y cumplimiento tributario se tomarían a ciegas.
+  </div>
+</section>
+
+<!-- ============================= TEMA 2 ============================= -->
+<section id="panel-tema2" class="panel">
+  <h2>Tema 2 — Estructura formal del ERI según la NIC 1</h2>
+
+  <div class="definicion">
+    <strong class="etiqueta">Definición — clasificación por función del gasto</strong>
+    La NIC 1 permite presentar los gastos de dos formas: por <strong>naturaleza</strong> (agrupando sueldos, arriendos, depreciaciones, etc., sin importar el área que los originó) o por <strong>función</strong> (agrupando los gastos según el rol que cumplen en el negocio: producir/adquirir lo que se vende, administrar la empresa, venderlo o financiarlo). Este curso usa la clasificación <strong>por función</strong>, porque es la que permite calcular la <strong>utilidad bruta</strong> —el margen más importante para un negocio comercial— y es la forma más usada en la práctica societaria ecuatoriana.
+  </div>
+
+  <p>Bajo el enfoque por función, un ERI se construye como una <strong>cascada de restas sucesivas</strong>: se parte de los ingresos y, en cada fila, se resta un bloque de partidas homogéneas hasta llegar al resultado final. Cada resta intermedia genera un <strong>subtotal con significado gerencial propio</strong> — no son pasos mecánicos, cada uno responde una pregunta distinta sobre el negocio.</p>
+
+  <div class="scroll-tabla">
+  <table class="tabla-eri">
+    <caption>Estructura general del ERI por función (formato-plantilla, sin cifras de un caso)</caption>
+    <thead>
+      <tr><th>Línea</th><th>¿Qué responde esta fila?</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Ingresos de actividades ordinarias</strong></td><td>¿Cuánto vendió la empresa por su giro normal de negocio (sin IVA, que no es un ingreso sino un impuesto que se cobra por cuenta del SRI)?</td></tr>
+      <tr class="deduccion"><td>(–) Costo de ventas</td><td>¿Cuánto costó, en términos de mercadería o servicio, generar esa venta?</td></tr>
+      <tr class="subtotal"><td><strong>= Utilidad bruta</strong></td><td>¿Qué margen deja el negocio antes de gastar en administrarlo o venderlo?</td></tr>
+      <tr class="deduccion"><td>(–) Gastos de operación (administración y ventas)</td><td>¿Cuánto cuesta sostener la estructura administrativa y comercial del negocio?</td></tr>
+      <tr class="subtotal"><td><strong>= Utilidad operativa</strong></td><td>¿El negocio, en su operación pura, genera valor?</td></tr>
+      <tr class="deduccion"><td>(–) Otros gastos operativos</td><td>¿Hubo pérdidas ligadas a la operación pero fuera de lo habitual (ajustes de inventario, bajas de activos, etc.)?</td></tr>
+      <tr class="deduccion"><td>(–) Gastos financieros</td><td>¿Cuánto le cuesta a la empresa el financiamiento que usa (intereses, comisiones bancarias)?</td></tr>
+      <tr class="subtotal"><td><strong>= Utilidad antes de participación trabajadores e impuesto a la renta</strong></td><td>¿Cuál es la base sobre la que se calculan las obligaciones legales y tributarias?</td></tr>
+      <tr class="deduccion"><td>(–) 15% Participación a trabajadores</td><td>Derecho laboral: los trabajadores participan del 15% de la utilidad (Código del Trabajo, no es un tributo).</td></tr>
+      <tr class="deduccion"><td>(–) Impuesto a la renta causado</td><td>Obligación tributaria sobre la utilidad restante (tarifa y liquidación: asignatura de Tributación).</td></tr>
+      <tr class="subtotal"><td><strong>= Utilidad (pérdida) neta del ejercicio</strong></td><td>¿Cuánto le queda finalmente a la empresa, disponible para repartir o reinvertir?</td></tr>
+      <tr class="deduccion"><td>(+/–) Otro Resultado Integral (ORI)</td><td>Ganancias o pérdidas que la norma reconoce sin pasar por la utilidad (ver más abajo).</td></tr>
+      <tr class="resultado"><td><strong>= Resultado Integral Total del ejercicio</strong></td><td>La cifra más completa: utilidad neta más todo lo demás que también cambió el patrimonio.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Gastos de operación: administración y ventas</h3>
+  <p>Dentro de «Gastos de operación» conviven dos grupos que muchas veces se presentan juntos en empresas pequeñas y separados en empresas más grandes: los <strong>gastos de administración</strong> (sueldos del personal administrativo, arriendo de oficinas o bodegas, seguros, depreciación de muebles y equipo, servicios básicos) y los <strong>gastos de ventas</strong> (comisiones de vendedores, publicidad, transporte de mercadería vendida). Ambos se restan de la utilidad bruta porque son necesarios para <strong>sostener la operación</strong>, aunque no formen parte del costo directo de lo vendido.</p>
+
+  <h3>«Otros gastos operativos»: el puente con la Unidad 3</h3>
+  <p>Esta línea existe para partidas que sí nacen de la operación del negocio pero que <strong>no son gastos recurrentes de administrar o vender</strong>: un faltante detectado en una toma física de inventario, una pérdida por ajuste al valor neto realizable, la baja de un activo dañado. La Unidad 3 completa —Kardex, conteos físicos, VNR— existe precisamente para que estas partidas lleguen aquí con una cifra verificable, no estimada al azar.</p>
+
+  <div class="nota-lateral">
+    <strong>Gasto financiero ≠ gasto operativo.</strong> El interés de un préstamo o una comisión bancaria no depende de qué tan bien se administra o se vende: depende de cuánto se debe y a qué tasa. Por eso la NIC 1 exige separarlo en su propia línea: mezclarlo con «gastos de operación» esconde el verdadero costo de la estructura de financiamiento del negocio.
+  </div>
+
+  <div class="formula">
+    Utilidad bruta − Gastos de operación − Otros gastos operativos − Gastos financieros<br>
+    = Utilidad antes de 15% de participación a trabajadores e impuesto a la renta
+  </div>
+
+  <h3>El 15% de participación a trabajadores y el impuesto a la renta</h3>
+  <p>Estas dos líneas aparecen siempre después de la utilidad operativa y financiera, y antes de la utilidad neta, porque ambas se calculan <strong>sobre la utilidad del negocio</strong>, no sobre sus ventas. El <strong>15% de participación a trabajadores</strong> es un derecho reconocido por el Código del Trabajo ecuatoriano: no es un impuesto, es una obligación laboral, y su tarifa del 15% es fija. El <strong>impuesto a la renta</strong>, en cambio, es una obligación tributaria cuya tarifa, exoneraciones y forma de liquidación (incluida la conciliación tributaria) dependen de la normativa vigente en cada ejercicio fiscal y se desarrollan con el detalle que merecen en la asignatura de <strong>Tributación</strong>.</p>
+
+  <div class="futuro">
+    <strong class="etiqueta">Fuera del alcance de Contabilidad General</strong>
+    Igual que la liquidación mensual del IVA quedó fuera del alcance de este curso, el cálculo detallado del impuesto a la renta (tarifa vigente, conciliación tributaria, anticipo, exoneraciones) corresponde a la asignatura de <strong>Tributación</strong>. En el Tema 3 vamos a construir el ERI real de El Astillero S.A. hasta la línea de <strong>utilidad antes del impuesto a la renta</strong>, dejando esa última línea señalada en la estructura pero sin inventar una tarifa que no forma parte de los contenidos previstos para este día.
+  </div>
+
+  <h3>Otro Resultado Integral (ORI): ¿qué es y por qué El Astillero S.A. no lo tiene este mes?</h3>
+  <p>El <strong>ORI</strong> agrupa partidas de ganancia o pérdida que las NIIF consideran que no deben «ensuciar» la utilidad del ejercicio porque no provienen de la operación normal del negocio, sino de cambios en el valor de ciertos activos o pasivos que la norma decide llevar directamente al patrimonio. Ejemplos típicos —ninguno de ellos ocurrió en El Astillero S.A. en agosto— son: la <strong>revaluación de propiedades, planta y equipo</strong> cuando una empresa decide medir sus activos fijos a valor razonable en vez de a costo histórico; las <strong>diferencias de conversión</strong> que surgen cuando una empresa consolida los estados financieros de una subsidiaria que opera en otra moneda (un tema directamente ligado a las finanzas internacionales); y las <strong>ganancias o pérdidas actuariales</strong> en planes de beneficios definidos a empleados.</p>
+
+  <div class="ejemplo">
+    <strong class="etiqueta">Ejemplo — cuándo sí aparecería un ORI</strong>
+    Si El Astillero S.A. fuera dueña de un edificio que compró en 200.000,00 hace diez años y decidiera, siguiendo el modelo de revaluación de la NIC 16, reconocer que ese edificio hoy vale 260.000,00, la ganancia de 60.000,00 <strong>no pasaría por la utilidad del ejercicio</strong>: se reconocería como Otro Resultado Integral y aumentaría directamente una cuenta de patrimonio («superávit por revaluación»). El resultado neto del mes seguiría siendo 582,70, pero el <strong>Resultado Integral Total</strong> de ese mes sería 60.582,70 — un ejemplo puramente ilustrativo para entender la mecánica, no una operación que El Astillero haya realizado.
+  </div>
+
+  <div class="carrera-box">
+    <strong class="etiqueta">Conexión con Negocios Internacionales</strong>
+    <ul>
+      <li><strong>Comercio exterior:</strong> los gastos financieros del ERI reflejan directamente el costo de instrumentos como cartas de crédito o líneas de financiamiento de importaciones y exportaciones.</li>
+      <li><strong>Finanzas internacionales:</strong> las diferencias de conversión de subsidiarias en el extranjero —un tipo de ORI— son el punto exacto donde la contabilidad general conecta con la gestión del riesgo cambiario que se estudia en cursos posteriores.</li>
+      <li><strong>Marketing y negociación internacional:</strong> conocer en qué línea del ERI cae cada tipo de gasto permite argumentar, con cifras y no con impresiones, por qué un descuento o una comisión adicional sí o no es sostenible para el negocio.</li>
+      <li><strong>Marco legal y normativo:</strong> el orden de las líneas del ERI no es arbitrario — responde a la NIC 1, al Código del Trabajo (15%) y a la Ley de Régimen Tributario Interno (impuesto a la renta), tres cuerpos normativos que un profesional de Negocios Internacionales debe saber distinguir.</li>
+    </ul>
+  </div>
+
+  <div class="conclusion">
+    <strong class="etiqueta">Idea clave</strong>
+    El ERI por función es una cascada ordenada de subtotales —bruto, operativo, antes de participación e impuestos, neto e integral total— y cada resta responde una pregunta gerencial distinta. El 15% de trabajadores y el impuesto a la renta se calculan siempre sobre la utilidad, nunca sobre las ventas; y el ORI existe para partidas excepcionales que no forman parte de la operación normal del negocio.
+  </div>
+</section>
+
+<!-- ============================= TEMA 3 ============================= -->
+<section id="panel-tema3" class="panel">
+  <h2>Tema 3 — El ERI real de Comercial El Astillero S.A., agosto 2026</h2>
+
+  <p>Todas las cifras de este tema ya fueron registradas y ajustadas el Día 13; hoy no se agrega ni un solo hecho económico nuevo. Lo único que hacemos es <strong>extraer las cuentas de ingresos y gastos</strong> del balance de comprobación ajustado (130.870,70) y ordenarlas según la estructura del Tema 2.</p>
+
+  <h3>Desglose del cálculo, línea por línea</h3>
+  <p>Antes de mostrar el estado terminado, se abre cada línea para que quede visible de dónde sale cada cifra — ninguna se presenta como un número «de caja negra».</p>
+
+  <div class="scroll-tabla">
+  <table class="tabla-eri">
+    <caption>1) Ingresos de actividades ordinarias — las 3 ventas de agosto (bases, sin IVA)</caption>
+    <thead><tr><th>Origen</th><th class="valor">Valor</th></tr></thead>
+    <tbody>
+      <tr><td>Venta 09/08 (150 u)</td><td class="valor">7.800,00</td></tr>
+      <tr><td>Venta 18/08 (300 u)</td><td class="valor">15.600,00</td></tr>
+      <tr><td>Venta 28/08 (140 u, consumidor final)</td><td class="valor">7.280,00</td></tr>
+      <tr class="subtotal"><td>Total ingresos de actividades ordinarias</td><td class="valor">30.680,00</td></tr>
+    </tbody>
+  </table>
+
+  <table class="tabla-eri">
+    <caption>2) Costo de ventas — costo FIFO de las mismas 3 ventas (artículo INV-4501)</caption>
+    <thead><tr><th>Origen</th><th class="valor">Valor</th></tr></thead>
+    <tbody>
+      <tr><td>Costo venta 09/08</td><td class="valor">4.700,00</td></tr>
+      <tr><td>Costo venta 18/08</td><td class="valor">10.450,00</td></tr>
+      <tr><td>Costo venta 28/08</td><td class="valor">5.510,00</td></tr>
+      <tr class="subtotal"><td>Total costo de ventas</td><td class="valor">20.660,00</td></tr>
+    </tbody>
+  </table>
+
+  <table class="tabla-eri">
+    <caption>3) Gastos de operación — administración y ventas</caption>
+    <thead><tr><th>Origen</th><th class="valor">Valor</th></tr></thead>
+    <tbody>
+      <tr><td>Arriendo bodega, agosto (Inmobiliaria Puerto Santa Ana S.A.)</td><td class="valor">900,00</td></tr>
+      <tr><td>Arriendo del local prepagado, consumo de agosto (ajuste 18)</td><td class="valor">600,00</td></tr>
+      <tr><td>Seguro devengado de agosto (ajuste 19)</td><td class="valor">180,00</td></tr>
+      <tr><td>Depreciación de muebles, equipo de cómputo y vehículos (ajuste 20)</td><td class="valor">580,00</td></tr>
+      <tr><td>Deterioro estimado de cuentas por cobrar (ajuste 22)</td><td class="valor">234,00</td></tr>
+      <tr><td>Energía eléctrica, CNEL EP</td><td class="valor">240,00</td></tr>
+      <tr><td>Mantenimiento de vehículo (Tecnimotor Cía. Ltda.)</td><td class="valor">500,00</td></tr>
+      <tr><td>Honorarios profesionales (Estudio Jurídico Andrade &amp; Asociados)</td><td class="valor">1.200,00</td></tr>
+      <tr><td>Sueldos y beneficios sociales (rol de pagos: 4.200,00 + aporte patronal IESS 468,30)</td><td class="valor">4.668,30</td></tr>
+      <tr class="subtotal"><td>Total gastos de operación</td><td class="valor">9.102,30</td></tr>
+    </tbody>
+  </table>
+
+  <table class="tabla-eri">
+    <caption>4) Otros gastos operativos — enlace directo con la Unidad 3</caption>
+    <thead><tr><th>Origen</th><th class="valor">Valor</th></tr></thead>
+    <tbody>
+      <tr><td>Faltante en toma física de inventario: Kardex 60 u vs. conteo 58 u, a 40,25 (ajuste 23)</td><td class="valor">80,50</td></tr>
+      <tr><td>Ajuste al valor neto realizable: 58 u, costo 40,25 vs. VNR 39,00 (ajuste 24)</td><td class="valor">72,50</td></tr>
+      <tr class="subtotal"><td>Total otros gastos operativos</td><td class="valor">153,00</td></tr>
+    </tbody>
+  </table>
+
+  <table class="tabla-eri">
+    <caption>5) Gastos financieros</caption>
+    <thead><tr><th>Origen</th><th class="valor">Valor</th></tr></thead>
+    <tbody>
+      <tr><td>Interés del préstamo bancario (12.000,00 al 12% anual, un mes) — ajuste 21</td><td class="valor">120,00</td></tr>
+      <tr><td>Gastos bancarios, nota de débito 3312 — ajuste 25</td><td class="valor">62,00</td></tr>
+      <tr class="subtotal"><td>Total gastos financieros</td><td class="valor">182,00</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="formula">
+    9.102,30 + 153,00 + 182,00 = <strong>9.437,30</strong> en gastos totales del mes<br>
+    10.020,00 (utilidad bruta) − 9.437,30 = <strong>582,70</strong> — la misma cifra que cerró el balance ajustado del Día 13
+  </div>
+
+  <h3>El Estado de Resultado Integral completo</h3>
+  <div class="scroll-tabla">
+  <table class="tabla-eri">
+    <caption>Comercial El Astillero S.A. — Estado de Resultado Integral por el mes terminado el 31 de agosto de 2026 (expresado en dólares de los Estados Unidos de América)</caption>
+    <thead><tr><th>Cuenta</th><th class="valor">Parcial</th><th class="valor">Total</th></tr></thead>
+    <tbody>
+      <tr><td>Ingresos de actividades ordinarias</td><td class="valor"></td><td class="valor">30.680,00</td></tr>
+      <tr class="deduccion"><td>(–) Costo de ventas</td><td class="valor"></td><td class="valor">(20.660,00)</td></tr>
+      <tr class="subtotal"><td>= Utilidad bruta</td><td class="valor"></td><td class="valor">10.020,00</td></tr>
+      <tr class="deduccion"><td>(–) Gastos de operación</td><td class="valor">9.102,30</td><td class="valor">(9.102,30)</td></tr>
+      <tr class="subtotal"><td>= Utilidad operativa</td><td class="valor"></td><td class="valor">917,70</td></tr>
+      <tr class="deduccion"><td>(–) Otros gastos operativos</td><td class="valor">153,00</td><td class="valor">(153,00)</td></tr>
+      <tr class="deduccion"><td>(–) Gastos financieros</td><td class="valor">182,00</td><td class="valor">(182,00)</td></tr>
+      <tr class="subtotal"><td>= Utilidad antes de 15% trabajadores e impuesto a la renta</td><td class="valor"></td><td class="valor">582,70</td></tr>
+      <tr class="deduccion"><td>(–) 15% Participación a trabajadores (582,70 × 15%)</td><td class="valor"></td><td class="valor">(87,41)</td></tr>
+      <tr class="subtotal"><td>= Utilidad antes del impuesto a la renta</td><td class="valor"></td><td class="valor">495,29</td></tr>
+      <tr class="pendiente"><td>(–) Impuesto a la renta causado</td><td class="valor"></td><td class="valor">se liquida en Tributación</td></tr>
+      <tr class="pendiente"><td>= Utilidad neta del ejercicio</td><td class="valor"></td><td class="valor">pendiente de la línea anterior</td></tr>
+      <tr class="pendiente"><td>(+/–) Otro Resultado Integral (ORI)</td><td class="valor"></td><td class="valor">0,00 (sin partidas este mes)</td></tr>
+      <tr class="pendiente"><td>= Resultado Integral Total del ejercicio</td><td class="valor"></td><td class="valor">pendiente del IR</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="alerta">
+    <strong class="etiqueta">Por qué el estado no cierra en un solo número final</strong>
+    Las dos últimas líneas quedan señaladas y no calculadas a propósito: liquidar el impuesto a la renta exige aplicar la tarifa societaria vigente, verificar exoneraciones y hacer la conciliación tributaria del ejercicio — contenido que corresponde a la asignatura de Tributación y que no forma parte del Plan Analítico de este día. Presentar un número inventado en esa línea violaría el objetivo mismo de este widget: nunca mostrar una cifra que no pueda sustentarse en la normativa o en los datos ya trabajados en clase.
+  </div>
+
+  <h3>Análisis de márgenes: la importancia del ERI en cifras</h3>
+  <div class="scroll-tabla">
+  <table class="tabla-eri">
+    <caption>Márgenes de Comercial El Astillero S.A., agosto 2026 (sobre ingresos de 30.680,00)</caption>
+    <thead><tr><th>Margen</th><th class="valor">Cálculo</th><th class="valor">%</th></tr></thead>
+    <tbody>
+      <tr><td>Margen bruto</td><td class="valor">10.020,00 ÷ 30.680,00</td><td class="valor">32,66%</td></tr>
+      <tr><td>Margen operativo</td><td class="valor">917,70 ÷ 30.680,00</td><td class="valor">2,99%</td></tr>
+      <tr><td>Margen antes de participación e impuestos</td><td class="valor">582,70 ÷ 30.680,00</td><td class="valor">1,90%</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>El Día 13 llamamos a la última cifra, de forma informal, «margen neto» porque todavía no habíamos formalizado la estructura del ERI. Con el Tema 2 ya trabajado, hoy la nombramos con precisión: es el <strong>margen antes de participación e impuestos</strong> (1,90%), no el margen neto real, porque la utilidad neta todavía debe restar el 15% de trabajadores y el impuesto a la renta.</p>
+
+  <p>La lectura gerencial es contundente: de cada dólar vendido, El Astillero S.A. conserva 32,66 centavos después de reponer la mercadería vendida (margen bruto), pero solo 2,99 centavos después de sostener su estructura administrativa y de ventas (margen operativo), y apenas 1,90 centavos después de cubrir además los ajustes de inventario y el costo de su financiamiento. La <strong>brecha entre el margen bruto y los siguientes</strong> es la señal de gestión más importante de este estado: el problema de El Astillero en agosto no fue vender ni comprar bien —el margen bruto de 32,66% es saludable para un comercio minorista—, fue el peso de sus gastos de operación (9.102,30, casi el 91% de la utilidad bruta) lo que erosionó el resultado.</p>
+
+  <div class="carrera-box">
+    <strong class="etiqueta">Conexión con Negocios Internacionales</strong>
+    <ul>
+      <li><strong>Comercio exterior:</strong> un margen bruto de 32,66% es el tipo de indicador que una entidad de fomento a las exportaciones revisa antes de aprobar líneas de precompra o factoring de exportación.</li>
+      <li><strong>Finanzas internacionales:</strong> la caída de 32,66% a 1,90% en tres pasos es exactamente el análisis vertical que un analista de riesgo internacional hace antes de recomendar una inversión o un crédito transfronterizo.</li>
+      <li><strong>Marketing y negociación internacional:</strong> conocer que los gastos de operación consumen el 91% de la utilidad bruta permite negociar, con datos, reducciones de costos fijos o mejores condiciones con proveedores de servicios (arriendo, seguros) antes de negociar precios de venta.</li>
+      <li><strong>Marco legal y normativo:</strong> el 15% de participación a trabajadores (87,41) y el futuro impuesto a la renta se calculan sobre la utilidad de 582,70 — no sobre las ventas de 30.680,00 — un punto que con frecuencia se confunde y que tiene consecuencias legales si se calcula mal.</li>
+    </ul>
+  </div>
+
+  <div class="conclusion">
+    <strong class="etiqueta">Idea clave</strong>
+    El ERI de El Astillero S.A. no agrega ni un dato nuevo al Día 13: solo ordena, en la estructura de la NIC 1, cifras que ya existían. Y esa sola reorganización revela algo que el balance ajustado, por sí solo, no mostraba con claridad: la utilidad se pierde principalmente en gastos de operación, no en el costo de la mercadería ni en los ajustes de inventario.
+  </div>
+</section>
+
+<!-- ============================= EJERCICIO ============================= -->
+<section id="panel-ejercicio" class="panel">
+  <h2>Ejercicio Interactivo — Clasifica cada partida en su línea del ERI</h2>
+  <p>Cada partida ya fue registrada en el Día 13 (o, en el último caso, es un ejemplo puramente conceptual del Tema 2). Marca en qué línea del <strong>Estado de Resultado Integral</strong> corresponde presentarla. Responde las 8 preguntas y luego presiona <strong>«Verificar respuestas»</strong>.</p>
+
+  <form id="form-ejercicio">
+
+    <div class="item-pregunta">
+      <div class="enunciado">1. El costo de la mercadería vendida en las tres ventas de agosto (20.660,00).</div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="ei1" value="a"><span><strong>a)</strong> Ingresos de actividades ordinarias</span></label>
+        <label class="opcion"><input type="radio" name="ei1" value="b"><span><strong>b)</strong> Costo de ventas</span></label>
+        <label class="opcion"><input type="radio" name="ei1" value="c"><span><strong>c)</strong> Gastos de operación</span></label>
+        <label class="opcion"><input type="radio" name="ei1" value="d"><span><strong>d)</strong> Gastos financieros</span></label>
+      </div>
+      <div class="feedback" id="fb-ei1"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">2. La depreciación de muebles, equipo de cómputo y vehículos del mes (580,00).</div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="ei2" value="a"><span><strong>a)</strong> Otros gastos operativos</span></label>
+        <label class="opcion"><input type="radio" name="ei2" value="b"><span><strong>b)</strong> Gastos financieros</span></label>
+        <label class="opcion"><input type="radio" name="ei2" value="c"><span><strong>c)</strong> Gastos de operación</span></label>
+        <label class="opcion"><input type="radio" name="ei2" value="d"><span><strong>d)</strong> 15% Participación a trabajadores</span></label>
+      </div>
+      <div class="feedback" id="fb-ei2"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">3. El interés devengado del préstamo bancario al 12% anual (120,00).</div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="ei3" value="a"><span><strong>a)</strong> Gastos financieros</span></label>
+        <label class="opcion"><input type="radio" name="ei3" value="b"><span><strong>b)</strong> Gastos de operación</span></label>
+        <label class="opcion"><input type="radio" name="ei3" value="c"><span><strong>c)</strong> Costo de ventas</span></label>
+        <label class="opcion"><input type="radio" name="ei3" value="d"><span><strong>d)</strong> Otro Resultado Integral (ORI)</span></label>
+      </div>
+      <div class="feedback" id="fb-ei3"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">4. La base de las tres ventas de mercadería realizadas en agosto (30.680,00).</div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="ei4" value="a"><span><strong>a)</strong> Otro Resultado Integral (ORI)</span></label>
+        <label class="opcion"><input type="radio" name="ei4" value="b"><span><strong>b)</strong> Costo de ventas</span></label>
+        <label class="opcion"><input type="radio" name="ei4" value="c"><span><strong>c)</strong> Gastos de operación</span></label>
+        <label class="opcion"><input type="radio" name="ei4" value="d"><span><strong>d)</strong> Ingresos de actividades ordinarias</span></label>
+      </div>
+      <div class="feedback" id="fb-ei4"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">5. El faltante detectado en la toma física de inventario: Kardex 60 u frente a un conteo real de 58 u (80,50).</div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="ei5" value="a"><span><strong>a)</strong> Otros gastos operativos</span></label>
+        <label class="opcion"><input type="radio" name="ei5" value="b"><span><strong>b)</strong> Ingresos de actividades ordinarias</span></label>
+        <label class="opcion"><input type="radio" name="ei5" value="c"><span><strong>c)</strong> Gastos financieros</span></label>
+        <label class="opcion"><input type="radio" name="ei5" value="d"><span><strong>d)</strong> 15% Participación a trabajadores</span></label>
+      </div>
+      <div class="feedback" id="fb-ei5"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">6. El 15% que la ley laboral ecuatoriana reconoce a los trabajadores sobre la utilidad del ejercicio (87,41).</div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="ei6" value="a"><span><strong>a)</strong> Impuesto a la renta</span></label>
+        <label class="opcion"><input type="radio" name="ei6" value="b"><span><strong>b)</strong> Gastos de operación</span></label>
+        <label class="opcion"><input type="radio" name="ei6" value="c"><span><strong>c)</strong> 15% Participación a trabajadores</span></label>
+        <label class="opcion"><input type="radio" name="ei6" value="d"><span><strong>d)</strong> Otro Resultado Integral (ORI)</span></label>
+      </div>
+      <div class="feedback" id="fb-ei6"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">7. El gasto bancario cobrado por el banco según la nota de débito 3312 (62,00).</div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="ei7" value="a"><span><strong>a)</strong> Gastos de operación</span></label>
+        <label class="opcion"><input type="radio" name="ei7" value="b"><span><strong>b)</strong> Gastos financieros</span></label>
+        <label class="opcion"><input type="radio" name="ei7" value="c"><span><strong>c)</strong> Otros gastos operativos</span></label>
+        <label class="opcion"><input type="radio" name="ei7" value="d"><span><strong>d)</strong> Costo de ventas</span></label>
+      </div>
+      <div class="feedback" id="fb-ei7"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">8. La ganancia por revaluar un edificio a valor razonable, reconocida directamente contra el patrimonio, sin pasar por la utilidad del ejercicio (ejemplo conceptual del Tema 2).</div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="ei8" value="a"><span><strong>a)</strong> Ingresos de actividades ordinarias</span></label>
+        <label class="opcion"><input type="radio" name="ei8" value="b"><span><strong>b)</strong> Gastos de operación</span></label>
+        <label class="opcion"><input type="radio" name="ei8" value="c"><span><strong>c)</strong> 15% Participación a trabajadores</span></label>
+        <label class="opcion"><input type="radio" name="ei8" value="d"><span><strong>d)</strong> Otro Resultado Integral (ORI)</span></label>
+      </div>
+      <div class="feedback" id="fb-ei8"></div>
+    </div>
+
+    <div class="alerta-envio" id="alerta-ejercicio">Responde las 8 preguntas antes de verificar.</div>
+    <div class="barra-contenedor" id="barra-cont-ejercicio" style="display:none;"><div class="barra-relleno" id="barra-ejercicio">0%</div></div>
+    <div class="resultado-final" id="resultado-ejercicio"></div>
+
+    <button type="button" class="btn" onclick="verificarEjercicio()">Verificar respuestas</button>
+    <button type="button" class="btn secundario" onclick="reiniciarEjercicio()">Reiniciar</button>
+  </form>
+
+  <div class="solucion-caja" id="solucion-ejercicio" style="display:none;">
+    <h4>Solución completa desarrollada</h4>
+    <table class="tabla-eri">
+      <thead><tr><th>#</th><th>Partida</th><th>Línea correcta del ERI</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Costo de la mercadería vendida (20.660,00)</td><td><strong>b) Costo de ventas</strong> — porque mide lo que costó, según FIFO, lo que efectivamente se vendió.</td></tr>
+        <tr><td>2</td><td>Depreciación de muebles, equipo y vehículos (580,00)</td><td><strong>c) Gastos de operación</strong> — sostiene la estructura administrativa, no es parte del costo de lo vendido.</td></tr>
+        <tr><td>3</td><td>Interés del préstamo bancario (120,00)</td><td><strong>a) Gastos financieros</strong> — nace del financiamiento, no de administrar o vender.</td></tr>
+        <tr><td>4</td><td>Base de las ventas de agosto (30.680,00)</td><td><strong>d) Ingresos de actividades ordinarias</strong> — es el giro normal del negocio, sin IVA.</td></tr>
+        <tr><td>5</td><td>Faltante en toma física de inventario (80,50)</td><td><strong>a) Otros gastos operativos</strong> — nace de la operación (control de inventarios) pero no es un gasto recurrente de administrar o vender.</td></tr>
+        <tr><td>6</td><td>15% a trabajadores (87,41)</td><td><strong>c) 15% Participación a trabajadores</strong> — derecho laboral fijo, no es un impuesto.</td></tr>
+        <tr><td>7</td><td>Gasto bancario, nota de débito (62,00)</td><td><strong>b) Gastos financieros</strong> — es un costo del manejo bancario del negocio.</td></tr>
+        <tr><td>8</td><td>Ganancia por revaluación de un edificio (ejemplo conceptual)</td><td><strong>d) Otro Resultado Integral (ORI)</strong> — se reconoce contra el patrimonio, nunca en la utilidad del ejercicio.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================= CUESTIONARIO ============================= -->
+<section id="panel-cuestionario" class="panel">
+  <h2>Cuestionario — 10 preguntas</h2>
+  <p>7 preguntas teóricas (con lo trabajado en los Temas 1 a 3) y 3 preguntas de análisis de caso, con datos propios de una empresa distinta a El Astillero S.A. Responde las 10 y luego presiona <strong>«Verificar respuestas»</strong>.</p>
+
+  <form id="form-cuestionario">
+
+    <div class="item-pregunta">
+      <div class="enunciado">1. ¿Cuál es la diferencia fundamental entre el Estado de Situación Financiera (ESF) y el Estado de Resultado Integral (ERI)? <span class="badge teorica">Teórica</span></div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="qi1" value="a"><span><strong>a)</strong> El ESF es una fotografía a una fecha exacta; el ERI es una película de un período</span></label>
+        <label class="opcion"><input type="radio" name="qi1" value="b"><span><strong>b)</strong> El ESF mide un período; el ERI mide una fecha exacta</span></label>
+        <label class="opcion"><input type="radio" name="qi1" value="c"><span><strong>c)</strong> Ambos miden exactamente lo mismo, solo cambia el nombre</span></label>
+        <label class="opcion"><input type="radio" name="qi1" value="d"><span><strong>d)</strong> El ESF solo lo usan los bancos y el ERI solo lo usa el SRI</span></label>
+      </div>
+      <div class="feedback" id="fb-qi1"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">2. ¿Por qué el estado se llama «Estado de Resultado Integral» y no solo «Estado de Resultados»? <span class="badge teorica">Teórica</span></div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="qi2" value="a"><span><strong>a)</strong> Porque integra en un solo documento el ESF y el ERI</span></label>
+        <label class="opcion"><input type="radio" name="qi2" value="b"><span><strong>b)</strong> Es solo un cambio de nombre, sin ningún efecto en el contenido</span></label>
+        <label class="opcion"><input type="radio" name="qi2" value="c"><span><strong>c)</strong> Porque incluye la liquidación del IVA del período</span></label>
+        <label class="opcion"><input type="radio" name="qi2" value="d"><span><strong>d)</strong> Porque, además de la utilidad neta, puede incluir el bloque de Otro Resultado Integral (ORI)</span></label>
+      </div>
+      <div class="feedback" id="fb-qi2"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">3. Bajo la clasificación por función, ¿qué se resta directamente de los ingresos de actividades ordinarias para obtener la utilidad bruta? <span class="badge teorica">Teórica</span></div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="qi3" value="a"><span><strong>a)</strong> Los gastos de operación</span></label>
+        <label class="opcion"><input type="radio" name="qi3" value="b"><span><strong>b)</strong> El 15% de participación a trabajadores</span></label>
+        <label class="opcion"><input type="radio" name="qi3" value="c"><span><strong>c)</strong> El costo de ventas</span></label>
+        <label class="opcion"><input type="radio" name="qi3" value="d"><span><strong>d)</strong> Los gastos financieros</span></label>
+      </div>
+      <div class="feedback" id="fb-qi3"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">4. ¿Por qué la NIC 1 exige presentar los gastos financieros en una línea separada de los gastos de operación? <span class="badge teorica">Teórica</span></div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="qi4" value="a"><span><strong>a)</strong> Porque el gasto financiero depende de cuánto se debe y a qué tasa, no de administrar o vender</span></label>
+        <label class="opcion"><input type="radio" name="qi4" value="b"><span><strong>b)</strong> Porque los bancos lo exigen por ley</span></label>
+        <label class="opcion"><input type="radio" name="qi4" value="c"><span><strong>c)</strong> Porque forman parte del costo de ventas</span></label>
+        <label class="opcion"><input type="radio" name="qi4" value="d"><span><strong>d)</strong> Porque los gastos financieros nunca afectan la utilidad</span></label>
+      </div>
+      <div class="feedback" id="fb-qi4"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">5. El 15% de participación a trabajadores... <span class="badge teorica">Teórica</span></div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="qi5" value="a"><span><strong>a)</strong> es un impuesto que administra el SRI</span></label>
+        <label class="opcion"><input type="radio" name="qi5" value="b"><span><strong>b)</strong> se calcula sobre las ventas totales del período</span></label>
+        <label class="opcion"><input type="radio" name="qi5" value="c"><span><strong>c)</strong> es un derecho laboral fijo del Código del Trabajo, calculado sobre la utilidad</span></label>
+        <label class="opcion"><input type="radio" name="qi5" value="d"><span><strong>d)</strong> sustituye al impuesto a la renta</span></label>
+      </div>
+      <div class="feedback" id="fb-qi5"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">6. ¿Cuál de las siguientes es un ejemplo típico de partida de Otro Resultado Integral (ORI)? <span class="badge teorica">Teórica</span></div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="qi6" value="a"><span><strong>a)</strong> El costo de la mercadería vendida</span></label>
+        <label class="opcion"><input type="radio" name="qi6" value="b"><span><strong>b)</strong> La revaluación de propiedades, planta y equipo a valor razonable</span></label>
+        <label class="opcion"><input type="radio" name="qi6" value="c"><span><strong>c)</strong> El arriendo de una bodega</span></label>
+        <label class="opcion"><input type="radio" name="qi6" value="d"><span><strong>d)</strong> El pago del rol de sueldos</span></label>
+      </div>
+      <div class="feedback" id="fb-qi6"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">7. En el ERI de El Astillero S.A. de agosto de 2026, la utilidad bajó de 10.020,00 (utilidad bruta) a 917,70 (utilidad operativa). ¿A qué se debió principalmente esa caída? <span class="badge teorica">Teórica</span></div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="qi7" value="a"><span><strong>a)</strong> Al costo de ventas</span></label>
+        <label class="opcion"><input type="radio" name="qi7" value="b"><span><strong>b)</strong> A los gastos financieros</span></label>
+        <label class="opcion"><input type="radio" name="qi7" value="c"><span><strong>c)</strong> Al impuesto a la renta</span></label>
+        <label class="opcion"><input type="radio" name="qi7" value="d"><span><strong>d)</strong> A los gastos de operación (9.102,30)</span></label>
+      </div>
+      <div class="feedback" id="fb-qi7"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">8. Comercial Manta Sur S.A. registra en el mes ingresos de actividades ordinarias por 50.000,00, costo de ventas por 32.000,00, gastos de operación por 12.500,00 y gastos financieros por 800,00 (sin otros gastos operativos). ¿Cuál es su utilidad bruta? <span class="badge analisis">Análisis de caso</span></div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="qi8" value="a"><span><strong>a)</strong> 5.500,00</span></label>
+        <label class="opcion"><input type="radio" name="qi8" value="b"><span><strong>b)</strong> 37.500,00</span></label>
+        <label class="opcion"><input type="radio" name="qi8" value="c"><span><strong>c)</strong> 18.000,00</span></label>
+        <label class="opcion"><input type="radio" name="qi8" value="d"><span><strong>d)</strong> 4.700,00</span></label>
+      </div>
+      <div class="feedback" id="fb-qi8"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">9. Con los mismos datos de Comercial Manta Sur S.A. de la pregunta anterior, ¿cuál es su utilidad operativa? <span class="badge analisis">Análisis de caso</span></div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="qi9" value="a"><span><strong>a)</strong> 18.000,00</span></label>
+        <label class="opcion"><input type="radio" name="qi9" value="b"><span><strong>b)</strong> 5.500,00</span></label>
+        <label class="opcion"><input type="radio" name="qi9" value="c"><span><strong>c)</strong> 4.700,00</span></label>
+        <label class="opcion"><input type="radio" name="qi9" value="d"><span><strong>d)</strong> 12.500,00</span></label>
+      </div>
+      <div class="feedback" id="fb-qi9"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">10. Con los mismos datos, la utilidad antes de participación e impuestos de Comercial Manta Sur S.A. es 4.700,00. ¿Cuál es el valor del 15% de participación a trabajadores que corresponde reconocer? <span class="badge analisis">Análisis de caso</span></div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="qi10" value="a"><span><strong>a)</strong> 7.500,00</span></label>
+        <label class="opcion"><input type="radio" name="qi10" value="b"><span><strong>b)</strong> 480,00</span></label>
+        <label class="opcion"><input type="radio" name="qi10" value="c"><span><strong>c)</strong> 900,00</span></label>
+        <label class="opcion"><input type="radio" name="qi10" value="d"><span><strong>d)</strong> 705,00</span></label>
+      </div>
+      <div class="feedback" id="fb-qi10"></div>
+    </div>
+
+    <div class="alerta-envio" id="alerta-cuestionario">Responde las 10 preguntas antes de verificar.</div>
+    <div class="barra-contenedor" id="barra-cont-cuestionario" style="display:none;"><div class="barra-relleno" id="barra-cuestionario">0%</div></div>
+    <div class="resultado-final" id="resultado-cuestionario"></div>
+
+    <button type="button" class="btn" onclick="verificarCuestionario()">Verificar respuestas</button>
+    <button type="button" class="btn secundario" onclick="reiniciarCuestionario()">Reiniciar</button>
+  </form>
+</section>
+
+<!-- ============================= ACTIVIDAD CON IA ============================= -->
+<section id="panel-ia" class="panel">
+  <h2>Actividad con IA — construye, consulta y audita tu propio ERI</h2>
+  <p>Esta actividad tiene tres pasos obligatorios, en este orden: <strong>1) resuelves a mano</strong>, <strong>2) consultas a la IA</strong> y <strong>3) auditas su respuesta</strong> comparándola con tu propio trabajo. Se recomienda usar <strong>Claude (claude.ai)</strong>, de acceso gratuito.</p>
+
+  <h3>Paso 1 — Resuelve a mano (antes de abrir cualquier IA)</h3>
+  <div class="ejemplo">
+    <strong class="etiqueta">Caso: Ferretería Los Ríos S.A. — agosto de 2026</strong>
+    <p>En su primer mes de operación, Ferretería Los Ríos S.A. registró: ingresos de actividades ordinarias 42.300,00 · costo de ventas 27.600,00 · gastos de operación 9.150,00 · otros gastos operativos (ajuste de inventario) 210,00 · gastos financieros 340,00. No tiene partidas de Otro Resultado Integral.</p>
+  </div>
+  <p>En una hoja o en Excel, construye el Estado de Resultado Integral completo hasta la línea de <strong>«utilidad antes del impuesto a la renta»</strong>, siguiendo exactamente la estructura del Tema 2 (utilidad bruta → utilidad operativa → utilidad antes de gastos financieros → utilidad antes de participación e impuestos → 15% de participación a trabajadores → utilidad antes del impuesto a la renta). Guarda cada subtotal: los necesitarás en el Paso 3.</p>
+
+  <h3>Paso 2 — Consulta a la IA</h3>
+  <div class="alerta">
+    <strong class="etiqueta">Antes de enviar nada: detecta el error</strong>
+    El siguiente prompt tiene <strong>dos errores deliberados</strong> de clasificación y de cifra, escritos para ver si los detectas antes de enviarlos. No lo copies tal cual: corrígelo primero.
+  </div>
+  <div class="prompt-ia prompt-error">Actúa como profesor de Contabilidad General. Tengo el caso de Ferretería Los Ríos S.A., agosto 2026: ingresos 42.300,00, costo de ventas 27.600,00, gastos de operación 9.150,00, gastos financieros de 210,00 clasificados como "otros gastos operativos", y un gasto financiero adicional de 340,00. Calcula la utilidad bruta como ingresos menos gastos de operación y dime el resultado final del ejercicio.</div>
+  <p><strong>Pista para encontrar los errores:</strong> revisa el Tema 2 — ¿de verdad el gasto de 210,00 es un gasto financiero? ¿Y la utilidad bruta se calcula restando gastos de operación, o restando otra cosa?</p>
+
+  <p>Una vez corregido, envía una versión como esta:</p>
+  <div class="prompt-ia">Actúa como profesor de Contabilidad General bajo NIIF. Tengo el caso de Ferretería Los Ríos S.A., agosto de 2026: ingresos de actividades ordinarias 42.300,00, costo de ventas 27.600,00, gastos de operación 9.150,00, otros gastos operativos (ajuste de inventario) 210,00 y gastos financieros 340,00; sin partidas de Otro Resultado Integral. Construye el Estado de Resultado Integral por función, paso a paso, hasta la utilidad antes del impuesto a la renta, mostrando cada subtotal (utilidad bruta, utilidad operativa, utilidad antes de gastos financieros, utilidad antes de participación e impuestos, 15% de participación a trabajadores y utilidad antes del impuesto a la renta). Explica en una frase qué pregunta de gestión responde cada subtotal.</div>
+
+  <h3>Paso 3 — Audita la respuesta (esto es lo que se evalúa)</h3>
+  <p>Copiar la respuesta de la IA sin más no demuestra aprendizaje. Lo que distingue el pensamiento crítico de la copia simple es esta auditoría, que debes entregar junto con tu hoja del Paso 1:</p>
+  <div class="carrera-box">
+    <strong class="etiqueta">Entrega mínima de la auditoría</strong>
+    <ul>
+      <li>Compara, línea por línea, cada subtotal de la IA contra el tuyo del Paso 1: ¿coinciden exactamente?</li>
+      <li>Si hay una diferencia, identifica si el error está en tu cálculo o en el de la IA, y explica por qué.</li>
+      <li>Señala una frase de la respuesta de la IA que te ayudó a entender mejor un concepto del Tema 2.</li>
+      <li>Señala una frase de la respuesta de la IA que corregirías o matizarías con lo visto en clase (por ejemplo, si mezcla «utilidad neta» con «utilidad antes de impuestos», o si intenta calcular un impuesto a la renta que no corresponde a este curso).</li>
+    </ul>
+  </div>
+
+  <div class="conclusion">
+    <strong class="etiqueta">Idea clave</strong>
+    La IA es una herramienta de verificación y de segunda opinión, no un sustituto del cálculo propio. Un estudiante que audita detecta cuándo la IA acierta y cuándo se equivoca; un estudiante que solo copia no puede distinguir una cosa de la otra.
+  </div>
+</section>
+
+<!-- ============================= REFLEXIÓN ============================= -->
+<section id="panel-reflexion" class="panel">
+  <h2>Reflexión</h2>
+
+  <p>Antes de las preguntas, una idea importante: es muy común llegar a la carrera de Negocios Internacionales pensando que se trata sobre todo de <strong>negociar</strong> — cerrar tratos, hablar idiomas, viajar. Y la negociación es parte de la carrera, pero es solo una parte. Negocios Internacionales es también leer estados financieros de empresas extranjeras, calcular el costo real de una operación de comercio exterior, entender cadenas de abastecimiento, gestionar el riesgo cambiario, conocer la normativa aduanera y tributaria de cada país, y sustentar decisiones ante terceros con cifras, no solo con argumentos. El Estado de Resultado Integral que construiste hoy es exactamente ese tipo de herramienta: silenciosa, técnica, y a la vez decisiva para cualquier negociación que vengas después a cerrar.</p>
+
+  <div class="reflexion-pregunta">
+    <strong>1.</strong> Piensa en el último resumen de gastos que revisaste de tu propia vida —el estado de cuenta de una tarjeta, el resumen mensual de tu celular, o el saldo de una billetera digital—. ¿Qué información necesitabas ver ahí para saber si «te sobró o te faltó» dinero ese mes? ¿En qué se parece esa necesidad a lo que resuelve un Estado de Resultado Integral para una empresa?
+    <textarea class="respuesta-libre" placeholder="Escribe tu respuesta aquí..."></textarea>
+  </div>
+
+  <div class="reflexion-pregunta">
+    <strong>2.</strong> Ahora imagina la cadena completa: tú revisas tus gastos personales; el dueño de una ferretería como Los Ríos S.A. revisa el ERI de su negocio; un banco revisa el ERI de esa ferretería antes de prestarle dinero; y un inversionista extranjero revisa los estados financieros consolidados de una cadena de ferreterías antes de comprar acciones. En cada eslabón de esa cadena, ¿qué pasaría si la información no fuera confiable? ¿Por qué crees que la confiabilidad de un estado financiero importa más mientras más lejos y más grande es la decisión que se toma con él?
+    <textarea class="respuesta-libre" placeholder="Escribe tu respuesta aquí..."></textarea>
+  </div>
+
+  <div class="reflexion-pregunta">
+    <strong>3. (Exploración vocacional)</strong> De las cuatro áreas de Negocios Internacionales que hemos venido conectando en cada tema —comercio exterior, finanzas internacionales, marketing y negociación internacional, marco legal y normativo— ¿en cuál te ves trabajando dentro de algunos años? ¿Qué fue lo que hiciste hoy en este widget (leer el ERI, construirlo, auditarlo con la IA) que más se parece a una tarea real de esa área?
+    <textarea class="respuesta-libre" placeholder="Escribe tu respuesta aquí..."></textarea>
+  </div>
+
+  <div class="reflexion-pregunta">
+    <strong>4. (Inteligencia emocional)</strong> Cuando en el Paso 3 de la Actividad con IA tuviste que señalar un error —tuyo o de la IA— ¿qué sentiste? ¿Te resultó fácil o incómodo reconocer una equivocación propia frente a una cifra concreta? Un profesional de Negocios Internacionales sustenta decisiones ante jefes, clientes o socios extranjeros constantemente: ¿qué puedes empezar a practicar desde ya para que reconocer un error, tuyo o ajeno, se sienta como parte normal del trabajo y no como un fracaso?
+    <textarea class="respuesta-libre" placeholder="Escribe tu respuesta aquí..."></textarea>
+  </div>
+</section>
+
+<!-- ============================= BIBLIOGRAFÍA ============================= -->
+<section id="panel-bibliografia" class="panel">
+  <h2>Bibliografía</h2>
+  <div class="grid-biblio">
+    <div class="tarjeta-biblio">
+      <span class="tipo">Libro</span>
+      <p>Guajardo Cantú, G., &amp; Andrade de Guajardo, N. E. (2014). <em>Contabilidad financiera</em> (6.ª ed.). McGraw-Hill Interamericana.</p>
+    </div>
+    <div class="tarjeta-biblio">
+      <span class="tipo">Libro</span>
+      <p>Horngren, C. T., Harrison, W. T., &amp; Oliver, M. S. (2012). <em>Contabilidad</em> (9.ª ed.). Pearson Educación.</p>
+    </div>
+    <div class="tarjeta-biblio">
+      <span class="tipo">Libro</span>
+      <p>Warren, C. S., Reeve, J. M., &amp; Duchac, J. (2018). <em>Contabilidad financiera</em> (14.ª ed.). Cengage Learning.</p>
+    </div>
+    <div class="tarjeta-biblio">
+      <span class="tipo">Norma</span>
+      <p>IFRS Foundation. (2022). <em>NIC 1 Presentación de estados financieros</em>. IFRS Foundation.</p>
+    </div>
+    <div class="tarjeta-biblio">
+      <span class="tipo">Norma</span>
+      <p>Superintendencia de Compañías, Valores y Seguros del Ecuador. (2023). <em>Normativa contable y financiera aplicable a las compañías sujetas a su control</em>. SUPERCIAS.</p>
+    </div>
+    <div class="tarjeta-biblio">
+      <span class="tipo">Ley</span>
+      <p>Ministerio del Trabajo del Ecuador. (2023). <em>Código del Trabajo</em> (codificación con reformas vigentes). Registro Oficial.</p>
+    </div>
+    <div class="tarjeta-biblio">
+      <span class="tipo">Ley</span>
+      <p>Servicio de Rentas Internas del Ecuador (SRI). (2024). <em>Ley de Régimen Tributario Interno y su Reglamento de Aplicación</em>. SRI.</p>
+    </div>
+  </div>
+  <p style="font-size:.8rem; color:#666; margin-top:16px;"><em>Nota: se recomienda verificar la edición y vigencia exactas de cada fuente en Google Scholar o en el repositorio institucional de la Universidad de Guayaquil antes de citarlas en trabajos formales.</em></p>
+</section>
+
+</main>
+
+<footer class="pie">Universidad de Guayaquil · Facultad de Ciencias Administrativas · Carrera de Negocios Internacionales · Contabilidad General · Día 14</footer>
+</div>
+
+<script>
+/* ==========================================================================
+   1. NAVEGACIÓN ENTRE PESTAÑAS
+   ========================================================================== */
+function showTab(id){
+  document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('activo'); });
+  document.querySelectorAll('.pestana-btn').forEach(function(b){ b.classList.remove('activa'); });
+  document.getElementById('panel-' + id).classList.add('activo');
+  document.querySelector('.pestana-btn[data-tab="' + id + '"]').classList.add('activa');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* ==========================================================================
+   2. ACORDEÓN DE REPASO
+   ========================================================================== */
+function toggleAcordeon(cabecera){
+  cabecera.classList.toggle('abierto');
+  var contenido = cabecera.nextElementSibling;
+  contenido.classList.toggle('abierto');
+}
+
+/* ==========================================================================
+   3. EJERCICIO INTERACTIVO — clasificación (8 ítems)
+   ========================================================================== */
+var correctasEjercicio = {ei1:'b', ei2:'c', ei3:'a', ei4:'d', ei5:'a', ei6:'c', ei7:'b', ei8:'d'};
+var retroEjercicio = {
+  ei1: 'Es Costo de ventas: mide, bajo FIFO, lo que costó la mercadería efectivamente vendida.',
+  ei2: 'Es Gastos de operación: la depreciación sostiene la estructura administrativa, no es parte del costo de lo vendido.',
+  ei3: 'Es Gastos financieros: nace del financiamiento (la tasa y el saldo de la deuda), no de administrar o vender.',
+  ei4: 'Es Ingresos de actividades ordinarias: es el giro normal del negocio, registrado sin IVA.',
+  ei5: 'Es Otros gastos operativos: nace del control de inventarios (Unidad 3), no es un gasto recurrente de administración o ventas.',
+  ei6: 'Es 15% Participación a trabajadores: derecho laboral fijo del Código del Trabajo, no es un tributo.',
+  ei7: 'Es Gastos financieros: es un costo del manejo bancario del negocio.',
+  ei8: 'Es Otro Resultado Integral (ORI): se reconoce directamente contra el patrimonio, nunca en la utilidad del ejercicio.'
+};
+
+function verificarEjercicio(){
+  var claves = Object.keys(correctasEjercicio);
+  var faltan = claves.some(function(k){
+    return !document.querySelector('input[name="'+k+'"]:checked');
+  });
+  var alerta = document.getElementById('alerta-ejercicio');
+  if(faltan){
+    alerta.classList.add('mostrar');
+    return;
+  }
+  alerta.classList.remove('mostrar');
+
+  var correctas = 0;
+  claves.forEach(function(k){
+    var seleccion = document.querySelector('input[name="'+k+'"]:checked').value;
+    var esCorrecta = seleccion === correctasEjercicio[k];
+    if(esCorrecta) correctas++;
+
+    document.querySelectorAll('input[name="'+k+'"]').forEach(function(input){
+      var opcionDiv = input.closest('.opcion');
+      opcionDiv.classList.remove('correcta-marca','incorrecta-marca');
+      if(input.value === correctasEjercicio[k]) opcionDiv.classList.add('correcta-marca');
+      else if(input.checked) opcionDiv.classList.add('incorrecta-marca');
+    });
+
+    var fb = document.getElementById('fb-'+k);
+    fb.classList.add('mostrar');
+    fb.classList.remove('ok','mal');
+    if(esCorrecta){
+      fb.classList.add('ok');
+      fb.textContent = '✔ Correcto. ' + retroEjercicio[k];
+    } else {
+      fb.classList.add('mal');
+      fb.textContent = '✘ Incorrecto. ' + retroEjercicio[k];
+    }
+  });
+
+  var total = claves.length;
+  var pct = Math.round((correctas/total)*100);
+  document.getElementById('barra-cont-ejercicio').style.display = 'block';
+  var barra = document.getElementById('barra-ejercicio');
+  setTimeout(function(){ barra.style.width = pct + '%'; barra.textContent = pct + '%'; }, 60);
+  document.getElementById('resultado-ejercicio').textContent = 'Resultado: ' + correctas + ' / ' + total + ' (' + pct + '%)';
+  document.getElementById('solucion-ejercicio').style.display = 'block';
+}
+
+function reiniciarEjercicio(){
+  document.getElementById('form-ejercicio').reset();
+  document.querySelectorAll('#panel-ejercicio .opcion').forEach(function(o){ o.classList.remove('correcta-marca','incorrecta-marca'); });
+  document.querySelectorAll('#panel-ejercicio .feedback').forEach(function(f){ f.classList.remove('mostrar','ok','mal'); f.textContent=''; });
+  document.getElementById('alerta-ejercicio').classList.remove('mostrar');
+  document.getElementById('barra-cont-ejercicio').style.display = 'none';
+  var barra = document.getElementById('barra-ejercicio'); barra.style.width='0%'; barra.textContent='0%';
+  document.getElementById('resultado-ejercicio').textContent = '';
+  document.getElementById('solucion-ejercicio').style.display = 'none';
+}
+
+/* ==========================================================================
+   4. CUESTIONARIO — 10 preguntas (7 teóricas + 3 análisis de caso)
+   ========================================================================== */
+var correctasCuestionario = {qi1:'a', qi2:'d', qi3:'c', qi4:'a', qi5:'c', qi6:'b', qi7:'d', qi8:'c', qi9:'b', qi10:'d'};
+var retroCuestionario = {
+  qi1: 'El ESF («al» una fecha) es una fotografía; el ERI («del…al…») es una película de un período.',
+  qi2: 'El nombre "integral" existe porque, además de la utilidad neta, el estado puede incorporar el Otro Resultado Integral (ORI).',
+  qi3: 'De los ingresos se resta el costo de ventas para obtener la utilidad bruta; los demás gastos se restan después.',
+  qi4: 'Los gastos financieros dependen del nivel de deuda y de la tasa, no de administrar ni de vender: por eso van en línea separada.',
+  qi5: 'El 15% de participación a trabajadores es un derecho laboral fijo (Código del Trabajo), calculado sobre la utilidad, no sobre las ventas.',
+  qi6: 'La revaluación de propiedades, planta y equipo a valor razonable es el ejemplo clásico de ORI: se reconoce contra el patrimonio, no contra la utilidad.',
+  qi7: 'La caída se explica por los gastos de operación (9.102,30), casi el 91% de la utilidad bruta de El Astillero S.A. en agosto.',
+  qi8: 'Utilidad bruta = ingresos (50.000,00) − costo de ventas (32.000,00) = 18.000,00.',
+  qi9: 'Utilidad operativa = utilidad bruta (18.000,00) − gastos de operación (12.500,00) = 5.500,00.',
+  qi10: '15% de participación = utilidad antes de participación e impuestos (4.700,00) × 15% = 705,00 (se calcula sobre la utilidad, no sobre los 50.000,00 de ingresos).'
+};
+
+function verificarCuestionario(){
+  var claves = Object.keys(correctasCuestionario);
+  var faltan = claves.some(function(k){
+    return !document.querySelector('input[name="'+k+'"]:checked');
+  });
+  var alerta = document.getElementById('alerta-cuestionario');
+  if(faltan){
+    alerta.classList.add('mostrar');
+    return;
+  }
+  alerta.classList.remove('mostrar');
+
+  var correctas = 0;
+  claves.forEach(function(k){
+    var seleccion = document.querySelector('input[name="'+k+'"]:checked').value;
+    var esCorrecta = seleccion === correctasCuestionario[k];
+    if(esCorrecta) correctas++;
+
+    document.querySelectorAll('input[name="'+k+'"]').forEach(function(input){
+      var opcionDiv = input.closest('.opcion');
+      opcionDiv.classList.remove('correcta-marca','incorrecta-marca');
+      if(input.value === correctasCuestionario[k]) opcionDiv.classList.add('correcta-marca');
+      else if(input.checked) opcionDiv.classList.add('incorrecta-marca');
+    });
+
+    var fb = document.getElementById('fb-'+k);
+    fb.classList.add('mostrar');
+    fb.classList.remove('ok','mal');
+    if(esCorrecta){
+      fb.classList.add('ok');
+      fb.textContent = '✔ Correcto. ' + retroCuestionario[k];
+    } else {
+      fb.classList.add('mal');
+      fb.textContent = '✘ Incorrecto. ' + retroCuestionario[k];
+    }
+  });
+
+  var total = claves.length;
+  var pct = Math.round((correctas/total)*100);
+  var emoji = '📖';
+  if(pct === 100) emoji = '🏆';
+  else if(pct >= 80) emoji = '🎯';
+  else if(pct >= 60) emoji = '📘';
+  else if(pct >= 40) emoji = '⚠️';
+
+  document.getElementById('barra-cont-cuestionario').style.display = 'block';
+  var barra = document.getElementById('barra-cuestionario');
+  setTimeout(function(){ barra.style.width = pct + '%'; barra.textContent = pct + '%'; }, 60);
+  document.getElementById('resultado-cuestionario').textContent = 'Calificación: ' + correctas + ' / ' + total + ' (' + pct + '%) ' + emoji;
+}
+
+function reiniciarCuestionario(){
+  document.getElementById('form-cuestionario').reset();
+  document.querySelectorAll('#panel-cuestionario .opcion').forEach(function(o){ o.classList.remove('correcta-marca','incorrecta-marca'); });
+  document.querySelectorAll('#panel-cuestionario .feedback').forEach(function(f){ f.classList.remove('mostrar','ok','mal'); f.textContent=''; });
+  document.getElementById('alerta-cuestionario').classList.remove('mostrar');
+  document.getElementById('barra-cont-cuestionario').style.display = 'none';
+  var barra = document.getElementById('barra-cuestionario'); barra.style.width='0%'; barra.textContent='0%';
+  document.getElementById('resultado-cuestionario').textContent = '';
+}
+</script>
+</body>
+</html>

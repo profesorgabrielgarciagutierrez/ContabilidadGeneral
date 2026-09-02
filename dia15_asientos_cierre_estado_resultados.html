@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Día 15 · Asientos de cierre contable y elaboración del Estado de Resultados</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --azul-oscuro:#003366;
+    --celeste:#87CEEB;
+    --verde:#2e7d32;
+    --verde-bg:#eef7ee;
+    --rojo:#b3261e;
+    --rojo-bg:#fdecea;
+    --amarillo-bg:#fff8e1;
+    --gris-borde:#c9d6e3;
+    --gris-fondo:#f5f8fb;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; padding:0;
+    font-family:'Source Sans 3', Arial, sans-serif;
+    color:#1a1a1a;
+    background:#eef2f6;
+    line-height:1.6;
+  }
+  h1,h2,h3,h4{ font-family:'Lora', Georgia, serif; color:var(--azul-oscuro); }
+  .contenedor{ max-width:1000px; margin:0 auto; background:#fff; min-height:100vh; box-shadow:0 0 18px rgba(0,0,0,.08); }
+
+  header.encabezado{
+    background:var(--azul-oscuro); color:#fff; padding:22px 28px;
+  }
+  header.encabezado .institucion{ font-size:.82rem; letter-spacing:.03em; opacity:.92; margin:0 0 4px 0; }
+  header.encabezado h1{ color:#fff; margin:0 0 6px 0; font-size:1.5rem; }
+  header.encabezado .meta{ font-size:.95rem; opacity:.95; }
+  header.encabezado .meta strong{ color:#fff; }
+
+  nav.menu-pestanas{
+    display:flex; overflow-x:auto; background:var(--celeste);
+    border-bottom:3px solid var(--azul-oscuro); position:sticky; top:0; z-index:50;
+  }
+  nav.menu-pestanas button{
+    flex:0 0 auto; padding:13px 18px; border:none; background:transparent;
+    color:#0a0a0a; font-family:'Source Sans 3',sans-serif; font-weight:600; font-size:.92rem;
+    cursor:pointer; white-space:nowrap; border-right:1px solid rgba(0,51,102,.15);
+    transition:background .15s;
+  }
+  nav.menu-pestanas button:hover{ background:#a6dcf2; }
+  nav.menu-pestanas button.activa{
+    background:#fff; color:var(--azul-oscuro); font-weight:700;
+    box-shadow:inset 0 -3px 0 var(--azul-oscuro);
+  }
+
+  main{ padding:26px 30px 50px 30px; }
+  .panel{ display:none; }
+  .panel.activo{ display:block; }
+  .panel h2{ font-size:1.35rem; border-bottom:2px solid var(--celeste); padding-bottom:8px; margin-top:0;}
+  .panel h3{ font-size:1.12rem; margin-top:26px; }
+
+  /* ---- Recuadros obligatorios ---- */
+  .definicion{ background:#eaf2fb; border-left:5px solid var(--azul-oscuro); padding:14px 18px; margin:16px 0; border-radius:4px; }
+  .definicion strong.etiqueta{ display:block; color:var(--azul-oscuro); font-family:'Lora',serif; margin-bottom:4px; }
+  .ejemplo{ background:#f4f0fb; border-left:5px solid #6a4c93; padding:14px 18px; margin:16px 0; border-radius:4px; }
+  .ejemplo strong.etiqueta{ display:block; color:#6a4c93; font-family:'Lora',serif; margin-bottom:4px; }
+  .nota-lateral{ background:#f0f0f0; border-left:5px solid #666; padding:12px 18px; margin:16px 0; border-radius:4px; font-size:.94rem; }
+  .formula{ background:#fff; border:1.5px dashed var(--azul-oscuro); padding:12px 18px; margin:16px 0; border-radius:4px; font-family:'Lora',serif; text-align:center; font-size:1.02rem; }
+  .carrera-box{ background:var(--verde-bg); border:1.5px dashed var(--verde); padding:14px 18px; margin:18px 0; border-radius:6px; }
+  .carrera-box strong.etiqueta{ display:block; color:var(--verde); font-family:'Lora',serif; margin-bottom:6px; }
+  .carrera-box ul{ margin:6px 0 0 0; padding-left:20px; }
+  .carrera-box li{ margin-bottom:4px; }
+  .futuro{ background:#eef4fb; border:1.5px solid #7391b5; padding:14px 18px; margin:16px 0; border-radius:6px; }
+  .futuro strong.etiqueta{ display:block; color:#2c4a6b; font-family:'Lora',serif; margin-bottom:4px; }
+  .conclusion{ background:var(--azul-oscuro); color:#fff; padding:16px 20px; margin:22px 0 10px 0; border-radius:6px; }
+  .conclusion strong.etiqueta{ display:block; font-family:'Lora',serif; margin-bottom:6px; color:#cfe4fb; }
+  .alerta{ background:var(--amarillo-bg); border-left:5px solid #b8860b; padding:14px 18px; margin:16px 0; border-radius:4px; }
+  .alerta strong.etiqueta{ display:block; color:#8a6300; font-family:'Lora',serif; margin-bottom:4px; }
+
+  /* ---- Acordeón Repaso ---- */
+  .acordeon-item{ border:1px solid var(--gris-borde); border-radius:6px; margin-bottom:10px; overflow:hidden; }
+  .acordeon-cabecera{
+    display:flex; justify-content:space-between; align-items:center;
+    background:var(--gris-fondo); padding:12px 16px; cursor:pointer; font-weight:700; color:var(--azul-oscuro);
+  }
+  .acordeon-cabecera .flecha{ transition:transform .2s; font-size:.85rem; }
+  .acordeon-cabecera.abierto .flecha{ transform:rotate(90deg); }
+  .acordeon-contenido{ max-height:0; overflow:hidden; transition:max-height .3s ease; padding:0 18px; background:#fff; }
+  .acordeon-contenido.abierto{ max-height:3000px; padding:14px 18px 18px 18px; }
+
+  /* ---- Tablas contables ---- */
+  table.tabla-eri{ width:100%; border-collapse:collapse; margin:14px 0; font-size:.94rem; }
+  table.tabla-eri caption{ background:var(--azul-oscuro); color:#fff; padding:8px; font-weight:700; text-align:left; padding-left:14px; border-radius:4px 4px 0 0; }
+  table.tabla-eri th, table.tabla-eri td{ border:1px solid var(--gris-borde); padding:7px 10px; }
+  table.tabla-eri th{ background:#eaf2fb; color:var(--azul-oscuro); text-align:left; }
+  table.tabla-eri td.valor{ text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  table.tabla-eri tr.subtotal td{ font-weight:700; background:#f5f8fb; }
+  table.tabla-eri tr.resultado td{ font-weight:700; background:#dcebfa; border-top:2px double var(--azul-oscuro); }
+  table.tabla-eri tr.deduccion td{ color:var(--rojo); }
+  table.tabla-eri tr.pendiente td{ color:#888; font-style:italic; }
+  .scroll-tabla{ overflow-x:auto; }
+
+  /* ---- Libro Diario (asientos contables) ---- */
+  table.libro-diario{ width:100%; border-collapse:collapse; margin:10px 0 4px 0; font-size:.9rem; }
+  .asiento-encabezado{ background:var(--azul-oscuro); color:#fff; padding:9px 14px; border-radius:6px 6px 0 0; font-weight:700; display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px; }
+  table.libro-diario thead th{ background:#eaf2fb; color:var(--azul-oscuro); padding:7px 8px; text-align:center; border:1px solid var(--gris-borde); }
+  table.libro-diario td, table.libro-diario th{ border:1px solid var(--gris-borde); padding:6px 8px; }
+  table.libro-diario td.num{ text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  table.libro-diario td.haber{ padding-left:26px; }
+  table.libro-diario tr.suman td{ border-top:3px double var(--azul-oscuro); font-weight:700; }
+  table.libro-diario td.glosa{ font-style:italic; font-size:.86rem; background:#fbfcfe; }
+  .bloque-asiento{ margin:18px 0 26px 0; border:1px solid var(--gris-borde); border-radius:6px; overflow:hidden; }
+
+  /* ---- T-cuenta ---- */
+  table.t-cuenta{ width:100%; border-collapse:collapse; margin:14px 0; font-size:.92rem; }
+  table.t-cuenta caption{ background:#6a4c93; color:#fff; padding:8px; font-weight:700; border-radius:4px 4px 0 0; }
+  table.t-cuenta th{ background:#f0eaf9; color:#6a4c93; border:1px solid var(--gris-borde); padding:7px; text-align:center; }
+  table.t-cuenta td{ border:1px solid var(--gris-borde); padding:7px 10px; vertical-align:top; }
+  table.t-cuenta td.num{ text-align:right; font-variant-numeric:tabular-nums; }
+  table.t-cuenta tr.saldo td{ font-weight:700; background:#f5f8fb; border-top:2px double #6a4c93; }
+
+  /* ---- Ejercicio / Cuestionario ---- */
+  .item-pregunta{ border:1px solid var(--gris-borde); border-radius:8px; padding:16px; margin-bottom:16px; background:#fbfcfe; }
+  .item-pregunta .enunciado{ font-weight:600; margin-bottom:10px; }
+  .badge{ display:inline-block; font-size:.72rem; font-weight:700; padding:2px 9px; border-radius:12px; margin-left:8px; vertical-align:middle; }
+  .badge.teorica{ background:#d6e9ff; color:var(--azul-oscuro); }
+  .badge.analisis{ background:#ffe3c2; color:#8a4b00; }
+  .opciones{ display:flex; flex-direction:column; gap:8px; }
+  .opcion{ display:flex; align-items:flex-start; gap:8px; padding:9px 12px; border:1px solid var(--gris-borde); border-radius:6px; cursor:pointer; }
+  .opcion:hover{ background:#f0f6fc; }
+  .opcion input{ margin-top:3px; }
+  .feedback{ margin-top:10px; padding:10px 12px; border-radius:6px; font-size:.92rem; display:none; }
+  .feedback.mostrar{ display:block; }
+  .feedback.ok{ background:var(--verde-bg); border-left:4px solid var(--verde); color:#1b4d1e; }
+  .feedback.mal{ background:var(--rojo-bg); border-left:4px solid var(--rojo); color:#7a1a14; }
+  .opcion.correcta-marca{ border-color:var(--verde); background:var(--verde-bg); }
+  .opcion.incorrecta-marca{ border-color:var(--rojo); background:var(--rojo-bg); }
+
+  .barra-contenedor{ background:#e0e6ec; border-radius:20px; overflow:hidden; height:26px; margin:14px 0; }
+  .barra-relleno{ height:100%; width:0%; background:linear-gradient(90deg,#1e5fa8,#2e8b57); display:flex; align-items:center; justify-content:flex-end; padding-right:10px; color:#fff; font-weight:700; font-size:.85rem; transition:width 1.1s ease; }
+  .resultado-final{ text-align:center; font-size:1.15rem; font-weight:700; margin:14px 0; }
+
+  .btn{ background:var(--azul-oscuro); color:#fff; border:none; padding:11px 22px; border-radius:6px; font-weight:700; cursor:pointer; font-size:.95rem; margin-right:10px; }
+  .btn:hover{ background:#004a91; }
+  .btn.secundario{ background:#fff; color:var(--azul-oscuro); border:2px solid var(--azul-oscuro); }
+  .btn.secundario:hover{ background:#eaf2fb; }
+  .alerta-envio{ background:var(--rojo-bg); color:var(--rojo); border:1px solid var(--rojo); padding:10px 14px; border-radius:6px; margin:12px 0; display:none; font-weight:600; }
+  .alerta-envio.mostrar{ display:block; }
+
+  .solucion-caja{ background:var(--gris-fondo); border:1px solid var(--gris-borde); border-radius:8px; padding:16px 18px; margin-top:20px; }
+  .solucion-caja h4{ margin-top:0; }
+
+  /* ---- Reflexión / IA ---- */
+  .reflexion-pregunta{ background:#fff; border:1px solid var(--gris-borde); border-left:5px solid #6a4c93; padding:14px 18px; margin:14px 0; border-radius:4px; }
+  .reflexion-pregunta strong{ color:#6a4c93; }
+  textarea.respuesta-libre{ width:100%; min-height:70px; margin-top:8px; padding:9px; border:1px solid var(--gris-borde); border-radius:6px; font-family:inherit; font-size:.94rem; resize:vertical; }
+  .prompt-ia{ background:#0d1b2a; color:#e6f0fa; padding:14px 16px; border-radius:6px; font-family:'Courier New',monospace; font-size:.86rem; white-space:pre-wrap; margin:12px 0; }
+  .prompt-error{ border:1.5px dashed #b3261e; }
+
+  /* ---- Bibliografía ---- */
+  .grid-biblio{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:16px; }
+  .tarjeta-biblio{ background:#fff; border:1px solid var(--gris-borde); border-left:5px solid var(--azul-oscuro); border-radius:6px; padding:14px 16px; font-size:.92rem; }
+  .tarjeta-biblio .tipo{ display:inline-block; font-size:.7rem; font-weight:700; background:#eaf2fb; color:var(--azul-oscuro); padding:2px 8px; border-radius:10px; margin-bottom:6px; }
+  footer.pie{ text-align:center; font-size:.82rem; color:#666; padding:20px; }
+
+  @media (max-width:640px){
+    main{ padding:18px 14px 40px 14px; }
+    .grid-biblio{ grid-template-columns:1fr; }
+    header.encabezado{ padding:16px 16px; }
+    table.tabla-eri, table.libro-diario, table.t-cuenta{ font-size:.8rem; }
+  }
+</style>
+</head>
+<body>
+<div class="contenedor">
+
+<header class="encabezado">
+  <p class="institucion">Universidad de Guayaquil · Facultad de Ciencias Administrativas · Carrera de Negocios Internacionales</p>
+  <h1>Contabilidad General</h1>
+  <p class="meta"><strong>Día 15</strong> · Miércoles 2 de septiembre de 2026 · 5 horas · <strong>Unidad 4</strong> — Asientos de cierre contable. Elaboración del Estado de Resultados. Práctica</p>
+</header>
+
+<nav class="menu-pestanas" id="menu-pestanas">
+  <button class="pestana-btn activa" data-tab="repaso" onclick="showTab('repaso')">Repaso</button>
+  <button class="pestana-btn" data-tab="tema1" onclick="showTab('tema1')">Tema 1</button>
+  <button class="pestana-btn" data-tab="tema2" onclick="showTab('tema2')">Tema 2</button>
+  <button class="pestana-btn" data-tab="tema3" onclick="showTab('tema3')">Tema 3</button>
+  <button class="pestana-btn" data-tab="ejercicio" onclick="showTab('ejercicio')">Ejercicio Interactivo</button>
+  <button class="pestana-btn" data-tab="cuestionario" onclick="showTab('cuestionario')">Cuestionario</button>
+  <button class="pestana-btn" data-tab="ia" onclick="showTab('ia')">Actividad con IA</button>
+  <button class="pestana-btn" data-tab="reflexion" onclick="showTab('reflexion')">Reflexión</button>
+  <button class="pestana-btn" data-tab="bibliografia" onclick="showTab('bibliografia')">Bibliografía</button>
+</nav>
+
+<main>
+
+<!-- ============================= REPASO ============================= -->
+<section id="panel-repaso" class="panel activo">
+  <h2>Repaso — lo recorrido antes de hoy</h2>
+  <p>Ayer, en el Día 14, dejamos el resultado de Comercial El Astillero S.A. completamente ordenado en un estado financiero formal, pero con las cuentas de ingresos y gastos <strong>todavía abiertas</strong> en la contabilidad: seguían mostrando sus saldos en los libros, como si el mes de agosto nunca fuera a terminar contablemente. Hoy les ponemos el punto final.</p>
+
+  <div class="acordeon-item">
+    <div class="acordeon-cabecera" onclick="toggleAcordeon(this)">
+      <span>Unidad 3 en síntesis (Días 7-13)</span>
+      <span class="flecha">▶</span>
+    </div>
+    <div class="acordeon-contenido">
+      <p>La Unidad 3 completa nos llevó desde la NIC 2 y los métodos de valuación de inventarios (FIFO, promedio) hasta el Kardex formal, las cuatro familias de asientos de ajuste (acumulación, diferimiento, estimación, comprobación) y el balance de comprobación ajustado. Cerró con el caso integrador de <strong>Comercial El Astillero S.A.</strong>, agosto de 2026: 17 asientos de transacciones más 8 de ajuste, un <strong>balance de comprobación ajustado de 130.870,70</strong> (41 cuentas) y un <strong>resultado real de 582,70</strong>, muy por debajo del resultado aparente de 2.511,70 que mostraba el balance preliminar.</p>
+    </div>
+  </div>
+
+  <div class="acordeon-item">
+    <div class="acordeon-cabecera" onclick="toggleAcordeon(this)">
+      <span>Día 14 — Estructura del Estado de Resultado Integral</span>
+      <span class="flecha">▶</span>
+    </div>
+    <div class="acordeon-contenido">
+      <p>Aprendimos que el <strong>Estado de Resultado Integral (ERI)</strong> es una película de un período (no una fotografía como el ESF), y que la NIC 1 lo estructura, bajo el enfoque por función, como una cascada de restas: ingresos menos costo de ventas es la <strong>utilidad bruta</strong>; menos gastos de operación, la <strong>utilidad operativa</strong>; menos otros gastos operativos y gastos financieros, la <strong>utilidad antes de participación e impuestos</strong>.</p>
+      <p>Con las cuentas de El Astillero S.A. armamos ese ERI sin agregar ni un dato nuevo: <strong>ingresos 30.680,00 − costo de ventas 20.660,00 = utilidad bruta 10.020,00</strong>; menos gastos de operación 9.102,30 = utilidad operativa 917,70; menos otros gastos operativos 153,00 y gastos financieros 182,00 = <strong>utilidad antes de participación e impuestos: 582,70</strong> (la misma cifra del Día 13). Calculamos también el <strong>15% de participación a trabajadores: 87,41</strong>, lo que deja una <strong>utilidad antes del impuesto a la renta de 495,29</strong>. El impuesto a la renta quedó señalado en la estructura, sin calcular, porque su tarifa y liquidación pertenecen a la asignatura de Tributación.</p>
+    </div>
+  </div>
+
+  <div class="futuro">
+    <strong class="etiqueta">Puente hacia el Día 15</strong>
+    El ERI del Día 14 fue un ejercicio de <strong>presentación</strong>: reorganizamos cifras que ya existían en los libros, pero esas cifras seguían siendo saldos activos en las cuentas de Ventas, Costo de ventas y cada gasto. Hoy vamos a <strong>cerrarlas contablemente</strong>: llevarlas a cero mediante asientos de cierre, provisionar el 15% de participación a trabajadores que el Día 14 solo calculó en el papel, y trasladar la utilidad definitiva del mes a Resultados Acumulados — el paso que faltaba para que agosto de 2026 quede oficialmente cerrado en la contabilidad de El Astillero S.A. y septiembre empiece limpio.
+  </div>
+</section>
+
+<!-- ============================= TEMA 1 ============================= -->
+<section id="panel-tema1" class="panel">
+  <h2>Tema 1 — Qué son y para qué sirven los asientos de cierre</h2>
+
+  <div class="definicion">
+    <strong class="etiqueta">Definición</strong>
+    Los <strong>asientos de cierre</strong> son los asientos contables que se registran al final de cada período (mes, trimestre o año, según la política de la entidad) con un único propósito: <strong>llevar a saldo cero todas las cuentas de resultado</strong> — ingresos, costo de ventas y gastos — para que el período contable siguiente comience su medición desde cero, sin arrastrar los saldos del período anterior.
+  </div>
+
+  <h3>Dos tipos de cuentas: reales y nominales</h3>
+  <p>Desde el Día 3 trabajamos con la naturaleza de las cuentas dentro de la ecuación contable (Activo = Pasivo + Patrimonio). Hoy es el momento de precisar una distinción que estuvo presente todo el curso, aunque no se había nombrado con este vocabulario: no todas las cuentas se comportan igual de un período a otro.</p>
+  <ul>
+    <li><strong>Cuentas reales o permanentes</strong> (activo, pasivo y patrimonio): su saldo <strong>se acumula</strong> de un período a otro. El saldo de Bancos al cierre de agosto es exactamente el saldo con el que Bancos abre septiembre. Estas cuentas forman el Estado de Situación Financiera y <strong>nunca se cierran</strong>.</li>
+    <li><strong>Cuentas nominales o temporales</strong> (ingresos, costo de ventas, gastos): existen únicamente para <strong>medir el desempeño de un período específico</strong>. Si el saldo de Ventas de agosto no se llevara a cero, en septiembre esa cuenta empezaría ya "contaminada" con las ventas de agosto, y el Estado de Resultado Integral de septiembre mostraría una cifra falsa. Estas cuentas forman el ERI y <strong>siempre se cierran</strong> al final del período.</li>
+  </ul>
+
+  <div class="ejemplo">
+    <strong class="etiqueta">Ejemplo — el marcador de un partido</strong>
+    <p>Piensa en el marcador electrónico de un estadio. El resultado del partido de ayer (2 a 1) no se suma al resultado del partido de hoy: antes de que ruede el balón, el marcador vuelve a 0 a 0. Si no se reiniciara, el segundo partido empezaría con un marcador falso que no representa lo que realmente ocurrió en ese juego. Las cuentas de ingresos y gastos funcionan igual: cada período empieza su propio marcador desde cero. Lo que sí permanece de un partido a otro —como el saldo acumulado de Bancos o de Capital— es más parecido a la tabla de posiciones del campeonato, que sí acumula puntos partido tras partido.</p>
+  </div>
+
+  <h3>El ciclo contable completo, cerrado por primera vez</h3>
+  <p>Este es un buen momento para mirar hacia atrás y ver el curso completo como un solo proceso: en el Día 1 definimos la contabilidad como un sistema de información; en el Día 3, la partida doble y los tipos de asientos; en el Día 5, la jornalización y la mayorización; en el Día 11 y el Día 12, los ajustes y el balance de comprobación ajustado; en el Día 14, la presentación formal del resultado. Los asientos de cierre de hoy son el <strong>último eslabón del ciclo contable de un período</strong>: después de ellos, solo quedan en los libros las cuentas reales, listas para convertirse en el Estado de Situación Financiera del Día 16, y las cuentas nominales quedan en cero, listas para que empiece a medirse el siguiente período.</p>
+
+  <div class="alerta">
+    <strong class="etiqueta">Error frecuente</strong>
+    Pensar que "cerrar la contabilidad" significa dejar de registrar transacciones para siempre. No es así: los asientos de cierre solo reinician las cuentas nominales; el negocio sigue operando, y en septiembre se volverán a jornalizar ventas, compras y gastos con toda normalidad, empezando cada cuenta nominal desde cero.
+  </div>
+
+  <div class="carrera-box">
+    <strong class="etiqueta">Conexión con Negocios Internacionales</strong>
+    <ul>
+      <li><strong>Comercio exterior:</strong> un exportador que reporta resultados trimestrales a una entidad de fomento necesita que cada trimestre se mida de forma independiente y comparable; sin cierre, los trimestres se mezclarían.</li>
+      <li><strong>Finanzas internacionales:</strong> los inversionistas comparan la utilidad de un período contra otro (análisis horizontal); esa comparación solo es válida si cada período fue correctamente cerrado y empezó su propio marcador en cero.</li>
+      <li><strong>Marketing y negociación internacional:</strong> negociar metas de ventas o comisiones por período exige que cada período se mida de forma limpia y aislada, exactamente lo que garantiza el cierre contable.</li>
+      <li><strong>Marco legal y normativo:</strong> el SRI exige información de un ejercicio fiscal específico (no acumulada indefinidamente); los asientos de cierre son el mecanismo contable que hace posible esa delimitación exacta por período.</li>
+    </ul>
+  </div>
+
+  <div class="conclusion">
+    <strong class="etiqueta">Idea clave</strong>
+    Los asientos de cierre existen para que las cuentas nominales (ingresos, costo de ventas, gastos) midan un solo período a la vez, mientras que las cuentas reales (activo, pasivo, patrimonio) acumulan su saldo de por vida en la empresa. Sin cierre, ningún período podría medirse ni compararse con el siguiente de forma confiable.
+  </div>
+</section>
+
+<!-- ============================= TEMA 2 ============================= -->
+<section id="panel-tema2" class="panel">
+  <h2>Tema 2 — El proceso de cierre: la cuenta puente y sus pasos</h2>
+
+  <div class="definicion">
+    <strong class="etiqueta">Definición — Resumen de Rentas y Gastos</strong>
+    El <strong>Resumen de Rentas y Gastos</strong> (en otras tradiciones contables llamada «Pérdidas y Ganancias») es una cuenta <strong>puente, temporal y exclusiva del proceso de cierre</strong>: no existe durante el período, se abre únicamente para recibir, por un instante contable, el traslado de todas las cuentas de ingresos y de todas las cuentas de costo y gasto, y se cierra ella misma en el mismo proceso, trasladando su saldo final a Resultados Acumulados. Nunca aparece en un balance de comprobación a mitad de mes.
+  </div>
+
+  <h3>Los tres pasos del cierre</h3>
+  <p>Bajo el enfoque de cuenta puente que usa este curso, cerrar un período comercial completo se hace siempre en el mismo orden:</p>
+
+  <div class="scroll-tabla">
+  <table class="tabla-eri">
+    <caption>Los tres asientos de cierre, en orden fijo</caption>
+    <thead><tr><th>Paso</th><th>Qué se hace</th><th>Efecto en Resumen de Rentas y Gastos</th></tr></thead>
+    <tbody>
+      <tr><td><strong>1. Cierre de ingresos</strong></td><td>Se debita cada cuenta de ingreso (Ventas) por su saldo total y se acredita, por el mismo valor, Resumen de Rentas y Gastos.</td><td>Queda con saldo <strong>acreedor</strong> (Haber) igual al total de ingresos.</td></tr>
+      <tr><td><strong>2. Cierre de costos y gastos</strong></td><td>Se acredita cada cuenta de costo y de gasto (costo de ventas, cada gasto de operación, otros gastos operativos, gastos financieros) por su saldo, y se debita, por el total, Resumen de Rentas y Gastos.</td><td>Recibe un valor <strong>deudor</strong> (Debe) igual al total de costos y gastos.</td></tr>
+      <tr><td><strong>3. Cierre del Resumen de Rentas y Gastos</strong></td><td>Se calcula el saldo neto de la cuenta puente (ingresos menos costos y gastos) y se traslada íntegro a Resultados Acumulados.</td><td>Queda en <strong>cero</strong>: ya cumplió su función.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="formula">
+    Si Resumen de Rentas y Gastos queda con saldo <strong>acreedor</strong> → hubo <strong>utilidad</strong>: se debita Resumen y se acredita Resultados Acumulados.<br>
+    Si queda con saldo <strong>deudor</strong> → hubo <strong>pérdida</strong>: se acredita Resumen y se debita Resultados Acumulados.
+  </div>
+
+  <div class="alerta">
+    <strong class="etiqueta">Error frecuente</strong>
+    Cerrar cada cuenta de gasto directamente contra Resultados Acumulados, saltándose la cuenta puente. Esto rompe la trazabilidad: Resultados Acumulados terminaría mezclando, en un solo movimiento por cuenta, información de decenas de gastos distintos, sin que quede un solo lugar donde verificar que ingresos menos costos y gastos efectivamente cuadra con la utilidad del ERI. La cuenta puente existe precisamente para que ese cuadre sea visible antes de tocar el patrimonio.
+  </div>
+
+  <h3>¿Y la participación a trabajadores?</h3>
+  <p>El Día 14 calculamos el 15% de participación a trabajadores (87,41 para El Astillero S.A.) como parte de la <strong>estructura de presentación</strong> del ERI, pero esa cifra todavía no tenía un asiento contable propio: no existía todavía una cuenta de gasto ni un pasivo por pagar a los trabajadores en los libros. Antes de poder cerrar el período, hace falta un asiento adicional —de la misma familia de <strong>estimación</strong> que ya trabajamos el Día 11— que reconozca esa obligación: se debita un gasto por participación a trabajadores y se acredita el pasivo correspondiente. Solo después de ese asiento, la cuenta de gasto de participación a trabajadores existe en los libros y puede cerrarse junto con las demás en el paso 2.</p>
+
+  <h3>Formato de los asientos de cierre</h3>
+  <p>Los asientos de cierre siguen exactamente el mismo formato de Libro Diario usado desde el Día 5: encabezado con número de asiento y fecha, columnas Fecha/Código/Detalle/Parcial/Debe/Haber, cuenta deudora al margen izquierdo, cuenta(s) acreedora(s) indentadas y precedidas de «a)», fila SUMAN con doble borde, y una <strong>glosa obligatoria en cursiva</strong>. Como estos asientos no son ni una compra, ni una venta, ni un pago, ni un ajuste de los ya vistos, la glosa de un asiento de cierre inicia siempre con <strong>«P/R Cierre de…»</strong>.</p>
+
+  <div class="carrera-box">
+    <strong class="etiqueta">Conexión con Negocios Internacionales</strong>
+    <ul>
+      <li><strong>Comercio exterior:</strong> una casa comercializadora con líneas de producto distintas cierra cada cuenta de ingreso por separado antes de consolidarlas en Resumen de Rentas y Gastos, lo que permite auditar el aporte de cada línea al resultado total.</li>
+      <li><strong>Finanzas internacionales:</strong> el saldo final de Resultados Acumulados, después del cierre, es exactamente el dato que un analista de crédito internacional revisa para ver cuánta utilidad ha retenido la empresa a lo largo del tiempo.</li>
+      <li><strong>Marketing y negociación internacional:</strong> conocer que la participación a trabajadores requiere su propio asiento de provisión antes del cierre evita subestimar el costo real de una operación al negociar precios o comisiones.</li>
+      <li><strong>Marco legal y normativo:</strong> provisionar el 15% de participación a trabajadores antes de cerrar el período no es opcional: es un derecho laboral reconocido por el Código del Trabajo que debe reflejarse en los libros del ejercicio al que corresponde, no en el siguiente.</li>
+    </ul>
+  </div>
+
+  <div class="conclusion">
+    <strong class="etiqueta">Idea clave</strong>
+    Cerrar un período comercial son siempre tres movimientos ordenados alrededor de una cuenta puente —Resumen de Rentas y Gastos—: ingresos entran por el Haber, costos y gastos entran por el Debe, y el saldo neto resultante se traslada a Resultados Acumulados. Antes de ese tercer paso, toda obligación del período —incluida la participación a trabajadores— debe estar provisionada.
+  </div>
+</section>
+
+<!-- ============================= TEMA 3 ============================= -->
+<section id="panel-tema3" class="panel">
+  <h2>Tema 3 — Cierre real de Comercial El Astillero S.A., agosto 2026</h2>
+
+  <p>Partimos del balance de comprobación ajustado del Día 13 (130.870,70) y del ERI del Día 14. Antes de cerrar, falta un asiento: la provisión del 15% de participación a trabajadores. Con él, los libros de El Astillero S.A. quedan listos para los tres asientos de cierre.</p>
+
+  <h3>Asiento N.º 26 — Provisión del 15% de participación a trabajadores</h3>
+  <div class="formula">582,70 (utilidad antes de participación e impuestos, Día 14) × 15% = 87,405 → redondeo comercial → <strong>87,41</strong></div>
+
+  <div class="bloque-asiento">
+    <div class="asiento-encabezado"><span>ASIENTO N.º 26</span><span>31/08/2026</span></div>
+    <table class="libro-diario">
+      <thead><tr><th>Fecha</th><th>Código</th><th>Detalle</th><th>Parcial</th><th>Debe</th><th>Haber</th></tr></thead>
+      <tbody>
+        <tr><td>31/08</td><td>5.2.11</td><td>Gasto Participación Trabajadores</td><td class="num"></td><td class="num">87,41</td><td class="num"></td></tr>
+        <tr><td></td><td>2.1.05.01</td><td class="haber">a) Participación Trabajadores por Pagar</td><td class="num"></td><td class="num"></td><td class="num">87,41</td></tr>
+        <tr class="suman"><td colspan="4">SUMAN</td><td class="num">87,41</td><td class="num">87,41</td></tr>
+        <tr><td colspan="6" class="glosa">P/R Provisión del 15% de participación a trabajadores sobre la utilidad de agosto de 2026 (582,70 × 15% = 87,41), conforme al Código del Trabajo.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Asiento N.º 27 — Cierre de la cuenta de ingresos</h3>
+  <div class="bloque-asiento">
+    <div class="asiento-encabezado"><span>ASIENTO N.º 27</span><span>31/08/2026</span></div>
+    <table class="libro-diario">
+      <thead><tr><th>Fecha</th><th>Código</th><th>Detalle</th><th>Parcial</th><th>Debe</th><th>Haber</th></tr></thead>
+      <tbody>
+        <tr><td>31/08</td><td>4.1.01.01</td><td>Ventas</td><td class="num"></td><td class="num">30.680,00</td><td class="num"></td></tr>
+        <tr><td></td><td>5.9.01.01</td><td class="haber">a) Resumen de Rentas y Gastos</td><td class="num"></td><td class="num"></td><td class="num">30.680,00</td></tr>
+        <tr class="suman"><td colspan="4">SUMAN</td><td class="num">30.680,00</td><td class="num">30.680,00</td></tr>
+        <tr><td colspan="6" class="glosa">P/R Cierre de la cuenta de ingresos del ejercicio de agosto de 2026.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Asiento N.º 28 — Cierre de costo de ventas, gastos y participación a trabajadores</h3>
+  <p>Se cierra, en un solo asiento, cada cuenta nominal de costo y de gasto que quedó registrada en el balance ajustado del Día 13 más la provisión del Asiento 26. Por simplicidad y siguiendo la práctica contable estándar, el arriendo pagado en efectivo (transacción 3, 900,00) y el arriendo consumido del prepagado (ajuste 18, 600,00) se agrupan bajo la misma cuenta de gasto, porque ambos son arriendo devengado en agosto.</p>
+  <div class="bloque-asiento">
+    <div class="asiento-encabezado"><span>ASIENTO N.º 28</span><span>31/08/2026</span></div>
+    <table class="libro-diario">
+      <thead><tr><th>Fecha</th><th>Código</th><th>Detalle</th><th>Parcial</th><th>Debe</th><th>Haber</th></tr></thead>
+      <tbody>
+        <tr><td>31/08</td><td>5.9.01.01</td><td>Resumen de Rentas y Gastos</td><td class="num"></td><td class="num">30.184,71</td><td class="num"></td></tr>
+        <tr><td></td><td>5.1.01.01</td><td class="haber">a) Costo de Ventas</td><td class="num"></td><td class="num"></td><td class="num">20.660,00</td></tr>
+        <tr><td></td><td>5.2.01</td><td class="haber">a) Gasto Arriendo (900,00 + 600,00)</td><td class="num"></td><td class="num"></td><td class="num">1.500,00</td></tr>
+        <tr><td></td><td>5.2.02</td><td class="haber">a) Gasto Seguros</td><td class="num"></td><td class="num"></td><td class="num">180,00</td></tr>
+        <tr><td></td><td>5.2.03</td><td class="haber">a) Gasto Depreciación</td><td class="num"></td><td class="num"></td><td class="num">580,00</td></tr>
+        <tr><td></td><td>5.2.04</td><td class="haber">a) Gasto Deterioro Cuentas por Cobrar</td><td class="num"></td><td class="num"></td><td class="num">234,00</td></tr>
+        <tr><td></td><td>5.2.05</td><td class="haber">a) Servicios Básicos</td><td class="num"></td><td class="num"></td><td class="num">240,00</td></tr>
+        <tr><td></td><td>5.2.06</td><td class="haber">a) Mantenimiento de Vehículos</td><td class="num"></td><td class="num"></td><td class="num">500,00</td></tr>
+        <tr><td></td><td>5.2.07</td><td class="haber">a) Honorarios Profesionales</td><td class="num"></td><td class="num"></td><td class="num">1.200,00</td></tr>
+        <tr><td></td><td>5.2.08</td><td class="haber">a) Sueldos y Beneficios Sociales</td><td class="num"></td><td class="num"></td><td class="num">4.668,30</td></tr>
+        <tr><td></td><td>5.2.09</td><td class="haber">a) Faltante de Inventario</td><td class="num"></td><td class="num"></td><td class="num">80,50</td></tr>
+        <tr><td></td><td>5.2.10</td><td class="haber">a) Ajuste a Valor Neto Realizable</td><td class="num"></td><td class="num"></td><td class="num">72,50</td></tr>
+        <tr><td></td><td>5.3.01</td><td class="haber">a) Gasto Interés</td><td class="num"></td><td class="num"></td><td class="num">120,00</td></tr>
+        <tr><td></td><td>5.3.02</td><td class="haber">a) Gastos Bancarios</td><td class="num"></td><td class="num"></td><td class="num">62,00</td></tr>
+        <tr><td></td><td>5.2.11</td><td class="haber">a) Gasto Participación Trabajadores</td><td class="num"></td><td class="num"></td><td class="num">87,41</td></tr>
+        <tr class="suman"><td colspan="4">SUMAN</td><td class="num">30.184,71</td><td class="num">30.184,71</td></tr>
+        <tr><td colspan="6" class="glosa">P/R Cierre de las cuentas de costo de ventas, gastos de operación, otros gastos operativos, gastos financieros y participación a trabajadores del ejercicio de agosto de 2026.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="nota-lateral">
+    <strong>Verificación del Asiento 28:</strong> 20.660,00 + 1.500,00 + 180,00 + 580,00 + 234,00 + 240,00 + 500,00 + 1.200,00 + 4.668,30 + 80,50 + 72,50 + 120,00 + 62,00 + 87,41 = <strong>30.184,71</strong>, exactamente igual a costo de ventas (20.660,00) + gastos de operación (9.102,30) + otros gastos operativos (153,00) + gastos financieros (182,00) + participación a trabajadores (87,41) del Día 14.
+  </div>
+
+  <h3>La cuenta puente después de los asientos 27 y 28</h3>
+  <div class="scroll-tabla">
+  <table class="t-cuenta">
+    <caption>5.9.01.01 — Resumen de Rentas y Gastos</caption>
+    <thead><tr><th style="width:50%;">DEBE</th><th style="width:50%;">HABER</th></tr></thead>
+    <tbody>
+      <tr><td>Asiento 28 — costo de ventas, gastos y participación trabajadores: <span class="num">30.184,71</span></td><td>Asiento 27 — ingresos: <span class="num">30.680,00</span></td></tr>
+      <tr class="saldo"><td>Saldo acreedor a trasladar: <span class="num">495,29</span></td><td></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>El saldo de 495,29 es <strong>acreedor</strong> (el Haber, 30.680,00, es mayor que el Debe, 30.184,71): hubo utilidad, no pérdida. Ese saldo es exactamente la «utilidad antes del impuesto a la renta» que el Día 14 dejó calculada en la última fila completa del ERI.</p>
+
+  <h3>Asiento N.º 29 — Cierre del Resumen de Rentas y Gastos a Resultados Acumulados</h3>
+  <div class="bloque-asiento">
+    <div class="asiento-encabezado"><span>ASIENTO N.º 29</span><span>31/08/2026</span></div>
+    <table class="libro-diario">
+      <thead><tr><th>Fecha</th><th>Código</th><th>Detalle</th><th>Parcial</th><th>Debe</th><th>Haber</th></tr></thead>
+      <tbody>
+        <tr><td>31/08</td><td>5.9.01.01</td><td>Resumen de Rentas y Gastos</td><td class="num"></td><td class="num">495,29</td><td class="num"></td></tr>
+        <tr><td></td><td>3.4.01.01</td><td class="haber">a) Resultados Acumulados</td><td class="num"></td><td class="num"></td><td class="num">495,29</td></tr>
+        <tr class="suman"><td colspan="4">SUMAN</td><td class="num">495,29</td><td class="num">495,29</td></tr>
+        <tr><td colspan="6" class="glosa">P/R Cierre de la cuenta Resumen de Rentas y Gastos y traslado de la utilidad del ejercicio de agosto de 2026 a Resultados Acumulados (582,70 − 87,41 = 495,29).</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="formula">Resultados Acumulados: 6.500,00 (saldo de apertura, Día 13) + 495,29 (utilidad de agosto ya cerrada) = <strong>6.995,29</strong></div>
+
+  <h3>El Estado de Resultados, ya con los libros cerrados</h3>
+  <p>Con los asientos 26 a 29 registrados, la cuenta Resumen de Rentas y Gastos —leída de arriba hacia abajo, ingresos primero y luego cada costo y gasto— es, en esencia, el mismo Estado de Resultado Integral del Día 14, solo que ahora respaldado por asientos contables reales y no únicamente por una tabla de presentación.</p>
+  <div class="scroll-tabla">
+  <table class="tabla-eri">
+    <caption>Comercial El Astillero S.A. — Estado de Resultados por el mes terminado el 31 de agosto de 2026 (posterior al cierre)</caption>
+    <thead><tr><th>Cuenta</th><th class="valor">Total</th></tr></thead>
+    <tbody>
+      <tr><td>Ingresos de actividades ordinarias</td><td class="valor">30.680,00</td></tr>
+      <tr class="deduccion"><td>(–) Costo de ventas</td><td class="valor">(20.660,00)</td></tr>
+      <tr class="subtotal"><td>= Utilidad bruta</td><td class="valor">10.020,00</td></tr>
+      <tr class="deduccion"><td>(–) Gastos de operación</td><td class="valor">(9.102,30)</td></tr>
+      <tr class="subtotal"><td>= Utilidad operativa</td><td class="valor">917,70</td></tr>
+      <tr class="deduccion"><td>(–) Otros gastos operativos</td><td class="valor">(153,00)</td></tr>
+      <tr class="deduccion"><td>(–) Gastos financieros</td><td class="valor">(182,00)</td></tr>
+      <tr class="subtotal"><td>= Utilidad antes de 15% trabajadores e impuesto a la renta</td><td class="valor">582,70</td></tr>
+      <tr class="deduccion"><td>(–) 15% Participación a trabajadores (ya provisionada, Asiento 26)</td><td class="valor">(87,41)</td></tr>
+      <tr class="resultado"><td>= Utilidad antes del impuesto a la renta — trasladada a Resultados Acumulados (Asiento 29)</td><td class="valor">495,29</td></tr>
+      <tr class="pendiente"><td>(–) Impuesto a la renta causado</td><td class="valor">se liquida en Tributación</td></tr>
+      <tr class="pendiente"><td>(+/–) Otro Resultado Integral (ORI)</td><td class="valor">0,00 (sin partidas este mes)</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="futuro">
+    <strong class="etiqueta">Lo que sigue — Día 16</strong>
+    Con las cuentas nominales ya en cero, solo quedan en los libros de El Astillero S.A. las cuentas reales: Caja, Bancos, Cuentas por Cobrar, Inventario, activos fijos, Proveedores, el nuevo pasivo de Participación Trabajadores por Pagar, y el patrimonio, con Resultados Acumulados ya en 6.995,29. Ese es exactamente el conjunto de cuentas con el que el Día 16 va a construir el <strong>Estado de Situación Financiera</strong> de El Astillero S.A. al 31 de agosto de 2026.
+  </div>
+
+  <div class="carrera-box">
+    <strong class="etiqueta">Conexión con Negocios Internacionales</strong>
+    <ul>
+      <li><strong>Comercio exterior:</strong> el saldo cerrado de Resultados Acumulados es el que un banco corresponsal internacional revisa para evaluar años de utilidades retenidas antes de abrir una línea de crédito documentario.</li>
+      <li><strong>Finanzas internacionales:</strong> la coincidencia exacta entre el Resumen de Rentas y Gastos (30.680,00 vs. 30.184,71) y el ERI del Día 14 es el tipo de control cruzado que un auditor internacional exige antes de certificar estados financieros.</li>
+      <li><strong>Marketing y negociación internacional:</strong> una utilidad ya cerrada y trasladada a patrimonio (495,29) es un dato definitivo, no proyectado, que puede usarse con total respaldo en una negociación de inversión o alianza comercial.</li>
+      <li><strong>Marco legal y normativo:</strong> el pasivo «Participación Trabajadores por Pagar» (87,41), creado por el Asiento 26, es una obligación exigible que deberá liquidarse conforme a los plazos que fija el Código del Trabajo.</li>
+    </ul>
+  </div>
+
+  <div class="conclusion">
+    <strong class="etiqueta">Idea clave</strong>
+    Cerrar El Astillero S.A. no cambió ni un solo resultado del Día 14: los mismos 582,70 y los mismos 87,41 y 495,29 reaparecen, ahora respaldados por cuatro asientos contables reales (26 a 29) y no solo por una tabla de presentación. La contabilidad y la presentación financiera son, al final, la misma información vista desde dos ángulos que siempre deben cuadrar entre sí.
+  </div>
+</section>
+
+<!-- ============================= EJERCICIO ============================= -->
+<section id="panel-ejercicio" class="panel">
+  <h2>Ejercicio Interactivo — Cierra los libros de Comercial Puerto Azul S.A.</h2>
+  <p>Comercial Puerto Azul S.A. presenta, al cierre de su ejercicio, las siguientes cuentas nominales: Ventas 18.500,00 · Costo de Ventas 11.200,00 · Gasto Arriendo 900,00 · Gasto Sueldos 2.400,00 · Gasto Depreciación 350,00 · Gasto Interés 150,00. Responde las 8 preguntas del proceso de cierre y luego presiona <strong>«Verificar respuestas»</strong>.</p>
+
+  <form id="form-ejercicio">
+
+    <div class="item-pregunta">
+      <div class="enunciado">1. En el asiento de cierre de la cuenta de ingresos, ¿qué cuenta se debita?</div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="ei1" value="a"><span><strong>a)</strong> Ventas</span></label>
+        <label class="opcion"><input type="radio" name="ei1" value="b"><span><strong>b)</strong> Costo de Ventas</span></label>
+        <label class="opcion"><input type="radio" name="ei1" value="c"><span><strong>c)</strong> Resumen de Rentas y Gastos</span></label>
+        <label class="opcion"><input type="radio" name="ei1" value="d"><span><strong>d)</strong> Resultados Acumulados</span></label>
+      </div>
+      <div class="feedback" id="fb-ei1"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">2. ¿Por qué valor se debita la cuenta Ventas en ese asiento de cierre?</div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="ei2" value="a"><span><strong>a)</strong> 15.000,00</span></label>
+        <label class="opcion"><input type="radio" name="ei2" value="b"><span><strong>b)</strong> 18.500,00</span></label>
+        <label class="opcion"><input type="radio" name="ei2" value="c"><span><strong>c)</strong> 3.500,00</span></label>
+        <label class="opcion"><input type="radio" name="ei2" value="d"><span><strong>d)</strong> 525,00</span></label>
+      </div>
+      <div class="feedback" id="fb-ei2"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">3. En el asiento de cierre de costos y gastos, ¿qué valor total se debita a Resumen de Rentas y Gastos? (Costo de Ventas 11.200,00 + Gasto Arriendo 900,00 + Gasto Sueldos 2.400,00 + Gasto Depreciación 350,00 + Gasto Interés 150,00)</div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="ei3" value="a"><span><strong>a)</strong> 18.500,00</span></label>
+        <label class="opcion"><input type="radio" name="ei3" value="b"><span><strong>b)</strong> 3.500,00</span></label>
+        <label class="opcion"><input type="radio" name="ei3" value="c"><span><strong>c)</strong> 15.000,00</span></label>
+        <label class="opcion"><input type="radio" name="ei3" value="d"><span><strong>d)</strong> 11.200,00</span></label>
+      </div>
+      <div class="feedback" id="fb-ei3"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">4. Después de registrar los dos primeros asientos de cierre, ¿qué saldo queda en Resumen de Rentas y Gastos y de qué naturaleza es?</div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="ei4" value="a"><span><strong>a)</strong> 15.000,00, acreedor</span></label>
+        <label class="opcion"><input type="radio" name="ei4" value="b"><span><strong>b)</strong> 3.500,00, deudor (pérdida)</span></label>
+        <label class="opcion"><input type="radio" name="ei4" value="c"><span><strong>c)</strong> 18.500,00, acreedor</span></label>
+        <label class="opcion"><input type="radio" name="ei4" value="d"><span><strong>d)</strong> 3.500,00, acreedor (utilidad)</span></label>
+      </div>
+      <div class="feedback" id="fb-ei4"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">5. Ese saldo de Resumen de Rentas y Gastos es acreedor. ¿Cómo se traslada a Resultados Acumulados en el tercer asiento de cierre?</div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="ei5" value="a"><span><strong>a)</strong> Se debita Resumen de Rentas y Gastos y se acredita Resultados Acumulados</span></label>
+        <label class="opcion"><input type="radio" name="ei5" value="b"><span><strong>b)</strong> Se acredita Resumen de Rentas y Gastos y se debita Resultados Acumulados</span></label>
+        <label class="opcion"><input type="radio" name="ei5" value="c"><span><strong>c)</strong> No se traslada: el saldo permanece en Resumen de Rentas y Gastos</span></label>
+        <label class="opcion"><input type="radio" name="ei5" value="d"><span><strong>d)</strong> Se debita nuevamente la cuenta Ventas</span></label>
+      </div>
+      <div class="feedback" id="fb-ei5"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">6. Antes del cierre final, Comercial Puerto Azul S.A. debe provisionar el 15% de participación a trabajadores sobre el saldo de 3.500,00. ¿Cuál es ese valor?</div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="ei6" value="a"><span><strong>a)</strong> 700,00</span></label>
+        <label class="opcion"><input type="radio" name="ei6" value="b"><span><strong>b)</strong> 525,00</span></label>
+        <label class="opcion"><input type="radio" name="ei6" value="c"><span><strong>c)</strong> 350,00</span></label>
+        <label class="opcion"><input type="radio" name="ei6" value="d"><span><strong>d)</strong> 3.500,00</span></label>
+      </div>
+      <div class="feedback" id="fb-ei6"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">7. ¿Qué tipo de cuenta es Resumen de Rentas y Gastos?</div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="ei7" value="a"><span><strong>a)</strong> Una cuenta real que acumula su saldo de un período a otro</span></label>
+        <label class="opcion"><input type="radio" name="ei7" value="b"><span><strong>b)</strong> Una cuenta de activo</span></label>
+        <label class="opcion"><input type="radio" name="ei7" value="c"><span><strong>c)</strong> Una cuenta puente, temporal, exclusiva del proceso de cierre</span></label>
+        <label class="opcion"><input type="radio" name="ei7" value="d"><span><strong>d)</strong> Una cuenta de patrimonio permanente</span></label>
+      </div>
+      <div class="feedback" id="fb-ei7"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">8. Después del cierre completo de Comercial Puerto Azul S.A., ¿qué cuentas quedan con saldo distinto de cero en los libros?</div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="ei8" value="a"><span><strong>a)</strong> Solo las cuentas de gastos</span></label>
+        <label class="opcion"><input type="radio" name="ei8" value="b"><span><strong>b)</strong> Ninguna: todas quedan en cero</span></label>
+        <label class="opcion"><input type="radio" name="ei8" value="c"><span><strong>c)</strong> Solo Ventas y Costo de Ventas</span></label>
+        <label class="opcion"><input type="radio" name="ei8" value="d"><span><strong>d)</strong> Únicamente las cuentas reales (activo, pasivo y patrimonio)</span></label>
+      </div>
+      <div class="feedback" id="fb-ei8"></div>
+    </div>
+
+    <div class="alerta-envio" id="alerta-ejercicio">Responde las 8 preguntas antes de verificar.</div>
+    <div class="barra-contenedor" id="barra-cont-ejercicio" style="display:none;"><div class="barra-relleno" id="barra-ejercicio">0%</div></div>
+    <div class="resultado-final" id="resultado-ejercicio"></div>
+
+    <button type="button" class="btn" onclick="verificarEjercicio()">Verificar respuestas</button>
+    <button type="button" class="btn secundario" onclick="reiniciarEjercicio()">Reiniciar</button>
+  </form>
+
+  <div class="solucion-caja" id="solucion-ejercicio" style="display:none;">
+    <h4>Solución completa desarrollada</h4>
+    <table class="tabla-eri">
+      <thead><tr><th>#</th><th>Respuesta correcta</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><strong>a) Ventas</strong> — es la cuenta de ingreso que se cierra debitándola por su saldo total.</td></tr>
+        <tr><td>2</td><td><strong>b) 18.500,00</strong> — el saldo íntegro de Ventas antes del cierre.</td></tr>
+        <tr><td>3</td><td><strong>c) 15.000,00</strong> — 11.200,00 + 900,00 + 2.400,00 + 350,00 + 150,00.</td></tr>
+        <tr><td>4</td><td><strong>d) 3.500,00, acreedor (utilidad)</strong> — 18.500,00 (Haber) − 15.000,00 (Debe) = 3.500,00 a favor del Haber.</td></tr>
+        <tr><td>5</td><td><strong>a) Se debita Resumen y se acredita Resultados Acumulados</strong> — así se traslada un saldo acreedor (utilidad) al patrimonio.</td></tr>
+        <tr><td>6</td><td><strong>b) 525,00</strong> — 3.500,00 × 15%.</td></tr>
+        <tr><td>7</td><td><strong>c) Cuenta puente, temporal, exclusiva del cierre</strong> — no existe durante el período ni permanece después de cerrarlo.</td></tr>
+        <tr><td>8</td><td><strong>d) Únicamente las cuentas reales</strong> — activo, pasivo y patrimonio; todas las cuentas nominales quedan en cero.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================= CUESTIONARIO ============================= -->
+<section id="panel-cuestionario" class="panel">
+  <h2>Cuestionario — 10 preguntas</h2>
+  <p>7 preguntas teóricas (con lo trabajado en los Temas 1 a 3) y 3 preguntas de análisis de caso, con datos propios de una empresa distinta a El Astillero S.A. y a Comercial Puerto Azul S.A. Responde las 10 y luego presiona <strong>«Verificar respuestas»</strong>.</p>
+
+  <form id="form-cuestionario">
+
+    <div class="item-pregunta">
+      <div class="enunciado">1. ¿Cuál es el propósito fundamental de los asientos de cierre? <span class="badge teorica">Teórica</span></div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="qi1" value="a"><span><strong>a)</strong> Llevar a saldo cero las cuentas nominales para que el siguiente período inicie su medición desde cero</span></label>
+        <label class="opcion"><input type="radio" name="qi1" value="b"><span><strong>b)</strong> Registrar nuevas compras del período siguiente</span></label>
+        <label class="opcion"><input type="radio" name="qi1" value="c"><span><strong>c)</strong> Corregir errores de la mayorización</span></label>
+        <label class="opcion"><input type="radio" name="qi1" value="d"><span><strong>d)</strong> Calcular el impuesto a la renta del ejercicio</span></label>
+      </div>
+      <div class="feedback" id="fb-qi1"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">2. ¿Cuáles de las siguientes son cuentas nominales o temporales? <span class="badge teorica">Teórica</span></div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="qi2" value="a"><span><strong>a)</strong> Caja, Bancos y Cuentas por Cobrar</span></label>
+        <label class="opcion"><input type="radio" name="qi2" value="b"><span><strong>b)</strong> Ingresos, costo de ventas y gastos</span></label>
+        <label class="opcion"><input type="radio" name="qi2" value="c"><span><strong>c)</strong> Proveedores y Préstamo bancario</span></label>
+        <label class="opcion"><input type="radio" name="qi2" value="d"><span><strong>d)</strong> Capital y Resultados Acumulados</span></label>
+      </div>
+      <div class="feedback" id="fb-qi2"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">3. ¿Qué caracteriza a las cuentas reales o permanentes? <span class="badge teorica">Teórica</span></div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="qi3" value="a"><span><strong>a)</strong> Se cierran cada período junto con las cuentas de resultado</span></label>
+        <label class="opcion"><input type="radio" name="qi3" value="b"><span><strong>b)</strong> Solo existen mientras dura el proceso de cierre</span></label>
+        <label class="opcion"><input type="radio" name="qi3" value="c"><span><strong>c)</strong> Su saldo se acumula de un período a otro y nunca se cierran</span></label>
+        <label class="opcion"><input type="radio" name="qi3" value="d"><span><strong>d)</strong> Forman parte exclusivamente del Estado de Resultado Integral</span></label>
+      </div>
+      <div class="feedback" id="fb-qi3"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">4. En el asiento de cierre de ingresos, la cuenta Ventas... <span class="badge teorica">Teórica</span></div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="qi4" value="a"><span><strong>a)</strong> se acredita, y Resumen de Rentas y Gastos se debita</span></label>
+        <label class="opcion"><input type="radio" name="qi4" value="b"><span><strong>b)</strong> permanece sin movimiento</span></label>
+        <label class="opcion"><input type="radio" name="qi4" value="c"><span><strong>c)</strong> se traslada directamente a Resultados Acumulados</span></label>
+        <label class="opcion"><input type="radio" name="qi4" value="d"><span><strong>d)</strong> se debita, y Resumen de Rentas y Gastos se acredita</span></label>
+      </div>
+      <div class="feedback" id="fb-qi4"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">5. Si Resumen de Rentas y Gastos queda con saldo deudor después de cerrar ingresos y gastos, eso significa que... <span class="badge teorica">Teórica</span></div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="qi5" value="a"><span><strong>a)</strong> hubo una pérdida: se acredita Resumen de Rentas y Gastos y se debita Resultados Acumulados</span></label>
+        <label class="opcion"><input type="radio" name="qi5" value="b"><span><strong>b)</strong> hubo utilidad y se acredita directamente Ventas</span></label>
+        <label class="opcion"><input type="radio" name="qi5" value="c"><span><strong>c)</strong> el asiento está mal hecho y debe repetirse desde cero</span></label>
+        <label class="opcion"><input type="radio" name="qi5" value="d"><span><strong>d)</strong> no es necesario cerrar esa cuenta</span></label>
+      </div>
+      <div class="feedback" id="fb-qi5"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">6. ¿Por qué debe provisionarse el 15% de participación a trabajadores antes de los asientos de cierre? <span class="badge teorica">Teórica</span></div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="qi6" value="a"><span><strong>a)</strong> Porque es un impuesto que administra el SRI</span></label>
+        <label class="opcion"><input type="radio" name="qi6" value="b"><span><strong>b)</strong> Porque de lo contrario esa cuenta de gasto no existiría todavía en los libros para poder cerrarla</span></label>
+        <label class="opcion"><input type="radio" name="qi6" value="c"><span><strong>c)</strong> Porque solo se provisiona si la empresa tuvo pérdidas</span></label>
+        <label class="opcion"><input type="radio" name="qi6" value="d"><span><strong>d)</strong> Porque reemplaza al asiento de cierre de ingresos</span></label>
+      </div>
+      <div class="feedback" id="fb-qi6"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">7. Después del cierre completo, ¿qué estado financiero se puede construir con las cuentas que quedan abiertas en los libros? <span class="badge teorica">Teórica</span></div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="qi7" value="a"><span><strong>a)</strong> El Estado de Resultado Integral del período que se acaba de cerrar</span></label>
+        <label class="opcion"><input type="radio" name="qi7" value="b"><span><strong>b)</strong> Un nuevo balance de comprobación preliminar</span></label>
+        <label class="opcion"><input type="radio" name="qi7" value="c"><span><strong>c)</strong> El Estado de Situación Financiera</span></label>
+        <label class="opcion"><input type="radio" name="qi7" value="d"><span><strong>d)</strong> El Kardex del siguiente período</span></label>
+      </div>
+      <div class="feedback" id="fb-qi7"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">8. Ferretería Bolívar Cía. Ltda. presenta, al cierre: Ventas 22.000,00, Costo de Ventas 13.500,00, Gasto Arriendo 800,00, Gasto Sueldos 3.200,00 y Gasto Seguros 200,00. ¿Qué valor total se debita a Resumen de Rentas y Gastos en el asiento de cierre de costos y gastos? <span class="badge analisis">Análisis de caso</span></div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="qi8" value="a"><span><strong>a)</strong> 22.000,00</span></label>
+        <label class="opcion"><input type="radio" name="qi8" value="b"><span><strong>b)</strong> 4.300,00</span></label>
+        <label class="opcion"><input type="radio" name="qi8" value="c"><span><strong>c)</strong> 13.500,00</span></label>
+        <label class="opcion"><input type="radio" name="qi8" value="d"><span><strong>d)</strong> 17.700,00</span></label>
+      </div>
+      <div class="feedback" id="fb-qi8"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">9. Con los mismos datos de Ferretería Bolívar Cía. Ltda., ¿qué saldo queda en Resumen de Rentas y Gastos después de cerrar ingresos y gastos, y de qué naturaleza es? <span class="badge analisis">Análisis de caso</span></div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="qi9" value="a"><span><strong>a)</strong> 4.300,00, acreedor (utilidad)</span></label>
+        <label class="opcion"><input type="radio" name="qi9" value="b"><span><strong>b)</strong> 17.700,00, deudor</span></label>
+        <label class="opcion"><input type="radio" name="qi9" value="c"><span><strong>c)</strong> 22.000,00, acreedor</span></label>
+        <label class="opcion"><input type="radio" name="qi9" value="d"><span><strong>d)</strong> 4.300,00, deudor (pérdida)</span></label>
+      </div>
+      <div class="feedback" id="fb-qi9"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">10. ¿Cuál es el valor del 15% de participación a trabajadores que Ferretería Bolívar Cía. Ltda. debe provisionar antes de cerrar, sobre un saldo de 4.300,00? <span class="badge analisis">Análisis de caso</span></div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="qi10" value="a"><span><strong>a)</strong> 430,00</span></label>
+        <label class="opcion"><input type="radio" name="qi10" value="b"><span><strong>b)</strong> 645,00</span></label>
+        <label class="opcion"><input type="radio" name="qi10" value="c"><span><strong>c)</strong> 4.300,00</span></label>
+        <label class="opcion"><input type="radio" name="qi10" value="d"><span><strong>d)</strong> 300,00</span></label>
+      </div>
+      <div class="feedback" id="fb-qi10"></div>
+    </div>
+
+    <div class="alerta-envio" id="alerta-cuestionario">Responde las 10 preguntas antes de verificar.</div>
+    <div class="barra-contenedor" id="barra-cont-cuestionario" style="display:none;"><div class="barra-relleno" id="barra-cuestionario">0%</div></div>
+    <div class="resultado-final" id="resultado-cuestionario"></div>
+
+    <button type="button" class="btn" onclick="verificarCuestionario()">Verificar respuestas</button>
+    <button type="button" class="btn secundario" onclick="reiniciarCuestionario()">Reiniciar</button>
+  </form>
+</section>
+
+<!-- ============================= ACTIVIDAD CON IA ============================= -->
+<section id="panel-ia" class="panel">
+  <h2>Actividad con IA — cierra los libros y audita el resultado</h2>
+  <p>Tres pasos obligatorios, en este orden: <strong>1) resuelves a mano</strong>, <strong>2) consultas a la IA</strong> y <strong>3) auditas su respuesta</strong> comparándola con tu propio trabajo. Se recomienda usar <strong>Claude (claude.ai)</strong>, de acceso gratuito.</p>
+
+  <h3>Paso 1 — Resuelve a mano (antes de abrir cualquier IA)</h3>
+  <div class="ejemplo">
+    <strong class="etiqueta">Caso: Repuestos del Pacífico S.A. — agosto de 2026</strong>
+    <p>Al cierre del ejercicio, sus cuentas nominales muestran: ventas 24.900,00 · costo de ventas 15.300,00 · gasto arriendo 750,00 · gasto sueldos 3.100,00 · gasto seguros 220,00 · gasto interés 260,00. No tiene otros gastos operativos.</p>
+  </div>
+  <p>En una hoja o en Excel: (1) calcula el saldo de Resumen de Rentas y Gastos después de cerrar ingresos y gastos, y determina su naturaleza (deudor o acreedor); (2) calcula el 15% de participación a trabajadores sobre ese saldo; (3) redacta —con Fecha, Código, Detalle, Debe y Haber— los tres asientos de cierre más el asiento de provisión de participación a trabajadores, en el orden correcto. Guarda tus cuatro asientos: los necesitarás en el Paso 3.</p>
+
+  <h3>Paso 2 — Consulta a la IA</h3>
+  <div class="alerta">
+    <strong class="etiqueta">Antes de enviar nada: detecta los errores</strong>
+    El siguiente prompt tiene <strong>dos errores deliberados</strong> — uno conceptual (la dirección de un asiento está invertida) y uno numérico (una cifra no coincide con el dato original). No lo copies tal cual: corrígelo primero.
+  </div>
+  <div class="prompt-ia prompt-error">Actúa como profesor de Contabilidad General. Tengo el caso de Repuestos del Pacífico S.A.: ventas 24.900,00, costo de ventas 15.300,00, gasto arriendo 750,00, gasto sueldos 3.100,00, gasto seguros 220,00 y gasto interés 260,00. Cierra primero la cuenta de ingresos <u>acreditando Ventas y debitando Resumen de Rentas y Gastos</u>. Luego cierra los gastos, que en total suman <u>18.630,00</u>, y dime el saldo final de Resumen de Rentas y Gastos y a qué cuenta se traslada.</div>
+  <p><strong>Pista para encontrar los errores:</strong> revisa el Tema 2 — cuando se cierra la cuenta de ingresos, ¿Ventas se debita o se acredita? Y suma tú mismo los cinco gastos del caso: ¿de verdad dan 18.630,00?</p>
+
+  <p>Una vez corregido, envía una versión como esta:</p>
+  <div class="prompt-ia">Actúa como profesor de Contabilidad General bajo NIIF. Tengo el caso de Repuestos del Pacífico S.A., agosto de 2026: ventas 24.900,00, costo de ventas 15.300,00, gasto arriendo 750,00, gasto sueldos 3.100,00, gasto seguros 220,00 y gasto interés 260,00; sin otros gastos operativos. Redacta, en orden, los cuatro asientos que hacen falta para cerrar el ejercicio: primero la provisión del 15% de participación a trabajadores, luego el cierre de ingresos, luego el cierre de costos y gastos (incluida la participación recién provisionada), y por último el cierre de Resumen de Rentas y Gastos hacia Resultados Acumulados. Indica en cada uno qué cuenta se debita y cuál se acredita, y explica en una frase el porqué de cada uno.</div>
+
+  <h3>Paso 3 — Audita la respuesta (esto es lo que se evalúa)</h3>
+  <p>Copiar la respuesta de la IA sin más no demuestra aprendizaje. Lo que distingue el pensamiento crítico de la copia simple es esta auditoría, que debes entregar junto con tu hoja del Paso 1:</p>
+  <div class="carrera-box">
+    <strong class="etiqueta">Entrega mínima de la auditoría</strong>
+    <ul>
+      <li>Compara, asiento por asiento, la respuesta de la IA contra tus cuatro asientos del Paso 1: ¿coinciden el orden, las cuentas y los valores?</li>
+      <li>Si hay una diferencia, identifica si el error está en tu trabajo o en el de la IA, y explica por qué usando lo visto en el Tema 2.</li>
+      <li>Señala una frase de la respuesta de la IA que te ayudó a entender mejor por qué existe la cuenta puente Resumen de Rentas y Gastos.</li>
+      <li>Señala una frase que corregirías o matizarías (por ejemplo, si la IA calcula un impuesto a la renta que no corresponde a este curso, o si mezcla el orden de los asientos).</li>
+    </ul>
+  </div>
+
+  <div class="conclusion">
+    <strong class="etiqueta">Idea clave</strong>
+    Un estudiante que audita puede decir con precisión en qué asiento se equivocó la IA, si se equivocó; un estudiante que solo copia no tiene con qué comparar. La verificación propia —hecha primero, a mano— es lo que vuelve útil a la IA como segunda opinión.
+  </div>
+</section>
+
+<!-- ============================= REFLEXIÓN ============================= -->
+<section id="panel-reflexion" class="panel">
+  <h2>Reflexión</h2>
+
+  <p>Antes de las preguntas, una idea importante: es muy común llegar a la carrera de Negocios Internacionales pensando que se trata sobre todo de <strong>negociar</strong> — cerrar tratos, hablar idiomas, viajar. Y la negociación es parte de la carrera, pero es solo una parte. Negocios Internacionales es también leer estados financieros de empresas extranjeras, calcular el costo real de una operación de comercio exterior, entender cadenas de abastecimiento, gestionar el riesgo cambiario, conocer la normativa aduanera y tributaria de cada país, y sustentar decisiones ante terceros con cifras, no solo con argumentos. Cerrar correctamente los libros de una empresa —lo que hicimos hoy— es exactamente ese tipo de trabajo silencioso que hace posible todo lo demás.</p>
+
+  <div class="reflexion-pregunta">
+    <strong>1.</strong> Piensa en una aplicación de finanzas personales o de gastos de tu celular que, al terminar el mes, te pregunta si quieres «reiniciar» el resumen de gastos, mientras que el saldo de tus ahorros sigue siendo exactamente el mismo con el que cerraste el mes anterior. ¿Por qué crees que la app trata esas dos cosas —el resumen de gastos del mes y el saldo acumulado de ahorros— de forma tan distinta? ¿En qué se parece eso a la diferencia entre cuentas nominales y cuentas reales que vimos hoy?
+    <textarea class="respuesta-libre" placeholder="Escribe tu respuesta aquí..."></textarea>
+  </div>
+
+  <div class="reflexion-pregunta">
+    <strong>2.</strong> Ahora imagina la cadena completa: tú «cierras» el resumen de gastos de tu celular cada mes; el contador de El Astillero S.A. cierra los libros de agosto con los asientos de hoy; y, un año después, un inversionista extranjero revisa cinco cierres anuales seguidos de esa empresa antes de decidir si invertir. En cada eslabón de esa cadena, ¿qué pasaría si un cierre se hiciera mal o se saltara un paso? ¿Por qué un solo asiento de cierre incorrecto puede afectar la confianza en años de información, no solo en el mes en que ocurrió?
+    <textarea class="respuesta-libre" placeholder="Escribe tu respuesta aquí..."></textarea>
+  </div>
+
+  <div class="reflexion-pregunta">
+    <strong>3. (Exploración vocacional)</strong> De las cuatro áreas de Negocios Internacionales que hemos venido conectando en cada tema —comercio exterior, finanzas internacionales, marketing y negociación internacional, marco legal y normativo— ¿en cuál te ves trabajando dentro de algunos años? El cierre contable es un trabajo detallado, ordenado y poco visible desde afuera: ¿qué tan cómodo te sientes con ese tipo de tareas, y qué papel crees que juegan dentro del área que elegiste?
+    <textarea class="respuesta-libre" placeholder="Escribe tu respuesta aquí..."></textarea>
+  </div>
+
+  <div class="reflexion-pregunta">
+    <strong>4. (Inteligencia emocional)</strong> Cerrar un asiento mal —por ejemplo, invertir un débito y un crédito, como en el error del Paso 2— es fácil de hacer y, si no se detecta a tiempo, se arrastra a todos los pasos siguientes. ¿Cómo reaccionas normalmente cuando descubres, ya avanzado un trabajo, que un error temprano tuyo afectó todo lo que hiciste después? ¿Qué puedes practicar desde ya para que revisar y corregir tus propios errores se sienta como parte normal del trabajo bien hecho, y no como un fracaso?
+    <textarea class="respuesta-libre" placeholder="Escribe tu respuesta aquí..."></textarea>
+  </div>
+</section>
+
+<!-- ============================= BIBLIOGRAFÍA ============================= -->
+<section id="panel-bibliografia" class="panel">
+  <h2>Bibliografía</h2>
+  <div class="grid-biblio">
+    <div class="tarjeta-biblio">
+      <span class="tipo">Libro</span>
+      <p>Guajardo Cantú, G., &amp; Andrade de Guajardo, N. E. (2014). <em>Contabilidad financiera</em> (6.ª ed.). McGraw-Hill Interamericana.</p>
+    </div>
+    <div class="tarjeta-biblio">
+      <span class="tipo">Libro</span>
+      <p>Horngren, C. T., Harrison, W. T., &amp; Oliver, M. S. (2012). <em>Contabilidad</em> (9.ª ed.). Pearson Educación.</p>
+    </div>
+    <div class="tarjeta-biblio">
+      <span class="tipo">Libro</span>
+      <p>Warren, C. S., Reeve, J. M., &amp; Duchac, J. (2018). <em>Contabilidad financiera</em> (14.ª ed.). Cengage Learning.</p>
+    </div>
+    <div class="tarjeta-biblio">
+      <span class="tipo">Norma</span>
+      <p>IFRS Foundation. (2022). <em>NIC 1 Presentación de estados financieros</em>. IFRS Foundation.</p>
+    </div>
+    <div class="tarjeta-biblio">
+      <span class="tipo">Norma</span>
+      <p>Superintendencia de Compañías, Valores y Seguros del Ecuador. (2023). <em>Normativa contable y financiera aplicable a las compañías sujetas a su control</em>. SUPERCIAS.</p>
+    </div>
+    <div class="tarjeta-biblio">
+      <span class="tipo">Ley</span>
+      <p>Ministerio del Trabajo del Ecuador. (2023). <em>Código del Trabajo</em> (codificación con reformas vigentes). Registro Oficial.</p>
+    </div>
+    <div class="tarjeta-biblio">
+      <span class="tipo">Ley</span>
+      <p>Servicio de Rentas Internas del Ecuador (SRI). (2024). <em>Ley de Régimen Tributario Interno y su Reglamento de Aplicación</em>. SRI.</p>
+    </div>
+  </div>
+  <p style="font-size:.8rem; color:#666; margin-top:16px;"><em>Nota: se recomienda verificar la edición y vigencia exactas de cada fuente en Google Scholar o en el repositorio institucional de la Universidad de Guayaquil antes de citarlas en trabajos formales.</em></p>
+</section>
+
+</main>
+
+<footer class="pie">Universidad de Guayaquil · Facultad de Ciencias Administrativas · Carrera de Negocios Internacionales · Contabilidad General · Día 15</footer>
+</div>
+
+<script>
+/* ==========================================================================
+   1. NAVEGACIÓN ENTRE PESTAÑAS
+   ========================================================================== */
+function showTab(id){
+  document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('activo'); });
+  document.querySelectorAll('.pestana-btn').forEach(function(b){ b.classList.remove('activa'); });
+  document.getElementById('panel-' + id).classList.add('activo');
+  document.querySelector('.pestana-btn[data-tab="' + id + '"]').classList.add('activa');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* ==========================================================================
+   2. ACORDEÓN DE REPASO
+   ========================================================================== */
+function toggleAcordeon(cabecera){
+  cabecera.classList.toggle('abierto');
+  var contenido = cabecera.nextElementSibling;
+  contenido.classList.toggle('abierto');
+}
+
+/* ==========================================================================
+   3. EJERCICIO INTERACTIVO — cierre de Comercial Puerto Azul S.A. (8 ítems)
+   ========================================================================== */
+var correctasEjercicio = {ei1:'a', ei2:'b', ei3:'c', ei4:'d', ei5:'a', ei6:'b', ei7:'c', ei8:'d'};
+var retroEjercicio = {
+  ei1: 'Ventas es la cuenta de ingreso que se cierra debitándola por su saldo total.',
+  ei2: 'El saldo íntegro de Ventas antes del cierre es 18.500,00.',
+  ei3: 'Se debita 15.000,00 a Resumen de Rentas y Gastos: 11.200,00 + 900,00 + 2.400,00 + 350,00 + 150,00.',
+  ei4: '18.500,00 (Haber) − 15.000,00 (Debe) = 3.500,00, saldo a favor del Haber: es acreedor, y un saldo acreedor en Resumen significa utilidad.',
+  ei5: 'Un saldo acreedor (utilidad) se traslada debitando Resumen de Rentas y Gastos y acreditando Resultados Acumulados.',
+  ei6: '3.500,00 × 15% = 525,00.',
+  ei7: 'Resumen de Rentas y Gastos es una cuenta puente: no existe durante el período ni permanece después de cerrarlo.',
+  ei8: 'Después del cierre, solo quedan con saldo las cuentas reales: activo, pasivo y patrimonio. Todas las cuentas nominales quedan en cero.'
+};
+
+function verificarEjercicio(){
+  var claves = Object.keys(correctasEjercicio);
+  var faltan = claves.some(function(k){
+    return !document.querySelector('input[name="'+k+'"]:checked');
+  });
+  var alerta = document.getElementById('alerta-ejercicio');
+  if(faltan){
+    alerta.classList.add('mostrar');
+    return;
+  }
+  alerta.classList.remove('mostrar');
+
+  var correctas = 0;
+  claves.forEach(function(k){
+    var seleccion = document.querySelector('input[name="'+k+'"]:checked').value;
+    var esCorrecta = seleccion === correctasEjercicio[k];
+    if(esCorrecta) correctas++;
+
+    document.querySelectorAll('input[name="'+k+'"]').forEach(function(input){
+      var opcionDiv = input.closest('.opcion');
+      opcionDiv.classList.remove('correcta-marca','incorrecta-marca');
+      if(input.value === correctasEjercicio[k]) opcionDiv.classList.add('correcta-marca');
+      else if(input.checked) opcionDiv.classList.add('incorrecta-marca');
+    });
+
+    var fb = document.getElementById('fb-'+k);
+    fb.classList.add('mostrar');
+    fb.classList.remove('ok','mal');
+    if(esCorrecta){
+      fb.classList.add('ok');
+      fb.textContent = '✔ Correcto. ' + retroEjercicio[k];
+    } else {
+      fb.classList.add('mal');
+      fb.textContent = '✘ Incorrecto. ' + retroEjercicio[k];
+    }
+  });
+
+  var total = claves.length;
+  var pct = Math.round((correctas/total)*100);
+  document.getElementById('barra-cont-ejercicio').style.display = 'block';
+  var barra = document.getElementById('barra-ejercicio');
+  setTimeout(function(){ barra.style.width = pct + '%'; barra.textContent = pct + '%'; }, 60);
+  document.getElementById('resultado-ejercicio').textContent = 'Resultado: ' + correctas + ' / ' + total + ' (' + pct + '%)';
+  document.getElementById('solucion-ejercicio').style.display = 'block';
+}
+
+function reiniciarEjercicio(){
+  document.getElementById('form-ejercicio').reset();
+  document.querySelectorAll('#panel-ejercicio .opcion').forEach(function(o){ o.classList.remove('correcta-marca','incorrecta-marca'); });
+  document.querySelectorAll('#panel-ejercicio .feedback').forEach(function(f){ f.classList.remove('mostrar','ok','mal'); f.textContent=''; });
+  document.getElementById('alerta-ejercicio').classList.remove('mostrar');
+  document.getElementById('barra-cont-ejercicio').style.display = 'none';
+  var barra = document.getElementById('barra-ejercicio'); barra.style.width='0%'; barra.textContent='0%';
+  document.getElementById('resultado-ejercicio').textContent = '';
+  document.getElementById('solucion-ejercicio').style.display = 'none';
+}
+
+/* ==========================================================================
+   4. CUESTIONARIO — 10 preguntas (7 teóricas + 3 análisis de caso)
+   ========================================================================== */
+var correctasCuestionario = {qi1:'a', qi2:'b', qi3:'c', qi4:'d', qi5:'a', qi6:'b', qi7:'c', qi8:'d', qi9:'a', qi10:'b'};
+var retroCuestionario = {
+  qi1: 'Los asientos de cierre llevan a cero las cuentas nominales para que el período siguiente inicie su medición desde cero.',
+  qi2: 'Ingresos, costo de ventas y gastos son las cuentas nominales o temporales, propias de un solo período.',
+  qi3: 'Las cuentas reales (activo, pasivo, patrimonio) acumulan su saldo de un período a otro y nunca se cierran.',
+  qi4: 'En el cierre de ingresos, Ventas se debita por su saldo total y Resumen de Rentas y Gastos se acredita.',
+  qi5: 'Un saldo deudor en Resumen de Rentas y Gastos indica pérdida: se acredita Resumen y se debita Resultados Acumulados.',
+  qi6: 'Sin la provisión, la cuenta de gasto por participación a trabajadores no existiría todavía en los libros para poder cerrarla junto con las demás.',
+  qi7: 'Con las cuentas reales que quedan abiertas tras el cierre se construye el Estado de Situación Financiera (contenido del Día 16).',
+  qi8: 'Se debitan 17.700,00 a Resumen de Rentas y Gastos: 13.500,00 + 800,00 + 3.200,00 + 200,00.',
+  qi9: '22.000,00 (Haber) − 17.700,00 (Debe) = 4.300,00, saldo acreedor: hubo utilidad.',
+  qi10: '4.300,00 × 15% = 645,00.'
+};
+
+function verificarCuestionario(){
+  var claves = Object.keys(correctasCuestionario);
+  var faltan = claves.some(function(k){
+    return !document.querySelector('input[name="'+k+'"]:checked');
+  });
+  var alerta = document.getElementById('alerta-cuestionario');
+  if(faltan){
+    alerta.classList.add('mostrar');
+    return;
+  }
+  alerta.classList.remove('mostrar');
+
+  var correctas = 0;
+  claves.forEach(function(k){
+    var seleccion = document.querySelector('input[name="'+k+'"]:checked').value;
+    var esCorrecta = seleccion === correctasCuestionario[k];
+    if(esCorrecta) correctas++;
+
+    document.querySelectorAll('input[name="'+k+'"]').forEach(function(input){
+      var opcionDiv = input.closest('.opcion');
+      opcionDiv.classList.remove('correcta-marca','incorrecta-marca');
+      if(input.value === correctasCuestionario[k]) opcionDiv.classList.add('correcta-marca');
+      else if(input.checked) opcionDiv.classList.add('incorrecta-marca');
+    });
+
+    var fb = document.getElementById('fb-'+k);
+    fb.classList.add('mostrar');
+    fb.classList.remove('ok','mal');
+    if(esCorrecta){
+      fb.classList.add('ok');
+      fb.textContent = '✔ Correcto. ' + retroCuestionario[k];
+    } else {
+      fb.classList.add('mal');
+      fb.textContent = '✘ Incorrecto. ' + retroCuestionario[k];
+    }
+  });
+
+  var total = claves.length;
+  var pct = Math.round((correctas/total)*100);
+  var emoji = '📖';
+  if(pct === 100) emoji = '🏆';
+  else if(pct >= 80) emoji = '🎯';
+  else if(pct >= 60) emoji = '📘';
+  else if(pct >= 40) emoji = '⚠️';
+
+  document.getElementById('barra-cont-cuestionario').style.display = 'block';
+  var barra = document.getElementById('barra-cuestionario');
+  setTimeout(function(){ barra.style.width = pct + '%'; barra.textContent = pct + '%'; }, 60);
+  document.getElementById('resultado-cuestionario').textContent = 'Calificación: ' + correctas + ' / ' + total + ' (' + pct + '%) ' + emoji;
+}
+
+function reiniciarCuestionario(){
+  document.getElementById('form-cuestionario').reset();
+  document.querySelectorAll('#panel-cuestionario .opcion').forEach(function(o){ o.classList.remove('correcta-marca','incorrecta-marca'); });
+  document.querySelectorAll('#panel-cuestionario .feedback').forEach(function(f){ f.classList.remove('mostrar','ok','mal'); f.textContent=''; });
+  document.getElementById('alerta-cuestionario').classList.remove('mostrar');
+  document.getElementById('barra-cont-cuestionario').style.display = 'none';
+  var barra = document.getElementById('barra-cuestionario'); barra.style.width='0%'; barra.textContent='0%';
+  document.getElementById('resultado-cuestionario').textContent = '';
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Día 16 · Estado de Situación Financiera: estructura, importancia, elaboración</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --azul-oscuro:#003366;
+    --celeste:#87CEEB;
+    --verde:#2e7d32;
+    --verde-bg:#eef7ee;
+    --rojo:#b3261e;
+    --rojo-bg:#fdecea;
+    --amarillo-bg:#fff8e1;
+    --morado:#6a4c93;
+    --gris-borde:#c9d6e3;
+    --gris-fondo:#f5f8fb;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; padding:0;
+    font-family:'Source Sans 3', Arial, sans-serif;
+    color:#1a1a1a;
+    background:#eef2f6;
+    line-height:1.6;
+  }
+  h1,h2,h3,h4{ font-family:'Lora', Georgia, serif; color:var(--azul-oscuro); }
+  .contenedor{ max-width:1000px; margin:0 auto; background:#fff; min-height:100vh; box-shadow:0 0 18px rgba(0,0,0,.08); }
+
+  header.encabezado{ background:var(--azul-oscuro); color:#fff; padding:22px 28px; }
+  header.encabezado .institucion{ font-size:.82rem; letter-spacing:.03em; opacity:.92; margin:0 0 4px 0; }
+  header.encabezado h1{ color:#fff; margin:0 0 6px 0; font-size:1.5rem; }
+  header.encabezado .meta{ font-size:.95rem; opacity:.95; }
+  header.encabezado .meta strong{ color:#fff; }
+
+  nav.menu-pestanas{
+    display:flex; overflow-x:auto; background:var(--celeste);
+    border-bottom:3px solid var(--azul-oscuro); position:sticky; top:0; z-index:50;
+  }
+  nav.menu-pestanas button{
+    flex:0 0 auto; padding:13px 16px; border:none; background:transparent;
+    color:#0a0a0a; font-family:'Source Sans 3',sans-serif; font-weight:600; font-size:.9rem;
+    cursor:pointer; white-space:nowrap; border-right:1px solid rgba(0,51,102,.15);
+    transition:background .15s;
+  }
+  nav.menu-pestanas button:hover{ background:#a6dcf2; }
+  nav.menu-pestanas button.activa{
+    background:#fff; color:var(--azul-oscuro); font-weight:700;
+    box-shadow:inset 0 -3px 0 var(--azul-oscuro);
+  }
+
+  main{ padding:26px 30px 50px 30px; }
+  .panel{ display:none; }
+  .panel.activo{ display:block; }
+  .panel h2{ font-size:1.35rem; border-bottom:2px solid var(--celeste); padding-bottom:8px; margin-top:0;}
+  .panel h3{ font-size:1.12rem; margin-top:26px; }
+
+  /* ---- Recuadros obligatorios ---- */
+  .definicion{ background:#eaf2fb; border-left:5px solid var(--azul-oscuro); padding:14px 18px; margin:16px 0; border-radius:4px; }
+  .definicion strong.etiqueta{ display:block; color:var(--azul-oscuro); font-family:'Lora',serif; margin-bottom:4px; }
+  .ejemplo{ background:#f4f0fb; border-left:5px solid var(--morado); padding:14px 18px; margin:16px 0; border-radius:4px; }
+  .ejemplo strong.etiqueta{ display:block; color:var(--morado); font-family:'Lora',serif; margin-bottom:4px; }
+  .nota-lateral{ background:#f0f0f0; border-left:5px solid #666; padding:12px 18px; margin:16px 0; border-radius:4px; font-size:.94rem; }
+  .formula{ background:#fff; border:1.5px dashed var(--azul-oscuro); padding:12px 18px; margin:16px 0; border-radius:4px; font-family:'Lora',serif; text-align:center; font-size:1.02rem; }
+  .carrera-box{ background:var(--verde-bg); border:1.5px dashed var(--verde); padding:14px 18px; margin:18px 0; border-radius:6px; }
+  .carrera-box strong.etiqueta{ display:block; color:var(--verde); font-family:'Lora',serif; margin-bottom:6px; }
+  .carrera-box ul{ margin:6px 0 0 0; padding-left:20px; }
+  .carrera-box li{ margin-bottom:4px; }
+  .futuro{ background:#eef4fb; border:1.5px solid #7391b5; padding:14px 18px; margin:16px 0; border-radius:6px; }
+  .futuro strong.etiqueta{ display:block; color:#2c4a6b; font-family:'Lora',serif; margin-bottom:4px; }
+  .conclusion{ background:var(--azul-oscuro); color:#fff; padding:16px 20px; margin:22px 0 10px 0; border-radius:6px; }
+  .conclusion strong.etiqueta{ display:block; font-family:'Lora',serif; margin-bottom:6px; color:#cfe4fb; }
+  .alerta{ background:var(--amarillo-bg); border-left:5px solid #b8860b; padding:14px 18px; margin:16px 0; border-radius:4px; }
+  .alerta strong.etiqueta{ display:block; color:#8a6300; font-family:'Lora',serif; margin-bottom:4px; }
+  .anexo{ background:#f7f2ea; border:2px solid #b8860b; padding:14px 18px; margin:16px 0; border-radius:6px; }
+  .anexo strong.etiqueta{ display:block; color:#8a6300; font-family:'Lora',serif; margin-bottom:4px; font-size:1.02rem; }
+
+  /* ---- Acordeón Repaso ---- */
+  .acordeon-item{ border:1px solid var(--gris-borde); border-radius:6px; margin-bottom:10px; overflow:hidden; }
+  .acordeon-cabecera{ display:flex; justify-content:space-between; align-items:center; background:var(--gris-fondo); padding:12px 16px; cursor:pointer; font-weight:700; color:var(--azul-oscuro); }
+  .acordeon-cabecera .flecha{ transition:transform .2s; font-size:.85rem; }
+  .acordeon-cabecera.abierto .flecha{ transform:rotate(90deg); }
+  .acordeon-contenido{ max-height:0; overflow:hidden; transition:max-height .3s ease; padding:0 18px; background:#fff; }
+  .acordeon-contenido.abierto{ max-height:3000px; padding:14px 18px 18px 18px; }
+
+  /* ---- Tablas contables ---- */
+  table.tabla-eri{ width:100%; border-collapse:collapse; margin:14px 0; font-size:.94rem; }
+  table.tabla-eri caption{ background:var(--azul-oscuro); color:#fff; padding:8px; font-weight:700; text-align:left; padding-left:14px; border-radius:4px 4px 0 0; }
+  table.tabla-eri th, table.tabla-eri td{ border:1px solid var(--gris-borde); padding:7px 10px; }
+  table.tabla-eri th{ background:#eaf2fb; color:var(--azul-oscuro); text-align:left; }
+  table.tabla-eri td.valor{ text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  table.tabla-eri tr.subtotal td{ font-weight:700; background:#f5f8fb; }
+  table.tabla-eri tr.resultado td{ font-weight:700; background:#dcebfa; border-top:2px double var(--azul-oscuro); }
+  table.tabla-eri tr.deduccion td{ color:var(--rojo); }
+  table.tabla-eri tr.pendiente td{ color:#888; font-style:italic; }
+  table.tabla-eri tr.categoria td{ font-weight:700; background:#f0eaf9; color:var(--morado); }
+  .scroll-tabla{ overflow-x:auto; }
+
+  /* ---- Libro Diario (asientos contables) ---- */
+  table.libro-diario{ width:100%; border-collapse:collapse; margin:10px 0 4px 0; font-size:.9rem; }
+  .asiento-encabezado{ background:var(--azul-oscuro); color:#fff; padding:9px 14px; border-radius:6px 6px 0 0; font-weight:700; display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px; }
+  table.libro-diario thead th{ background:#eaf2fb; color:var(--azul-oscuro); padding:7px 8px; text-align:center; border:1px solid var(--gris-borde); }
+  table.libro-diario td, table.libro-diario th{ border:1px solid var(--gris-borde); padding:6px 8px; }
+  table.libro-diario td.num{ text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  table.libro-diario td.haber{ padding-left:26px; }
+  table.libro-diario tr.suman td{ border-top:3px double var(--azul-oscuro); font-weight:700; }
+  table.libro-diario td.glosa{ font-style:italic; font-size:.86rem; background:#fbfcfe; }
+  .bloque-asiento{ margin:18px 0 26px 0; border:1px solid var(--gris-borde); border-radius:6px; overflow:hidden; }
+
+  /* ---- Estado de Situación Financiera (dos columnas) ---- */
+  .esf-dos-columnas{ display:grid; grid-template-columns:1fr 1fr; gap:0; border:1px solid var(--gris-borde); border-radius:6px; overflow:hidden; margin:14px 0; }
+  .esf-columna{ padding:0; }
+  .esf-columna h4{ background:var(--azul-oscuro); color:#fff; margin:0; padding:9px 14px; font-size:1rem; }
+  .esf-columna table{ width:100%; border-collapse:collapse; font-size:.88rem; }
+  .esf-columna td{ border-bottom:1px solid var(--gris-borde); padding:6px 10px; }
+  .esf-columna td.valor{ text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .esf-columna tr.grupo td{ font-weight:700; background:var(--gris-fondo); color:var(--azul-oscuro); padding-top:10px; }
+  .esf-columna tr.subtotal td{ font-weight:700; background:#f0f4f9; }
+  .esf-columna tr.total td{ font-weight:700; background:#dcebfa; border-top:2px double var(--azul-oscuro); }
+  @media (max-width:640px){ .esf-dos-columnas{ grid-template-columns:1fr; } }
+
+  /* ---- Ejercicio / Cuestionario ---- */
+  .item-pregunta{ border:1px solid var(--gris-borde); border-radius:8px; padding:16px; margin-bottom:16px; background:#fbfcfe; }
+  .item-pregunta .enunciado{ font-weight:600; margin-bottom:10px; }
+  .badge{ display:inline-block; font-size:.72rem; font-weight:700; padding:2px 9px; border-radius:12px; margin-left:8px; vertical-align:middle; }
+  .badge.teorica{ background:#d6e9ff; color:var(--azul-oscuro); }
+  .badge.analisis{ background:#ffe3c2; color:#8a4b00; }
+  .opciones{ display:flex; flex-direction:column; gap:8px; }
+  .opcion{ display:flex; align-items:flex-start; gap:8px; padding:9px 12px; border:1px solid var(--gris-borde); border-radius:6px; cursor:pointer; }
+  .opcion:hover{ background:#f0f6fc; }
+  .opcion input{ margin-top:3px; }
+  .feedback{ margin-top:10px; padding:10px 12px; border-radius:6px; font-size:.92rem; display:none; }
+  .feedback.mostrar{ display:block; }
+  .feedback.ok{ background:var(--verde-bg); border-left:4px solid var(--verde); color:#1b4d1e; }
+  .feedback.mal{ background:var(--rojo-bg); border-left:4px solid var(--rojo); color:#7a1a14; }
+  .opcion.correcta-marca{ border-color:var(--verde); background:var(--verde-bg); }
+  .opcion.incorrecta-marca{ border-color:var(--rojo); background:var(--rojo-bg); }
+
+  .barra-contenedor{ background:#e0e6ec; border-radius:20px; overflow:hidden; height:26px; margin:14px 0; }
+  .barra-relleno{ height:100%; width:0%; background:linear-gradient(90deg,#1e5fa8,#2e8b57); display:flex; align-items:center; justify-content:flex-end; padding-right:10px; color:#fff; font-weight:700; font-size:.85rem; transition:width 1.1s ease; }
+  .resultado-final{ text-align:center; font-size:1.15rem; font-weight:700; margin:14px 0; }
+
+  .btn{ background:var(--azul-oscuro); color:#fff; border:none; padding:11px 22px; border-radius:6px; font-weight:700; cursor:pointer; font-size:.95rem; margin-right:10px; }
+  .btn:hover{ background:#004a91; }
+  .btn.secundario{ background:#fff; color:var(--azul-oscuro); border:2px solid var(--azul-oscuro); }
+  .btn.secundario:hover{ background:#eaf2fb; }
+  .alerta-envio{ background:var(--rojo-bg); color:var(--rojo); border:1px solid var(--rojo); padding:10px 14px; border-radius:6px; margin:12px 0; display:none; font-weight:600; }
+  .alerta-envio.mostrar{ display:block; }
+
+  .solucion-caja{ background:var(--gris-fondo); border:1px solid var(--gris-borde); border-radius:8px; padding:16px 18px; margin-top:20px; }
+  .solucion-caja h4{ margin-top:0; }
+
+  /* ---- Reflexión / IA ---- */
+  .reflexion-pregunta{ background:#fff; border:1px solid var(--gris-borde); border-left:5px solid var(--morado); padding:14px 18px; margin:14px 0; border-radius:4px; }
+  .reflexion-pregunta strong{ color:var(--morado); }
+  textarea.respuesta-libre{ width:100%; min-height:70px; margin-top:8px; padding:9px; border:1px solid var(--gris-borde); border-radius:6px; font-family:inherit; font-size:.94rem; resize:vertical; }
+  .prompt-ia{ background:#0d1b2a; color:#e6f0fa; padding:14px 16px; border-radius:6px; font-family:'Courier New',monospace; font-size:.86rem; white-space:pre-wrap; margin:12px 0; }
+  .prompt-error{ border:1.5px dashed #b3261e; }
+
+  /* ---- Bibliografía ---- */
+  .grid-biblio{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:16px; }
+  .tarjeta-biblio{ background:#fff; border:1px solid var(--gris-borde); border-left:5px solid var(--azul-oscuro); border-radius:6px; padding:14px 16px; font-size:.92rem; }
+  .tarjeta-biblio .tipo{ display:inline-block; font-size:.7rem; font-weight:700; background:#eaf2fb; color:var(--azul-oscuro); padding:2px 8px; border-radius:10px; margin-bottom:6px; }
+  footer.pie{ text-align:center; font-size:.82rem; color:#666; padding:20px; }
+
+  @media (max-width:640px){
+    main{ padding:18px 14px 40px 14px; }
+    .grid-biblio{ grid-template-columns:1fr; }
+    header.encabezado{ padding:16px 16px; }
+    table.tabla-eri, table.libro-diario, .esf-columna table{ font-size:.8rem; }
+  }
+</style>
+</head>
+<body>
+<div class="contenedor">
+
+<header class="encabezado">
+  <p class="institucion">Universidad de Guayaquil · Facultad de Ciencias Administrativas · Carrera de Negocios Internacionales</p>
+  <h1>Contabilidad General</h1>
+  <p class="meta"><strong>Día 16</strong> · Jueves 3 de septiembre de 2026 · 5 horas · <strong>Unidad 4</strong> — Estado de Situación Financiera: estructura, importancia, elaboración</p>
+</header>
+
+<nav class="menu-pestanas" id="menu-pestanas">
+  <button class="pestana-btn activa" data-tab="repaso" onclick="showTab('repaso')">Repaso</button>
+  <button class="pestana-btn" data-tab="tema1" onclick="showTab('tema1')">Tema 1</button>
+  <button class="pestana-btn" data-tab="tema2" onclick="showTab('tema2')">Tema 2</button>
+  <button class="pestana-btn" data-tab="tema3" onclick="showTab('tema3')">Tema 3</button>
+  <button class="pestana-btn" data-tab="tema4" onclick="showTab('tema4')">Tema 4 · NIIF 18</button>
+  <button class="pestana-btn" data-tab="ejercicio" onclick="showTab('ejercicio')">Ejercicio Interactivo</button>
+  <button class="pestana-btn" data-tab="cuestionario" onclick="showTab('cuestionario')">Cuestionario</button>
+  <button class="pestana-btn" data-tab="ia" onclick="showTab('ia')">Actividad con IA</button>
+  <button class="pestana-btn" data-tab="reflexion" onclick="showTab('reflexion')">Reflexión</button>
+  <button class="pestana-btn" data-tab="bibliografia" onclick="showTab('bibliografia')">Bibliografía</button>
+</nav>
+
+<main>
+
+<!-- ============================= REPASO ============================= -->
+<section id="panel-repaso" class="panel activo">
+  <h2>Repaso — lo recorrido antes de hoy</h2>
+  <p>Los libros de Comercial El Astillero S.A. quedaron cerrados ayer: todas las cuentas de ingresos y gastos están en cero, y su utilidad de agosto (495,29) ya viajó a Resultados Acumulados. Solo queda un paso: mirar lo que sobrevivió al cierre.</p>
+
+  <div class="acordeon-item">
+    <div class="acordeon-cabecera" onclick="toggleAcordeon(this)">
+      <span>Unidad 3 en síntesis (Días 7-13)</span>
+      <span class="flecha">▶</span>
+    </div>
+    <div class="acordeon-contenido">
+      <p>La Unidad 3 nos llevó desde la NIC 2 y los métodos de valuación de inventarios hasta el Kardex formal, las cuatro familias de ajustes y el balance de comprobación ajustado. Cerró con Comercial El Astillero S.A., agosto de 2026: <strong>balance de comprobación ajustado de 130.870,70</strong> (41 cuentas) y un <strong>resultado real de 582,70</strong>.</p>
+    </div>
+  </div>
+
+  <div class="acordeon-item">
+    <div class="acordeon-cabecera" onclick="toggleAcordeon(this)">
+      <span>Día 14 — Estructura del Estado de Resultado Integral</span>
+      <span class="flecha">▶</span>
+    </div>
+    <div class="acordeon-contenido">
+      <p>Aprendimos la estructura del ERI por función (NIC 1): ingresos menos costo de ventas es la utilidad bruta; menos gastos de operación, la utilidad operativa; menos otros gastos operativos y gastos financieros, la utilidad antes de participación e impuestos. Con las cuentas de El Astillero S.A.: <strong>ingresos 30.680,00 − costo de ventas 20.660,00 = utilidad bruta 10.020,00</strong>; utilidad operativa 917,70; <strong>utilidad antes de participación e impuestos: 582,70</strong>; 15% de participación a trabajadores: 87,41; <strong>utilidad antes del impuesto a la renta: 495,29</strong>.</p>
+    </div>
+  </div>
+
+  <div class="acordeon-item">
+    <div class="acordeon-cabecera" onclick="toggleAcordeon(this)">
+      <span>Día 15 — Asientos de cierre contable</span>
+      <span class="flecha">▶</span>
+    </div>
+    <div class="acordeon-contenido">
+      <p>Aprendimos que las cuentas nominales (ingresos, costo de ventas, gastos) se cierran cada período a través de una cuenta puente, <strong>Resumen de Rentas y Gastos</strong>, en tres pasos: cierre de ingresos, cierre de costos y gastos, y traslado del saldo neto a Resultados Acumulados. Antes del cierre, provisionamos el 15% de participación a trabajadores (Asiento 26, 87,41) porque esa cuenta de gasto todavía no existía en los libros. Con los Asientos 27 a 29, El Astillero S.A. cerró agosto con una utilidad de <strong>495,29</strong>, y <strong>Resultados Acumulados pasó de 6.500,00 a 6.995,29</strong>.</p>
+    </div>
+  </div>
+
+  <div class="futuro">
+    <strong class="etiqueta">Puente hacia el Día 16</strong>
+    Después del cierre, en los libros de El Astillero S.A. ya no queda ni un solo saldo de ingreso o de gasto: solo permanecen las <strong>cuentas reales</strong> — Caja, Bancos, Cuentas por Cobrar, Inventario, activos fijos, Proveedores, el nuevo pasivo de Participación Trabajadores por Pagar, el Préstamo bancario, y el patrimonio, con Resultados Acumulados ya en 6.995,29. Hoy vamos a tomar exactamente esas cuentas y construir con ellas el segundo estado financiero formal del curso: el <strong>Estado de Situación Financiera</strong> de El Astillero S.A. al 31 de agosto de 2026.
+  </div>
+</section>
+
+<!-- ============================= TEMA 1 ============================= -->
+<section id="panel-tema1" class="panel">
+  <h2>Tema 1 — El Estado de Situación Financiera: qué es y por qué importa</h2>
+
+  <div class="definicion">
+    <strong class="etiqueta">Definición</strong>
+    El <strong>Estado de Situación Financiera (ESF)</strong> es el estado financiero que muestra, <strong>en una fecha exacta</strong>, los recursos que controla una entidad (<strong>activo</strong>), las obligaciones que tiene con terceros (<strong>pasivo</strong>) y la parte de esos recursos que pertenece a sus propietarios (<strong>patrimonio</strong>), de manera que siempre se cumpla la ecuación contable: <strong>Activo = Pasivo + Patrimonio</strong>. En años anteriores, y todavía en el lenguaje cotidiano de muchas empresas, se le conoce como «Balance General».
+  </div>
+
+  <p>Este es el estado financiero cuya estructura básica adelantamos brevemente en el Día 3, cuando recién aprendíamos la ecuación contable y la naturaleza de las cuentas. Hoy, con la Unidad 3 y el ERI del Día 14 ya trabajados, volvemos a él para construirlo completo, con un caso real y cerrado: El Astillero S.A.</p>
+
+  <h3>La diferencia que ya conocemos, ahora aplicada al ESF</h3>
+  <p>El Día 14 aprendimos que el <strong>ERI es una película</strong> de un período completo («del 1 al 31 de agosto»). El <strong>ESF es una fotografía</strong>: muestra la situación de la empresa en un instante exacto («al 31 de agosto de 2026»). Por eso el encabezado de todo ESF usa siempre la palabra «al», nunca «del… al…». Ambos estados están profundamente conectados: la utilidad que el ERI midió durante el mes, y que el Día 15 trasladamos a Resultados Acumulados mediante los asientos de cierre, es exactamente la cifra que hoy aparece dentro del patrimonio del ESF. Un estado alimenta al otro.</p>
+
+  <div class="ejemplo">
+    <strong class="etiqueta">Ejemplo — la fotografía familiar</strong>
+    <p>Piensa en una fotografía familiar tomada el 31 de diciembre de cada año: muestra cuántos miembros hay en la familia, qué poseen en ese instante (la casa, el auto, los ahorros) y qué deben (la hipoteca, un préstamo). No muestra cuánto ganó o gastó la familia durante el año —eso lo contaría un video, no una foto—, pero sí muestra el resultado acumulado de todas esas películas anteriores: los ahorros de este año son, en parte, la utilidad de los años previos que la familia decidió no gastar. El ESF de una empresa funciona igual: es una fotografía que resume, en un instante, el efecto acumulado de todas las películas (períodos) anteriores.</p>
+  </div>
+
+  <h3>Por qué importa: usuarios y decisiones</h3>
+  <p>Un banco que evalúa un préstamo revisa el ESF para saber si la empresa tiene suficientes activos (especialmente los que puede convertir rápido en efectivo) para responder por sus deudas. Un proveedor que va a otorgar crédito a 60 días revisa cuánto debe ya la empresa a otros proveedores antes de sumarse a la fila. Un inversionista revisa cuánto patrimonio propio tiene la empresa frente a cuánto debe a terceros, para medir el riesgo de la inversión. La Superintendencia de Compañías exige el ESF como parte de los estados financieros anuales de toda sociedad. En los cuatro casos, la pregunta de fondo es la misma: <strong>¿qué tan sólida es esta empresa en este momento exacto?</strong> — una pregunta que el ERI, por sí solo, no puede responder.</p>
+
+  <div class="alerta">
+    <strong class="etiqueta">Error frecuente</strong>
+    Pensar que una empresa con una buena utilidad en el ERI (como los 495,29 de El Astillero S.A. en agosto) es automáticamente una empresa «sólida». La utilidad mide el desempeño de un mes; el ESF mide si, con todo lo que la empresa posee y debe hasta ese momento, puede responder por sus obligaciones. Una empresa puede tener una excelente utilidad mensual y, al mismo tiempo, un ESF débil si arrastra demasiadas deudas de períodos anteriores.
+  </div>
+
+  <div class="carrera-box">
+    <strong class="etiqueta">Conexión con Negocios Internacionales</strong>
+    <ul>
+      <li><strong>Comercio exterior:</strong> una entidad de fomento a las exportaciones revisa el ESF de una empresa para verificar que tiene activos suficientes como garantía antes de financiar un embarque.</li>
+      <li><strong>Finanzas internacionales:</strong> comparar el ESF de una empresa en varios años sucesivos (análisis horizontal) es la base de cualquier análisis de riesgo de crédito internacional.</li>
+      <li><strong>Marketing y negociación internacional:</strong> conocer la solidez patrimonial de un socio comercial extranjero, visible en su ESF, es información clave antes de negociar una alianza o una distribución exclusiva.</li>
+      <li><strong>Marco legal y normativo:</strong> la Superintendencia de Compañías, Valores y Seguros del Ecuador exige la presentación anual del ESF bajo NIIF a toda sociedad sujeta a su control.</li>
+    </ul>
+  </div>
+
+  <div class="conclusion">
+    <strong class="etiqueta">Idea clave</strong>
+    El Estado de Situación Financiera es una fotografía, tomada en una fecha exacta, de todo lo que una empresa posee, debe y tiene como patrimonio propio. Es el estado que responde si una empresa es sólida en este momento, una pregunta distinta —y complementaria— a la que responde el ERI sobre su desempeño durante un período.
+  </div>
+</section>
+
+<!-- ============================= TEMA 2 ============================= -->
+<section id="panel-tema2" class="panel">
+  <h2>Tema 2 — Estructura y clasificación del ESF</h2>
+
+  <div class="definicion">
+    <strong class="etiqueta">Definición — corriente y no corriente</strong>
+    La NIC 1 exige clasificar el activo y el pasivo en <strong>corriente</strong> (se espera realizar, vender, consumir o liquidar dentro de los <strong>doce meses</strong> siguientes a la fecha del ESF, o dentro del ciclo normal de operación de la empresa si este es más largo) y <strong>no corriente</strong> (todo lo demás: se espera que permanezca en la empresa por más de un año).
+  </div>
+
+  <h3>El activo: de lo más líquido a lo menos líquido</h3>
+  <p>Dentro del activo corriente, la práctica más extendida —y la que sigue este curso— ordena las cuentas de <strong>mayor a menor liquidez</strong>, es decir, de lo que más rápido se convierte en efectivo a lo que más tiempo tarda:</p>
+
+  <div class="scroll-tabla">
+  <table class="tabla-eri">
+    <caption>Activo corriente — orden de liquidez</caption>
+    <thead><tr><th>Cuenta</th><th>¿Por qué es corriente?</th></tr></thead>
+    <tbody>
+      <tr><td>Efectivo y equivalentes (Caja, Bancos)</td><td>Ya es dinero disponible; liquidez inmediata.</td></tr>
+      <tr><td>Cuentas por Cobrar (netas de deterioro)</td><td>Se espera cobrarlas en el corto plazo, según las condiciones de crédito otorgadas.</td></tr>
+      <tr><td>Inventario (neto de ajustes)</td><td>Se espera venderlo dentro del ciclo normal de operación.</td></tr>
+      <tr><td>Arriendos y seguros prepagados</td><td>Se consumirán —dejarán de ser un derecho y pasarán a ser gasto— dentro de los próximos doce meses.</td></tr>
+      <tr><td>IVA en compras, anticipos y créditos tributarios</td><td>Son derechos a favor de la empresa que se espera recuperar o compensar en el corto plazo.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>El activo <strong>no corriente</strong> agrupa lo que la empresa usará por más de un año para operar, no para vender: propiedad, planta y equipo (muebles, equipo de computación, vehículos), presentados siempre a su <strong>valor neto</strong> (costo histórico menos depreciación acumulada), tal como los depreciamos en el Día 11.</p>
+
+  <h3>El pasivo: de lo más exigible a lo menos exigible</h3>
+  <p>El pasivo corriente agrupa las obligaciones que vencen dentro de los próximos doce meses: proveedores, retenciones e IVA por pagar, participación a trabajadores por pagar, sueldos y aportes al IESS por pagar, la porción del interés ya devengado. El pasivo no corriente agrupa las deudas a largo plazo, como la porción de un préstamo bancario cuyo vencimiento supera el año.</p>
+
+  <div class="formula">
+    Activo Corriente + Activo No Corriente = <strong>Total Activo</strong><br>
+    Pasivo Corriente + Pasivo No Corriente = <strong>Total Pasivo</strong><br>
+    Total Activo = Total Pasivo + Total Patrimonio
+  </div>
+
+  <h3>Dos formas válidas de presentar el mismo estado</h3>
+  <p>La NIC 1 no impone un único diseño visual. Las dos formas más usadas son la <strong>forma de cuenta</strong> (dos columnas lado a lado: Activo a la izquierda, Pasivo y Patrimonio a la derecha, como una gran ecuación visual) y la <strong>forma de reporte</strong> (una sola columna vertical: primero todo el activo, luego el pasivo, luego el patrimonio). Ambas muestran exactamente la misma información; este curso usa la forma de cuenta porque hace visualmente evidente la ecuación contable.</p>
+
+  <h3>El patrimonio: lo que queda para el propietario</h3>
+  <p>El patrimonio se presenta después del pasivo y agrupa lo que pertenece a los socios o accionistas: el <strong>Capital</strong> (lo que aportaron al constituir la empresa o en aportes posteriores) y los <strong>Resultados Acumulados</strong> (la suma de las utilidades de todos los períodos anteriores que la empresa no ha repartido, incluida la utilidad recién cerrada del Día 15).</p>
+
+  <div class="nota-lateral">
+    <strong>¿Por qué el patrimonio nunca se calcula directamente?</strong> El patrimonio no se cuenta ni se mide de forma independiente: es siempre lo que <em>sobra</em> después de restar el pasivo del activo. Por eso a veces se le llama «interés residual»: primero se pagan —o se reconocen— las obligaciones con terceros (pasivo), y lo que queda es lo que pertenece a los propietarios.
+  </div>
+
+  <div class="alerta">
+    <strong class="etiqueta">Error frecuente</strong>
+    Clasificar una cuenta como corriente o no corriente según su <em>naturaleza</em> (por ejemplo, pensar que «todo lo que es una deuda con un banco es no corriente»), en vez de según su <em>plazo real</em>. Un préstamo bancario a cinco años tiene una porción no corriente (lo que vence después de doce meses) y, con el paso del tiempo, una porción corriente (la cuota que vence dentro del próximo año). El criterio siempre es el plazo, nunca el tipo de cuenta por sí solo.
+  </div>
+
+  <div class="carrera-box">
+    <strong class="etiqueta">Conexión con Negocios Internacionales</strong>
+    <ul>
+      <li><strong>Comercio exterior:</strong> un banco que financia una carta de crédito de importación revisa específicamente el activo corriente disponible antes de aprobar el cupo.</li>
+      <li><strong>Finanzas internacionales:</strong> la relación entre activo corriente y pasivo corriente (que veremos en el Tema 3) es uno de los indicadores más usados en la calificación de riesgo internacional de una empresa.</li>
+      <li><strong>Marketing y negociación internacional:</strong> negociar plazos de pago más largos con un proveedor extranjero cambia directamente la clasificación de esa deuda entre corriente y no corriente.</li>
+      <li><strong>Marco legal y normativo:</strong> la NIC 1 exige esta clasificación precisamente para que los estados financieros de empresas de distintos países sean comparables entre sí bajo un mismo criterio.</li>
+    </ul>
+  </div>
+
+  <div class="conclusion">
+    <strong class="etiqueta">Idea clave</strong>
+    El ESF clasifica el activo y el pasivo según el plazo —corriente si se espera realizar o liquidar dentro de doce meses, no corriente si no— y presenta el patrimonio como lo que queda después de restar el pasivo del activo. El criterio siempre es el plazo real de cada cuenta, nunca su tipo por sí solo.
+  </div>
+</section>
+
+<!-- ============================= TEMA 3 ============================= -->
+<section id="panel-tema3" class="panel">
+  <h2>Tema 3 — El ESF real de Comercial El Astillero S.A. al 31/08/2026</h2>
+
+  <p>Partimos de los saldos de apertura del Día 13 (asiento 1, suma 83.740,00) y les aplicamos, cuenta por cuenta, el efecto de los 17 asientos de transacciones, los 8 ajustes y el asiento de provisión del Día 15. Ninguna cifra de este tema es nueva: todas provienen de hechos ya registrados en los Días 13 y 15.</p>
+
+  <div class="nota-lateral">
+    <strong>Dos decisiones de presentación, declaradas explícitamente:</strong> (1) Caja y Bancos se presentan agregados como una sola línea, «Efectivo y equivalentes de efectivo» — una agregación que la propia NIC 1 permite en el cuerpo del estado cuando no cambia la utilidad de la información. (2) Las cuentas de IVA y de retenciones (en compras y en ventas) parten de saldo cero el 1 de agosto de 2026, de forma consistente con que el asiento de apertura del Día 13 no las incluyó y con la nota de que las retenciones de julio ya se habían liquidado.
+  </div>
+
+  <h3>Desglose del cálculo, cuenta por cuenta</h3>
+
+  <div class="scroll-tabla">
+  <table class="tabla-eri">
+    <caption>1) Efectivo y equivalentes de efectivo</caption>
+    <thead><tr><th>Movimiento</th><th class="valor">Entradas</th><th class="valor">Salidas</th></tr></thead>
+    <tbody>
+      <tr><td>Saldo de apertura (Caja 1.200,00 + Bancos 28.500,00)</td><td class="valor">29.700,00</td><td class="valor"></td></tr>
+      <tr><td>Cobro de cartera (11/08)</td><td class="valor">6.000,00</td><td class="valor"></td></tr>
+      <tr><td>Venta a consumidores finales, cobrada (28/08)</td><td class="valor">8.372,00</td><td class="valor"></td></tr>
+      <tr><td>Pago saldo proveedores (02/08)</td><td class="valor"></td><td class="valor">7.200,00</td></tr>
+      <tr><td>Arriendo bodega, neto (04/08)</td><td class="valor"></td><td class="valor">850,50</td></tr>
+      <tr><td>Energía eléctrica CNEL EP (12/08)</td><td class="valor"></td><td class="valor">240,00</td></tr>
+      <tr><td>Compra con cheque, neto (14/08)</td><td class="valor"></td><td class="valor">6.347,25</td></tr>
+      <tr><td>Mantenimiento vehículo, neto (20/08)</td><td class="valor"></td><td class="valor">507,50</td></tr>
+      <tr><td>Honorarios profesionales, neto (26/08)</td><td class="valor"></td><td class="valor">1.194,00</td></tr>
+      <tr><td>Líquido del rol de pagos (29/08)</td><td class="valor"></td><td class="valor">3.803,10</td></tr>
+      <tr><td>Nota de débito bancaria (ajuste 25)</td><td class="valor"></td><td class="valor">62,00</td></tr>
+      <tr class="subtotal"><td>Totales</td><td class="valor">44.072,00</td><td class="valor">20.204,35</td></tr>
+      <tr class="resultado"><td>Saldo final de Efectivo y equivalentes</td><td class="valor" colspan="2">23.867,65</td></tr>
+    </tbody>
+  </table>
+
+  <table class="tabla-eri">
+    <caption>2) Cuentas por Cobrar (netas)</caption>
+    <thead><tr><th>Origen</th><th class="valor">Valor</th></tr></thead>
+    <tbody>
+      <tr><td>Saldo de apertura</td><td class="valor">9.400,00</td></tr>
+      <tr><td>+ Venta a crédito 09/08 (CxC)</td><td class="valor">8.463,00</td></tr>
+      <tr><td>+ Venta a crédito 18/08 (CxC)</td><td class="valor">16.926,00</td></tr>
+      <tr><td>− Cobro de cartera 11/08</td><td class="valor">(6.000,00)</td></tr>
+      <tr class="subtotal"><td>CxC bruta al 31/08</td><td class="valor">28.789,00</td></tr>
+      <tr><td>− (–) Deterioro acumulado (120,00 apertura + 234,00 ajuste 22)</td><td class="valor">(354,00)</td></tr>
+      <tr class="resultado"><td>CxC neta al 31/08</td><td class="valor">28.435,00</td></tr>
+    </tbody>
+  </table>
+
+  <table class="tabla-eri">
+    <caption>3) Inventario (Kardex FIFO + ajustes)</caption>
+    <thead><tr><th>Origen</th><th class="valor">Valor</th></tr></thead>
+    <tbody>
+      <tr><td>Kardex FIFO al 31/08 (Día 9): 60 u a 40,25</td><td class="valor">2.415,00</td></tr>
+      <tr><td>− Faltante en toma física (ajuste 23)</td><td class="valor">(80,50)</td></tr>
+      <tr><td>− Ajuste a Valor Neto Realizable (ajuste 24)</td><td class="valor">(72,50)</td></tr>
+      <tr class="resultado"><td>Inventario neto al 31/08</td><td class="valor">2.262,00</td></tr>
+    </tbody>
+  </table>
+
+  <table class="tabla-eri">
+    <caption>4) Prepagados y activo fijo neto</caption>
+    <thead><tr><th>Cuenta</th><th class="valor">Cálculo</th><th class="valor">Saldo final</th></tr></thead>
+    <tbody>
+      <tr><td>Arriendos prepagados</td><td class="valor">3.000,00 − 600,00 (ajuste 18)</td><td class="valor">2.400,00</td></tr>
+      <tr><td>Seguros prepagados</td><td class="valor">1.440,00 − 180,00 (ajuste 19)</td><td class="valor">1.260,00</td></tr>
+      <tr><td>Muebles, neto</td><td class="valor">9.600,00 − (1.920,00 + 80,00)</td><td class="valor">7.600,00</td></tr>
+      <tr><td>Equipo de computación, neto</td><td class="valor">3.600,00 − (1.200,00 + 100,00)</td><td class="valor">2.300,00</td></tr>
+      <tr><td>Vehículos, neto</td><td class="valor">24.000,00 − (4.800,00 + 400,00)</td><td class="valor">18.800,00</td></tr>
+    </tbody>
+  </table>
+
+  <table class="tabla-eri">
+    <caption>5) IVA, anticipos y créditos tributarios a favor de El Astillero S.A. (activo)</caption>
+    <thead><tr><th>Cuenta</th><th class="valor">Cálculo</th><th class="valor">Saldo final</th></tr></thead>
+    <tbody>
+      <tr><td>IVA en compras</td><td class="valor">135,00+1.530,00+877,50+75,00+603,75+180,00</td><td class="valor">3.401,25</td></tr>
+      <tr><td>Anticipo de IR retenido</td><td class="valor">156,00 (09/08) + 312,00 (18/08)</td><td class="valor">468,00</td></tr>
+      <tr><td>Crédito tributario ret. IVA</td><td class="valor">351,00 (09/08) + 702,00 (18/08)</td><td class="valor">1.053,00</td></tr>
+    </tbody>
+  </table>
+
+  <table class="tabla-eri">
+    <caption>6) Pasivos por retenciones, IVA e IESS (El Astillero S.A. como agente de retención y empleador)</caption>
+    <thead><tr><th>Cuenta</th><th class="valor">Cálculo</th><th class="valor">Saldo final</th></tr></thead>
+    <tbody>
+      <tr><td>IVA en ventas</td><td class="valor">1.170,00+2.340,00+1.092,00</td><td class="valor">4.602,00</td></tr>
+      <tr><td>Retención IR por pagar</td><td class="valor">90,00+204,00+117,00+15,00+80,50+60,00</td><td class="valor">566,50</td></tr>
+      <tr><td>Retención IVA por pagar</td><td class="valor">94,50+459,00+263,25+52,50+181,13+126,00</td><td class="valor">1.176,38</td></tr>
+      <tr><td>IESS por pagar (personal 396,90 + patronal 468,30)</td><td class="valor">rol de pagos 29/08</td><td class="valor">865,20</td></tr>
+    </tbody>
+  </table>
+
+  <table class="tabla-eri">
+    <caption>7) Proveedores, préstamo, y pasivos nuevos del Día 15</caption>
+    <thead><tr><th>Cuenta</th><th class="valor">Cálculo</th><th class="valor">Saldo final</th></tr></thead>
+    <tbody>
+      <tr><td>Proveedores</td><td class="valor">7.200,00 − 7.200,00 + 11.067,00 + 4.367,12</td><td class="valor">15.434,12</td></tr>
+      <tr><td>Préstamo bancario (no corriente)</td><td class="valor">sin variación</td><td class="valor">12.000,00</td></tr>
+      <tr><td>Interés por pagar (ajuste 21)</td><td class="valor">12.000,00 × 12% ÷ 12</td><td class="valor">120,00</td></tr>
+      <tr><td>Participación Trabajadores por Pagar (Día 15, Asiento 26)</td><td class="valor">582,70 × 15%</td><td class="valor">87,41</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>El Estado de Situación Financiera completo</h3>
+  <div class="esf-dos-columnas">
+    <div class="esf-columna">
+      <h4>ACTIVO</h4>
+      <table>
+        <tr class="grupo"><td colspan="2">Activo Corriente</td></tr>
+        <tr><td>Efectivo y equivalentes</td><td class="valor">23.867,65</td></tr>
+        <tr><td>Cuentas por Cobrar, netas</td><td class="valor">28.435,00</td></tr>
+        <tr><td>Inventario, neto</td><td class="valor">2.262,00</td></tr>
+        <tr><td>Arriendos prepagados</td><td class="valor">2.400,00</td></tr>
+        <tr><td>Seguros prepagados</td><td class="valor">1.260,00</td></tr>
+        <tr><td>IVA en compras</td><td class="valor">3.401,25</td></tr>
+        <tr><td>Anticipo de IR retenido</td><td class="valor">468,00</td></tr>
+        <tr><td>Crédito tributario ret. IVA</td><td class="valor">1.053,00</td></tr>
+        <tr class="subtotal"><td>Total Activo Corriente</td><td class="valor">63.146,90</td></tr>
+        <tr class="grupo"><td colspan="2">Activo No Corriente</td></tr>
+        <tr><td>Muebles, neto</td><td class="valor">7.600,00</td></tr>
+        <tr><td>Equipo de computación, neto</td><td class="valor">2.300,00</td></tr>
+        <tr><td>Vehículos, neto</td><td class="valor">18.800,00</td></tr>
+        <tr class="subtotal"><td>Total Activo No Corriente</td><td class="valor">28.700,00</td></tr>
+        <tr class="total"><td>TOTAL ACTIVO</td><td class="valor">91.846,90</td></tr>
+      </table>
+    </div>
+    <div class="esf-columna">
+      <h4>PASIVO Y PATRIMONIO</h4>
+      <table>
+        <tr class="grupo"><td colspan="2">Pasivo Corriente</td></tr>
+        <tr><td>Proveedores</td><td class="valor">15.434,12</td></tr>
+        <tr><td>Interés por pagar</td><td class="valor">120,00</td></tr>
+        <tr><td>IVA en ventas</td><td class="valor">4.602,00</td></tr>
+        <tr><td>Retención IR por pagar</td><td class="valor">566,50</td></tr>
+        <tr><td>Retención IVA por pagar</td><td class="valor">1.176,38</td></tr>
+        <tr><td>IESS por pagar</td><td class="valor">865,20</td></tr>
+        <tr><td>Participación Trabajadores por Pagar</td><td class="valor">87,41</td></tr>
+        <tr class="subtotal"><td>Total Pasivo Corriente</td><td class="valor">22.851,61</td></tr>
+        <tr class="grupo"><td colspan="2">Pasivo No Corriente</td></tr>
+        <tr><td>Préstamo bancario</td><td class="valor">12.000,00</td></tr>
+        <tr class="subtotal"><td>Total Pasivo No Corriente</td><td class="valor">12.000,00</td></tr>
+        <tr class="subtotal"><td>TOTAL PASIVO</td><td class="valor">34.851,61</td></tr>
+        <tr class="grupo"><td colspan="2">Patrimonio</td></tr>
+        <tr><td>Capital</td><td class="valor">50.000,00</td></tr>
+        <tr><td>Resultados Acumulados</td><td class="valor">6.995,29</td></tr>
+        <tr class="subtotal"><td>TOTAL PATRIMONIO</td><td class="valor">56.995,29</td></tr>
+        <tr class="total"><td>TOTAL PASIVO + PATRIMONIO</td><td class="valor">91.846,90</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="formula">Total Activo 91.846,90 = Total Pasivo 34.851,61 + Total Patrimonio 56.995,29 — la ecuación contable cuadra exacto.</div>
+
+  <h3>Importancia en cifras: capital de trabajo y liquidez</h3>
+  <div class="scroll-tabla">
+  <table class="tabla-eri">
+    <caption>Indicadores de liquidez de El Astillero S.A. al 31/08/2026</caption>
+    <thead><tr><th>Indicador</th><th class="valor">Cálculo</th><th class="valor">Resultado</th></tr></thead>
+    <tbody>
+      <tr><td>Capital de trabajo</td><td class="valor">63.146,90 − 22.851,61</td><td class="valor">40.295,29</td></tr>
+      <tr><td>Razón corriente</td><td class="valor">63.146,90 ÷ 22.851,61</td><td class="valor">2,76</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Una razón corriente de 2,76 significa que, por cada dólar de deuda que vence dentro de los próximos doce meses, El Astillero S.A. cuenta con 2,76 dólares en activos que espera convertir en efectivo en ese mismo plazo. Es un colchón de liquidez amplio: el negocio no depende de una utilidad futura para cubrir sus obligaciones de corto plazo, ya tiene con qué hacerlo hoy. Este es exactamente el tipo de cálculo que un analista de crédito revisa antes de aprobar una línea de financiamiento.</p>
+
+  <div class="futuro">
+    <strong class="etiqueta">Lo que sigue — Días 17 y 18</strong>
+    Con el ERI (Días 14-15) y el ESF (Día 16) ya trabajados por separado, los Días 17 y 18 van a construir ambos estados juntos, desde cero, primero para una empresa de servicios y luego para una empresa comercial —posiblemente retomando el balance ya cerrado de El Astillero S.A. como punto de partida—, cerrando así la Unidad 4 con el circuito contable completo.
+  </div>
+
+  <div class="carrera-box">
+    <strong class="etiqueta">Conexión con Negocios Internacionales</strong>
+    <ul>
+      <li><strong>Comercio exterior:</strong> una razón corriente de 2,76 es exactamente el tipo de dato que respalda una solicitud de línea de crédito documentario para financiar una importación.</li>
+      <li><strong>Finanzas internacionales:</strong> el capital de trabajo (40.295,29) mide cuántos recursos libres tiene la empresa para operar sin depender de financiamiento adicional de corto plazo — un dato central en cualquier análisis de riesgo internacional.</li>
+      <li><strong>Marketing y negociación internacional:</strong> mostrar un ESF sólido, con una ecuación contable que cuadra y una liquidez saludable, fortalece la posición de El Astillero S.A. al negociar mejores condiciones con proveedores extranjeros.</li>
+      <li><strong>Marco legal y normativo:</strong> el pasivo «Participación Trabajadores por Pagar» y las retenciones por pagar son obligaciones exigibles que la Superintendencia de Compañías y el SRI esperan ver correctamente clasificadas como corrientes en el ESF.</li>
+    </ul>
+  </div>
+
+  <div class="conclusion">
+    <strong class="etiqueta">Idea clave</strong>
+    El ESF de El Astillero S.A. no es un documento aislado: es la fotografía que resulta de sumar, cuenta por cuenta, cada hecho económico de agosto sobre el saldo de apertura de la empresa. Cuadra exacto (91.846,90 = 91.846,90) porque cada asiento de los Días 13 y 15 mantuvo la partida doble, y su liquidez (razón corriente 2,76) confirma, con números, la solidez que el ERI por sí solo no podía mostrar.
+  </div>
+</section>
+
+<!-- ============================= TEMA 4 — NIIF 18 ============================= -->
+<section id="panel-tema4" class="panel">
+  <h2>Tema 4 — Nota técnica: la NIIF 18 y el futuro del Estado de Resultados</h2>
+
+  <div class="anexo">
+    <strong class="etiqueta">Contenido adicional, a pedido del docente</strong>
+    Este tema no forma parte del Plan Analítico de la asignatura: se incluye como información de actualidad profesional, porque afecta directamente la estructura del Estado de Resultado Integral que trabajamos en los Días 14 y 15. Todo lo evaluable del curso —incluidos el Ejercicio, el Cuestionario y la Actividad con IA de hoy— sigue basado en la NIC 1, que es la norma vigente para el ejercicio fiscal 2026 del caso de El Astillero S.A.
+  </div>
+
+  <div class="definicion">
+    <strong class="etiqueta">Definición</strong>
+    La <strong>NIIF 18 «Presentación e Información a Revelar en los Estados Financieros»</strong> es una norma nueva emitida por el IASB en abril de 2024. Sustituirá a la <strong>NIC 1</strong> —la norma que hemos usado en todo este curso— para los períodos anuales que comiencen a partir del <strong>1 de enero de 2027</strong>, aunque permite adopción anticipada. El IASB la describe como el cambio más significativo en la presentación del rendimiento financiero de las empresas en más de dos décadas.
+  </div>
+
+  <h3>¿Por qué surge la NIIF 18?</h3>
+  <p>Antes de la NIIF 18, la NIC 1 no exigía un subtotal de «utilidad operativa» calculado de manera uniforme: cada empresa decidía si lo presentaba y cómo lo calculaba. El IASB documentó que, en la práctica, más de sesenta empresas analizadas usaban <strong>nueve formas distintas</strong> de calcular ese mismo subtotal, lo que dificultaba comparar el desempeño de una empresa con otra. La NIIF 18 busca cerrar esa brecha de comparabilidad, sin cambiar cuánta utilidad total gana una empresa, sino <strong>dónde y cómo se presentan</strong> sus ingresos y gastos dentro del estado.</p>
+
+  <h3>Los tres cambios principales</h3>
+  <div class="scroll-tabla">
+  <table class="tabla-eri">
+    <caption>Qué cambia con la NIIF 18</caption>
+    <thead><tr><th>Cambio</th><th>En qué consiste</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Tres categorías obligatorias</strong></td><td>Todo ingreso y gasto se clasifica en una de tres categorías: <strong>operación</strong>, <strong>inversión</strong> (por ejemplo, ingresos por dividendos o ganancias en la venta de inversiones) y <strong>financiación</strong> (intereses y otros costos de financiamiento).</td></tr>
+      <tr><td><strong>Subtotal de utilidad operativa obligatorio</strong></td><td>Todas las empresas deben presentar un subtotal de «utilidad operativa» calculado de la misma manera: la categoría de operación agrupa <em>todo</em> lo que no sea explícitamente de inversión o de financiación — incluidas partidas que antes solían presentarse por separado, como pérdidas por ajustes de inventario.</td></tr>
+      <tr><td><strong>Medidas de rendimiento definidas por la gerencia (MPM)</strong></td><td>Si una empresa presenta indicadores propios fuera de las NIIF (como un «EBITDA ajustado»), deberá revelarlos en una nota específica, explicar cómo se calculan y conciliarlos con las cifras oficiales del estado — y esas notas quedarán sujetas a auditoría.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Ilustración: el ERI de El Astillero S.A. bajo las categorías de la NIIF 18</h3>
+  <p>Las cifras de El Astillero S.A. no cambiarían con la NIIF 18 —la utilidad final es la misma—, pero el subtotal de «utilidad operativa» sí caería en un punto distinto, porque los «otros gastos operativos» (el faltante de inventario y el ajuste a VNR) tendrían que incluirse dentro de la categoría de operación, no presentarse como una línea aparte después de la utilidad operativa, como hizo el Día 14.</p>
+
+  <div class="scroll-tabla">
+  <table class="tabla-eri">
+    <caption>El Astillero S.A. — reorganización ilustrativa bajo NIIF 18 (mismas cifras del Día 14)</caption>
+    <thead><tr><th>Cuenta</th><th class="valor">Total</th></tr></thead>
+    <tbody>
+      <tr class="categoria"><td colspan="2">Categoría de OPERACIÓN</td></tr>
+      <tr><td>Ingresos de actividades ordinarias</td><td class="valor">30.680,00</td></tr>
+      <tr class="deduccion"><td>(–) Costo de ventas</td><td class="valor">(20.660,00)</td></tr>
+      <tr class="deduccion"><td>(–) Gastos de operación</td><td class="valor">(9.102,30)</td></tr>
+      <tr class="deduccion"><td>(–) Otros gastos operativos</td><td class="valor">(153,00)</td></tr>
+      <tr class="resultado"><td>= Utilidad operativa (subtotal obligatorio NIIF 18)</td><td class="valor">764,70</td></tr>
+      <tr class="categoria"><td colspan="2">Categoría de FINANCIACIÓN</td></tr>
+      <tr class="deduccion"><td>(–) Gastos financieros</td><td class="valor">(182,00)</td></tr>
+      <tr class="subtotal"><td>= Utilidad antes de participación e impuestos</td><td class="valor">582,70</td></tr>
+      <tr class="deduccion"><td>(–) 15% Participación a trabajadores</td><td class="valor">(87,41)</td></tr>
+      <tr class="subtotal"><td>= Utilidad antes del impuesto a la renta</td><td class="valor">495,29</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="nota-lateral">
+    <strong>El Astillero S.A. no tiene categoría de inversión</strong> en este caso: no posee dividendos de otras empresas, ni ganancias por venta de inversiones financieras, propias de un comercio minorista. Por eso el ejemplo solo muestra las categorías de operación y financiación.
+  </div>
+
+  <div class="alerta">
+    <strong class="etiqueta">Lo que NO cambia</strong>
+    La utilidad antes de participación e impuestos sigue siendo 582,70 y la utilidad antes del impuesto a la renta sigue siendo 495,29 — exactamente las mismas cifras del Día 14 y del cierre del Día 15. La NIIF 18 reorganiza <em>dónde</em> se presenta la información, no <em>cuánta</em> utilidad genera el negocio. El Estado de Situación Financiera que construimos en el Tema 3 tampoco cambia de forma significativa: la NIIF 18 se concentra en el Estado de Resultados, y mantiene sobre el ESF los mismos principios de agrupación que ya trae la NIC 1.
+  </div>
+
+  <div class="carrera-box">
+    <strong class="etiqueta">Conexión con Negocios Internacionales</strong>
+    <ul>
+      <li><strong>Comercio exterior:</strong> empresas ecuatorianas exportadoras que reportan a matrices o inversionistas internacionales que ya aplican NIIF 18 empezarán a recibir solicitudes de información en ese formato antes de que sea obligatorio en Ecuador.</li>
+      <li><strong>Finanzas internacionales:</strong> un subtotal de utilidad operativa estandarizado facilita comparar empresas de distintos países sin ajustar manualmente sus estados financieros — justo el problema que la NIIF 18 busca resolver.</li>
+      <li><strong>Marketing y negociación internacional:</strong> las medidas de rendimiento definidas por la gerencia (MPM), ahora auditadas, exigirán mayor disciplina al comunicar cifras de desempeño en materiales de inversión o negociación internacional.</li>
+      <li><strong>Marco legal y normativo:</strong> en Ecuador, la Superintendencia de Compañías históricamente adopta las NIIF en la fecha de vigencia que fija el IASB; se espera que la NIIF 18 siga el mismo camino para los ejercicios que inicien desde 2027.</li>
+    </ul>
+  </div>
+
+  <div class="conclusion">
+    <strong class="etiqueta">Idea clave</strong>
+    La NIIF 18 no es un tema de examen de este curso, pero sí es el futuro cercano de la norma que hoy aprendimos: a partir de 2027, el subtotal de «utilidad operativa» dejará de ser una decisión de cada empresa y pasará a calcularse siempre de la misma forma, con las mismas tres categorías, en cualquier empresa que reporte bajo NIIF en el mundo.
+  </div>
+</section>
+
+<!-- ============================= EJERCICIO ============================= -->
+<section id="panel-ejercicio" class="panel">
+  <h2>Ejercicio Interactivo — Clasifica el ESF de Comercial Salinas Cía. Ltda.</h2>
+  <p>Comercial Salinas Cía. Ltda. presenta, al 31 de agosto de 2026: Caja y Bancos 8.400,00 · Cuentas por Cobrar 5.600,00 · Inventario 12.000,00 · Vehículos (neto) 15.000,00 · Proveedores 6.200,00 · Préstamo bancario a largo plazo 10.000,00 · IVA en ventas por pagar 1.800,00 · Capital 20.000,00 · Resultados Acumulados 3.000,00. Responde las 8 preguntas y luego presiona <strong>«Verificar respuestas»</strong>.</p>
+
+  <form id="form-ejercicio">
+
+    <div class="item-pregunta">
+      <div class="enunciado">1. ¿En qué grupo del ESF se clasifica Caja y Bancos (8.400,00)?</div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="ei1" value="a"><span><strong>a)</strong> Activo Corriente</span></label>
+        <label class="opcion"><input type="radio" name="ei1" value="b"><span><strong>b)</strong> Activo No Corriente</span></label>
+        <label class="opcion"><input type="radio" name="ei1" value="c"><span><strong>c)</strong> Pasivo Corriente</span></label>
+        <label class="opcion"><input type="radio" name="ei1" value="d"><span><strong>d)</strong> Patrimonio</span></label>
+      </div>
+      <div class="feedback" id="fb-ei1"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">2. ¿Por qué el Inventario (12.000,00) se clasifica como activo corriente?</div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="ei2" value="a"><span><strong>a)</strong> Porque nunca se vende</span></label>
+        <label class="opcion"><input type="radio" name="ei2" value="b"><span><strong>b)</strong> Porque se espera venderlo dentro del ciclo normal de operación (≤12 meses)</span></label>
+        <label class="opcion"><input type="radio" name="ei2" value="c"><span><strong>c)</strong> Porque es efectivo</span></label>
+        <label class="opcion"><input type="radio" name="ei2" value="d"><span><strong>d)</strong> Porque es un pasivo</span></label>
+      </div>
+      <div class="feedback" id="fb-ei2"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">3. Los Vehículos netos (15.000,00) se clasifican como...</div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="ei3" value="a"><span><strong>a)</strong> Activo Corriente, porque se usan todos los días</span></label>
+        <label class="opcion"><input type="radio" name="ei3" value="b"><span><strong>b)</strong> Pasivo No Corriente</span></label>
+        <label class="opcion"><input type="radio" name="ei3" value="c"><span><strong>c)</strong> Activo No Corriente, porque se usarán por más de un año para operar</span></label>
+        <label class="opcion"><input type="radio" name="ei3" value="d"><span><strong>d)</strong> Patrimonio</span></label>
+      </div>
+      <div class="feedback" id="fb-ei3"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">4. ¿Cuál es el Total Activo de Comercial Salinas Cía. Ltda.?</div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="ei4" value="a"><span><strong>a)</strong> 26.000,00</span></label>
+        <label class="opcion"><input type="radio" name="ei4" value="b"><span><strong>b)</strong> 18.000,00</span></label>
+        <label class="opcion"><input type="radio" name="ei4" value="c"><span><strong>c)</strong> 23.000,00</span></label>
+        <label class="opcion"><input type="radio" name="ei4" value="d"><span><strong>d)</strong> 41.000,00</span></label>
+      </div>
+      <div class="feedback" id="fb-ei4"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">5. El Préstamo bancario a largo plazo (10.000,00) se clasifica como...</div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="ei5" value="a"><span><strong>a)</strong> Activo No Corriente</span></label>
+        <label class="opcion"><input type="radio" name="ei5" value="b"><span><strong>b)</strong> Pasivo No Corriente</span></label>
+        <label class="opcion"><input type="radio" name="ei5" value="c"><span><strong>c)</strong> Pasivo Corriente</span></label>
+        <label class="opcion"><input type="radio" name="ei5" value="d"><span><strong>d)</strong> Patrimonio</span></label>
+      </div>
+      <div class="feedback" id="fb-ei5"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">6. ¿Cuál es el Total Pasivo Corriente de Comercial Salinas Cía. Ltda.?</div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="ei6" value="a"><span><strong>a)</strong> 18.000,00</span></label>
+        <label class="opcion"><input type="radio" name="ei6" value="b"><span><strong>b)</strong> 10.000,00</span></label>
+        <label class="opcion"><input type="radio" name="ei6" value="c"><span><strong>c)</strong> 8.000,00</span></label>
+        <label class="opcion"><input type="radio" name="ei6" value="d"><span><strong>d)</strong> 6.200,00</span></label>
+      </div>
+      <div class="feedback" id="fb-ei6"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">7. ¿Cuál es la razón corriente de Comercial Salinas Cía. Ltda.?</div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="ei7" value="a"><span><strong>a)</strong> 1,80</span></label>
+        <label class="opcion"><input type="radio" name="ei7" value="b"><span><strong>b)</strong> 5,13</span></label>
+        <label class="opcion"><input type="radio" name="ei7" value="c"><span><strong>c)</strong> 0,31</span></label>
+        <label class="opcion"><input type="radio" name="ei7" value="d"><span><strong>d)</strong> 3,25</span></label>
+      </div>
+      <div class="feedback" id="fb-ei7"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">8. Si la razón corriente es 3,25, ¿qué significa para la empresa?</div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="ei8" value="a"><span><strong>a)</strong> Que por cada dólar de deuda de corto plazo, tiene 3,25 dólares en activos que espera convertir en efectivo en el mismo plazo</span></label>
+        <label class="opcion"><input type="radio" name="ei8" value="b"><span><strong>b)</strong> Que no tiene ninguna deuda</span></label>
+        <label class="opcion"><input type="radio" name="ei8" value="c"><span><strong>c)</strong> Que su patrimonio es negativo</span></label>
+        <label class="opcion"><input type="radio" name="ei8" value="d"><span><strong>d)</strong> Que el activo no corriente es mayor que el corriente</span></label>
+      </div>
+      <div class="feedback" id="fb-ei8"></div>
+    </div>
+
+    <div class="alerta-envio" id="alerta-ejercicio">Responde las 8 preguntas antes de verificar.</div>
+    <div class="barra-contenedor" id="barra-cont-ejercicio" style="display:none;"><div class="barra-relleno" id="barra-ejercicio">0%</div></div>
+    <div class="resultado-final" id="resultado-ejercicio"></div>
+
+    <button type="button" class="btn" onclick="verificarEjercicio()">Verificar respuestas</button>
+    <button type="button" class="btn secundario" onclick="reiniciarEjercicio()">Reiniciar</button>
+  </form>
+
+  <div class="solucion-caja" id="solucion-ejercicio" style="display:none;">
+    <h4>Solución completa desarrollada</h4>
+    <table class="tabla-eri">
+      <thead><tr><th>#</th><th>Respuesta correcta</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><strong>a) Activo Corriente</strong> — el efectivo ya tiene liquidez inmediata.</td></tr>
+        <tr><td>2</td><td><strong>b)</strong> Se espera venderlo dentro del ciclo normal de operación, que no supera los 12 meses.</td></tr>
+        <tr><td>3</td><td><strong>c) Activo No Corriente</strong> — se usarán por más de un año para operar el negocio, no para venderse.</td></tr>
+        <tr><td>4</td><td><strong>d) 41.000,00</strong> — 8.400,00 + 5.600,00 + 12.000,00 + 15.000,00.</td></tr>
+        <tr><td>5</td><td><strong>b) Pasivo No Corriente</strong> — su plazo supera los doce meses.</td></tr>
+        <tr><td>6</td><td><strong>c) 8.000,00</strong> — Proveedores 6.200,00 + IVA en ventas por pagar 1.800,00.</td></tr>
+        <tr><td>7</td><td><strong>d) 3,25</strong> — Activo Corriente 26.000,00 ÷ Pasivo Corriente 8.000,00.</td></tr>
+        <tr><td>8</td><td><strong>a)</strong> Es la lectura correcta de una razón corriente: dólares de activo corriente disponibles por cada dólar de pasivo corriente.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================= CUESTIONARIO ============================= -->
+<section id="panel-cuestionario" class="panel">
+  <h2>Cuestionario — 10 preguntas</h2>
+  <p>7 preguntas teóricas (con lo trabajado en los Temas 1 a 4) y 3 preguntas de análisis de caso, con datos propios de una empresa distinta a El Astillero S.A. y a Comercial Salinas Cía. Ltda. Responde las 10 y luego presiona <strong>«Verificar respuestas»</strong>.</p>
+
+  <form id="form-cuestionario">
+
+    <div class="item-pregunta">
+      <div class="enunciado">1. ¿Qué muestra el Estado de Situación Financiera? <span class="badge teorica">Teórica</span></div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="qi1" value="a"><span><strong>a)</strong> Los recursos, obligaciones y patrimonio de una entidad en una fecha exacta</span></label>
+        <label class="opcion"><input type="radio" name="qi1" value="b"><span><strong>b)</strong> El desempeño de un período completo</span></label>
+        <label class="opcion"><input type="radio" name="qi1" value="c"><span><strong>c)</strong> Solo los ingresos del mes</span></label>
+        <label class="opcion"><input type="radio" name="qi1" value="d"><span><strong>d)</strong> Solo las cuentas de gasto</span></label>
+      </div>
+      <div class="feedback" id="fb-qi1"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">2. ¿Cuál es la ecuación contable que debe cumplir siempre el ESF? <span class="badge teorica">Teórica</span></div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="qi2" value="a"><span><strong>a)</strong> Ingresos = Gastos</span></label>
+        <label class="opcion"><input type="radio" name="qi2" value="b"><span><strong>b)</strong> Activo = Pasivo + Patrimonio</span></label>
+        <label class="opcion"><input type="radio" name="qi2" value="c"><span><strong>c)</strong> Activo = Pasivo − Patrimonio</span></label>
+        <label class="opcion"><input type="radio" name="qi2" value="d"><span><strong>d)</strong> Patrimonio = Activo + Pasivo</span></label>
+      </div>
+      <div class="feedback" id="fb-qi2"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">3. Una cuenta se clasifica como corriente cuando... <span class="badge teorica">Teórica</span></div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="qi3" value="a"><span><strong>a)</strong> es una cuenta de gasto</span></label>
+        <label class="opcion"><input type="radio" name="qi3" value="b"><span><strong>b)</strong> pertenece al patrimonio</span></label>
+        <label class="opcion"><input type="radio" name="qi3" value="c"><span><strong>c)</strong> se espera realizar, vender, consumir o liquidar dentro de los doce meses siguientes (o el ciclo normal de operación)</span></label>
+        <label class="opcion"><input type="radio" name="qi3" value="d"><span><strong>d)</strong> su saldo es mayor a 10.000,00</span></label>
+      </div>
+      <div class="feedback" id="fb-qi3"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">4. ¿Por qué el patrimonio nunca se calcula de forma directa? <span class="badge teorica">Teórica</span></div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="qi4" value="a"><span><strong>a)</strong> Porque es siempre igual al activo</span></label>
+        <label class="opcion"><input type="radio" name="qi4" value="b"><span><strong>b)</strong> Porque solo existe en empresas grandes</span></label>
+        <label class="opcion"><input type="radio" name="qi4" value="c"><span><strong>c)</strong> Porque se fija por ley en un monto exacto</span></label>
+        <label class="opcion"><input type="radio" name="qi4" value="d"><span><strong>d)</strong> Porque es el interés residual: lo que queda después de restar el pasivo del activo</span></label>
+      </div>
+      <div class="feedback" id="fb-qi4"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">5. La razón corriente se calcula como: <span class="badge teorica">Teórica</span></div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="qi5" value="a"><span><strong>a)</strong> Activo Corriente ÷ Pasivo Corriente</span></label>
+        <label class="opcion"><input type="radio" name="qi5" value="b"><span><strong>b)</strong> Total Activo ÷ Total Pasivo</span></label>
+        <label class="opcion"><input type="radio" name="qi5" value="c"><span><strong>c)</strong> Activo No Corriente ÷ Pasivo No Corriente</span></label>
+        <label class="opcion"><input type="radio" name="qi5" value="d"><span><strong>d)</strong> Pasivo Corriente ÷ Activo Corriente</span></label>
+      </div>
+      <div class="feedback" id="fb-qi5"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">6. Según la NIIF 18 (vigente desde 2027), ¿qué cambia respecto a la NIC 1 en el Estado de Resultados? <span class="badge teorica">Teórica</span></div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="qi6" value="a"><span><strong>a)</strong> Desaparece la utilidad bruta</span></label>
+        <label class="opcion"><input type="radio" name="qi6" value="b"><span><strong>b)</strong> Se exigen tres categorías (operación, inversión, financiación) y un subtotal de utilidad operativa calculado de forma uniforme</span></label>
+        <label class="opcion"><input type="radio" name="qi6" value="c"><span><strong>c)</strong> El Estado de Situación Financiera deja de presentarse</span></label>
+        <label class="opcion"><input type="radio" name="qi6" value="d"><span><strong>d)</strong> Se elimina el patrimonio</span></label>
+      </div>
+      <div class="feedback" id="fb-qi6"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">7. ¿Qué le pasa al Estado de Situación Financiera con la adopción de la NIIF 18? <span class="badge teorica">Teórica</span></div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="qi7" value="a"><span><strong>a)</strong> Se reestructura por completo, igual que el Estado de Resultados</span></label>
+        <label class="opcion"><input type="radio" name="qi7" value="b"><span><strong>b)</strong> Su ecuación contable deja de cumplirse</span></label>
+        <label class="opcion"><input type="radio" name="qi7" value="c"><span><strong>c)</strong> No se ve afectado de forma significativa; la NIIF 18 se concentra en el Estado de Resultados</span></label>
+        <label class="opcion"><input type="radio" name="qi7" value="d"><span><strong>d)</strong> Desaparece y se reemplaza por otro estado</span></label>
+      </div>
+      <div class="feedback" id="fb-qi7"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">8. Repuestos Manabí S.A. presenta al 31/08/2026: Caja y Bancos 5.000,00 · Cuentas por Cobrar 7.000,00 · Inventario 9.000,00 · Equipo, neto 20.000,00 · Proveedores 4.500,00 · Préstamo bancario a largo plazo 15.000,00 · IESS por pagar 500,00 · Capital 18.000,00 · Resultados Acumulados 3.000,00. ¿Cuál es su Total Activo? <span class="badge analisis">Análisis de caso</span></div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="qi8" value="a"><span><strong>a)</strong> 21.000,00</span></label>
+        <label class="opcion"><input type="radio" name="qi8" value="b"><span><strong>b)</strong> 20.000,00</span></label>
+        <label class="opcion"><input type="radio" name="qi8" value="c"><span><strong>c)</strong> 41.000,00</span></label>
+        <label class="opcion"><input type="radio" name="qi8" value="d"><span><strong>d)</strong> 5.000,00</span></label>
+      </div>
+      <div class="feedback" id="fb-qi8"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">9. Con los mismos datos de Repuestos Manabí S.A., ¿cuál es su Total Pasivo Corriente? <span class="badge analisis">Análisis de caso</span></div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="qi9" value="a"><span><strong>a)</strong> 4.500,00</span></label>
+        <label class="opcion"><input type="radio" name="qi9" value="b"><span><strong>b)</strong> 15.000,00</span></label>
+        <label class="opcion"><input type="radio" name="qi9" value="c"><span><strong>c)</strong> 20.000,00</span></label>
+        <label class="opcion"><input type="radio" name="qi9" value="d"><span><strong>d)</strong> 5.000,00</span></label>
+      </div>
+      <div class="feedback" id="fb-qi9"></div>
+    </div>
+
+    <div class="item-pregunta">
+      <div class="enunciado">10. Con los mismos datos, ¿cuál es la razón corriente de Repuestos Manabí S.A.? <span class="badge analisis">Análisis de caso</span></div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="qi10" value="a"><span><strong>a)</strong> 4,20</span></label>
+        <label class="opcion"><input type="radio" name="qi10" value="b"><span><strong>b)</strong> 1,40</span></label>
+        <label class="opcion"><input type="radio" name="qi10" value="c"><span><strong>c)</strong> 0,24</span></label>
+        <label class="opcion"><input type="radio" name="qi10" value="d"><span><strong>d)</strong> 8,20</span></label>
+      </div>
+      <div class="feedback" id="fb-qi10"></div>
+    </div>
+
+    <div class="alerta-envio" id="alerta-cuestionario">Responde las 10 preguntas antes de verificar.</div>
+    <div class="barra-contenedor" id="barra-cont-cuestionario" style="display:none;"><div class="barra-relleno" id="barra-cuestionario">0%</div></div>
+    <div class="resultado-final" id="resultado-cuestionario"></div>
+
+    <button type="button" class="btn" onclick="verificarCuestionario()">Verificar respuestas</button>
+    <button type="button" class="btn secundario" onclick="reiniciarCuestionario()">Reiniciar</button>
+  </form>
+</section>
+
+<!-- ============================= ACTIVIDAD CON IA ============================= -->
+<section id="panel-ia" class="panel">
+  <h2>Actividad con IA — construye y audita un Estado de Situación Financiera</h2>
+  <p>Tres pasos obligatorios, en este orden: <strong>1) resuelves a mano</strong>, <strong>2) consultas a la IA</strong> y <strong>3) auditas su respuesta</strong> comparándola con tu propio trabajo. Se recomienda usar <strong>Claude (claude.ai)</strong>, de acceso gratuito.</p>
+
+  <h3>Paso 1 — Resuelve a mano (antes de abrir cualquier IA)</h3>
+  <div class="ejemplo">
+    <strong class="etiqueta">Caso: Cerámicas Cuenca Cía. Ltda. — al 31 de agosto de 2026</strong>
+    <p>Caja y Bancos 6.200,00 · Cuentas por Cobrar 4.800,00 · Inventario 10.500,00 · Vehículos, neto 22.000,00 · Proveedores 5.300,00 · Préstamo bancario a largo plazo 18.000,00 · Retención IVA por pagar 1.200,00 · Capital 16.000,00 · Resultados Acumulados 3.000,00.</p>
+  </div>
+  <p>En una hoja o en Excel: (1) clasifica cada cuenta en Activo Corriente, Activo No Corriente, Pasivo Corriente, Pasivo No Corriente o Patrimonio; (2) construye el ESF completo en forma de cuenta (dos columnas); (3) comprueba que Total Activo = Total Pasivo + Total Patrimonio; (4) calcula la razón corriente. Guarda tu ESF completo: lo necesitarás en el Paso 3.</p>
+
+  <h3>Paso 2 — Consulta a la IA</h3>
+  <div class="alerta">
+    <strong class="etiqueta">Antes de enviar nada: detecta los errores</strong>
+    El siguiente prompt tiene <strong>dos errores deliberados</strong> — uno de clasificación (un pasivo no corriente aparece descrito como corriente) y uno numérico (el total de activo no coincide con la suma real de las cuentas). No lo copies tal cual: corrígelo primero.
+  </div>
+  <div class="prompt-ia prompt-error">Actúa como profesor de Contabilidad General. Tengo el caso de Cerámicas Cuenca Cía. Ltda.: Caja y Bancos 6.200,00, Cuentas por Cobrar 4.800,00, Inventario 10.500,00, Vehículos netos 22.000,00, Proveedores 5.300,00, Préstamo bancario a largo plazo 18.000,00 (<u>clasifícalo como Pasivo Corriente, porque es una obligación con un banco</u>), Retención IVA por pagar 1.200,00, Capital 16.000,00 y Resultados Acumulados 3.000,00. El Total Activo es <u>41.000,00</u>. Constrúyeme el Estado de Situación Financiera completo y calcula la razón corriente.</div>
+  <p><strong>Pista para encontrar los errores:</strong> revisa el Tema 2 — ¿un préstamo bancario "a largo plazo" se clasifica por su plazo o por el simple hecho de ser un préstamo? Y suma tú mismo las cuatro cuentas de activo: ¿de verdad dan 41.000,00?</p>
+
+  <p>Una vez corregido, envía una versión como esta:</p>
+  <div class="prompt-ia">Actúa como profesor de Contabilidad General bajo NIIF. Tengo el caso de Cerámicas Cuenca Cía. Ltda., al 31 de agosto de 2026: Caja y Bancos 6.200,00, Cuentas por Cobrar 4.800,00, Inventario 10.500,00, Vehículos netos 22.000,00, Proveedores 5.300,00, Préstamo bancario a largo plazo 18.000,00, Retención IVA por pagar 1.200,00, Capital 16.000,00 y Resultados Acumulados 3.000,00. Clasifica cada cuenta en Activo Corriente, Activo No Corriente, Pasivo Corriente, Pasivo No Corriente o Patrimonio, explicando el criterio de cada clasificación. Luego construye el Estado de Situación Financiera completo, comprueba que Activo = Pasivo + Patrimonio, y calcula la razón corriente explicando qué significa el resultado.</div>
+
+  <h3>Paso 3 — Audita la respuesta (esto es lo que se evalúa)</h3>
+  <p>Copiar la respuesta de la IA sin más no demuestra aprendizaje. Lo que distingue el pensamiento crítico de la copia simple es esta auditoría, que debes entregar junto con tu ESF del Paso 1:</p>
+  <div class="carrera-box">
+    <strong class="etiqueta">Entrega mínima de la auditoría</strong>
+    <ul>
+      <li>Compara, cuenta por cuenta, la clasificación de la IA contra la tuya del Paso 1: ¿coinciden?</li>
+      <li>Verifica que el Total Activo de la IA sea igual al Total Pasivo más Total Patrimonio. Si no cuadra, señala en qué cuenta está el error.</li>
+      <li>Compara la razón corriente calculada por la IA contra la tuya: ¿usó el Activo Corriente y el Pasivo Corriente correctos?</li>
+      <li>Señala una frase de la respuesta de la IA que te ayudó a entender mejor el criterio de corriente/no corriente, y otra que corregirías con lo visto en el Tema 2.</li>
+    </ul>
+  </div>
+
+  <div class="conclusion">
+    <strong class="etiqueta">Idea clave</strong>
+    Un ESF que no cuadra (Activo ≠ Pasivo + Patrimonio) es la señal más clara de un error, propio o de la IA. Verificar esa igualdad siempre, antes de aceptar cualquier resultado, es el hábito profesional que hoy practicaste.
+  </div>
+</section>
+
+<!-- ============================= REFLEXIÓN ============================= -->
+<section id="panel-reflexion" class="panel">
+  <h2>Reflexión</h2>
+
+  <p>Antes de las preguntas, una idea importante: es muy común llegar a la carrera de Negocios Internacionales pensando que se trata sobre todo de <strong>negociar</strong> — cerrar tratos, hablar idiomas, viajar. Y la negociación es parte de la carrera, pero es solo una parte. Negocios Internacionales es también leer estados financieros de empresas extranjeras, calcular el costo real de una operación de comercio exterior, entender cadenas de abastecimiento, gestionar el riesgo cambiario, conocer la normativa aduanera y tributaria de cada país, y sustentar decisiones ante terceros con cifras, no solo con argumentos. Leer un Estado de Situación Financiera —lo que hicimos hoy— es exactamente esa clase de lectura técnica que sostiene cualquier negociación seria.</p>
+
+  <div class="reflexion-pregunta">
+    <strong>1.</strong> Piensa en una fotografía que alguien de tu familia tomó de todo lo que la familia posee y debe en un momento dado —quizás al mudarse de casa, o al hacer cuentas de fin de año—. ¿Qué información daría esa fotografía que una simple lista de "cuánto ganamos este mes" no daría? ¿En qué se parece esa fotografía al Estado de Situación Financiera que construimos hoy para El Astillero S.A.?
+    <textarea class="respuesta-libre" placeholder="Escribe tu respuesta aquí..."></textarea>
+  </div>
+
+  <div class="reflexion-pregunta">
+    <strong>2.</strong> Ahora imagina la cadena completa: tú revisas cuánto tienes y cuánto debes antes de pedir un préstamo personal; El Astillero S.A. presenta su ESF a un banco antes de pedir una línea de crédito; y un fondo de inversión internacional revisa el ESF de una cadena de empresas antes de decidir en cuál invertir millones de dólares. En cada eslabón, la pregunta de fondo es la misma —¿qué tan sólida es esta situación hoy?—, pero las consecuencias de una respuesta equivocada crecen enormemente. ¿Por qué crees que la exactitud de un ESF importa más mientras más grande es la decisión que se toma con él?
+    <textarea class="respuesta-libre" placeholder="Escribe tu respuesta aquí..."></textarea>
+  </div>
+
+  <div class="reflexion-pregunta">
+    <strong>3. (Exploración vocacional)</strong> De las cuatro áreas de Negocios Internacionales que hemos venido conectando en cada tema —comercio exterior, finanzas internacionales, marketing y negociación internacional, marco legal y normativo— ¿en cuál te ves trabajando dentro de algunos años? Leer e interpretar un ESF, calcular una razón corriente, entender qué significa un capital de trabajo amplio: ¿qué tan presente ves ese tipo de análisis en el área que elegiste?
+    <textarea class="respuesta-libre" placeholder="Escribe tu respuesta aquí..."></textarea>
+  </div>
+
+  <div class="reflexion-pregunta">
+    <strong>4. (Inteligencia emocional)</strong> Construir un ESF que no cuadra a la primera —como probablemente te pasó al reconstruir el de Cerámicas Cuenca Cía. Ltda. si cometiste algún error de clasificación— genera frustración, porque obliga a revisar todo de nuevo antes de poder avanzar. ¿Cómo manejas normalmente esa frustración cuando un ejercicio no "cierra" a la primera? ¿Qué estrategia te ha funcionado, o podrías empezar a practicar, para volver a revisar con calma en vez de con ansiedad?
+    <textarea class="respuesta-libre" placeholder="Escribe tu respuesta aquí..."></textarea>
+  </div>
+</section>
+
+<!-- ============================= BIBLIOGRAFÍA ============================= -->
+<section id="panel-bibliografia" class="panel">
+  <h2>Bibliografía</h2>
+  <div class="grid-biblio">
+    <div class="tarjeta-biblio">
+      <span class="tipo">Libro</span>
+      <p>Guajardo Cantú, G., &amp; Andrade de Guajardo, N. E. (2014). <em>Contabilidad financiera</em> (6.ª ed.). McGraw-Hill Interamericana.</p>
+    </div>
+    <div class="tarjeta-biblio">
+      <span class="tipo">Libro</span>
+      <p>Horngren, C. T., Harrison, W. T., &amp; Oliver, M. S. (2012). <em>Contabilidad</em> (9.ª ed.). Pearson Educación.</p>
+    </div>
+    <div class="tarjeta-biblio">
+      <span class="tipo">Libro</span>
+      <p>Warren, C. S., Reeve, J. M., &amp; Duchac, J. (2018). <em>Contabilidad financiera</em> (14.ª ed.). Cengage Learning.</p>
+    </div>
+    <div class="tarjeta-biblio">
+      <span class="tipo">Norma</span>
+      <p>IFRS Foundation. (2022). <em>NIC 1 Presentación de estados financieros</em>. IFRS Foundation.</p>
+    </div>
+    <div class="tarjeta-biblio">
+      <span class="tipo">Norma</span>
+      <p>IFRS Foundation. (2024). <em>NIIF 18 Presentación e Información a Revelar en los Estados Financieros</em>. IFRS Foundation.</p>
+    </div>
+    <div class="tarjeta-biblio">
+      <span class="tipo">Norma</span>
+      <p>Superintendencia de Compañías, Valores y Seguros del Ecuador. (2023). <em>Normativa contable y financiera aplicable a las compañías sujetas a su control</em>. SUPERCIAS.</p>
+    </div>
+    <div class="tarjeta-biblio">
+      <span class="tipo">Ley</span>
+      <p>Ministerio del Trabajo del Ecuador. (2023). <em>Código del Trabajo</em> (codificación con reformas vigentes). Registro Oficial.</p>
+    </div>
+    <div class="tarjeta-biblio">
+      <span class="tipo">Ley</span>
+      <p>Servicio de Rentas Internas del Ecuador (SRI). (2024). <em>Ley de Régimen Tributario Interno y su Reglamento de Aplicación</em>. SRI.</p>
+    </div>
+  </div>
+  <p style="font-size:.8rem; color:#666; margin-top:16px;"><em>Nota: se recomienda verificar la edición y vigencia exactas de cada fuente en Google Scholar o en el repositorio institucional de la Universidad de Guayaquil antes de citarlas en trabajos formales.</em></p>
+</section>
+
+</main>
+
+<footer class="pie">Universidad de Guayaquil · Facultad de Ciencias Administrativas · Carrera de Negocios Internacionales · Contabilidad General · Día 16</footer>
+</div>
+
+<script>
+/* ==========================================================================
+   1. NAVEGACIÓN ENTRE PESTAÑAS
+   ========================================================================== */
+function showTab(id){
+  document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('activo'); });
+  document.querySelectorAll('.pestana-btn').forEach(function(b){ b.classList.remove('activa'); });
+  document.getElementById('panel-' + id).classList.add('activo');
+  document.querySelector('.pestana-btn[data-tab="' + id + '"]').classList.add('activa');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* ==========================================================================
+   2. ACORDEÓN DE REPASO
+   ========================================================================== */
+function toggleAcordeon(cabecera){
+  cabecera.classList.toggle('abierto');
+  var contenido = cabecera.nextElementSibling;
+  contenido.classList.toggle('abierto');
+}
+
+/* ==========================================================================
+   3. EJERCICIO INTERACTIVO — Comercial Salinas Cía. Ltda. (8 ítems)
+   ========================================================================== */
+var correctasEjercicio = {ei1:'a', ei2:'b', ei3:'c', ei4:'d', ei5:'b', ei6:'c', ei7:'d', ei8:'a'};
+var retroEjercicio = {
+  ei1: 'El efectivo ya tiene liquidez inmediata: siempre es Activo Corriente.',
+  ei2: 'El inventario se clasifica como corriente porque se espera venderlo dentro del ciclo normal de operación (≤12 meses).',
+  ei3: 'Los vehículos, netos, se usarán por más de un año para operar el negocio, no para venderse: son Activo No Corriente.',
+  ei4: 'Total Activo = 8.400,00 + 5.600,00 + 12.000,00 + 15.000,00 = 41.000,00.',
+  ei5: 'Un préstamo bancario a largo plazo se clasifica por su plazo, que supera los doce meses: Pasivo No Corriente.',
+  ei6: 'Total Pasivo Corriente = Proveedores 6.200,00 + IVA en ventas por pagar 1.800,00 = 8.000,00.',
+  ei7: 'Razón corriente = Activo Corriente 26.000,00 ÷ Pasivo Corriente 8.000,00 = 3,25.',
+  ei8: 'Una razón corriente de 3,25 significa que por cada dólar de deuda de corto plazo, la empresa tiene 3,25 dólares en activos que espera convertir en efectivo dentro del mismo plazo.'
+};
+
+function verificarEjercicio(){
+  var claves = Object.keys(correctasEjercicio);
+  var faltan = claves.some(function(k){
+    return !document.querySelector('input[name="'+k+'"]:checked');
+  });
+  var alerta = document.getElementById('alerta-ejercicio');
+  if(faltan){
+    alerta.classList.add('mostrar');
+    return;
+  }
+  alerta.classList.remove('mostrar');
+
+  var correctas = 0;
+  claves.forEach(function(k){
+    var seleccion = document.querySelector('input[name="'+k+'"]:checked').value;
+    var esCorrecta = seleccion === correctasEjercicio[k];
+    if(esCorrecta) correctas++;
+
+    document.querySelectorAll('input[name="'+k+'"]').forEach(function(input){
+      var opcionDiv = input.closest('.opcion');
+      opcionDiv.classList.remove('correcta-marca','incorrecta-marca');
+      if(input.value === correctasEjercicio[k]) opcionDiv.classList.add('correcta-marca');
+      else if(input.checked) opcionDiv.classList.add('incorrecta-marca');
+    });
+
+    var fb = document.getElementById('fb-'+k);
+    fb.classList.add('mostrar');
+    fb.classList.remove('ok','mal');
+    if(esCorrecta){
+      fb.classList.add('ok');
+      fb.textContent = '✔ Correcto. ' + retroEjercicio[k];
+    } else {
+      fb.classList.add('mal');
+      fb.textContent = '✘ Incorrecto. ' + retroEjercicio[k];
+    }
+  });
+
+  var total = claves.length;
+  var pct = Math.round((correctas/total)*100);
+  document.getElementById('barra-cont-ejercicio').style.display = 'block';
+  var barra = document.getElementById('barra-ejercicio');
+  setTimeout(function(){ barra.style.width = pct + '%'; barra.textContent = pct + '%'; }, 60);
+  document.getElementById('resultado-ejercicio').textContent = 'Resultado: ' + correctas + ' / ' + total + ' (' + pct + '%)';
+  document.getElementById('solucion-ejercicio').style.display = 'block';
+}
+
+function reiniciarEjercicio(){
+  document.getElementById('form-ejercicio').reset();
+  document.querySelectorAll('#panel-ejercicio .opcion').forEach(function(o){ o.classList.remove('correcta-marca','incorrecta-marca'); });
+  document.querySelectorAll('#panel-ejercicio .feedback').forEach(function(f){ f.classList.remove('mostrar','ok','mal'); f.textContent=''; });
+  document.getElementById('alerta-ejercicio').classList.remove('mostrar');
+  document.getElementById('barra-cont-ejercicio').style.display = 'none';
+  var barra = document.getElementById('barra-ejercicio'); barra.style.width='0%'; barra.textContent='0%';
+  document.getElementById('resultado-ejercicio').textContent = '';
+  document.getElementById('solucion-ejercicio').style.display = 'none';
+}
+
+/* ==========================================================================
+   4. CUESTIONARIO — 10 preguntas (7 teóricas + 3 análisis de caso)
+   ========================================================================== */
+var correctasCuestionario = {qi1:'a', qi2:'b', qi3:'c', qi4:'d', qi5:'a', qi6:'b', qi7:'c', qi8:'c', qi9:'d', qi10:'a'};
+var retroCuestionario = {
+  qi1: 'El ESF muestra los recursos, obligaciones y patrimonio de una entidad en una fecha exacta: es una fotografía, no una película.',
+  qi2: 'La ecuación contable que sostiene todo el ESF es Activo = Pasivo + Patrimonio.',
+  qi3: 'Una cuenta es corriente cuando se espera realizarla, venderla, consumirla o liquidarla dentro de los doce meses siguientes, o dentro del ciclo normal de operación.',
+  qi4: 'El patrimonio es el interés residual: lo que queda después de restar el pasivo del activo. Por eso nunca se calcula de forma directa.',
+  qi5: 'La razón corriente se calcula como Activo Corriente ÷ Pasivo Corriente.',
+  qi6: 'La NIIF 18 exige tres categorías (operación, inversión, financiación) y un subtotal de utilidad operativa calculado de forma uniforme en todas las empresas.',
+  qi7: 'La NIIF 18 se concentra en el Estado de Resultados; el Estado de Situación Financiera no se ve afectado de forma significativa.',
+  qi8: 'Total Activo = 5.000,00 + 7.000,00 + 9.000,00 + 20.000,00 = 41.000,00.',
+  qi9: 'Total Pasivo Corriente = Proveedores 4.500,00 + IESS por pagar 500,00 = 5.000,00. El préstamo a largo plazo no entra: es Pasivo No Corriente.',
+  qi10: 'Razón corriente = Activo Corriente 21.000,00 (5.000,00 + 7.000,00 + 9.000,00) ÷ Pasivo Corriente 5.000,00 = 4,20.'
+};
+
+function verificarCuestionario(){
+  var claves = Object.keys(correctasCuestionario);
+  var faltan = claves.some(function(k){
+    return !document.querySelector('input[name="'+k+'"]:checked');
+  });
+  var alerta = document.getElementById('alerta-cuestionario');
+  if(faltan){
+    alerta.classList.add('mostrar');
+    return;
+  }
+  alerta.classList.remove('mostrar');
+
+  var correctas = 0;
+  claves.forEach(function(k){
+    var seleccion = document.querySelector('input[name="'+k+'"]:checked').value;
+    var esCorrecta = seleccion === correctasCuestionario[k];
+    if(esCorrecta) correctas++;
+
+    document.querySelectorAll('input[name="'+k+'"]').forEach(function(input){
+      var opcionDiv = input.closest('.opcion');
+      opcionDiv.classList.remove('correcta-marca','incorrecta-marca');
+      if(input.value === correctasCuestionario[k]) opcionDiv.classList.add('correcta-marca');
+      else if(input.checked) opcionDiv.classList.add('incorrecta-marca');
+    });
+
+    var fb = document.getElementById('fb-'+k);
+    fb.classList.add('mostrar');
+    fb.classList.remove('ok','mal');
+    if(esCorrecta){
+      fb.classList.add('ok');
+      fb.textContent = '✔ Correcto. ' + retroCuestionario[k];
+    } else {
+      fb.classList.add('mal');
+      fb.textContent = '✘ Incorrecto. ' + retroCuestionario[k];
+    }
+  });
+
+  var total = claves.length;
+  var pct = Math.round((correctas/total)*100);
+  var emoji = '📖';
+  if(pct === 100) emoji = '🏆';
+  else if(pct >= 80) emoji = '🎯';
+  else if(pct >= 60) emoji = '📘';
+  else if(pct >= 40) emoji = '⚠️';
+
+  document.getElementById('barra-cont-cuestionario').style.display = 'block';
+  var barra = document.getElementById('barra-cuestionario');
+  setTimeout(function(){ barra.style.width = pct + '%'; barra.textContent = pct + '%'; }, 60);
+  document.getElementById('resultado-cuestionario').textContent = 'Calificación: ' + correctas + ' / ' + total + ' (' + pct + '%) ' + emoji;
+}
+
+function reiniciarCuestionario(){
+  document.getElementById('form-cuestionario').reset();
+  document.querySelectorAll('#panel-cuestionario .opcion').forEach(function(o){ o.classList.remove('correcta-marca','incorrecta-marca'); });
+  document.querySelectorAll('#panel-cuestionario .feedback').forEach(function(f){ f.classList.remove('mostrar','ok','mal'); f.textContent=''; });
+  document.getElementById('alerta-cuestionario').classList.remove('mostrar');
+  document.getElementById('barra-cont-cuestionario').style.display = 'none';
+  var barra = document.getElementById('barra-cuestionario'); barra.style.width='0%'; barra.textContent='0%';
+  document.getElementById('resultado-cuestionario').textContent = '';
+}
+</script>
+</body>
+</html>

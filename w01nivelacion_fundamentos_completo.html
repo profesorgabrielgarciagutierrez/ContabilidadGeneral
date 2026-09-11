@@ -1,0 +1,1906 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Widget de Nivelacion - Fundamentos de Contabilidad</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --azul:#003366;
+  --celeste:#87CEEB;
+  --celeste-suave:#eaf6fc;
+  --verde:#2e7d32;
+  --verde-suave:#eef7ee;
+  --naranja:#b26a00;
+  --naranja-suave:#fff4e0;
+  --morado:#6a4c93;
+  --morado-suave:#f2edf8;
+  --rojo:#c0392b;
+  --rojo-suave:#fdecec;
+  --gris-borde:#d8d8d8;
+  --texto:#232323;
+}
+*{box-sizing:border-box;}
+body{margin:0; font-family:'Source Sans 3', Arial, sans-serif; color:var(--texto); background:#fbfbfb; line-height:1.6;}
+h1,h2,h3,h4{font-family:'Lora', Georgia, serif; color:var(--azul); margin-top:0;}
+
+header.institucional{background:var(--azul); color:#fff; padding:22px 18px; text-align:center;}
+header.institucional .universidad{font-family:'Lora',serif; font-weight:700; font-size:1.3rem; letter-spacing:.5px;}
+header.institucional .facultad{font-size:.92rem; opacity:.92; margin-top:2px;}
+header.institucional .titulo-sesion{margin-top:14px; font-family:'Lora',serif; font-size:1.4rem; font-weight:600;}
+header.institucional .meta-sesion{margin-top:6px; font-size:.9rem; background:rgba(255,255,255,.12); display:inline-block; padding:5px 14px; border-radius:20px;}
+
+nav.tabs{background:var(--celeste); display:flex; overflow-x:auto; white-space:nowrap; border-bottom:3px solid var(--azul); position:sticky; top:0; z-index:50;}
+nav.tabs button{font-family:'Source Sans 3',sans-serif; font-weight:600; font-size:.86rem; color:#062338; background:transparent; border:none; padding:13px 14px; cursor:pointer; flex-shrink:0;}
+nav.tabs button.activa{background:#fff; color:var(--azul); font-weight:700; border-bottom:3px solid var(--azul); margin-bottom:-3px;}
+
+main{max-width:900px; margin:0 auto; padding:22px 18px 70px;}
+.panel{display:none;}
+.panel.activo{display:block;}
+
+p{margin:0 0 14px;}
+ul,ol{margin:0 0 14px; padding-left:24px;}
+li{margin-bottom:6px;}
+table.comparativa{width:100%; border-collapse:collapse; margin:16px 0; font-size:.92rem;}
+table.comparativa th{background:var(--azul); color:#fff; padding:10px; text-align:left;}
+table.comparativa td{padding:10px; border-bottom:1px solid var(--gris-borde); vertical-align:top;}
+table.comparativa tr:nth-child(even) td{background:#f7f9fc;}
+
+.caja{border-radius:8px; padding:14px 16px; margin:16px 0; border-left:6px solid;}
+.caja-titulo{font-family:'Lora',serif; font-weight:700; font-size:.9rem; text-transform:uppercase; letter-spacing:.4px; margin-bottom:6px; display:block;}
+.pregunta{background:var(--celeste-suave); border-left-color:var(--azul);}
+.pregunta .caja-titulo{color:var(--azul);}
+.ejemplo{background:var(--morado-suave); border-left-color:var(--morado);}
+.ejemplo .caja-titulo{color:var(--morado);}
+.definicion{background:#eef2fb; border-left-color:var(--azul);}
+.definicion .caja-titulo{color:var(--azul);}
+.conclusion{background:var(--verde-suave); border-left-color:var(--verde);}
+.conclusion .caja-titulo{color:var(--verde);}
+.futuro{background:var(--naranja-suave); border-left-color:var(--naranja); border-left-style:dashed;}
+.futuro .caja-titulo{color:var(--naranja);}
+.alerta{background:var(--rojo-suave); border-left-color:var(--rojo);}
+.alerta .caja-titulo{color:var(--rojo);}
+.nota-lateral{background:#f5f5f5; border-left:6px solid #888; font-size:.92rem; font-style:italic;}
+.nota-lateral .caja-titulo{color:#555;}
+.formula{background:#fff; border:2px solid var(--azul); border-left:6px solid var(--azul); text-align:center; font-family:'Lora',serif; font-weight:700; font-size:1.05rem;}
+.formula .caja-titulo{color:var(--azul); text-align:left;}
+
+.carrera-box{background:#f3fbf3; border:2px dashed var(--verde); border-radius:8px; padding:14px 16px; margin:16px 0;}
+.carrera-box .caja-titulo{font-family:'Lora',serif; font-weight:700; color:var(--verde); display:block; margin-bottom:8px;}
+.carrera-box ul{margin-bottom:0;}
+
+.ecuacion{display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:center; margin:18px 0; font-family:'Lora',serif; font-size:1.1rem; font-weight:700;}
+.ecuacion .pieza{border-radius:8px; padding:12px 16px; text-align:center; min-width:110px;}
+.ecuacion .activo{background:#eef2fb; border:2px solid var(--azul); color:var(--azul);}
+.ecuacion .pasivo{background:var(--rojo-suave); border:2px solid var(--rojo); color:var(--rojo);}
+.ecuacion .patrimonio{background:var(--verde-suave); border:2px solid var(--verde); color:var(--verde);}
+.ecuacion .gasto{background:#fdf3e3; border:2px solid var(--naranja); color:var(--naranja);}
+.ecuacion .ingreso{background:var(--morado-suave); border:2px solid var(--morado); color:var(--morado);}
+.ecuacion .signo{font-size:1.3rem; color:#555;}
+.ecuacion .pieza small{display:block; font-family:'Source Sans 3',sans-serif; font-weight:400; font-size:.72rem; margin-top:4px;}
+
+.tcuenta{display:inline-block; border:2px solid var(--azul); border-radius:6px; margin:12px 10px 12px 0; min-width:220px; vertical-align:top;}
+.tcuenta .titulo-cuenta{background:var(--azul); color:#fff; text-align:center; padding:6px; font-weight:700; font-family:'Lora',serif;}
+.tcuenta table{width:100%; border-collapse:collapse; font-size:.88rem;}
+.tcuenta td{padding:6px 10px; border-bottom:1px solid var(--gris-borde);}
+.tcuenta .col-debe{border-right:2px solid var(--azul); text-align:right;}
+.tcuenta .col-haber{text-align:right;}
+.tcuenta .fila-saldo{font-weight:700; background:#f2f6fb;}
+
+.acordeon{border:1px solid var(--gris-borde); border-radius:8px; margin:16px 0; overflow:hidden;}
+.acordeon-boton{width:100%; text-align:left; background:var(--celeste-suave); border:none; padding:14px 16px; font-family:'Source Sans 3',sans-serif; font-weight:700; font-size:1rem; color:var(--azul); cursor:pointer; display:flex; justify-content:space-between; align-items:center;}
+.acordeon-flecha{transition:transform .2s ease;}
+.acordeon-boton.abierto .acordeon-flecha{transform:rotate(90deg);}
+.acordeon-panel{display:none; padding:14px 16px; border-top:1px solid var(--gris-borde); background:#fff;}
+.acordeon-panel.abierto{display:block;}
+
+.revelar-btn{background:var(--azul); color:#fff; border:none; padding:10px 18px; border-radius:6px; font-weight:700; font-size:.95rem; cursor:pointer; font-family:'Source Sans 3',sans-serif;}
+.revelar-btn:hover{background:#004a8f;}
+.revelar-contenido{display:none; margin-top:12px;}
+.revelar-contenido.abierto{display:block;}
+
+.diario{border:2px solid var(--azul); border-radius:8px; margin:16px 0; overflow:hidden;}
+.diario-header{background:var(--azul); color:#fff; padding:8px 14px; font-weight:700; display:flex; justify-content:space-between; font-family:'Lora',serif;}
+.diario table{width:100%; border-collapse:collapse; font-size:.88rem;}
+.diario th{background:#eef2fb; padding:8px; text-align:left; border-bottom:2px solid var(--azul);}
+.diario td{padding:7px 8px; border-bottom:1px solid var(--gris-borde);}
+.diario td.num{text-align:right; font-variant-numeric:tabular-nums;}
+.diario tr.suman td{border-top:3px double var(--azul); font-weight:700;}
+.diario .indent{padding-left:26px;}
+.diario .glosa{font-style:italic; font-size:.85rem; color:#555; padding:8px 8px 12px;}
+
+.avance{display:flex; justify-content:space-between; margin-top:34px; gap:10px; flex-wrap:wrap;}
+.avance button{background:var(--azul); color:#fff; border:none; padding:10px 16px; border-radius:6px; font-weight:700; cursor:pointer; font-family:'Source Sans 3',sans-serif;}
+.avance button.secundario{background:#fff; color:var(--azul); border:2px solid var(--azul);}
+
+.item-ejercicio, .item-quiz{border:1px solid var(--gris-borde); border-radius:8px; padding:14px 16px; margin:14px 0; background:#fff;}
+.item-ejercicio.ok, .item-quiz.ok{border-color:var(--verde); background:var(--verde-suave);}
+.item-ejercicio.mal, .item-quiz.mal{border-color:var(--rojo); background:var(--rojo-suave);}
+.item-ejercicio .enunciado, .item-quiz .enunciado{font-weight:700; margin-bottom:10px;}
+.item-ejercicio label, .item-quiz label{display:block; padding:7px 10px; margin-bottom:6px; border:1px solid var(--gris-borde); border-radius:6px; cursor:pointer; background:#fafafa;}
+.item-ejercicio label:hover, .item-quiz label:hover{background:var(--celeste-suave);}
+.feedback{display:none; margin-top:10px; padding:10px 12px; border-radius:6px; font-size:.92rem;}
+.feedback.visible{display:block;}
+.item-ejercicio.ok .feedback, .item-quiz.ok .feedback{display:block; background:#e3f3e3; color:#1b5e20;}
+.item-ejercicio.mal .feedback, .item-quiz.mal .feedback{display:block; background:#fbe4e1; color:#8c2c1f;}
+.badge-teorica, .badge-caso{display:inline-block; font-size:.72rem; font-weight:700; padding:3px 10px; border-radius:12px; margin-bottom:8px;}
+.badge-teorica{background:#dce8fb; color:var(--azul);}
+.badge-caso{background:#f3e6fb; color:var(--morado);}
+
+.barra-contenedor{background:#e6e6e6; border-radius:20px; overflow:hidden; height:26px; margin:16px 0;}
+.barra-progreso{height:100%; width:0%; background:linear-gradient(90deg,var(--azul),var(--celeste)); transition:width 1s ease; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:.82rem;}
+.resultado-final{text-align:center; font-family:'Lora',serif; font-size:1.3rem; font-weight:700; margin:14px 0; color:var(--azul);}
+
+.btn-accion{background:var(--azul); color:#fff; border:none; padding:12px 22px; border-radius:6px; font-weight:700; font-size:1rem; cursor:pointer; font-family:'Source Sans 3',sans-serif; margin-right:10px;}
+.btn-accion.reiniciar{background:#fff; color:var(--azul); border:2px solid var(--azul);}
+.btn-accion:hover{opacity:.9;}
+
+.tarjeta-biblio{border:1px solid var(--gris-borde); border-radius:8px; padding:14px 16px; margin:12px 0; background:#fff; border-left:6px solid var(--azul);}
+.tarjeta-biblio .autor{font-weight:700; color:var(--azul);}
+
+textarea.reflexion{width:100%; min-height:70px; border:1px solid var(--gris-borde); border-radius:6px; padding:10px; font-family:'Source Sans 3',sans-serif; font-size:.95rem; resize:vertical;}
+
+footer.pie{text-align:center; color:#777; font-size:.8rem; padding:18px;}
+
+@media (max-width:600px){
+  header.institucional .titulo-sesion{font-size:1.15rem;}
+  nav.tabs button{padding:11px 10px; font-size:.78rem;}
+  .ecuacion{font-size:.92rem;}
+  .tcuenta{min-width:100%; margin-right:0;}
+}
+</style>
+</head>
+<body>
+
+<header class="institucional">
+  <div class="universidad">UNIVERSIDAD DE GUAYAQUIL</div>
+  <div class="facultad">Facultad de Ciencias Administrativas &middot; Carrera Negocios Internacionales</div>
+  <div class="titulo-sesion">Fundamentos de Contabilidad &mdash; Ecuacion, Debe y Haber, Cuentas y Documentos</div>
+  <div class="meta-sesion">Contabilidad General &middot; Programa de Nivelacion &middot; Autoestudio</div>
+</header>
+
+<nav class="tabs">
+  <button class="tab-btn activa" data-tab="tema1">1. Ecuacion y el celular</button>
+  <button class="tab-btn" data-tab="tema2">2. Debe, Haber y saldo</button>
+  <button class="tab-btn" data-tab="tema3">3. Ingresos y gastos</button>
+  <button class="tab-btn" data-tab="tema4">4. Cuentas y documentos</button>
+  <button class="tab-btn" data-tab="tema5">5. Tarjeta de credito</button>
+  <button class="tab-btn" data-tab="tema6">6. Corriente y no corriente</button>
+  <button class="tab-btn" data-tab="tema6b">6b. Cuotas y sobregiro</button>
+  <button class="tab-btn" data-tab="tema7">7. Jornalizacion</button>
+  <button class="tab-btn" data-tab="tema8">8. El IVA entra en juego</button>
+  <button class="tab-btn" data-tab="tema9">9. Mayorizacion</button>
+  <button class="tab-btn" data-tab="tema10">10. La NIIF 18</button>
+  <button class="tab-btn" data-tab="tema11">11. Caso integrador</button>
+  <button class="tab-btn" data-tab="ejercicio">Ejercicio</button>
+  <button class="tab-btn" data-tab="cuestionario">Cuestionario</button>
+  <button class="tab-btn" data-tab="actividadia">Actividad con IA</button>
+  <button class="tab-btn" data-tab="reflexion">Reflexion</button>
+  <button class="tab-btn" data-tab="bibliografia">Bibliografia</button>
+</nav>
+
+<main>
+
+<!-- ===================== TEMA 1 ===================== -->
+<section id="tema1" class="panel activo">
+<h2>1. Que es la Contabilidad: de lo empirico a la norma</h2>
+
+<p>En las conversaciones que ya tuvimos en clase, construimos algo muy valioso sin usar ni una sola formula: la idea de que <strong>lo que tengo = lo que debo + lo que es mio</strong>. Lo probamos con un celular de $300, y funciono en las tres situaciones posibles. Vamos a confirmarlo con numeros, porque las tres estan perfectamente correctas.</p>
+
+<div class="ejemplo">
+<span class="caja-titulo">Las tres variantes del celular, verificadas</span>
+<p><strong>A) Lo pagas completo con tu propio dinero:</strong></p>
+<div class="ecuacion">
+  <div class="pieza activo">ACTIVO $300<small>el celular</small></div>
+  <span class="signo">=</span>
+  <div class="pieza pasivo">PASIVO $0<small>no debes nada</small></div>
+  <span class="signo">+</span>
+  <div class="pieza patrimonio">PATRIMONIO $300<small>es todo tuyo</small></div>
+</div>
+<p><strong>B) Lo debes completo (te lo financiaron el 100%):</strong></p>
+<div class="ecuacion">
+  <div class="pieza activo">ACTIVO $300<small>el celular</small></div>
+  <span class="signo">=</span>
+  <div class="pieza pasivo">PASIVO $300<small>debes todo</small></div>
+  <span class="signo">+</span>
+  <div class="pieza patrimonio">PATRIMONIO $0<small>nada propio, todavia</small></div>
+</div>
+<p><strong>C) Pagas una parte y debes el resto (por ejemplo, pagas $100 y debes $200):</strong></p>
+<div class="ecuacion">
+  <div class="pieza activo">ACTIVO $300<small>el celular</small></div>
+  <span class="signo">=</span>
+  <div class="pieza pasivo">PASIVO $200<small>lo que aun debes</small></div>
+  <span class="signo">+</span>
+  <div class="pieza patrimonio">PATRIMONIO $100<small>lo que ya es tuyo</small></div>
+</div>
+<p>Las tres comprobaciones cuadran exactamente: 300 = 0+300, 300 = 300+0, y 300 = 200+100. El celular es el mismo, lo unico que cambia es COMO fue financiado. Es importante que tengas presente, que si fuera tu contabilidad personal, se vería así tu patrimonio: es tuyo y punto!. Pero si fuera empresa, el patrimonio es considerado como una aportación de los socios para la empresa. Si tú fueras el único socio de la empresa, es decir el dueño, entonces es tu aporte a la empresa y por lo tanto el bien es de la empresa porque hablamos de la contabilidad de la empresa y no de la contabilidad personal del socio.</p>
+</div>
+
+<p>Ahora vamos a construir, desde cero y con nombre tecnico, todo lo que hace posible ese razonamiento. Empezamos por la pregunta mas basica de todas: <strong>&iquest;que es la Contabilidad?</strong></p>
+
+<div class="pregunta">
+<span class="caja-titulo">Piensa antes de seguir</span>
+Si nunca hubieras escuchado la palabra "Contabilidad", &iquest;como le explicarias a un amigo lo que acabamos de hacer con el celular, en una sola frase?
+</div>
+
+<div class="definicion">
+<span class="caja-titulo">Definicion de Contabilidad &mdash; tecnica y criolla</span>
+<p><strong>Tecnica.</strong> La Contabilidad es un sistema de informacion que permite registrar, clasificar y resumir de manera ordenada las operaciones economicas de una persona o de una empresa, con el fin de generar informacion util para la toma de decisiones. Ademas, la Contabilidad observa siempre a la entidad que informa: separa lo que le pertenece al negocio de lo que le pertenece, en su vida personal, al propietario.</p>
+<p><strong>Criolla.</strong> Es la forma ordenada de llevar la cuenta de lo que tienes, lo que debes y lo que es tuyo, para poder tomar buenas decisiones con esa informacion &mdash; exactamente lo que hicimos con el celular, pero ahora aplicado a cualquier persona o empresa, todos los dias.</p>
+</div>
+
+<div class="caja alerta">
+<span class="caja-titulo">La empresa y su propietario no son lo mismo</span>
+El propietario tiene bienes, deudas y decisiones personales; el negocio solamente reconoce los recursos y las obligaciones que le corresponden A EL. Un celular personal del dueno entra a la contabilidad del negocio unicamente cuando existe una transaccion que lo transfiere o lo aporta formalmente a la empresa (como en la variante A que veremos a continuacion). Mientras eso no ocurra, ese celular sigue siendo un asunto personal del propietario, y no aparece en ningun registro del negocio.
+</div>
+
+<p>Esa "cuenta ordenada" siempre se apoya en tres elementos, que ya usamos con el celular. Vamos a definirlos con precision, porque de aqui en adelante los vamos a usar en cada ejemplo:</p>
+
+<div class="definicion">
+<span class="caja-titulo">Activo, Pasivo y Patrimonio &mdash; tecnica y criolla</span>
+<p><strong>Activo.</strong> Tecnica (Marco Conceptual de las NIIF): recurso economico presente controlado por la entidad como resultado de sucesos pasados, con potencial de producir beneficios economicos futuros. Criollo: todo lo que TIENES y te sirve, de una forma u otra, para generar un beneficio.</p>
+<p><strong>Pasivo.</strong> Tecnica: obligacion presente de transferir un recurso economico como resultado de sucesos pasados. Criollo: todo lo que DEBES a alguien mas.</p>
+<p><strong>Patrimonio.</strong> Tecnica: participacion residual en los activos de la entidad, una vez deducidos todos sus pasivos. Criollo: lo que es REALMENTE tuyo &mdash; lo que te queda si hoy mismo pagaras todas tus deudas.</p>
+</div>
+
+<div class="formula">
+<span class="caja-titulo">La ecuacion contable</span>
+ACTIVO = PASIVO + PATRIMONIO
+</div>
+
+<p>Ya nos habias adelantado una idea muy acertada sobre el Activo: que es "todo aquello que va a sufrir una transformacion, o que va a servir para adquirir algo". Vamos a confirmarla y a afinarla un poco:</p>
+
+<div class="caja alerta">
+<span class="caja-titulo">Tu idea, confirmada y afinada</span>
+<p>Tienes razon: mucho de lo que es Activo efectivamente se transforma o se usa para conseguir otra cosa. El dinero se convierte en mercaderia; la mercaderia se convierte en dinero cuando se vende; un terreno se puede convertir en efectivo si se vende manana. Esa es una forma muy util de "sentir" el Activo.</p>
+<p>Pero la definicion tecnica es un poco mas amplia: un Activo es cualquier recurso que la empresa controla y que tiene el POTENCIAL de generar un beneficio economico futuro &mdash; ya sea porque se transforma, porque se vende, o simplemente porque se USA (por ejemplo, un escritorio de oficina no se "transforma" en otra cosa, pero sirve durante anos para que la empresa trabaje y genere ingresos, y por eso tambien es Activo).</p>
+<p>Y tu ejemplo de la tarjeta de credito es exacto: mientras no la usas, el simple hecho de tenerla no es ni Activo ni Pasivo para ti (es solo un limite disponible). En el momento en que la usas para comprar algo, aparecen dos cosas a la vez: un Activo nuevo (lo que compraste) y un Pasivo nuevo (lo que le debes al banco de la tarjeta) &mdash; exactamente como en la variante B del celular.</p>
+</div>
+
+<p>Repitamos la misma idea &mdash;el equilibrio nunca se rompe&mdash; pero ahora con otro monto y en el formato tecnico Debe/Haber que vamos a usar de aqui en adelante en TODOS los registros. Esta vez, en vez de un celular de $300 para uso personal, es un negocio el que adquiere un equipo de $500,00:</p>
+
+<div class="ejemplo">
+<span class="caja-titulo">El mismo equilibrio, con otro monto: un equipo de $500,00 para el negocio</span>
+<p><strong>A) El propietario aporta el equipo al negocio (Activo sube, Patrimonio sube):</strong></p>
+<table class="comparativa">
+<tr><th>Debe</th><th>Haber</th></tr>
+<tr><td>Equipos&nbsp;&nbsp;$500,00</td><td>Capital&nbsp;&nbsp;$500,00</td></tr>
+</table>
+<p>El negocio recibe un recurso nuevo, y aumenta en la misma medida la participacion del propietario.</p>
+<p><strong>B) El negocio lo compra a credito, sin poner nada en efectivo (Activo sube, Pasivo sube):</strong></p>
+<table class="comparativa">
+<tr><th>Debe</th><th>Haber</th></tr>
+<tr><td>Equipos&nbsp;&nbsp;$500,00</td><td>Cuentas por pagar&nbsp;&nbsp;$500,00</td></tr>
+</table>
+<p>El negocio recibe el equipo, pero al mismo tiempo asume una obligacion con el proveedor.</p>
+<p><strong>C) El negocio lo compra con dinero que ya tenia en el banco (un Activo sube, otro Activo baja):</strong></p>
+<table class="comparativa">
+<tr><th>Debe</th><th>Haber</th></tr>
+<tr><td>Equipos&nbsp;&nbsp;$500,00</td><td>Bancos&nbsp;&nbsp;$500,00</td></tr>
+</table>
+<p>Aqui no aparece ningun Pasivo nuevo ni cambia el Patrimonio: simplemente un Activo (Bancos) se transforma en otro Activo (Equipos). Este es exactamente el caso que ya intuiste: el dinero "se convirtio" en un bien de la empresa.</p>
+</div>
+
+<div class="caja alerta">
+<span class="caja-titulo">Comparando las dos versiones del mismo principio</span>
+Fijate que las variantes A y B del equipo de $500,00 son identicas en logica a las variantes A y B del celular de $300,00: aportar un bien aumenta Activo y Patrimonio; comprarlo a credito aumenta Activo y Pasivo. Lo unico verdaderamente nuevo aqui es la variante C, que no aparecia en el ejemplo del celular: cuando ya tienes el dinero y simplemente lo usas para comprar algo, no nace ninguna deuda nueva ni cambia lo que es tuyo, solo cambia LA FORMA en la que tienes tu Activo (de dinero en el banco, paso a ser un equipo).
+</div>
+
+<div class="carrera-box">
+<span class="caja-titulo">Conexion con Negocios Internacionales</span>
+<ul>
+<li><strong>Comercio exterior:</strong> antes de importar o exportar cualquier producto, hay que saber si la operacion es viable &mdash; y eso solo se sabe con informacion contable ordenada.</li>
+<li><strong>Finanzas internacionales:</strong> un banco extranjero o un inversionista solo confia en una empresa si su Activo, Pasivo y Patrimonio estan claros y bien sustentados.</li>
+<li><strong>Marketing y negociacion internacional:</strong> negociar un precio con un proveedor o cliente en el exterior exige saber, con precision, cuanto cuesta y cuanto se debe.</li>
+<li><strong>Marco legal y normativo:</strong> el Marco Conceptual de las NIIF que define Activo, Pasivo y Patrimonio es el mismo lenguaje contable que usan las empresas en todo el mundo, lo que permite comparar y comerciar entre paises.</li>
+</ul>
+</div>
+
+<div class="conclusion">
+<span class="caja-titulo">Idea clave</span>
+La Contabilidad no es otra cosa que llevar la cuenta ordenada de lo que tienes, lo que debes y lo que es tuyo. Ya lo hiciste bien con el celular; ahora lo confirmaste con un equipo de $500,00 y con el formato tecnico Debe/Haber. Sin importar el monto ni el bien, el equilibrio de la ecuacion contable jamas se rompe.
+</div>
+
+<div class="avance">
+<span></span>
+<button onclick="irA('tema2')">Siguiente &rarr; Tema 2</button>
+</div>
+</section>
+
+<!-- ===================== TEMA 2 ===================== -->
+<section id="tema2" class="panel">
+<h2>2. Debe, Haber, naturaleza y saldo</h2>
+
+<p>Ya usamos las palabras "Debe" y "Haber" en el Tema 1, dentro de las tablitas del equipo de $500,00. Antes de seguir armando asientos, necesitamos dejar estas dos palabras absolutamente claras, porque son la base tecnica de TODO lo que viene despues.</p>
+
+<div class="definicion">
+<span class="caja-titulo">Debe y Haber &mdash; dos lados tecnicos, sin significado cotidiano</span>
+<p><strong>Debe.</strong> Es simplemente el nombre del lado IZQUIERDO de cualquier cuenta contable. No significa "deuda", ni que alguien "debe" dinero.</p>
+<p><strong>Haber.</strong> Es simplemente el nombre del lado DERECHO de cualquier cuenta contable. No significa "dinero disponible" ni "lo que tengo en existencia".</p>
+<p>Son solo dos columnas, una a la izquierda y otra a la derecha, en las que se anota cada movimiento. La unica regla que jamas se rompe es esta: <strong>el total del Debe siempre debe ser igual al total del Haber.</strong></p>
+</div>
+
+<div class="caja alerta">
+<span class="caja-titulo">Error frecuente a evitar</span>
+Nadie "debe" nada por el simple hecho de que un valor se anote en el Debe. Debe y Haber son etiquetas de posicion (izquierda y derecha), igual que "pagina izquierda" y "pagina derecha" de un libro. Lo que SI cambia segun el tipo de cuenta es POR CUAL lado esa cuenta normalmente aumenta, y eso es un concepto distinto: la naturaleza.
+</div>
+
+<p>Cada elemento de la ecuacion contable (Activo, Pasivo, Patrimonio) se divide en "cuentas" mas especificas. Por ejemplo, el Activo "dinero" en realidad se divide en dos cuentas distintas: <strong>Caja</strong> y <strong>Bancos</strong>.</p>
+
+<div class="definicion">
+<span class="caja-titulo">Cuenta Caja y cuenta Bancos</span>
+<p><strong>Caja.</strong> Es el efectivo fisico que la empresa o la persona tiene en su poder: billetes, monedas, cheques recibidos que todavia no se han depositado.</p>
+<p><strong>Bancos.</strong> Es el dinero que esta depositado en una cuenta bancaria (cuenta corriente o de ahorros).</p>
+<p>Se separan en dos cuentas distintas porque tienen distinto grado de disponibilidad inmediata y de control: el dinero en Caja se puede gastar en el instante; el dinero en Bancos depende de una transferencia, un cheque o una tarjeta.</p>
+</div>
+
+<div class="definicion">
+<span class="caja-titulo">Naturaleza de una cuenta &mdash; tecnica y criolla</span>
+<p><strong>Tecnica.</strong> La naturaleza de una cuenta es el lado (Debe o Haber) por el cual esa clase de cuenta normalmente AUMENTA. Es una caracteristica fija, que depende del TIPO de cuenta, no de lo que le pase en un mes en particular.</p>
+<p><strong>Criolla.</strong> Es la "personalidad" de cada tipo de cuenta: unas cuentas son "de crecer por la izquierda" y otras son "de crecer por la derecha", y eso nunca cambia, sin importar cuantos movimientos tenga.</p>
+</div>
+
+<table class="comparativa">
+<tr><th>Tipo de cuenta</th><th>Aumenta por</th><th>Disminuye por</th><th>Saldo habitual</th></tr>
+<tr><td>Activo (Caja, Bancos, Mercaderia, Cuentas por cobrar)</td><td>Debe</td><td>Haber</td><td>Deudor</td></tr>
+<tr><td>Gasto (Arriendo, Sueldos, Comision bancaria)</td><td>Debe</td><td>Haber</td><td>Deudor</td></tr>
+<tr><td>Pasivo (Cuentas por pagar, Documentos por pagar)</td><td>Haber</td><td>Debe</td><td>Acreedor</td></tr>
+<tr><td>Patrimonio (Capital)</td><td>Haber</td><td>Debe</td><td>Acreedor</td></tr>
+<tr><td>Ingreso (Ventas, Ingresos por servicios)</td><td>Haber</td><td>Debe</td><td>Acreedor</td></tr>
+</table>
+
+<p>Fijate que las cinco categorias se agrupan en dos familias: Activo y Gasto se comportan igual (crecen por el Debe); Pasivo, Patrimonio e Ingreso se comportan igual entre si (crecen por el Haber). En el Tema 3 profundizaremos en Ingresos y Gastos, que todavia no habiamos presentado.</p>
+
+<div class="definicion">
+<span class="caja-titulo">Saldo deudor y saldo acreedor &mdash; en criollo</span>
+<p>Al final de un periodo, le preguntas a una cuenta: "&iquest;cuanto tienes?". La naturaleza te dice por que lado CRECE una cuenta; el saldo es distinto: es el resultado real, despues de sumar TODOS los movimientos, tanto los que la hicieron crecer como los que la hicieron disminuir. Se calcula restando el Debe menos el Haber (o al reves), y segun cual lado sea mayor, el saldo tiene un nombre:</p>
+<p><strong>Saldo deudor:</strong> se da cuando el total del Debe es mayor que el total del Haber.</p>
+<p><strong>Saldo acreedor:</strong> se da cuando el total del Haber es mayor que el total del Debe.</p>
+<p><strong>Saldo cero (o cuenta saldada):</strong> se da cuando el total del Debe es exactamente igual al total del Haber.</p>
+</div>
+
+<div class="caja alerta">
+<span class="caja-titulo">Naturaleza y saldo no son lo mismo</span>
+La naturaleza es una regla fija segun el TIPO de cuenta (Activo siempre es de naturaleza deudora). El saldo es el resultado real de esa cuenta en un momento dado, y puede, en casos excepcionales, salir CONTRARIO a su naturaleza (por ejemplo, la cuenta Bancos con saldo acreedor que veremos mas adelante, en el Tema 6b, con el sobregiro bancario). Cuando eso pasa, siempre hay que investigar la causa: un error, un pago anticipado, una devolucion o una reclasificacion pendiente.
+</div>
+
+<table class="comparativa">
+<tr><th>Tipo de cuenta</th><th>Crece por</th><th>Decrece por</th><th>Naturaleza de su saldo</th></tr>
+<tr><td>Activo (Caja, Bancos, Mercaderia)</td><td>Debe</td><td>Haber</td><td>Deudor</td></tr>
+<tr><td>Pasivo (Cuentas por pagar)</td><td>Haber</td><td>Debe</td><td>Acreedor</td></tr>
+<tr><td>Patrimonio (Capital)</td><td>Haber</td><td>Debe</td><td>Acreedor</td></tr>
+</table>
+
+<div class="ejemplo">
+<span class="caja-titulo">Ejemplo verificado &mdash; cuenta Caja</span>
+<p>Durante el mes, la cuenta Caja recibio (Debe) $500,00 y entrego (Haber) $150,00.</p>
+<p>Saldo = 500,00 &minus; 150,00 = <strong>$350,00, saldo deudor</strong> (porque Caja es Activo y el Debe fue mayor).</p>
+</div>
+
+<div class="ejemplo">
+<span class="caja-titulo">Ejemplo verificado &mdash; cuenta Cuentas por pagar</span>
+<p>Durante el mes, la cuenta Cuentas por pagar recibio (Haber) $800,00 y se le abono (Debe) $300,00.</p>
+<p>Saldo = 800,00 &minus; 300,00 = <strong>$500,00, saldo acreedor</strong> (porque Cuentas por pagar es Pasivo y el Haber fue mayor).</p>
+</div>
+
+<div class="ejemplo">
+<span class="caja-titulo">Ejemplo verificado &mdash; una cuenta de Gasto y una de Ingreso</span>
+<p><strong>Gasto de arriendo:</strong> en el mes solo tuvo un movimiento, de $200,00 al Debe (se pago el arriendo del local). Saldo = 200,00 &minus; 0,00 = <strong>$200,00, saldo deudor</strong> (porque Gasto se comporta igual que Activo).</p>
+<p><strong>Ingresos por servicios:</strong> en el mes solo tuvo un movimiento, de $180,00 al Haber (se presto un servicio). Saldo = 180,00 &minus; 0,00 = <strong>$180,00, saldo acreedor</strong> (porque Ingreso se comporta igual que Pasivo y Patrimonio).</p>
+</div>
+
+<div class="carrera-box">
+<span class="caja-titulo">Conexion con Negocios Internacionales</span>
+<ul>
+<li><strong>Comercio exterior:</strong> saber el saldo real de Bancos es indispensable antes de comprometerse a pagar una importacion en dolares o en otra moneda.</li>
+<li><strong>Finanzas internacionales:</strong> un inversionista extranjero revisa los saldos de las cuentas para decidir si una empresa es solvente.</li>
+<li><strong>Marketing y negociacion internacional:</strong> negociar plazos de pago con un proveedor extranjero exige saber cuanto Caja o Banco tiene realmente la empresa.</li>
+<li><strong>Marco legal y normativo:</strong> la naturaleza deudora o acreedora de cada cuenta esta definida por el mismo Marco Conceptual de las NIIF en todo el mundo, lo que permite leer estados financieros de cualquier pais con la misma logica.</li>
+</ul>
+</div>
+
+<div class="conclusion">
+<span class="caja-titulo">Idea clave</span>
+Debe es izquierda y Haber es derecha, sin ningun significado cotidiano. La naturaleza te dice por que lado crece cada tipo de cuenta (Activo y Gasto por el Debe; Pasivo, Patrimonio e Ingreso por el Haber). El saldo es el resultado real despues de todos los movimientos, y casi siempre coincide con la naturaleza, aunque en casos especiales puede salir al reves, y eso exige investigar.
+</div>
+
+<div class="avance">
+<button class="secundario" onclick="irA('tema1')">&larr; Tema 1</button>
+<button onclick="irA('tema3')">Siguiente &rarr; Tema 3</button>
+</div>
+</section>
+
+<!-- ===================== TEMA 3 ===================== -->
+<section id="tema3" class="panel">
+<h2>3. Ingresos y gastos: la ecuacion se amplia</h2>
+
+<p>Hasta ahora trabajamos la ecuacion contable solo con Activo, Pasivo y Patrimonio. Pero el Patrimonio de un negocio no solo cambia porque el propietario aporta o retira dinero: tambien cambia por el resultado propio de la actividad economica &mdash;por vender, por prestar servicios, por pagar arriendo, por pagar sueldos&mdash;. A esas dos nuevas categorias las llamamos <strong>Ingresos</strong> y <strong>Gastos</strong>.</p>
+
+<div class="definicion">
+<span class="caja-titulo">Ingresos y Gastos &mdash; tecnica y criolla</span>
+<p><strong>Ingreso.</strong> Tecnica: aumento del Patrimonio, distinto de los aportes de los propietarios, que resulta de la actividad ordinaria del negocio (vender, prestar un servicio, cobrar un interes a favor). Naturaleza acreedora: crece por el Haber. Criollo: es lo que el negocio "se gana" trabajando, no lo que el dueno mete de su bolsillo.</p>
+<p><strong>Gasto.</strong> Tecnica: disminucion del Patrimonio, distinta de las distribuciones a los propietarios, que resulta de la actividad ordinaria del negocio (pagar arriendo, sueldos, servicios basicos, comisiones). Naturaleza deudora: crece por el Debe. Criollo: es lo que el negocio "se come" para poder funcionar y generar sus ingresos.</p>
+</div>
+
+<div class="formula">
+<span class="caja-titulo">La ecuacion contable, ampliada</span>
+ACTIVO + GASTOS = PASIVO + PATRIMONIO + INGRESOS
+</div>
+
+<div class="ejemplo">
+<span class="caja-titulo">La ecuacion ampliada, con la balanza siempre equilibrada</span>
+<div class="ecuacion">
+  <div class="pieza activo">ACTIVO</div>
+  <span class="signo">+</span>
+  <div class="pieza gasto">GASTOS<small>naturaleza deudora, como el Activo</small></div>
+  <span class="signo">=</span>
+  <div class="pieza pasivo">PASIVO</div>
+  <span class="signo">+</span>
+  <div class="pieza patrimonio">PATRIMONIO</div>
+  <span class="signo">+</span>
+  <div class="pieza ingreso">INGRESOS<small>naturaleza acreedora, como el Patrimonio</small></div>
+</div>
+<p>Por eso el Gasto "se suma" del mismo lado que el Activo, y el Ingreso "se suma" del mismo lado que el Pasivo y el Patrimonio: comparten la misma naturaleza.</p>
+</div>
+
+<p>Un punto que confunde mucho al inicio: que ENTRE o SALGA dinero de Caja o de Bancos <strong>no significa automaticamente</strong> que eso sea un Ingreso o un Gasto. Hay que analizar la causa real del movimiento.</p>
+
+<table class="comparativa">
+<tr><th>Hecho economico</th><th>&iquest;Entra o sale dinero?</th><th>&iquest;Es ingreso o gasto?</th></tr>
+<tr><td>Recibir un prestamo bancario</td><td>Entra dinero</td><td>NO es ingreso: nace un Pasivo (hay que devolverlo)</td></tr>
+<tr><td>Vender un servicio a credito</td><td>Todavia no entra dinero</td><td>SI genera un Ingreso, aunque el efectivo llegue despues</td></tr>
+<tr><td>Pagar una deuda con el proveedor</td><td>Sale dinero</td><td>NO es gasto: solo disminuye un Pasivo que ya existia</td></tr>
+<tr><td>Consumo de un activo con el paso del tiempo (depreciacion)</td><td>No sale dinero en ese momento</td><td>SI genera un Gasto, aunque no haya salida de efectivo</td></tr>
+</table>
+
+<h3>Dos asientos que muestran la diferencia</h3>
+
+<div class="ejemplo">
+<span class="caja-titulo">Esto SI es un Ingreso: un servicio prestado a credito</span>
+<p>Bella Andina presta un servicio de asesoria de imagen a una clienta por $180,00. La clienta pagara la proxima semana (queda como Cuenta por cobrar, respaldada solo con la factura).</p>
+<div class="diario">
+<table>
+<tr><th>Detalle</th><th>Debe</th><th>Haber</th></tr>
+<tr><td>Cuentas por cobrar</td><td class="num">180,00</td><td></td></tr>
+<tr><td class="indent">a) Ingresos por servicios</td><td></td><td class="num">180,00</td></tr>
+<tr class="suman"><td>SUMAN</td><td class="num">180,00</td><td class="num">180,00</td></tr>
+</table>
+<div class="glosa">P/R servicio de asesoria de imagen prestado a credito, segun factura.</div>
+</div>
+<p>El efectivo todavia no ha entrado, pero el Ingreso ya nacio: el servicio ya se prestó.</p>
+</div>
+
+<div class="ejemplo">
+<span class="caja-titulo">Esto NO es un Ingreso, aunque entra dinero: un prestamo bancario</span>
+<p>Bella Andina recibe un prestamo del banco por $1.000,00, depositado directamente en su cuenta.</p>
+<div class="diario">
+<table>
+<tr><th>Detalle</th><th>Debe</th><th>Haber</th></tr>
+<tr><td>Bancos</td><td class="num">1.000,00</td><td></td></tr>
+<tr><td class="indent">a) Prestamos por pagar</td><td></td><td class="num">1.000,00</td></tr>
+<tr class="suman"><td>SUMAN</td><td class="num">1.000,00</td><td class="num">1.000,00</td></tr>
+</table>
+<div class="glosa">P/R prestamo bancario recibido, depositado en cuenta corriente.</div>
+</div>
+<p>Entro dinero a Bancos, pero no hubo ninguna venta ni ningun servicio prestado: solo nacio una obligacion (Pasivo) que el negocio tendra que devolver. Por eso NO es un Ingreso.</p>
+</div>
+
+<div class="ejemplo">
+<span class="caja-titulo">Un Gasto, con salida de efectivo</span>
+<p>Bella Andina paga el arriendo del local, $150,00, en efectivo de Caja.</p>
+<div class="diario">
+<table>
+<tr><th>Detalle</th><th>Debe</th><th>Haber</th></tr>
+<tr><td>Gasto de arriendo</td><td class="num">150,00</td><td></td></tr>
+<tr><td class="indent">a) Caja</td><td></td><td class="num">150,00</td></tr>
+<tr class="suman"><td>SUMAN</td><td class="num">150,00</td><td class="num">150,00</td></tr>
+</table>
+<div class="glosa">P/R pago de arriendo del local del mes en curso, en efectivo de Caja.</div>
+</div>
+</div>
+
+<div class="caja futuro">
+<span class="caja-titulo">Esto lo veremos con calma mas adelante</span>
+El caso de la depreciacion (un Gasto que no implica salida de efectivo en el momento) requiere conocer antes los activos fijos y las cuentas correctoras de activo. Por ahora, basta con entender la idea: un Gasto no siempre coincide con una salida de dinero, igual que un Ingreso no siempre coincide con una entrada de dinero.
+</div>
+
+<div class="carrera-box">
+<span class="caja-titulo">Conexion con Negocios Internacionales</span>
+<ul>
+<li><strong>Comercio exterior:</strong> distinguir un ingreso real de un simple ingreso de efectivo (como un prestamo) es esencial para evaluar si una operacion de exportacion realmente genero ganancia.</li>
+<li><strong>Finanzas internacionales:</strong> un banco extranjero analiza los ingresos y gastos de una empresa, no solo su saldo de caja, para decidir si le otorga financiamiento.</li>
+<li><strong>Marketing y negociacion internacional:</strong> negociar el precio de un servicio o producto exige saber con certeza si eso sera un ingreso real para el negocio.</li>
+<li><strong>Marco legal y normativo:</strong> el Marco Conceptual de las NIIF define Ingresos y Gastos con el mismo criterio en todo el mundo, lo que permite comparar el desempeno de empresas de distintos paises.</li>
+</ul>
+</div>
+
+<div class="conclusion">
+<span class="caja-titulo">Idea clave</span>
+Los Ingresos aumentan el Patrimonio y crecen por el Haber; los Gastos lo disminuyen y crecen por el Debe. Ninguno de los dos se confirma solo con ver si entro o salio dinero: hay que preguntarse siempre por la causa real de cada movimiento.
+</div>
+
+<div class="avance">
+<button class="secundario" onclick="irA('tema2')">&larr; Tema 2</button>
+<button onclick="irA('tema4')">Siguiente &rarr; Tema 4</button>
+</div>
+</section>
+
+<!-- ===================== TEMA 4 ===================== -->
+<section id="tema4" class="panel">
+<h2>4. Cuentas y documentos: por cobrar y por pagar</h2>
+
+<p>Ya sabemos que Activo es "lo que tengo" y Pasivo es "lo que debo". Pero dentro de esas dos categorias hay una distincion muy importante: no es lo mismo una <strong>cuenta</strong> que un <strong>documento</strong>, ni cuando cobras ni cuando pagas.</p>
+
+<div class="definicion">
+<span class="caja-titulo">Cuatro conceptos, definidos con precision</span>
+<p><strong>Cuenta por cobrar.</strong> Derecho de cobro que surge de una venta a credito, respaldado unicamente por la factura, el contrato, la orden de compra o los registros auxiliares del negocio &mdash;es decir, una cuenta abierta&mdash;, sin un instrumento formal negociable.</p>
+<p><strong>Documento por cobrar.</strong> Derecho de cobro respaldado por un titulo de credito formal (pagare o letra de cambio) que cumple los requisitos legales para ser negociable: se puede endosar, transferir o descontar en un banco.</p>
+<p><strong>Cuenta por pagar.</strong> Obligacion de pago que surge de una compra a credito, respaldada unicamente por la factura del proveedor, sin instrumento formal.</p>
+<p><strong>Documento por pagar.</strong> Obligacion de pago respaldada por un titulo de credito formal (pagare propio o letra de cambio aceptada) que el deudor firma comprometiendose a pagar en una fecha determinada.</p>
+</div>
+
+<div class="caja alerta">
+<span class="caja-titulo">La regla para decidir, siempre la misma</span>
+Preguntate: &iquest;existe un titulo de credito formal &mdash;pagare o letra de cambio&mdash; firmado con los requisitos legales, que se pueda endosar o transferir a otra persona? Si la respuesta es SI, es un DOCUMENTO (por cobrar o por pagar, segun quien lo tenga). Si el respaldo es solo la factura y la palabra del cliente o proveedor, es una CUENTA (por cobrar o por pagar). Una letra de cambio a 30 dias, por definicion, es un titulo de credito formal: siempre es documento, nunca cuenta. Una firma por si sola, en un recibo o una factura, no convierte cualquier papel en pagare: lo que importa es la sustancia del instrumento y que cumpla los requisitos juridicos, no la sola existencia de una firma.</p>
+</div>
+
+<table class="comparativa">
+<tr><th>Situacion</th><th>&iquest;Que es?</th></tr>
+<tr><td>Vendes $500 a credito abierto, respaldado solo con la factura, a 30 dias.</td><td>Cuenta por cobrar</td></tr>
+<tr><td>Un cliente te firma un pagare a 60 dias por $1.200.</td><td>Documento por cobrar</td></tr>
+<tr><td>Compras mercaderia y firmas una letra de cambio a 30 dias por $900 a favor del proveedor.</td><td>Documento por pagar</td></tr>
+<tr><td>Compras $400 de insumos de oficina, pagaras el proximo mes solo con la factura como respaldo.</td><td>Cuenta por pagar</td></tr>
+<tr><td>Un cliente te paga con tarjeta de credito y firma el voucher.</td><td>No es documento por cobrar (el voucher no es titulo de credito negociable). Es una <strong>cuenta por cobrar &ndash; tarjetas de credito</strong>, frente al banco procesador.</td></tr>
+</table>
+
+<h3>De cuenta por cobrar a documento por cobrar: la reclasificacion</h3>
+
+<p>Es muy comun que una cuenta que empezo como abierta (solo factura) se "formalice" mas adelante, cuando el cliente firma un pagare para respaldar esa misma deuda. A eso se le llama <strong>reclasificacion</strong>: no es una venta nueva, ni cambia el monto total que el cliente debe, solo cambia LA EVIDENCIA y la subcuenta donde se registra.</p>
+
+<div class="ejemplo">
+<span class="caja-titulo">Ejemplo &mdash; un cliente de Bella Andina formaliza su deuda</span>
+<p>Un cliente le debe a Bella Andina $600,00 desde hace dos semanas, en cuenta abierta (solo respaldada por la factura de venta). Hoy, el cliente se acerca y firma un pagare a 45 dias por esos mismos $600,00.</p>
+<div class="diario">
+<table>
+<tr><th>Detalle</th><th>Debe</th><th>Haber</th></tr>
+<tr><td>Documentos por cobrar</td><td class="num">600,00</td><td></td></tr>
+<tr><td class="indent">a) Cuentas por cobrar</td><td></td><td class="num">600,00</td></tr>
+<tr class="suman"><td>SUMAN</td><td class="num">600,00</td><td class="num">600,00</td></tr>
+</table>
+<div class="glosa">P/R reclasificacion de cuenta por cobrar a documento por cobrar, segun pagare firmado a 45 dias por el cliente.</div>
+</div>
+</div>
+
+<div class="caja alerta">
+<span class="caja-titulo">Lo que cambia y lo que NO cambia</span>
+Cambia: la subcuenta (de "Cuentas por cobrar" pasa a "Documentos por cobrar") y la evidencia (de solo factura, pasa a un titulo de credito formal, con las ventajas de poder endosarlo o descontarlo en un banco). NO cambia: el total del Activo del negocio sigue siendo exactamente el mismo, $600,00, solo que ahora esta clasificado con mayor precision.
+</div>
+
+<div class="ejemplo">
+<span class="caja-titulo">Recordando la tarjeta de credito</span>
+<p>Ya lo vimos: cuando alguien COMPRA con tarjeta, no genera una cuenta por cobrar para el, genera un <strong>Pasivo</strong> (una deuda con el banco emisor de la tarjeta). Cuando un comercio VENDE y recibe el pago con tarjeta, no le cobra al cliente, le cobra al procesador de la tarjeta, y eso se registra como <strong>cuenta por cobrar &ndash; tarjetas de credito</strong>, nunca como documento por cobrar, porque el voucher no es un titulo de credito formal. En el Tema 5 profundizaremos en las distintas formas de pagar una tarjeta de credito.</p>
+</div>
+
+<div class="carrera-box">
+<span class="caja-titulo">Conexion con Negocios Internacionales</span>
+<ul>
+<li><strong>Comercio exterior:</strong> en operaciones internacionales es muy comun usar letras de cambio y cartas de credito, que son documentos formales reconocidos en todo el mundo.</li>
+<li><strong>Finanzas internacionales:</strong> un documento por cobrar se puede "descontar" en un banco (venderlo antes de su vencimiento a cambio de una comision) para obtener liquidez inmediata, algo que una simple cuenta por cobrar no permite.</li>
+<li><strong>Marketing y negociacion internacional:</strong> ofrecer a un cliente extranjero la opcion de firmar un documento formal, en vez de una cuenta abierta, reduce el riesgo de no cobrar.</li>
+<li><strong>Marco legal y normativo:</strong> los requisitos que debe cumplir un pagare o una letra de cambio para ser validos estan establecidos en la ley de cada pais &mdash; en Ecuador, en el Codigo de Comercio&mdash;, algo que cualquier negocio internacional debe conocer.</li>
+</ul>
+</div>
+
+<div class="conclusion">
+<span class="caja-titulo">Idea clave</span>
+La diferencia entre cuenta y documento no depende de si hay "un papel firmado", sino de si ese papel es un titulo de credito formal y negociable. Esta distincion aplica igual para lo que te deben (por cobrar) y para lo que tu debes (por pagar), y una cuenta puede reclasificarse a documento sin que cambie el total del Activo.
+</div>
+
+<div class="avance">
+<button class="secundario" onclick="irA('tema3')">&larr; Tema 3</button>
+<button onclick="irA('tema5')">Siguiente &rarr; Tema 5</button>
+</div>
+</section>
+
+<!-- ===================== TEMA 5 ===================== -->
+<section id="tema5" class="panel">
+<h2>5. Tarjeta de credito: tres actores y tres formas de pagar</h2>
+
+<p>Ya establecimos la regla general: el voucher de una tarjeta de credito no es un titulo de credito formal, asi que nunca genera un documento por cobrar ni un documento por pagar. Ahora vamos a ver con mas detalle QUIENES intervienen en una compra con tarjeta, y las distintas formas en que esa deuda se puede terminar pagando.</p>
+
+<div class="definicion">
+<span class="caja-titulo">Tres actores en toda compra con tarjeta</span>
+<p><strong>Comprador (tarjetahabiente).</strong> Reconoce un Activo o un Gasto (segun que compro) y, al mismo tiempo, una obligacion (Pasivo) con el emisor de la tarjeta.</p>
+<p><strong>Comercio.</strong> Reconoce su Ingreso por la venta y un derecho de cobro frente al procesador o emisor con el que tiene contrato, no frente al cliente directamente.</p>
+<p><strong>Emisor de la tarjeta (banco o entidad financiera).</strong> Reconoce un derecho de cobro frente al tarjetahabiente, por el valor que este consumio.</p>
+<p>El comprobante firmado en el punto de venta evidencia que la compra ocurrio y que el cliente la autorizo, pero &mdash;insistimos&mdash; no se convierte automaticamente en un pagare.</p>
+</div>
+
+<h3>Tres formas de pagar la tarjeta</h3>
+
+<table class="comparativa">
+<tr><th>Modalidad</th><th>Que ocurre</th></tr>
+<tr><td>Pago corriente</td><td>La compra se exige integra en el siguiente estado de cuenta, segun la fecha de corte pactada. Es la forma "normal" de pagar.</td></tr>
+<tr><td>Pago diferido</td><td>La obligacion se distribuye en varias cuotas, segun lo acordado con el emisor. Puede incluir intereses o no, dependiendo del plazo y del contrato.</td></tr>
+<tr><td>Pago minimo</td><td>El tarjetahabiente paga solo una parte del saldo (el minimo exigido por el emisor). El resto continua pendiente, y normalmente genera intereses conforme al contrato.</td></tr>
+</table>
+
+<div class="caja alerta">
+<span class="caja-titulo">Lo que realmente importa para clasificar el saldo</span>
+Para efectos contables, lo que importa no es la intencion personal de pagar antes o despues, sino <strong>lo exigible al cierre del periodo</strong>: cuanto de esa deuda hay que pagar dentro de los proximos doce meses, y cuanto queda para despues. Esta idea la vamos a retomar en el Tema 6, cuando veamos la clasificacion corriente y no corriente.
+</div>
+
+<div class="ejemplo">
+<span class="caja-titulo">Las tres modalidades, con el mismo caso: compra empresarial de $600,00</span>
+<p>Bella Andina compra con su tarjeta de credito empresarial una vitrina para exhibir sus productos, por $600,00. Segun la modalidad que elija con el emisor:</p>
+<p><strong>Pago corriente:</strong> paga los $600,00 completos en la fecha de corte del siguiente estado de cuenta.</p>
+<p><strong>Pago diferido a 6 cuotas (sin intereses, para este ejercicio introductorio):</strong> 600,00 &divide; 6 = <strong>$100,00 por cuota</strong>.</p>
+<p><strong>Pago minimo del 5% exigido por el emisor:</strong> 600,00 &times; 0,05 = <strong>$30,00</strong> de pago obligatorio; el saldo restante, 600,00 &minus; 30,00 = <strong>$570,00</strong>, sigue pendiente y puede generar intereses.</p>
+</div>
+
+<div class="ejemplo">
+<span class="caja-titulo">El asiento inicial no cambia con la modalidad de pago elegida</span>
+<p>Sin importar si luego se paga corriente, diferido o minimo, el asiento que reconoce la compra es el mismo, porque en ese momento nace la obligacion total con el emisor:</p>
+<div class="diario">
+<table>
+<tr><th>Detalle</th><th>Debe</th><th>Haber</th></tr>
+<tr><td>Muebles y enseres</td><td class="num">600,00</td><td></td></tr>
+<tr><td class="indent">a) Tarjeta de credito por pagar</td><td></td><td class="num">600,00</td></tr>
+<tr class="suman"><td>SUMAN</td><td class="num">600,00</td><td class="num">600,00</td></tr>
+</table>
+<div class="glosa">P/R compra de vitrina para exhibicion, pagada con tarjeta de credito empresarial, segun voucher y contrato con el emisor.</div>
+</div>
+<p>La modalidad de pago (corriente, diferido o minimo) solo afecta COMO se ira cancelando esa obligacion despues, no el reconocimiento inicial de la compra.</p>
+</div>
+
+<div class="carrera-box">
+<span class="caja-titulo">Conexion con Negocios Internacionales</span>
+<ul>
+<li><strong>Comercio exterior:</strong> muchas compras de insumos o muestras para un negocio de importacion-exportacion se hacen con tarjeta corporativa, y elegir bien la modalidad de pago afecta el flujo de caja de la operacion.</li>
+<li><strong>Finanzas internacionales:</strong> el costo financiero de pagar solo el minimo (los intereses que se generan) puede ser muy alto, y es una decision que cualquier negocio internacional debe evaluar con cuidado.</li>
+<li><strong>Marketing y negociacion internacional:</strong> ofrecer a un cliente la posibilidad de pagar con tarjeta, en distintas modalidades, es en si mismo un argumento de negociacion comercial.</li>
+<li><strong>Marco legal y normativo:</strong> los contratos de tarjetas de credito y sus condiciones de pago estan regulados por la banca y por organismos de control financiero, con reglas distintas en cada pais.</li>
+</ul>
+</div>
+
+<div class="conclusion">
+<span class="caja-titulo">Idea clave</span>
+En toda compra con tarjeta intervienen tres actores (comprador, comercio y emisor), y la deuda se puede pagar de tres formas (corriente, diferida o minima). Sin importar la modalidad elegida, el voucher nunca se convierte en documento, y lo que realmente importa para la contabilidad es cuanto de esa deuda es exigible en el corto plazo.
+</div>
+
+<div class="avance">
+<button class="secundario" onclick="irA('tema4')">&larr; Tema 4</button>
+<button onclick="irA('tema6')">Siguiente &rarr; Tema 6</button>
+</div>
+</section>
+
+<!-- ===================== TEMA 6 ===================== -->
+<section id="tema6" class="panel">
+<h2>6. Clasificacion corriente y no corriente</h2>
+
+<p>Hasta ahora hemos clasificado las cuentas por su naturaleza (Activo, Pasivo, Patrimonio, Ingreso, Gasto). Existe otra clasificacion, igual de importante, que se usa al preparar los estados financieros: distinguir que partidas son <strong>corrientes</strong> (de corto plazo) y cuales son <strong>no corrientes</strong> (de largo plazo). En espanol tecnico contable, "corto plazo" se expresa como "corriente" y "largo plazo" como "no corriente".</p>
+
+<div class="definicion">
+<span class="caja-titulo">Corriente y no corriente &mdash; tecnica y criolla</span>
+<p><strong>Tecnica.</strong> Dentro del contenido de la NIC 1 se establece que una partida (un activo o un pasivo) se clasifica como corriente cuando se espera realizar, vender, consumir o liquidar dentro del ciclo normal de operacion del negocio, o dentro de los doce meses siguientes a la fecha de cierre del periodo sobre el que se informa &mdash;ademas de otros criterios especificos de la norma&mdash;. Todo lo que no cumple esos criterios se clasifica como no corriente.</p>
+<p><strong>Criolla.</strong> Corriente es "lo que se resuelve pronto" (en el negocio del dia a dia, o dentro del proximo ano); no corriente es "lo que se resuelve mas adelante". La referencia temporal siempre se evalua EN LA FECHA DE CIERRE, no en la fecha en que se firmo el compromiso.</p>
+</div>
+
+<table class="comparativa">
+<tr><th>Criterio (Activo)</th><th>Se clasifica como corriente si...</th></tr>
+<tr><td>Ciclo normal</td><td>Se espera realizar, vender o consumir dentro del ciclo normal de operacion del negocio.</td></tr>
+<tr><td>Negociacion</td><td>Se mantiene principalmente con el proposito de negociarlo.</td></tr>
+<tr><td>Doce meses</td><td>Se espera realizar dentro de los doce meses siguientes a la fecha de cierre.</td></tr>
+<tr><td>Efectivo</td><td>Es efectivo o un equivalente de efectivo, salvo que este restringido para su intercambio o uso por al menos doce meses.</td></tr>
+</table>
+
+<table class="comparativa">
+<tr><th>Criterio (Pasivo)</th><th>Se clasifica como corriente si...</th></tr>
+<tr><td>Ciclo normal</td><td>Se espera liquidar dentro del ciclo normal de operacion del negocio.</td></tr>
+<tr><td>Negociacion</td><td>Se mantiene principalmente con el proposito de negociarlo.</td></tr>
+<tr><td>Doce meses</td><td>Debe liquidarse dentro de los doce meses siguientes a la fecha de cierre.</td></tr>
+<tr><td>Derecho a diferir</td><td>La entidad NO tiene, a la fecha de cierre, el derecho de diferir su liquidacion por al menos doce meses.</td></tr>
+</table>
+
+<div class="caja alerta">
+<span class="caja-titulo">Un detalle que se presta a confusion</span>
+Los doce meses NO se cuentan desde la fecha en que se firmo el documento o se realizo la transaccion, sino desde la fecha de cierre del periodo sobre el que se informa, hacia adelante. Por eso una misma deuda puede cambiar de clasificacion de un cierre a otro, simplemente porque el tiempo restante hasta su vencimiento se va acortando.
+</div>
+
+<h3>La excepcion del ciclo normal de operacion</h3>
+
+<p>La regla de "doce meses" no funciona de forma aislada: primero se evalua si la partida forma parte del ciclo normal de operacion del negocio, y ese criterio puede hacer que algo siga siendo corriente aunque su plazo supere los doce meses.</p>
+
+<div class="ejemplo">
+<span class="caja-titulo">Dos casos que muestran la diferencia</span>
+<p><strong>Proveedor a 14 meses.</strong> Si esa deuda comercial forma parte del capital de trabajo dentro del ciclo normal de operacion de la empresa, puede seguir clasificandose como corriente, aunque su plazo de pago supere los doce meses. Dentro del contenido de la NIC 1 se admite expresamente que ciertas cuentas comerciales del ciclo normal sigan siendo corrientes aun cuando se paguen despues de doce meses.</p>
+<p><strong>Prestamo bancario a 18 meses.</strong> Un prestamo de este tipo normalmente NO forma parte del ciclo normal de operacion (no es una compra de mercaderia ni un insumo del giro del negocio), asi que se separa: la porcion exigible dentro de los proximos doce meses se presenta como corriente, y el resto como no corriente, considerando siempre el derecho que la entidad tenga (o no tenga) al cierre para diferir su pago. Esta separacion la calculamos en detalle en el Tema 6b.</p>
+</div>
+
+<div class="caja futuro">
+<span class="caja-titulo">Esto lo veremos con calma mas adelante</span>
+La elaboracion completa del Estado de Situacion Financiera, con todas sus secciones de Activo corriente, Activo no corriente, Pasivo corriente y Pasivo no corriente ya formalmente presentadas, se trabaja en una sesion posterior, cuando conozcamos el ciclo contable completo.
+</div>
+
+<div class="carrera-box">
+<span class="caja-titulo">Conexion con Negocios Internacionales</span>
+<ul>
+<li><strong>Comercio exterior:</strong> una empresa importadora necesita saber cuanto de su deuda con proveedores extranjeros es exigible en el corto plazo, para planificar sus pagos en moneda extranjera.</li>
+<li><strong>Finanzas internacionales:</strong> los analistas financieros usan la relacion entre Activo corriente y Pasivo corriente (liquidez) para decidir si prestarle dinero a una empresa que opera internacionalmente.</li>
+<li><strong>Marketing y negociacion internacional:</strong> negociar plazos de pago mas largos con un proveedor extranjero puede cambiar la clasificacion de una deuda de corriente a no corriente, mejorando la imagen financiera del negocio.</li>
+<li><strong>Marco legal y normativo:</strong> los criterios de clasificacion corriente y no corriente estan establecidos en la NIC 1, la misma norma internacional que usan las empresas en todo el mundo para preparar sus estados financieros.</li>
+</ul>
+</div>
+
+<div class="conclusion">
+<span class="caja-titulo">Idea clave</span>
+Corriente es lo que se resuelve en el ciclo normal de operacion o dentro de los proximos doce meses desde el cierre; no corriente es todo lo demas. El ciclo normal de operacion puede hacer que una deuda comercial siga siendo corriente aunque su plazo supere los doce meses, mientras que una deuda financiera ajena al giro del negocio se separa estrictamente segun el tiempo que falte para su vencimiento.
+</div>
+
+<div class="avance">
+<button class="secundario" onclick="irA('tema5')">&larr; Tema 5</button>
+<button onclick="irA('tema6b')">Siguiente &rarr; Tema 6b</button>
+</div>
+</section>
+
+<!-- ===================== TEMA 6b ===================== -->
+<section id="tema6b" class="panel">
+<h2>6b. Separacion de cuotas y sobregiro bancario</h2>
+
+<h3>Como dividir una deuda de largo plazo entre corriente y no corriente</h3>
+
+<p>Cuando una sola obligacion se paga en muchas cuotas a lo largo de varios anos, al preparar el Estado de Situacion Financiera esa obligacion se DIVIDE entre su porcion corriente y su porcion no corriente, segun lo que sea exigible dentro de los proximos doce meses desde la fecha de cierre.</p>
+
+<div class="ejemplo">
+<span class="caja-titulo">Ejemplo verificado &mdash; un prestamo en 18 cuotas mensuales</span>
+<p>Al cierre del ejercicio, un negocio tiene un prestamo pendiente en 18 cuotas mensuales iguales de $100,00 cada una (se omiten intereses futuros no devengados, para este ejercicio introductorio).</p>
+<p>Deuda total pendiente: 18 &times; 100,00 = <strong>$1.800,00</strong></p>
+<p>De esas 18 cuotas, las primeras 12 vencen dentro de los proximos doce meses desde el cierre: 12 &times; 100,00 = <strong>$1.200,00, Pasivo corriente</strong></p>
+<p>Las 6 cuotas restantes vencen despues de los proximos doce meses: 6 &times; 100,00 = <strong>$600,00, Pasivo no corriente</strong></p>
+<p>Comprobacion: 1.200,00 + 600,00 = 1.800,00 &check; (coincide exactamente con la deuda total)</p>
+</div>
+
+<table class="comparativa">
+<tr><th>Prestamo al cierre</th><th>Presentacion</th></tr>
+<tr><td>Cuotas exigibles durante los proximos 12 meses</td><td>Pasivo corriente ($1.200,00)</td></tr>
+<tr><td>Cuotas exigibles despues de los proximos 12 meses</td><td>Pasivo no corriente ($600,00)</td></tr>
+</table>
+
+<div class="caja alerta">
+<span class="caja-titulo">Lo que NO cambia con esta separacion</span>
+El total de la deuda sigue siendo el mismo, $1.800,00. La separacion entre corriente y no corriente no crea ni elimina Pasivo: solo reclasifica, para efectos de presentacion, cuanto de esa deuda es exigible pronto y cuanto es exigible mas adelante &mdash;exactamente el mismo tipo de logica que usamos en el Tema 4 con la reclasificacion de cuenta a documento por cobrar.
+</div>
+
+<h3>Sobregiro bancario</h3>
+
+<p>Recordemos: la cuenta Bancos es un Activo, y su naturaleza es deudora (normalmente crece por el Debe y su saldo habitual es deudor). Pero, en la practica, puede ocurrir que Bancos presente un saldo <strong>acreedor</strong>, es decir, contrario a su naturaleza. A eso se le llama sobregiro bancario.</p>
+
+<div class="ejemplo">
+<span class="caja-titulo">Ejemplo verificado &mdash; la cuenta Bancos con saldo acreedor</span>
+<p>Al cierre del mes, la cuenta Bancos de un negocio presenta Debe $100,00 y Haber $150,00.</p>
+<p>Saldo = 100,00 &minus; 150,00 = <strong>&minus;$50,00, es decir, saldo acreedor de $50,00</strong> (el Haber fue mayor que el Debe, lo contrario de lo habitual en una cuenta de Activo).</p>
+</div>
+
+<div class="caja alerta">
+<span class="caja-titulo">Un saldo contrario exige investigar, nunca ignorar</span>
+Un saldo acreedor en Bancos puede deberse a un sobregiro real (el negocio giro cheques o hizo pagos por mas dinero del que tenia disponible), a un error de registro, o a una partida pendiente de conciliar con el banco. La naturaleza de la cuenta ayuda a REGISTRAR correctamente cada movimiento; la clasificacion corriente o no corriente ayuda a PRESENTAR correctamente el resultado. Por eso, un sobregiro bancario normalmente no se deja "escondido" dentro de Bancos: se investiga, y si en efecto es un sobregiro, puede requerir reclasificarse y presentarse como un Pasivo corriente, en vez de como un Activo negativo.
+</div>
+
+<div class="carrera-box">
+<span class="caja-titulo">Conexion con Negocios Internacionales</span>
+<ul>
+<li><strong>Comercio exterior:</strong> antes de comprometerse a pagar una importacion, es indispensable saber si la cuenta Bancos tiene realmente saldo disponible o si esta en sobregiro.</li>
+<li><strong>Finanzas internacionales:</strong> separar correctamente las deudas en corriente y no corriente es la base para calcular indicadores de liquidez que un inversionista extranjero revisa antes de invertir.</li>
+<li><strong>Marketing y negociacion internacional:</strong> negociar el numero de cuotas de un financiamiento con un proveedor extranjero cambia directamente cuanto de esa deuda aparece como corriente y cuanto como no corriente.</li>
+<li><strong>Marco legal y normativo:</strong> los criterios para separar partidas corrientes y no corrientes, y para investigar saldos contrarios a su naturaleza, forman parte de la misma normativa contable internacional que rige en todos los paises donde el negocio opere.</li>
+</ul>
+</div>
+
+<div class="conclusion">
+<span class="caja-titulo">Idea clave</span>
+Una deuda de largo plazo se separa, al cierre, entre lo exigible dentro de doce meses (corriente) y lo exigible despues (no corriente), sin que cambie el total de la obligacion. Un saldo acreedor en una cuenta de naturaleza deudora, como el sobregiro en Bancos, siempre debe investigarse y puede requerir presentarse como Pasivo.
+</div>
+
+<div class="avance">
+<button class="secundario" onclick="irA('tema6')">&larr; Tema 6</button>
+<button onclick="irA('tema7')">Siguiente &rarr; Tema 7</button>
+</div>
+</section>
+
+<!-- ===================== TEMA 7 ===================== -->
+<section id="tema7" class="panel">
+<h2>7. La jornalizacion: el Libro Diario y los primeros asientos</h2>
+
+<div class="definicion">
+<span class="caja-titulo">Jornalizacion &mdash; tecnica y criolla</span>
+<p><strong>Tecnica.</strong> La jornalizacion es el proceso de registrar cronologicamente cada transaccion economica en el Libro Diario, aplicando el principio de partida doble: el total del Debe siempre debe ser igual al total del Haber.</p>
+<p><strong>Criolla.</strong> Es anotar, en orden de fecha, cada movimiento de dinero o de deudas que tiene la empresa, siempre en parejas que se compensan, para que la ecuacion contable nunca se desnivele.</p>
+</div>
+
+<p>Antes de jornalizar cualquier transaccion, conviene hacerse seis preguntas en orden: &iquest;que ocurrio realmente?, &iquest;que cuentas intervienen?, &iquest;que tipo de cuenta es cada una?, &iquest;aumento o disminuyo?, &iquest;en que lado se registra ese movimiento (Debe o Haber)?, y por ultimo, &iquest;el Debe y el Haber suman lo mismo? Esta ruta evita el error mas comun al iniciar: registrar por instinto, sin analizar primero el hecho economico.</p>
+
+<p>Cada anotacion se llama <strong>asiento contable</strong>, y sigue siempre el mismo formato: la cuenta que se AFECTA POR EL DEBE va al margen izquierdo; la cuenta que se afecta por el Haber va indentada y precedida de "a)"; y al final se explica la operacion en una <strong>glosa</strong> que siempre empieza con "P/R" (Por Registro de).</p>
+
+<div class="ejemplo">
+<span class="caja-titulo">Un mini plan de cuentas para estos primeros ejemplos</span>
+<p>1.1.01 Caja &middot; 1.1.02 Bancos &middot; 1.1.03 Mercaderia &middot; 2.1.01 Cuentas por pagar &middot; 2.1.02 Documentos por pagar</p>
+</div>
+
+<div class="caja futuro">
+<span class="caja-titulo">Esto lo veremos con calma mas adelante</span>
+El Plan de Cuentas completo de una empresa (con todas sus cuentas y su codificacion oficial) se construye con detalle en una sesion posterior. Por ahora usamos solo las cuentas necesarias para estos primeros ejemplos.
+</div>
+
+<h3>Asiento 1 &mdash; Compra al contado</h3>
+<p>La empresa compra mercaderia por $500,00 y paga todo en efectivo, de Caja.</p>
+<div class="diario">
+<div class="diario-header"><span>Asiento N&deg; 1</span><span>Fecha: --/--/2026</span></div>
+<table>
+<tr><th>Codigo</th><th>Detalle</th><th>Parcial</th><th>Debe</th><th>Haber</th></tr>
+<tr><td>1.1.03</td><td>Mercaderia</td><td></td><td class="num">500,00</td><td></td></tr>
+<tr><td>1.1.01</td><td class="indent">a) Caja</td><td></td><td></td><td class="num">500,00</td></tr>
+<tr class="suman"><td></td><td>SUMAN</td><td></td><td class="num">500,00</td><td class="num">500,00</td></tr>
+</table>
+<div class="glosa">P/R compra de mercaderia al contado, segun factura del proveedor, pagada en efectivo de Caja.</div>
+</div>
+
+<h3>Asiento 2 &mdash; Compra a credito</h3>
+<p>La empresa compra mercaderia por $800,00, a credito abierto (cuenta por pagar), respaldada solo con la factura, a 30 dias.</p>
+<div class="diario">
+<div class="diario-header"><span>Asiento N&deg; 2</span><span>Fecha: --/--/2026</span></div>
+<table>
+<tr><th>Codigo</th><th>Detalle</th><th>Parcial</th><th>Debe</th><th>Haber</th></tr>
+<tr><td>1.1.03</td><td>Mercaderia</td><td></td><td class="num">800,00</td><td></td></tr>
+<tr><td>2.1.01</td><td class="indent">a) Cuentas por pagar</td><td></td><td></td><td class="num">800,00</td></tr>
+<tr class="suman"><td></td><td>SUMAN</td><td></td><td class="num">800,00</td><td class="num">800,00</td></tr>
+</table>
+<div class="glosa">P/R compra de mercaderia a credito, segun factura del proveedor, a 30 dias plazo.</div>
+</div>
+
+<h3>Asiento 3 &mdash; Compra mixta (parte efectivo, parte credito)</h3>
+<p>La empresa compra mercaderia por $1.000,00: paga $400,00 en efectivo de Caja y el resto, $600,00, queda a credito (cuenta por pagar).</p>
+<div class="diario">
+<div class="diario-header"><span>Asiento N&deg; 3</span><span>Fecha: --/--/2026</span></div>
+<table>
+<tr><th>Codigo</th><th>Detalle</th><th>Parcial</th><th>Debe</th><th>Haber</th></tr>
+<tr><td>1.1.03</td><td>Mercaderia</td><td></td><td class="num">1.000,00</td><td></td></tr>
+<tr><td>1.1.01</td><td class="indent">a) Caja</td><td class="num">400,00</td><td></td><td></td></tr>
+<tr><td>2.1.01</td><td class="indent">a) Cuentas por pagar</td><td class="num">600,00</td><td></td><td></td></tr>
+<tr class="suman"><td></td><td>SUMAN</td><td></td><td class="num">1.000,00</td><td class="num">1.000,00</td></tr>
+</table>
+<div class="glosa">P/R compra de mercaderia por $1.000,00, pagando $400,00 en efectivo de Caja y $600,00 a credito con el proveedor, a 30 dias.</div>
+</div>
+
+<div class="caja alerta">
+<span class="caja-titulo">Nota sobre la columna Parcial</span>
+En el Asiento 3, la columna Parcial se usa porque el Haber esta dividido en DOS cuentas distintas (Caja y Cuentas por pagar). Ahi se anota cuanto corresponde a cada una, y luego se suman para llegar al total del Haber.
+</div>
+
+<div class="carrera-box">
+<span class="caja-titulo">Conexion con Negocios Internacionales</span>
+<ul>
+<li><strong>Comercio exterior:</strong> una importacion casi nunca se paga 100% al contado ni 100% a credito: lo mas comun es una combinacion, igual que en el Asiento 3.</li>
+<li><strong>Finanzas internacionales:</strong> el orden cronologico del Libro Diario permite a un analista financiero reconstruir, paso a paso, como una empresa uso su efectivo y su credito.</li>
+<li><strong>Marketing y negociacion internacional:</strong> negociar cuanto se paga al contado y cuanto a credito es parte central de cualquier negociacion comercial, local o internacional.</li>
+<li><strong>Marco legal y normativo:</strong> la obligacion de sustentar cada asiento con una factura o documento valido aplica igual en Ecuador y en el resto del mundo.</li>
+</ul>
+</div>
+
+<div class="conclusion">
+<span class="caja-titulo">Idea clave</span>
+Todo asiento, sin importar cuantas cuentas involucre, tiene que cumplir una sola regla innegociable: el total del Debe siempre es igual al total del Haber. Esa es la partida doble en accion, asiento tras asiento.
+</div>
+
+<div class="avance">
+<button class="secundario" onclick="irA('tema6b')">&larr; Tema 6b</button>
+<button onclick="irA('tema8')">Siguiente &rarr; Tema 8</button>
+</div>
+</section>
+
+<!-- ===================== TEMA 8 ===================== -->
+<section id="tema8" class="panel">
+<h2>8. El IVA entra en juego</h2>
+
+<p>Una de las estudiantes del curso cuenta que quiere poner su propio negocio: <strong>"Bella Andina"</strong>, una tienda de labiales y articulos de belleza. Es un ejemplo perfecto, porque ella estudia Negocios Internacionales, y quien sabe si mas adelante termina importando los labiales de otro pais, o incluso exportando los suyos. Vamos a usar su negocio para ver como entra el IVA en los asientos que ya aprendimos a hacer.</p>
+
+<div class="definicion">
+<span class="caja-titulo">IVA en compras e IVA en ventas &mdash; tecnica y criolla</span>
+<p><strong>IVA en compras.</strong> Tecnica: es un Activo (credito tributario) que la empresa puede compensar despues contra el IVA que ella misma cobra. Criollo: es el IVA que TU pagaste al comprar, y que el SRI te "debe" reconocer despues.</p>
+<p><strong>IVA en ventas.</strong> Tecnica: es un Pasivo, porque la empresa cobro ese IVA al cliente pero no es suyo: debe entregarlo al SRI. Criollo: es el IVA que TU cobraste al vender, y que tienes que pasarle al Estado, no es una ganancia tuya.</p>
+<p>La tarifa general de IVA vigente es del <strong>15%</strong>.</p>
+</div>
+
+<h3>Asiento 4 &mdash; Compra de mercaderia con IVA, pago mixto</h3>
+<p>Bella Andina compra maquillaje por $200,00 mas IVA (15%). Paga la mitad en efectivo y la otra mitad queda a credito con el proveedor.</p>
+<div class="ejemplo">
+<span class="caja-titulo">Calculo, paso a paso</span>
+<p>Base: $200,00 &middot; IVA (15%): 200,00 &times; 0,15 = <strong>$30,00</strong> &middot; Total factura: 200,00 + 30,00 = <strong>$230,00</strong></p>
+<p>Mitad en efectivo: 230,00 &divide; 2 = <strong>$115,00</strong> &middot; Mitad a credito: <strong>$115,00</strong></p>
+</div>
+<div class="diario">
+<div class="diario-header"><span>Asiento N&deg; 4</span><span>Fecha: --/--/2026</span></div>
+<table>
+<tr><th>Codigo</th><th>Detalle</th><th>Parcial</th><th>Debe</th><th>Haber</th></tr>
+<tr><td>1.1.03</td><td>Mercaderia</td><td></td><td class="num">200,00</td><td></td></tr>
+<tr><td>1.1.04</td><td>IVA en compras</td><td></td><td class="num">30,00</td><td></td></tr>
+<tr><td>1.1.01</td><td class="indent">a) Caja</td><td class="num">115,00</td><td></td><td></td></tr>
+<tr><td>2.1.01</td><td class="indent">a) Cuentas por pagar</td><td class="num">115,00</td><td></td><td></td></tr>
+<tr class="suman"><td></td><td>SUMAN</td><td></td><td class="num">230,00</td><td class="num">230,00</td></tr>
+</table>
+<div class="glosa">P/R compra de maquillaje segun factura del proveedor, IVA 15% incluido, pagando el 50% en efectivo de Caja y el 50% a credito.</div>
+</div>
+
+<h3>Asiento 5 &mdash; Venta con IVA, cobrada con tarjeta de credito</h3>
+<p>Bella Andina vende labiales por $350,00 mas IVA (15%). La clienta paga con tarjeta de credito; el procesador cobra una comision del 4%.</p>
+<div class="ejemplo">
+<span class="caja-titulo">Calculo, paso a paso</span>
+<p>Base: $350,00 &middot; IVA (15%): 350,00 &times; 0,15 = <strong>$52,50</strong> &middot; Total venta: 350,00 + 52,50 = <strong>$402,50</strong></p>
+<p>Comision del procesador: 402,50 &times; 0,04 = <strong>$16,10</strong> &middot; Neto que Bella Andina cobrara del procesador: 402,50 &minus; 16,10 = <strong>$386,40</strong></p>
+</div>
+<div class="diario">
+<div class="diario-header"><span>Asiento N&deg; 5</span><span>Fecha: --/--/2026</span></div>
+<table>
+<tr><th>Codigo</th><th>Detalle</th><th>Parcial</th><th>Debe</th><th>Haber</th></tr>
+<tr><td>1.1.07</td><td>Cuentas por cobrar &ndash; Tarjetas de credito</td><td></td><td class="num">386,40</td><td></td></tr>
+<tr><td>5.1.01</td><td>Comision bancaria</td><td></td><td class="num">16,10</td><td></td></tr>
+<tr><td>4.1.01</td><td class="indent">a) Ventas</td><td class="num">350,00</td><td></td><td></td></tr>
+<tr><td>2.1.03</td><td class="indent">a) IVA en ventas</td><td class="num">52,50</td><td></td><td></td></tr>
+<tr class="suman"><td></td><td>SUMAN</td><td></td><td class="num">402,50</td><td class="num">402,50</td></tr>
+</table>
+<div class="glosa">P/R venta de labiales segun factura, IVA 15% incluido, cobrada con tarjeta de credito; el procesador retiene una comision del 4% sobre el total facturado.</div>
+</div>
+
+<div class="caja alerta">
+<span class="caja-titulo">Por que la venta no es documento por cobrar</span>
+Recordemos el Tema 4: el voucher de la tarjeta no es un titulo de credito formal, por eso Bella Andina registra "Cuentas por cobrar &ndash; Tarjetas de credito" (una cuenta), y no un documento por cobrar. Y "Ventas" es una cuenta de Ingreso, tal como estudiamos en el Tema 3: crece por el Haber.
+</div>
+
+<div class="caja futuro">
+<span class="caja-titulo">Esto lo veremos con calma mas adelante</span>
+Las retenciones de IVA y de Impuesto a la Renta que se aplican en muchas compras y ventas en Ecuador se trabajan con detalle en una sesion posterior. Por ahora, el objetivo es entender como el IVA se suma o se resta dentro de un asiento.
+</div>
+
+<div class="carrera-box">
+<span class="caja-titulo">Conexion con Negocios Internacionales</span>
+<ul>
+<li><strong>Comercio exterior:</strong> si Bella Andina un dia importa sus labiales, el IVA se calcula tambien sobre el valor de la importacion, ademas de los aranceles.</li>
+<li><strong>Finanzas internacionales:</strong> la comision que cobra el procesador de tarjetas es un costo financiero real que hay que descontar al calcular cuanto efectivamente ingresa a la empresa.</li>
+<li><strong>Marketing y negociacion internacional:</strong> decidir si se acepta pago con tarjeta (con su comision) o solo en efectivo es una decision comercial que afecta el margen de ganancia.</li>
+<li><strong>Marco legal y normativo:</strong> el IVA es un impuesto regulado por el SRI en Ecuador; cada pais tiene su propio impuesto equivalente, con reglas distintas.</li>
+</ul>
+</div>
+
+<div class="conclusion">
+<span class="caja-titulo">Idea clave</span>
+El IVA no rompe la logica de la partida doble: simplemente agrega una cuenta mas a cada lado del asiento (IVA en compras al Debe cuando compras, IVA en ventas al Haber cuando vendes), y el asiento sigue balanceando exactamente igual.
+</div>
+
+<div class="avance">
+<button class="secundario" onclick="irA('tema7')">&larr; Tema 7</button>
+<button onclick="irA('tema9')">Siguiente &rarr; Tema 9</button>
+</div>
+</section>
+
+<!-- ===================== TEMA 9 ===================== -->
+<section id="tema9" class="panel">
+<h2>9. La mayorizacion: del Diario al Mayor</h2>
+
+<div class="definicion">
+<span class="caja-titulo">Mayorizacion &mdash; tecnica y criolla</span>
+<p><strong>Tecnica.</strong> La mayorizacion es el proceso de trasladar los valores registrados en el Libro Diario a las cuentas del Libro Mayor, agrupando cada movimiento por cuenta, para conocer el saldo de cada una.</p>
+<p><strong>Criolla.</strong> El Diario te dice, en orden de fecha, "que pasó cada dia". El Mayor te dice, por cuenta, "cuanto tengo AHORA en Caja, cuanto en Mercaderia, cuanto debo en Cuentas por pagar". Es pasar de una lista cronologica a un resumen por cuenta.</p>
+</div>
+
+<p>Vamos a mayorizar los asientos del Tema 7. Antes de esos tres asientos, recordemos que Bella Andina inicio su negocio con un aporte de capital de $1.000,00 en efectivo (Caja Debe 1.000,00 / Capital Haber 1.000,00). Con eso y los Asientos 1, 2 y 3, asi quedan las cuentas en el Mayor:</p>
+
+<div class="tcuenta">
+<div class="titulo-cuenta">Caja (1.1.01)</div>
+<table>
+<tr><td class="col-debe">1.000,00</td><td class="col-haber">500,00</td></tr>
+<tr><td class="col-debe"></td><td class="col-haber">400,00</td></tr>
+<tr class="fila-saldo"><td class="col-debe">1.000,00</td><td class="col-haber">900,00</td></tr>
+</table>
+<p style="text-align:center; padding:6px; font-weight:700; font-size:.88rem;">Saldo deudor: $100,00</p>
+</div>
+
+<div class="tcuenta">
+<div class="titulo-cuenta">Mercaderia (1.1.03)</div>
+<table>
+<tr><td class="col-debe">500,00</td><td class="col-haber"></td></tr>
+<tr><td class="col-debe">800,00</td><td class="col-haber"></td></tr>
+<tr><td class="col-debe">1.000,00</td><td class="col-haber"></td></tr>
+<tr class="fila-saldo"><td class="col-debe">2.300,00</td><td class="col-haber">0,00</td></tr>
+</table>
+<p style="text-align:center; padding:6px; font-weight:700; font-size:.88rem;">Saldo deudor: $2.300,00</p>
+</div>
+
+<div class="tcuenta">
+<div class="titulo-cuenta">Cuentas por pagar (2.1.01)</div>
+<table>
+<tr><td class="col-debe"></td><td class="col-haber">800,00</td></tr>
+<tr><td class="col-debe"></td><td class="col-haber">600,00</td></tr>
+<tr class="fila-saldo"><td class="col-debe">0,00</td><td class="col-haber">1.400,00</td></tr>
+</table>
+<p style="text-align:center; padding:6px; font-weight:700; font-size:.88rem;">Saldo acreedor: $1.400,00</p>
+</div>
+
+<div class="tcuenta">
+<div class="titulo-cuenta">Capital (3.1.01)</div>
+<table>
+<tr><td class="col-debe"></td><td class="col-haber">1.000,00</td></tr>
+<tr class="fila-saldo"><td class="col-debe">0,00</td><td class="col-haber">1.000,00</td></tr>
+</table>
+<p style="text-align:center; padding:6px; font-weight:700; font-size:.88rem;">Saldo acreedor: $1.000,00</p>
+</div>
+
+<div class="ejemplo">
+<span class="caja-titulo">Comprobacion final &mdash; la ecuacion sigue cuadrando</span>
+<p>Activo: Caja $100,00 + Mercaderia $2.300,00 = <strong>$2.400,00</strong></p>
+<p>Pasivo: Cuentas por pagar = <strong>$1.400,00</strong> &middot; Patrimonio: Capital = <strong>$1.000,00</strong></p>
+<p><strong>Comprobacion: 2.400,00 = 1.400,00 + 1.000,00 &check;</strong></p>
+</div>
+
+<div class="caja futuro">
+<span class="caja-titulo">Esto lo veremos con calma mas adelante</span>
+Una vez mayorizadas todas las cuentas, el siguiente paso es armar un Balance de Comprobacion para verificar que el total de todos los saldos deudores sea igual al total de todos los saldos acreedores. Eso lo trabajaremos en la siguiente sesion.
+</div>
+
+<div class="carrera-box">
+<span class="caja-titulo">Conexion con Negocios Internacionales</span>
+<ul>
+<li><strong>Comercio exterior:</strong> antes de decidir una importacion, se revisa el Mayor para saber cuanto efectivo hay realmente disponible.</li>
+<li><strong>Finanzas internacionales:</strong> los saldos del Mayor son la base de los estados financieros que un banco o inversionista extranjero va a analizar.</li>
+<li><strong>Marketing y negociacion internacional:</strong> saber el saldo de Cuentas por pagar ayuda a decidir si se puede negociar una nueva compra a credito.</li>
+<li><strong>Marco legal y normativo:</strong> mantener el Mayor actualizado es una obligacion contable y tributaria en cualquier pais.</li>
+</ul>
+</div>
+
+<div class="conclusion">
+<span class="caja-titulo">Idea clave</span>
+Mayorizar es simplemente reorganizar la misma informacion del Diario, pero agrupada por cuenta, para poder ver de un vistazo cuanto tiene, cuanto debe y cuanto es de cada quien el negocio, en cualquier momento.
+</div>
+
+<div class="avance">
+<button class="secundario" onclick="irA('tema8')">&larr; Tema 8</button>
+<button onclick="irA('tema10')">Siguiente &rarr; Tema 10</button>
+</div>
+</section>
+
+<!-- ===================== TEMA 10 ===================== -->
+<section id="tema10" class="panel">
+<h2>10. La NIIF 18: que cambia y que no cambia</h2>
+
+<p>Ya mencionamos varias veces a lo largo de este material que a partir de 2027 entra en vigencia una nueva norma: la NIIF 18. Es momento de aclarar, con precision, que es exactamente lo que esa norma modifica &mdash;y, sobre todo, que es lo que NO modifica&mdash; de todo lo que hemos aprendido hasta aqui.</p>
+
+<div class="definicion">
+<span class="caja-titulo">NIIF 18 &mdash; tecnica y criolla</span>
+<p><strong>Tecnica.</strong> La NIIF 18, "Presentacion e Informacion a Revelar en los Estados Financieros", sustituye a la NIC 1 para los periodos anuales que comiencen a partir del 1 de enero de 2027 (se permite su aplicacion anticipada). Mantiene el enfoque general de presentacion corriente y no corriente, y concentra sus principales novedades en el estado del resultado: nuevos subtotales definidos, categorias de agregacion y desagregacion de partidas, y las llamadas medidas del rendimiento definidas por la gerencia.</p>
+<p><strong>Criolla.</strong> La NIIF 18 no cambia las reglas del juego que ya aprendiste (la ecuacion, el Debe y el Haber, la partida doble, el Diario y el Mayor); lo que cambia es, sobre todo, COMO se presenta y se organiza la informacion en el Estado de Resultados frente a terceros.</p>
+</div>
+
+<table class="comparativa">
+<tr><th>Tema basico</th><th>&iquest;Cambia con la NIIF 18?</th></tr>
+<tr><td>Ecuacion contable (Activo = Pasivo + Patrimonio)</td><td>No</td></tr>
+<tr><td>Debe y Haber</td><td>No</td></tr>
+<tr><td>Partida doble</td><td>No</td></tr>
+<tr><td>Libro Diario y Libro Mayor</td><td>No</td></tr>
+<tr><td>Clasificacion corriente y no corriente en el Estado de Situacion Financiera</td><td>No: se mantiene el mismo enfoque de presentacion que ya estudiamos en los Temas 6 y 6b</td></tr>
+<tr><td>Presentacion del Estado de Resultados</td><td>Si: incorpora nuevos requerimientos de presentacion (subtotales, agregacion y desagregacion, medidas de rendimiento de la gerencia)</td></tr>
+</table>
+
+<div class="caja alerta">
+<span class="caja-titulo">La pregunta clave que muchos estudiantes se hacen mal</span>
+No es correcto pensar que "la NIIF 18 cambia como se clasifican las deudas en corriente y no corriente": eso NO cambia. Lo que la NIIF 18 transforma es la forma en que se presenta el resultado del ejercicio (ventas, costos, gastos, utilidad) frente a quien lee los estados financieros, no la mecanica basica del registro contable ni los criterios de clasificacion del Estado de Situacion Financiera que ya estudiamos.
+</div>
+
+<div class="carrera-box">
+<span class="caja-titulo">Conexion con Negocios Internacionales</span>
+<ul>
+<li><strong>Comercio exterior:</strong> las empresas que exportan o importan y cotizan en mercados internacionales deberan adaptar la presentacion de su Estado de Resultados a partir de 2027, aunque su contabilidad diaria no cambie.</li>
+<li><strong>Finanzas internacionales:</strong> los nuevos subtotales que exige la NIIF 18 buscan que los inversionistas de distintos paises puedan comparar el desempeno de las empresas con mayor claridad.</li>
+<li><strong>Marketing y negociacion internacional:</strong> una presentacion de resultados mas clara y estandarizada facilita negociar con socios o inversionistas extranjeros que revisan los estados financieros antes de cerrar un acuerdo.</li>
+<li><strong>Marco legal y normativo:</strong> la NIIF 18 es emitida por el mismo organismo internacional (la Fundacion IFRS) que emite todas las normas que hemos citado en este material, garantizando que el cambio se aplique de forma coherente en todo el mundo.</li>
+</ul>
+</div>
+
+<div class="conclusion">
+<span class="caja-titulo">Idea clave</span>
+La NIIF 18 actualiza la presentacion del Estado de Resultados desde 2027, pero no toca la ecuacion contable, el Debe y el Haber, la partida doble, el Diario, el Mayor, ni los criterios de clasificacion corriente y no corriente que ya estudiamos. Todo lo aprendido en este widget sigue siendo valido antes y despues de esa fecha.
+</div>
+
+<div class="avance">
+<button class="secundario" onclick="irA('tema9')">&larr; Tema 9</button>
+<button onclick="irA('tema11')">Siguiente &rarr; Tema 11</button>
+</div>
+</section>
+
+<!-- ===================== TEMA 11 ===================== -->
+<section id="tema11" class="panel">
+<h2>11. Caso integrador: Conexion Global S.A.S.</h2>
+
+<p>Llego el momento de juntar todo lo que hemos visto en un solo caso, de principio a fin. Conexion Global S.A.S. es una empresa que recien inicia actividades. Para este ejercicio introductorio se omiten el IVA y el costo de la mercaderia vendida, hasta que el docente los introduzca formalmente en una sesion posterior; por eso, este caso todavia no representa un ciclo contable completo.</p>
+
+<div class="ejemplo">
+<span class="caja-titulo">Las cuatro operaciones del mes</span>
+<p><strong>1) Aporte inicial.</strong> El propietario aporta $2.000,00 en efectivo para iniciar el negocio.</p>
+<p><strong>2) Compra de un celular para el negocio.</strong> Se compra un celular por $600,00, pagadero con tarjeta de credito al siguiente corte (recuerda el Tema 5: nace un Pasivo con el emisor de la tarjeta).</p>
+<p><strong>3) Compra de inventarios a credito.</strong> Se compran inventarios por $800,00 a credito con el proveedor, respaldados solo con la factura (cuenta por pagar, Tema 4).</p>
+<p><strong>4) Venta al contado.</strong> Se vende la mitad del inventario por $650,00, cobrados de inmediato en efectivo (Ingreso, Tema 3).</p>
+</div>
+
+<div class="diario">
+<div class="diario-header"><span>Resumen de las cuatro operaciones</span><span>Fecha: --/--/2026</span></div>
+<table>
+<tr><th>Operacion</th><th>Debe</th><th>Haber</th></tr>
+<tr><td>Aporte inicial</td><td>Caja&nbsp;&nbsp;2.000,00</td><td>Capital&nbsp;&nbsp;2.000,00</td></tr>
+<tr><td>Celular con tarjeta</td><td>Equipos&nbsp;&nbsp;600,00</td><td>Tarjeta de credito por pagar&nbsp;&nbsp;600,00</td></tr>
+<tr><td>Inventarios a credito</td><td>Inventarios&nbsp;&nbsp;800,00</td><td>Cuentas por pagar&nbsp;&nbsp;800,00</td></tr>
+<tr><td>Venta al contado</td><td>Caja&nbsp;&nbsp;650,00</td><td>Ingresos por ventas&nbsp;&nbsp;650,00</td></tr>
+<tr class="suman"><td>SUMAN</td><td class="num">4.050,00</td><td class="num">4.050,00</td></tr>
+</table>
+<div class="glosa">P/R aporte inicial, compra de celular con tarjeta de credito, compra de inventarios a credito y venta al contado, todo durante el mes de inicio de actividades.</div>
+</div>
+
+<div class="ejemplo">
+<span class="caja-titulo">Comprobacion final &mdash; la ecuacion ampliada sigue cuadrando</span>
+<p>Activo: Caja (2.000,00 + 650,00 = 2.650,00) + Equipos 600,00 + Inventarios 800,00 = <strong>$4.050,00</strong></p>
+<p>Pasivo: Tarjeta de credito por pagar 600,00 + Cuentas por pagar 800,00 = <strong>$1.400,00</strong></p>
+<p>Patrimonio: Capital = <strong>$2.000,00</strong> &middot; Ingresos: Ventas = <strong>$650,00</strong></p>
+<p><strong>Comprobacion: 4.050,00 = 1.400,00 + 2.000,00 + 650,00 &check;</strong> (Activo = Pasivo + Patrimonio + Ingresos, tal como estudiamos en el Tema 3)</p>
+</div>
+
+<h3>Comprobacion de aprendizaje: seis preguntas de repaso</h3>
+<p>Antes de pasar al Ejercicio calificado, revisa mentalmente estas seis preguntas. Si dudas en alguna, repasa el Tema indicado entre parentesis antes de continuar:</p>
+<ol>
+<li>&iquest;El Debe significa deuda? (Tema 2)</li>
+<li>&iquest;Un bien pagado siempre representa Patrimonio? (Tema 1)</li>
+<li>&iquest;Toda firma crea un pagare? (Tema 4)</li>
+<li>&iquest;Los doce meses se cuentan desde la firma del documento? (Tema 6)</li>
+<li>&iquest;Una deuda comercial puede seguir siendo corriente aunque venza despues de doce meses? (Tema 6)</li>
+<li>&iquest;La NIIF 18 cambia el asiento contable basico? (Tema 10)</li>
+</ol>
+
+<div class="conclusion">
+<span class="caja-titulo">Ideas que deben quedar claras</span>
+<ol>
+<li>Debe = izquierda. Haber = derecha.</li>
+<li>La ecuacion contable siempre conserva el equilibrio, incluso al ampliarse con Ingresos y Gastos.</li>
+<li>Naturaleza y saldo no son lo mismo.</li>
+<li>Cuenta y documento dependen de la sustancia del respaldo, no de la sola existencia de una firma.</li>
+<li>Lo corriente se evalua en la fecha de cierre, y tambien considera el ciclo normal de operacion.</li>
+<li>Comprender el hecho economico siempre precede al asiento.</li>
+</ol>
+</div>
+
+<div class="carrera-box">
+<span class="caja-titulo">Conexion con Negocios Internacionales</span>
+<ul>
+<li><strong>Comercio exterior:</strong> Conexion Global, por su propio nombre, es exactamente el tipo de empresa que podria terminar importando o exportando, y este primer mes de actividad es la base de toda su informacion futura.</li>
+<li><strong>Finanzas internacionales:</strong> con solo cuatro operaciones ya se puede calcular cuanto Activo, Pasivo, Patrimonio e Ingreso tiene la empresa: esa es la logica que un analista financiero aplica, multiplicada por miles de transacciones.</li>
+<li><strong>Marketing y negociacion internacional:</strong> decidir vender al contado o dejar la mitad del inventario para vender despues es ya una decision comercial con impacto contable directo.</li>
+<li><strong>Marco legal y normativo:</strong> este caso integra, en un solo ejemplo, la ecuacion contable, la naturaleza de las cuentas, la clasificacion de cuentas por cobrar y por pagar, y la tarjeta de credito: todo el marco normativo que revisamos a lo largo del widget.</li>
+</ul>
+</div>
+
+<div class="avance">
+<button class="secundario" onclick="irA('tema10')">&larr; Tema 10</button>
+<button onclick="irA('ejercicio')">Siguiente &rarr; Ejercicio</button>
+</div>
+</section>
+
+<!-- ===================== EJERCICIO INTERACTIVO ===================== -->
+<section id="ejercicio" class="panel">
+<h2>Ejercicio interactivo &mdash; Clasifica cada situacion</h2>
+<p>Responde las 14 situaciones. Cuando termines todas, presiona <strong>Verificar respuestas</strong> para ver tu resultado item por item.</p>
+
+<div class="item-ejercicio" id="cont-ei1">
+<p class="enunciado">1. Ana vende $500,00 a credito abierto, respaldado solo con la factura, a 30 dias. &iquest;Que es esto para Ana?</p>
+<label><input type="radio" name="ei1" value="a"> a) Cuenta por cobrar</label>
+<label><input type="radio" name="ei1" value="b"> b) Documento por cobrar</label>
+<label><input type="radio" name="ei1" value="c"> c) Cuenta por pagar</label>
+<label><input type="radio" name="ei1" value="d"> d) Documento por pagar</label>
+<div class="feedback" id="fb-ei1"></div>
+</div>
+
+<div class="item-ejercicio" id="cont-ei2">
+<p class="enunciado">2. La cuenta Bancos termino el mes con Debe $1.200,00 y Haber $300,00. &iquest;Que saldo presenta?</p>
+<label><input type="radio" name="ei2" value="a"> a) Saldo deudor de $900,00</label>
+<label><input type="radio" name="ei2" value="b"> b) Saldo acreedor de $900,00</label>
+<label><input type="radio" name="ei2" value="c"> c) Saldo deudor de $1.500,00</label>
+<label><input type="radio" name="ei2" value="d"> d) Saldo acreedor de $1.500,00</label>
+<div class="feedback" id="fb-ei2"></div>
+</div>
+
+<div class="item-ejercicio" id="cont-ei3">
+<p class="enunciado">3. Un cliente firma un pagare a 60 dias por $1.200,00 a favor de la tienda. &iquest;Que es esto para la tienda?</p>
+<label><input type="radio" name="ei3" value="a"> a) Cuenta por cobrar</label>
+<label><input type="radio" name="ei3" value="b"> b) Documento por cobrar</label>
+<label><input type="radio" name="ei3" value="c"> c) Cuenta por pagar</label>
+<label><input type="radio" name="ei3" value="d"> d) Documento por pagar</label>
+<div class="feedback" id="fb-ei3"></div>
+</div>
+
+<div class="item-ejercicio" id="cont-ei4">
+<p class="enunciado">4. Compra de mercaderia de $1.000,00: se pagan $300,00 en efectivo y se firma un documento formal por el resto. &iquest;Que tipo de asiento es?</p>
+<label><input type="radio" name="ei4" value="a"> a) Al contado</label>
+<label><input type="radio" name="ei4" value="b"> b) Mixto</label>
+<label><input type="radio" name="ei4" value="c"> c) A credito simple</label>
+<label><input type="radio" name="ei4" value="d"> d) Ninguna de las anteriores</label>
+<div class="feedback" id="fb-ei4"></div>
+</div>
+
+<div class="item-ejercicio" id="cont-ei5">
+<p class="enunciado">5. La tienda compra mercaderia y acepta una letra de cambio a 30 dias por $900,00 a favor del proveedor. &iquest;Que es esto para la tienda?</p>
+<label><input type="radio" name="ei5" value="a"> a) Cuenta por pagar</label>
+<label><input type="radio" name="ei5" value="b"> b) Documento por cobrar</label>
+<label><input type="radio" name="ei5" value="c"> c) Documento por pagar</label>
+<label><input type="radio" name="ei5" value="d"> d) Cuenta por cobrar</label>
+<div class="feedback" id="fb-ei5"></div>
+</div>
+
+<div class="item-ejercicio" id="cont-ei6">
+<p class="enunciado">6. La cuenta Cuentas por pagar termino el mes con Debe $300,00 y Haber $900,00. &iquest;Que saldo presenta?</p>
+<label><input type="radio" name="ei6" value="a"> a) Saldo deudor de $600,00</label>
+<label><input type="radio" name="ei6" value="b"> b) Saldo acreedor de $1.200,00</label>
+<label><input type="radio" name="ei6" value="c"> c) Saldo acreedor de $600,00</label>
+<label><input type="radio" name="ei6" value="d"> d) Saldo deudor de $1.200,00</label>
+<div class="feedback" id="fb-ei6"></div>
+</div>
+
+<div class="item-ejercicio" id="cont-ei7">
+<p class="enunciado">7. La tienda compra $400,00 de insumos de oficina; pagara el proximo mes, respaldado solo con la factura. &iquest;Que es esto para la tienda?</p>
+<label><input type="radio" name="ei7" value="a"> a) Documento por pagar</label>
+<label><input type="radio" name="ei7" value="b"> b) Documento por cobrar</label>
+<label><input type="radio" name="ei7" value="c"> c) Cuenta por cobrar</label>
+<label><input type="radio" name="ei7" value="d"> d) Cuenta por pagar</label>
+<div class="feedback" id="fb-ei7"></div>
+</div>
+
+<div class="item-ejercicio" id="cont-ei8">
+<p class="enunciado">8. Compra de mercaderia de $600,00, pagando los $600,00 en efectivo en el momento. &iquest;Que tipo de asiento es?</p>
+<label><input type="radio" name="ei8" value="a"> a) A credito</label>
+<label><input type="radio" name="ei8" value="b"> b) Mixto</label>
+<label><input type="radio" name="ei8" value="c"> c) Con documento</label>
+<label><input type="radio" name="ei8" value="d"> d) Al contado</label>
+<div class="feedback" id="fb-ei8"></div>
+</div>
+
+<div class="item-ejercicio" id="cont-ei9">
+<p class="enunciado">9. Un cliente debia $1.000,00 en cuenta abierta y hoy firma un pagare por ese mismo monto. &iquest;Que le pasa al total del Activo del negocio con esta reclasificacion?</p>
+<label><input type="radio" name="ei9" value="a"> a) Aumenta el Activo</label>
+<label><input type="radio" name="ei9" value="b"> b) Disminuye el Activo</label>
+<label><input type="radio" name="ei9" value="c"> c) Se genera un Gasto</label>
+<label><input type="radio" name="ei9" value="d"> d) El Activo total no cambia, solo cambia la subcuenta (de Cuentas por cobrar a Documentos por cobrar)</label>
+<div class="feedback" id="fb-ei9"></div>
+</div>
+
+<div class="item-ejercicio" id="cont-ei10">
+<p class="enunciado">10. Un negocio recibe un prestamo bancario de $1.000,00, depositado en su cuenta. &iquest;Es correcto registrarlo como un Ingreso?</p>
+<label><input type="radio" name="ei10" value="a"> a) No, es un Pasivo (Prestamos por pagar), porque genera la obligacion de devolverlo</label>
+<label><input type="radio" name="ei10" value="b"> b) Si, porque entro dinero a Bancos</label>
+<label><input type="radio" name="ei10" value="c"> c) Es un Gasto, porque disminuye el Patrimonio</label>
+<label><input type="radio" name="ei10" value="d"> d) Es Patrimonio, porque el dueno lo puede usar libremente</label>
+<div class="feedback" id="fb-ei10"></div>
+</div>
+
+<div class="item-ejercicio" id="cont-ei11">
+<p class="enunciado">11. El emisor de una tarjeta de credito exige pagar solo el 5% del saldo del estado de cuenta; el resto queda pendiente y genera intereses. &iquest;Que modalidad de pago es esta?</p>
+<label><input type="radio" name="ei11" value="a"> a) Pago corriente</label>
+<label><input type="radio" name="ei11" value="b"> b) Pago minimo</label>
+<label><input type="radio" name="ei11" value="c"> c) Pago diferido</label>
+<label><input type="radio" name="ei11" value="d"> d) Ninguna de las anteriores</label>
+<div class="feedback" id="fb-ei11"></div>
+</div>
+
+<div class="item-ejercicio" id="cont-ei12">
+<p class="enunciado">12. Un prestamo vence en 18 cuotas mensuales; al cierre, la empresa no tiene derecho a diferir el pago de las primeras 12 cuotas por al menos doce meses mas. &iquest;Como se presenta esta deuda en el Estado de Situacion Financiera?</p>
+<label><input type="radio" name="ei12" value="a"> a) Totalmente como no corriente</label>
+<label><input type="radio" name="ei12" value="b"> b) Totalmente como corriente</label>
+<label><input type="radio" name="ei12" value="c"> c) Se separa: una parte como corriente (las cuotas exigibles dentro de doce meses) y otra como no corriente (el resto)</label>
+<label><input type="radio" name="ei12" value="d"> d) No se presenta hasta el vencimiento final</label>
+<div class="feedback" id="fb-ei12"></div>
+</div>
+
+<div class="item-ejercicio" id="cont-ei13">
+<p class="enunciado">13. Una cuenta comercial con un proveedor vence en 14 meses, pero forma parte del ciclo normal de operacion de la empresa. &iquest;Como se clasifica?</p>
+<label><input type="radio" name="ei13" value="a"> a) No corriente, porque supera los doce meses</label>
+<label><input type="radio" name="ei13" value="b"> b) Se anula la deuda automaticamente</label>
+<label><input type="radio" name="ei13" value="c"> c) Depende unicamente de si el proveedor firmo o no la factura</label>
+<label><input type="radio" name="ei13" value="d"> d) Corriente, porque forma parte del ciclo normal de operacion de la empresa</label>
+<div class="feedback" id="fb-ei13"></div>
+</div>
+
+<div class="item-ejercicio" id="cont-ei14">
+<p class="enunciado">14. Al cierre del mes, la cuenta Bancos presenta Debe $100,00 y Haber $150,00. &iquest;Que saldo presenta y que implica?</p>
+<label><input type="radio" name="ei14" value="a"> a) Saldo acreedor de $50,00: es un sobregiro que debe investigarse y puede requerir presentarse como Pasivo</label>
+<label><input type="radio" name="ei14" value="b"> b) Saldo deudor de $250,00, sin ningun problema</label>
+<label><input type="radio" name="ei14" value="c"> c) Saldo deudor de $50,00</label>
+<label><input type="radio" name="ei14" value="d"> d) Es un error de calculo que se debe ignorar</label>
+<div class="feedback" id="fb-ei14"></div>
+</div>
+
+<div style="margin-top:20px;">
+<button class="btn-accion" onclick="verificarEjercicio()">Verificar respuestas</button>
+<button class="btn-accion reiniciar" onclick="reiniciarEjercicio()">Reiniciar</button>
+</div>
+
+<div class="barra-contenedor" id="barra-cont-ejercicio" style="display:none;">
+  <div class="barra-progreso" id="barra-ejercicio">0%</div>
+</div>
+<div class="resultado-final" id="resultado-ejercicio"></div>
+
+<div class="avance">
+<button class="secundario" onclick="irA('tema11')">&larr; Tema 11</button>
+<button onclick="irA('cuestionario')">Siguiente &rarr; Cuestionario</button>
+</div>
+</section>
+
+<!-- ===================== CUESTIONARIO ===================== -->
+<section id="cuestionario" class="panel">
+<h2>Cuestionario &mdash; 14 preguntas</h2>
+<p>10 preguntas teoricas y 4 de analisis de caso (con datos propios, distintos a los ya vistos). Responde todas y presiona <strong>Verificar respuestas</strong>.</p>
+
+<div class="item-quiz" id="cont-q1">
+<span class="badge-teorica">Teorica</span>
+<p class="enunciado">1. Segun el Marco Conceptual de las NIIF, el Patrimonio se define como:</p>
+<label><input type="radio" name="q1" value="a"> a) La participacion residual en los activos, una vez deducidos los pasivos</label>
+<label><input type="radio" name="q1" value="b"> b) La suma de todos los activos de la empresa</label>
+<label><input type="radio" name="q1" value="c"> c) El efectivo disponible del dueno</label>
+<label><input type="radio" name="q1" value="d"> d) El total de las deudas de la empresa</label>
+<div class="feedback" id="fb-q1"></div>
+</div>
+
+<div class="item-quiz" id="cont-q2">
+<span class="badge-teorica">Teorica</span>
+<p class="enunciado">2. Una cuenta tiene saldo deudor cuando:</p>
+<label><input type="radio" name="q2" value="a"> a) El Haber es mayor que el Debe</label>
+<label><input type="radio" name="q2" value="b"> b) El Debe es mayor que el Haber</label>
+<label><input type="radio" name="q2" value="c"> c) El Debe y el Haber son iguales</label>
+<label><input type="radio" name="q2" value="d"> d) La cuenta esta en cero</label>
+<div class="feedback" id="fb-q2"></div>
+</div>
+
+<div class="item-quiz" id="cont-q3">
+<span class="badge-teorica">Teorica</span>
+<p class="enunciado">3. &iquest;Cual es la diferencia esencial entre una cuenta por cobrar y un documento por cobrar?</p>
+<label><input type="radio" name="q3" value="a"> a) El monto de la operacion</label>
+<label><input type="radio" name="q3" value="b"> b) El tipo de cliente que compra</label>
+<label><input type="radio" name="q3" value="c"> c) Si existe o no un titulo de credito formal y negociable</label>
+<label><input type="radio" name="q3" value="d"> d) El plazo de la operacion, sin importar el respaldo</label>
+<div class="feedback" id="fb-q3"></div>
+</div>
+
+<div class="item-quiz" id="cont-q4">
+<span class="badge-teorica">Teorica</span>
+<p class="enunciado">4. La jornalizacion consiste en:</p>
+<label><input type="radio" name="q4" value="a"> a) Calcular el IVA de una venta</label>
+<label><input type="radio" name="q4" value="b"> b) Trasladar los saldos del Diario al Mayor</label>
+<label><input type="radio" name="q4" value="c"> c) Elaborar el Estado de Situacion Financiera</label>
+<label><input type="radio" name="q4" value="d"> d) Registrar cronologicamente las transacciones en el Libro Diario aplicando partida doble</label>
+<div class="feedback" id="fb-q4"></div>
+</div>
+
+<div class="item-quiz" id="cont-q5">
+<span class="badge-teorica">Teorica</span>
+<p class="enunciado">5. La mayorizacion consiste en:</p>
+<label><input type="radio" name="q5" value="a"> a) Trasladar los valores del Libro Diario a las cuentas del Libro Mayor</label>
+<label><input type="radio" name="q5" value="b"> b) Registrar por primera vez una transaccion</label>
+<label><input type="radio" name="q5" value="c"> c) Calcular impuestos</label>
+<label><input type="radio" name="q5" value="d"> d) Verificar que el Debe sea igual al Haber en el Diario</label>
+<div class="feedback" id="fb-q5"></div>
+</div>
+
+<div class="item-quiz" id="cont-q6">
+<span class="badge-teorica">Teorica</span>
+<p class="enunciado">6. Un voucher de tarjeta de credito firmado por el cliente, &iquest;se clasifica contablemente como documento por cobrar?</p>
+<label><input type="radio" name="q6" value="a"> a) Si, siempre, porque esta firmado</label>
+<label><input type="radio" name="q6" value="b"> b) No, porque no es un titulo de credito formal y negociable</label>
+<label><input type="radio" name="q6" value="c"> c) Solo si el monto supera $1.000,00</label>
+<label><input type="radio" name="q6" value="d"> d) Solo si lo firma el gerente de la tienda</label>
+<div class="feedback" id="fb-q6"></div>
+</div>
+
+<div class="item-quiz" id="cont-q7">
+<span class="badge-teorica">Teorica</span>
+<p class="enunciado">7. En una compra de mercaderia con IVA, la cuenta "IVA en compras" se comporta como:</p>
+<label><input type="radio" name="q7" value="a"> a) Un gasto que reduce la utilidad</label>
+<label><input type="radio" name="q7" value="b"> b) Un pasivo con el SRI</label>
+<label><input type="radio" name="q7" value="c"> c) Un activo (credito tributario) que la empresa podra compensar</label>
+<label><input type="radio" name="q7" value="d"> d) Parte del costo de la mercaderia</label>
+<div class="feedback" id="fb-q7"></div>
+</div>
+
+<div class="item-quiz" id="cont-q8">
+<span class="badge-caso">Analisis de caso</span>
+<p class="enunciado">8. Bella Andina compra maquillaje por $400,00 mas IVA (15%), y paga todo en efectivo. &iquest;Cual es el valor total que sale de Caja?</p>
+<label><input type="radio" name="q8" value="a"> a) $400,00</label>
+<label><input type="radio" name="q8" value="b"> b) $440,00</label>
+<label><input type="radio" name="q8" value="c"> c) $60,00</label>
+<label><input type="radio" name="q8" value="d"> d) $460,00</label>
+<div class="feedback" id="fb-q8"></div>
+</div>
+
+<div class="item-quiz" id="cont-q9">
+<span class="badge-caso">Analisis de caso</span>
+<p class="enunciado">9. Bella Andina vende labiales por $250,00 mas IVA (15%), y la clienta paga con tarjeta de credito. El procesador cobra una comision del 5% sobre el total facturado. &iquest;Cuanto es el neto que Bella Andina cobrara del procesador?</p>
+<label><input type="radio" name="q9" value="a"> a) $273,12</label>
+<label><input type="radio" name="q9" value="b"> b) $287,50</label>
+<label><input type="radio" name="q9" value="c"> c) $264,38</label>
+<label><input type="radio" name="q9" value="d"> d) $250,00</label>
+<div class="feedback" id="fb-q9"></div>
+</div>
+
+<div class="item-quiz" id="cont-q10">
+<span class="badge-caso">Analisis de caso</span>
+<p class="enunciado">10. La cuenta Bancos de Bella Andina tiene, al final del mes, Debe $2.000,00 y Haber $1.350,00. &iquest;Que saldo presenta?</p>
+<label><input type="radio" name="q10" value="a"> a) Saldo acreedor de $650,00</label>
+<label><input type="radio" name="q10" value="b"> b) Saldo deudor de $650,00</label>
+<label><input type="radio" name="q10" value="c"> c) Saldo deudor de $3.350,00</label>
+<label><input type="radio" name="q10" value="d"> d) Saldo acreedor de $3.350,00</label>
+<div class="feedback" id="fb-q10"></div>
+</div>
+
+<div class="item-quiz" id="cont-q11">
+<span class="badge-teorica">Teorica</span>
+<p class="enunciado">11. Los Ingresos, por su naturaleza, aumentan por:</p>
+<label><input type="radio" name="q11" value="a"> a) El Debe</label>
+<label><input type="radio" name="q11" value="b"> b) El Haber</label>
+<label><input type="radio" name="q11" value="c"> c) Ambos lados por igual</label>
+<label><input type="radio" name="q11" value="d"> d) Ninguno de los dos lados</label>
+<div class="feedback" id="fb-q11"></div>
+</div>
+
+<div class="item-quiz" id="cont-q12">
+<span class="badge-teorica">Teorica</span>
+<p class="enunciado">12. &iquest;Que afirmacion es correcta sobre la NIIF 18?</p>
+<label><input type="radio" name="q12" value="a"> a) Cambia la ecuacion contable basica (Activo = Pasivo + Patrimonio)</label>
+<label><input type="radio" name="q12" value="b"> b) Elimina el principio de partida doble</label>
+<label><input type="radio" name="q12" value="c"> c) Mantiene la mecanica basica del registro contable y actualiza la presentacion del Estado de Resultados, vigente desde los periodos que comiencen el 1 de enero de 2027</label>
+<label><input type="radio" name="q12" value="d"> d) Deroga por completo el Marco Conceptual de las NIIF</label>
+<div class="feedback" id="fb-q12"></div>
+</div>
+
+<div class="item-quiz" id="cont-q13">
+<span class="badge-teorica">Teorica</span>
+<p class="enunciado">13. Una cuenta comercial que forma parte del ciclo normal de operacion de la empresa, aunque venza despues de doce meses, se clasifica como:</p>
+<label><input type="radio" name="q13" value="a"> a) Siempre no corriente</label>
+<label><input type="radio" name="q13" value="b"> b) Siempre Patrimonio</label>
+<label><input type="radio" name="q13" value="c"> c) Corriente, por formar parte del ciclo normal de operacion</label>
+<label><input type="radio" name="q13" value="d"> d) Se elimina del Estado de Situacion Financiera</label>
+<div class="feedback" id="fb-q13"></div>
+</div>
+
+<div class="item-quiz" id="cont-q14">
+<span class="badge-caso">Analisis de caso</span>
+<p class="enunciado">14. Conexion Global S.A.S. tiene una deuda de $2.400,00 por un prestamo pagadero en 24 cuotas mensuales iguales. Al cierre del ejercicio, &iquest;que valor debe presentarse como Pasivo corriente?</p>
+<label><input type="radio" name="q14" value="a"> a) $2.400,00</label>
+<label><input type="radio" name="q14" value="b"> b) $600,00</label>
+<label><input type="radio" name="q14" value="c"> c) $1.800,00</label>
+<label><input type="radio" name="q14" value="d"> d) $1.200,00</label>
+<div class="feedback" id="fb-q14"></div>
+</div>
+
+<div style="margin-top:20px;">
+<button class="btn-accion" onclick="verificarCuestionario()">Verificar respuestas</button>
+<button class="btn-accion reiniciar" onclick="reiniciarCuestionario()">Reiniciar</button>
+</div>
+
+<div class="barra-contenedor" id="barra-cont-cuestionario" style="display:none;">
+  <div class="barra-progreso" id="barra-cuestionario">0%</div>
+</div>
+<div class="resultado-final" id="resultado-cuestionario"></div>
+
+<div class="avance">
+<button class="secundario" onclick="irA('ejercicio')">&larr; Ejercicio</button>
+<button onclick="irA('actividadia')">Siguiente &rarr; Actividad con IA</button>
+</div>
+</section>
+
+<!-- ===================== ACTIVIDAD CON IA ===================== -->
+<section id="actividadia" class="panel">
+<h2>Actividad con Inteligencia Artificial</h2>
+<p>Esta actividad tiene dos partes, retadoras y ejecutables gratis con una herramienta gratuita: <strong>Claude (claude.ai)</strong>. La idea NO es que la IA te resuelva el ejercicio, sino que la uses para AUDITAR tu propio trabajo despues de haberlo resuelto tu mismo.</p>
+
+<h3>Parte A &mdash; Cuenta o documento por pagar, con IVA</h3>
+
+<div class="pregunta">
+<span class="caja-titulo">El caso</span>
+Bella Andina compra perfumes por $500,00 mas IVA (15%). Paga $200,00 en efectivo y firma una letra de cambio a 30 dias por el resto.
+</div>
+
+<h4>Paso 1 &mdash; Resuelvelo tu primero, a mano</h4>
+<p>Antes de tocar la IA, calcula: el IVA, el total de la factura, cuanto queda en letra de cambio, e identifica si eso es cuenta o documento por pagar. Luego arma el asiento completo (Debe, Haber, glosa).</p>
+
+<h4>Paso 2 &mdash; Encuentra los errores antes de enviar el prompt</h4>
+<p>Aqui tienes un prompt YA REDACTADO para pedirle ayuda a Claude, pero tiene <strong>errores a proposito</strong>. Antes de enviarlo, encuentralos y corrigelos tu mismo. (Pista: hay al menos dos errores conceptuales, ademas de revisar si los numeros calzan con lo que tu ya calculaste a mano).</p>
+
+<div class="caja alerta">
+<span class="caja-titulo">Prompt con errores &mdash; no lo envies asi</span>
+<p style="font-family:monospace; font-size:.9rem;">"Ayudame a registrar este asiento contable: una tienda compra perfumes por $500 mas IVA al 12%, paga $200 en el banco y el resto queda como una cuenta por pagar a 30 dias respaldada por una letra de cambio. Dame el asiento con Debe y Haber."</p>
+</div>
+
+<div class="acordeon">
+<button class="acordeon-boton" onclick="toggleAcordeon(this)">
+  <span>Ver pistas de los errores &mdash; Parte A (usalas solo si ya intentaste encontrarlos tu mismo)</span>
+  <span class="acordeon-flecha">&#9654;</span>
+</button>
+<div class="acordeon-panel">
+<p>1) La tarifa de IVA que hemos usado en todo el widget es 15%, no 12%.</p>
+<p>2) El pago no fue "en el banco", fue en efectivo, de Caja.</p>
+<p>3) Una letra de cambio es un titulo de credito formal: es un DOCUMENTO por pagar, nunca una "cuenta por pagar" &mdash; el prompt los mezcla como si fueran lo mismo.</p>
+</div>
+</div>
+
+<h4>Paso 3 &mdash; Envia tu version corregida</h4>
+<p>Reescribe el prompt correctamente (con IVA 15%, pago en efectivo de Caja, y documento por pagar), envialo a Claude en claude.ai, y pide que te muestre el asiento completo con glosa.</p>
+
+<h4>Paso 4 &mdash; Audita la respuesta de la IA</h4>
+<p>Compara la respuesta de Claude con lo que TU calculaste a mano en el Paso 1. Verifica en particular:</p>
+<ul>
+<li>&iquest;El IVA calculado es $75,00 (500,00 &times; 15%)?</li>
+<li>&iquest;El total de la factura es $575,00?</li>
+<li>&iquest;El monto en documento por pagar es $375,00 (575,00 &minus; 200,00)?</li>
+<li>&iquest;Le llamo correctamente "documento por pagar" y no "cuenta por pagar"?</li>
+<li>&iquest;El Debe es igual al Haber en el asiento que te devolvio?</li>
+</ul>
+
+<h3>Parte B &mdash; Separacion de una deuda en corriente y no corriente</h3>
+
+<div class="pregunta">
+<span class="caja-titulo">El caso</span>
+Bella Andina firma un prestamo de $3.600,00 para comprar mobiliario, a pagar en 36 cuotas mensuales iguales, sin intereses para este ejercicio introductorio. Al cierre del ejercicio, ya se pagaron las primeras 6 cuotas, por lo que quedan 30 cuotas pendientes.
+</div>
+
+<h4>Paso 1 &mdash; Resuelvelo tu primero, a mano</h4>
+<p>Antes de tocar la IA, calcula: el valor de cada cuota, el saldo total pendiente al cierre, cuantas cuotas son exigibles dentro de los proximos doce meses, y cuanto de ese saldo se presenta como Pasivo corriente y cuanto como Pasivo no corriente.</p>
+
+<h4>Paso 2 &mdash; Encuentra los errores antes de enviar el prompt</h4>
+<p>Aqui tienes otro prompt YA REDACTADO, tambien con <strong>errores a proposito</strong>. Encuentralos antes de enviarlo. (Pista: hay al menos tres errores, entre datos inventados y un error de clasificacion).</p>
+
+<div class="caja alerta">
+<span class="caja-titulo">Prompt con errores &mdash; no lo envies asi</span>
+<p style="font-family:monospace; font-size:.9rem;">"Tengo un prestamo de $3.600 en 36 cuotas, ya pague 6, y el banco me cobra una tasa de interes del 20% que no te habia mencionado antes. Como las 30 cuotas que me faltan ya estan comprometidas y firmadas desde el inicio, clasifica las 30 completas como Pasivo corriente. Ademas, dime si esto se registra como un documento por cobrar."</p>
+</div>
+
+<div class="acordeon">
+<button class="acordeon-boton" onclick="toggleAcordeon(this)">
+  <span>Ver pistas de los errores &mdash; Parte B (usalas solo si ya intentaste encontrarlos tu mismo)</span>
+  <span class="acordeon-flecha">&#9654;</span>
+</button>
+<div class="acordeon-panel">
+<p>1) El caso original no menciona ninguna tasa de interes: el prompt inventa un dato del 20% que no existe en el enunciado. Nunca se debe agregar informacion que el caso no dio.</p>
+<p>2) No es correcto clasificar las 30 cuotas completas como Pasivo corriente solo porque "ya estan firmadas desde el inicio": lo que importa es cuanto es exigible dentro de los proximos doce meses desde el cierre (12 cuotas), y el resto (18 cuotas) es Pasivo no corriente.</p>
+<p>3) Esto es una obligacion de la empresa (Pasivo), nunca un documento por cobrar: un prestamo que el negocio recibe genera una deuda a pagar, no un derecho a cobrar.</p>
+</div>
+</div>
+
+<h4>Paso 3 &mdash; Envia tu version corregida</h4>
+<p>Reescribe el prompt sin inventar datos, pidiendo explicitamente la separacion entre Pasivo corriente y Pasivo no corriente segun lo exigible en los proximos doce meses, y envialo a Claude en claude.ai.</p>
+
+<h4>Paso 4 &mdash; Audita la respuesta de la IA</h4>
+<p>Compara la respuesta de Claude con lo que TU calculaste a mano en el Paso 1. Verifica en particular:</p>
+<ul>
+<li>&iquest;El valor de cada cuota es $100,00 (3.600,00 &divide; 36)?</li>
+<li>&iquest;El saldo pendiente al cierre es $3.000,00 (30 cuotas &times; $100,00)?</li>
+<li>&iquest;La porcion corriente es $1.200,00 (12 cuotas &times; $100,00)?</li>
+<li>&iquest;La porcion no corriente es $1.800,00 (18 cuotas &times; $100,00)?</li>
+<li>&iquest;La respuesta reconoce que esto es un Pasivo, y no un documento por cobrar?</li>
+</ul>
+
+<div class="caja alerta">
+<span class="caja-titulo">Que distingue pensamiento critico de copiar y pegar</span>
+Copiar la respuesta de la IA sin haberla comparado con tu propio calculo NO es aprender contabilidad, es solo transcribir. Cada parte de este ejercicio esta bien hecha solo si TU detectaste los errores del prompt original, y si TU verificaste, numero por numero, que la respuesta final de la IA es correcta.
+</div>
+
+<div class="carrera-box">
+<span class="caja-titulo">Conexion con Negocios Internacionales</span>
+<ul>
+<li><strong>Comercio exterior:</strong> auditar cifras de IVA, aranceles y plazos de financiamiento antes de aceptar un calculo ajeno es una habilidad indispensable al importar o exportar.</li>
+<li><strong>Finanzas internacionales:</strong> ninguna herramienta, ni siquiera la IA, reemplaza el criterio de quien entiende de donde salen los numeros, sobre todo al clasificar deudas de corto y largo plazo.</li>
+<li><strong>Marketing y negociacion internacional:</strong> saber distinguir un documento formal de una simple cuenta, y una deuda corriente de una no corriente, puede evitar perdidas al negociar plazos con un cliente o proveedor extranjero.</li>
+<li><strong>Marco legal y normativo:</strong> confundir "cuenta" con "documento", o inventar datos que la norma no respalda, puede tener consecuencias legales reales en una negociacion internacional.</li>
+</ul>
+</div>
+
+<div class="avance">
+<button class="secundario" onclick="irA('cuestionario')">&larr; Cuestionario</button>
+<button onclick="irA('reflexion')">Siguiente &rarr; Reflexion</button>
+</div>
+</section>
+
+<!-- ===================== REFLEXION ===================== -->
+<section id="reflexion" class="panel">
+<h2>Reflexion</h2>
+
+<p>Negocios Internacionales es mucho mas amplio que "negociar". Es analizar costos, leer estados financieros de empresas extranjeras, entender cadenas de abastecimiento, medir el riesgo cambiario, conocer la normativa aduanera y tributaria, y sustentar decisiones ante terceros. Muchos estudiantes creen que esta carrera es solo sentarse a "cerrar tratos", y se pierden todo lo que realmente hay detras.</p>
+
+<div class="pregunta">
+<span class="caja-titulo">Empecemos por algo muy concreto: la fanesca</span>
+Piensa en un plato de fanesca o de locro de papas: muchos ingredientes distintos (granos, leche, queso, pescado seco) pasan por un proceso y se transforman en un solo plato terminado &mdash; el mismo tipo de "transformacion" del Activo que vimos en el Tema 1. &iquest;De donde crees que viene cada ingrediente de la fanesca?
+</div>
+
+<div class="caja ejemplo">
+<span class="caja-titulo">Un dato real que sorprende</span>
+El bacalao verdadero que se usa en la fanesca en muchos lugares del pais no se pesca en Ecuador: llega desde mares tan lejanos como Noruega, Islandia o Dinamarca. Lo que en Galapagos se vende como "bacalao" es en realidad otra especie, un pez local llamado mero. Es decir: hasta en un plato tan tradicional como la fanesca hay una cadena internacional de proveedores, y hasta una diferencia importante en como se etiqueta el producto segun su origen real.
+</div>
+
+<div class="pregunta">
+<span class="caja-titulo">La cadena de actores</span>
+Para que ese bacalao llegue a una fanesca en Guayaquil, tuvo que pasar por un pescador o una empresa pesquera en el norte de Europa, un exportador, una naviera o aerolinea de carga, un importador en Ecuador, un distribuidor, y finalmente el mercado o supermercado. &iquest;Cuantos de esos actores crees que necesitan informacion contable confiable &mdash;exactamente lo que aprendimos hoy: cuentas, documentos, asientos, IVA, clasificacion corriente y no corriente&mdash; para poder operar?
+</div>
+
+<div class="pregunta">
+<span class="caja-titulo">Negocio internacional</span>
+Si el importador ecuatoriano del bacalao no supiera diferenciar una cuenta por pagar de un documento por pagar, o clasificara mal una deuda de largo plazo como si fuera de corto plazo, &iquest;que consecuencias reales podria tener eso para su negocio?
+</div>
+
+<div class="pregunta">
+<span class="caja-titulo">Autoconocimiento: tu propia relacion con el credito</span>
+Piensa en tu propia tarjeta de credito, o en la de alguien cercano a ti. &iquest;Alguna vez han pagado solo el "pago minimo" de un estado de cuenta? Ahora que sabes que ese saldo pendiente sigue generando intereses, &iquest;como cambia tu forma de ver esa decision, tanto para tus finanzas personales como para un negocio?
+</div>
+
+<div class="pregunta">
+<span class="caja-titulo">Exploracion vocacional</span>
+De las cuatro areas de Negocios Internacionales que hemos mencionado en cada Tema (comercio exterior, finanzas internacionales, marketing y negociacion, marco legal y normativo), &iquest;en cual te ves trabajando en el futuro, y por que?
+</div>
+
+<div class="pregunta">
+<span class="caja-titulo">Inteligencia emocional</span>
+Piensa en como te sentias en la primera tutoria, cuando la palabra "contabilidad" quizas te daba temor. Despues de armar tus propios asientos, con IVA, clasificacion corriente y no corriente, y un caso integrador completo, &iquest;que cambio en esa sensacion? &iquest;Que fue lo que mas te ayudo a perderle el miedo?
+</div>
+
+<div class="avance">
+<button class="secundario" onclick="irA('actividadia')">&larr; Actividad con IA</button>
+<button onclick="irA('bibliografia')">Siguiente &rarr; Bibliografia</button>
+</div>
+</section>
+
+<!-- ===================== BIBLIOGRAFIA ===================== -->
+<section id="bibliografia" class="panel">
+<h2>Bibliografia</h2>
+
+<div class="tarjeta-biblio">
+<p class="autor">Zapata Sanchez, P. (2011).</p>
+<p><em>Laboratorio de Contabilidad General</em> (7.&ordf; ed.). McGraw-Hill.</p>
+</div>
+
+<div class="tarjeta-biblio">
+<p class="autor">Vite Rangel, V. T. (s.f.).</p>
+<p><em>Contabilidad General</em>. Editorial digital UNID.</p>
+</div>
+
+<div class="tarjeta-biblio">
+<p class="autor">Moreno Fernandez, J. A. (s.f.).</p>
+<p><em>Contabilidad Basica</em> (4.&ordf; ed.). Grupo Editorial Patria.</p>
+</div>
+
+<div class="tarjeta-biblio">
+<p class="autor">Bravo Valdivieso, M. (2002).</p>
+<p><em>Contabilidad General</em> (5.&ordf; ed.). Nuevodia.</p>
+</div>
+
+<div class="tarjeta-biblio">
+<p class="autor">Guajardo Cantu, G., y Andrade de Guajardo, N. (2018).</p>
+<p><em>Contabilidad Financiera</em> (7.&ordf; ed.). McGraw-Hill Interamericana.</p>
+</div>
+
+<div class="tarjeta-biblio">
+<p class="autor">IFRS Foundation. (2018).</p>
+<p><em>NIIF: Marco Conceptual para la Informacion Financiera</em>. IFRS Foundation.</p>
+</div>
+
+<div class="tarjeta-biblio">
+<p class="autor">IFRS Foundation. (2024).</p>
+<p><em>NIC 1: Presentacion de Estados Financieros</em>. IFRS Foundation.</p>
+</div>
+
+<div class="tarjeta-biblio">
+<p class="autor">IFRS Foundation. (2024).</p>
+<p><em>NIIF 18: Presentacion e Informacion a Revelar en los Estados Financieros</em>. IFRS Foundation.</p>
+</div>
+
+<div class="tarjeta-biblio">
+<p class="autor">Asamblea Nacional del Ecuador. (2019).</p>
+<p><em>Codigo de Comercio</em> (Registro Oficial Suplemento 497, 29 de mayo de 2019).</p>
+</div>
+
+<p style="font-size:.85rem; color:#777; margin-top:16px;"><em>Nota: se recomienda verificar la disponibilidad y edicion mas reciente de estas obras en Google Scholar o en el repositorio institucional de la Universidad de Guayaquil.</em></p>
+
+<div class="avance">
+<button class="secundario" onclick="irA('reflexion')">&larr; Reflexion</button>
+<span></span>
+</div>
+</section>
+
+</main>
+
+<footer class="pie">
+Universidad de Guayaquil &middot; Facultad de Ciencias Administrativas &middot; Negocios Internacionales &middot; Contabilidad General &mdash; Programa de Nivelacion
+</footer>
+
+<!-- ===================== JAVASCRIPT ===================== -->
+<script>
+function irA(id){
+  var paneles = document.querySelectorAll('.panel');
+  for (var i=0; i<paneles.length; i++){ paneles[i].classList.remove('activo'); }
+  document.getElementById(id).classList.add('activo');
+
+  var botones = document.querySelectorAll('.tab-btn');
+  for (var j=0; j<botones.length; j++){
+    botones[j].classList.remove('activa');
+    if (botones[j].getAttribute('data-tab') === id){ botones[j].classList.add('activa'); }
+  }
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  var botones = document.querySelectorAll('.tab-btn');
+  for (var i=0; i<botones.length; i++){
+    botones[i].addEventListener('click', function(){
+      irA(this.getAttribute('data-tab'));
+    });
+  }
+});
+
+function toggleAcordeon(boton){
+  boton.classList.toggle('abierto');
+  var panel = boton.nextElementSibling;
+  panel.classList.toggle('abierto');
+}
+
+/* ============ EJERCICIO INTERACTIVO ============ */
+var respuestasEjercicio = {
+  ei1:'a', ei2:'a', ei3:'b', ei4:'b', ei5:'c', ei6:'c', ei7:'d', ei8:'d',
+  ei9:'d', ei10:'a', ei11:'b', ei12:'c', ei13:'d', ei14:'a'
+};
+var explicacionEjercicio = {
+  ei1: 'Correcto: es Cuenta por cobrar, porque el respaldo es solo la factura, sin titulo de credito formal.',
+  ei2: 'Correcto: 1.200,00 - 300,00 = 900,00. Como Bancos es Activo, el saldo es deudor.',
+  ei3: 'Correcto: un pagare es un titulo de credito formal, por eso es Documento por cobrar.',
+  ei4: 'Correcto: hay una parte en efectivo y otra en documento formal, por eso el asiento es Mixto.',
+  ei5: 'Correcto: la letra de cambio es un titulo de credito formal que la tienda firma como deudora, por eso es Documento por pagar.',
+  ei6: 'Correcto: 900,00 - 300,00 = 600,00. Como Cuentas por pagar es Pasivo, el saldo es acreedor.',
+  ei7: 'Correcto: el respaldo es solo la factura, sin instrumento formal, por eso es Cuenta por pagar.',
+  ei8: 'Correcto: se paga el 100% en efectivo en el momento, por eso el asiento es Al contado.',
+  ei9: 'Correcto: la reclasificacion solo cambia la subcuenta (de Cuentas por cobrar a Documentos por cobrar) y la evidencia; el Activo total del negocio no cambia.',
+  ei10: 'Correcto: un prestamo bancario genera un Pasivo (Prestamos por pagar), no un Ingreso, porque el negocio debe devolverlo.',
+  ei11: 'Correcto: pagar solo el minimo exigido, dejando el resto pendiente con intereses, es la modalidad de pago minimo.',
+  ei12: 'Correcto: al no existir el derecho de diferir el pago de las primeras 12 cuotas, esa porcion se presenta como corriente y el resto como no corriente.',
+  ei13: 'Correcto: si la cuenta forma parte del ciclo normal de operacion, sigue siendo corriente aunque venza despues de doce meses.',
+  ei14: 'Correcto: 150,00 - 100,00 = 50,00 de saldo acreedor en una cuenta de Activo, lo que evidencia un sobregiro que debe investigarse.'
+};
+function verificarEjercicio(){
+  var claves = Object.keys(respuestasEjercicio);
+  var faltantes = [];
+  for (var i=0; i<claves.length; i++){
+    var marcada = document.querySelector('input[name="'+claves[i]+'"]:checked');
+    if (!marcada) faltantes.push(claves[i]);
+  }
+  if (faltantes.length > 0){
+    alert('Responde todas las preguntas antes de verificar. Te faltan ' + faltantes.length + '.');
+    return;
+  }
+  var correctas = 0;
+  for (var i=0; i<claves.length; i++){
+    var key = claves[i];
+    var marcada = document.querySelector('input[name="'+key+'"]:checked').value;
+    var cont = document.getElementById('cont-'+key);
+    var fb = document.getElementById('fb-'+key);
+    if (marcada === respuestasEjercicio[key]){
+      cont.classList.remove('mal'); cont.classList.add('ok');
+      fb.textContent = explicacionEjercicio[key];
+      correctas++;
+    } else {
+      cont.classList.remove('ok'); cont.classList.add('mal');
+      fb.textContent = 'Incorrecto. La respuesta correcta es la opcion "' + respuestasEjercicio[key] + '". ' + explicacionEjercicio[key];
+    }
+    fb.classList.add('visible');
+  }
+  var pct = Math.round((correctas/claves.length)*100);
+  document.getElementById('barra-cont-ejercicio').style.display = 'block';
+  var barra = document.getElementById('barra-ejercicio');
+  setTimeout(function(){ barra.style.width = pct+'%'; barra.textContent = pct+'%'; }, 50);
+  document.getElementById('resultado-ejercicio').textContent = 'Obtuviste ' + correctas + ' de ' + claves.length + ' correctas (' + pct + '%).';
+}
+function reiniciarEjercicio(){
+  var claves = Object.keys(respuestasEjercicio);
+  for (var i=0; i<claves.length; i++){
+    var key = claves[i];
+    var radios = document.getElementsByName(key);
+    for (var r=0; r<radios.length; r++){ radios[r].checked = false; }
+    var cont = document.getElementById('cont-'+key);
+    cont.classList.remove('ok','mal');
+    var fb = document.getElementById('fb-'+key);
+    fb.classList.remove('visible');
+    fb.textContent = '';
+  }
+  document.getElementById('barra-cont-ejercicio').style.display = 'none';
+  document.getElementById('barra-ejercicio').style.width = '0%';
+  document.getElementById('barra-ejercicio').textContent = '0%';
+  document.getElementById('resultado-ejercicio').textContent = '';
+}
+
+/* ============ CUESTIONARIO ============ */
+var respuestasQuiz = {
+  q1:'a', q2:'b', q3:'c', q4:'d', q5:'a', q6:'b', q7:'c', q8:'d', q9:'a', q10:'b',
+  q11:'b', q12:'c', q13:'c', q14:'d'
+};
+var explicacionQuiz = {
+  q1: 'Correcto: el Patrimonio es la participacion residual en los activos, una vez deducidos los pasivos.',
+  q2: 'Correcto: saldo deudor es cuando el Debe es mayor que el Haber.',
+  q3: 'Correcto: la diferencia esencial es si hay o no un titulo de credito formal y negociable.',
+  q4: 'Correcto: jornalizar es registrar cronologicamente en el Diario, aplicando partida doble.',
+  q5: 'Correcto: mayorizar es trasladar los valores del Diario a las cuentas del Mayor.',
+  q6: 'Correcto: el voucher no es un titulo de credito formal ni negociable, por eso no es documento por cobrar.',
+  q7: 'Correcto: el IVA en compras es un activo (credito tributario) que la empresa puede compensar despues.',
+  q8: 'Correcto: 400,00 + IVA 15% (60,00) = 460,00, y todo sale de Caja porque se pago al contado.',
+  q9: 'Correcto: base 250,00 + IVA 15% (37,50) = 287,50; comision 5% = 14,38; neto = 287,50 - 14,38 = 273,12.',
+  q10: 'Correcto: 2.000,00 - 1.350,00 = 650,00. Como Bancos es Activo, el saldo es deudor.',
+  q11: 'Correcto: los Ingresos tienen naturaleza acreedora, igual que el Pasivo y el Patrimonio: aumentan por el Haber.',
+  q12: 'Correcto: la NIIF 18 mantiene la ecuacion, el Debe y Haber, la partida doble, el Diario y el Mayor; actualiza la presentacion del Estado de Resultados desde el 1 de enero de 2027.',
+  q13: 'Correcto: el ciclo normal de operacion prevalece sobre la simple cuenta de doce meses; una cuenta comercial del giro del negocio puede seguir siendo corriente aunque venza despues.',
+  q14: 'Correcto: 2.400,00 / 24 cuotas = 100,00 por cuota; 12 cuotas exigibles en los proximos doce meses x 100,00 = 1.200,00 de Pasivo corriente.'
+};
+function verificarCuestionario(){
+  var claves = Object.keys(respuestasQuiz);
+  var faltantes = [];
+  for (var i=0; i<claves.length; i++){
+    var marcada = document.querySelector('input[name="'+claves[i]+'"]:checked');
+    if (!marcada) faltantes.push(claves[i]);
+  }
+  if (faltantes.length > 0){
+    alert('Responde todas las preguntas antes de verificar. Te faltan ' + faltantes.length + '.');
+    return;
+  }
+  var correctas = 0;
+  for (var i=0; i<claves.length; i++){
+    var key = claves[i];
+    var marcada = document.querySelector('input[name="'+key+'"]:checked').value;
+    var cont = document.getElementById('cont-'+key);
+    var fb = document.getElementById('fb-'+key);
+    if (marcada === respuestasQuiz[key]){
+      cont.classList.remove('mal'); cont.classList.add('ok');
+      fb.textContent = explicacionQuiz[key];
+      correctas++;
+    } else {
+      cont.classList.remove('ok'); cont.classList.add('mal');
+      fb.textContent = 'Incorrecto. La respuesta correcta es la opcion "' + respuestasQuiz[key] + '". ' + explicacionQuiz[key];
+    }
+    fb.classList.add('visible');
+  }
+  var pct = Math.round((correctas/claves.length)*100);
+  document.getElementById('barra-cont-cuestionario').style.display = 'block';
+  var barra = document.getElementById('barra-cuestionario');
+  setTimeout(function(){ barra.style.width = pct+'%'; barra.textContent = pct+'%'; }, 50);
+  var emoji = '';
+  if (pct === 100) emoji = ' 🏆';
+  else if (pct >= 80) emoji = ' 🎯';
+  else if (pct >= 60) emoji = ' 📘';
+  else if (pct >= 40) emoji = ' ⚠️';
+  else emoji = ' 📖';
+  document.getElementById('resultado-cuestionario').textContent = 'Obtuviste ' + correctas + ' de ' + claves.length + ' (' + pct + '%)' + emoji;
+}
+function reiniciarCuestionario(){
+  var claves = Object.keys(respuestasQuiz);
+  for (var i=0; i<claves.length; i++){
+    var key = claves[i];
+    var radios = document.getElementsByName(key);
+    for (var r=0; r<radios.length; r++){ radios[r].checked = false; }
+    var cont = document.getElementById('cont-'+key);
+    cont.classList.remove('ok','mal');
+    var fb = document.getElementById('fb-'+key);
+    fb.classList.remove('visible');
+    fb.textContent = '';
+  }
+  document.getElementById('barra-cont-cuestionario').style.display = 'none';
+  document.getElementById('barra-cuestionario').style.width = '0%';
+  document.getElementById('barra-cuestionario').textContent = '0%';
+  document.getElementById('resultado-cuestionario').textContent = '';
+}
+</script>
+
+</body>
+</html>
